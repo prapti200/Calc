@@ -1653,5 +1653,121 @@
   color: var(--text-primary);
 }
 
+/* ==========================================================================
+   MOBILE & TOUCH-OPTIMIZED RESPONSIVE SUITE FOR CALCULATORS
+   Strictly scoped to mobile & tablet viewports so desktop is 100% untouched
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  /* 1. Scientific & Standard Keypad Scaling */
+  .calc-machine {
+    max-width: 100% !important;
+    border-radius: 14px !important;
+  }
+
+  .calc-screen {
+    padding: 1rem 0.85rem !important;
+    min-height: 110px !important;
+  }
+
+  .calc-current-input {
+    font-size: 1.95rem !important;
+  }
+
+  .calc-controls-bar {
+    padding: 0.5rem 0.75rem !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+  }
+
+  .calc-keypad {
+    padding: 0.65rem 0.45rem !important;
+    gap: 0.35rem !important;
+  }
+
+  .calc-keypad.scientific-active {
+    gap: 0.28rem !important;
+  }
+
+  .key-btn {
+    height: 48px !important;
+    font-size: 1.15rem !important;
+    border-radius: 8px !important;
+  }
+
+  .key-btn.sci {
+    font-size: 0.8rem !important;
+  }
+
+  .key-btn.action {
+    font-size: 0.95rem !important;
+  }
+
+  .key-btn.operator {
+    font-size: 1.25rem !important;
+  }
+
+  .key-btn.equals {
+    font-size: 1.4rem !important;
+  }
+
+  /* 2. Tables & Schedule Horizontal Touch Scrolling */
+  .breakdown-table,
+  .orm-table,
+  .pace-splits-table,
+  .cycle-forecast-table,
+  .table-responsive {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    font-size: 0.78rem !important;
+  }
+
+  .breakdown-table th,
+  .breakdown-table td,
+  .orm-table th,
+  .orm-table td,
+  .pace-splits-table th,
+  .pace-splits-table td,
+  .cycle-forecast-table th,
+  .cycle-forecast-table td {
+    padding: 0.45rem 0.55rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* 3. Unit Converter & Comparisons */
+  .unit-converter-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.6rem !important;
+  }
+
+  .swap-btn-circular {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.15rem !important;
+    margin: 0.25rem auto !important;
+  }
+
+  .comparison-card-group {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cycle-phase-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.45rem !important;
+  }
+
+  /* 4. BMI Spectrum Bar & Gauges */
+  .bmi-labels-row {
+    font-size: 0.65rem !important;
+  }
+
+  .water-tracker-visual {
+    gap: 1rem !important;
+  }
+}
+
+
 
 

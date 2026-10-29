@@ -4798,4 +4798,405 @@ input, select, textarea {
   color: var(--text-muted);
 }
 
+/* ==========================================================================
+   MOBILE & TOUCH-OPTIMIZED RESPONSIVE SUITE
+   Strictly scoped to mobile & tablet viewports so desktop is 100% untouched
+   ========================================================================== */
+
+@media (max-width: 820px) {
+  /* 1. Header & Navigation Bar (Native Mobile App Experience) */
+  .app-header {
+    height: auto !important;
+    min-height: auto !important;
+    padding: 0.55rem 0.85rem 0.4rem !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    row-gap: 0.45rem !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+  }
+
+  .header-left-group {
+    display: contents !important;
+  }
+
+  .brand-wrapper {
+    order: 1 !important;
+    gap: 0.65rem !important;
+  }
+
+  .brand-logo-frame {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+  }
+
+  .brand-title {
+    font-size: 1.3rem !important;
+  }
+
+  .zenith-brand-subtitle {
+    font-size: 0.54rem !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  .header-actions {
+    order: 2 !important;
+    margin-left: auto !important;
+    gap: 0.45rem !important;
+  }
+
+  .settings-btn-label {
+    display: none !important;
+  }
+
+  .header-settings-btn {
+    padding: 0 0.55rem !important;
+    width: 36px !important;
+    height: 36px !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+  }
+
+  .icon-btn {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .zenith-header-nav {
+    order: 3 !important;
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    display: flex !important;
+    gap: 0.35rem !important;
+    padding: 0.25rem 0.1rem 0.35rem !important;
+    border-top: 1px solid rgba(226, 234, 244, 0.7) !important;
+  }
+
+  [data-theme="dark"] .zenith-header-nav {
+    border-top-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .zenith-header-nav::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .zenith-nav-dropdown {
+    flex-shrink: 0 !important;
+    font-size: 0.82rem !important;
+    padding: 0.38rem 0.8rem !important;
+    border-radius: 9999px !important;
+  }
+
+  /* 2. Page Container & Hero Search */
+  .main-wrapper {
+    padding: 0.5rem 0.65rem 2rem !important;
+  }
+
+  .zenith-hero-search-container {
+    max-width: 100% !important;
+    margin: 0.75rem auto 0.6rem !important;
+    padding: 0 !important;
+  }
+
+  .zenith-hero-search-wrapper {
+    padding: 0.2rem !important;
+  }
+
+  .zenith-hero-search-input {
+    font-size: 16px !important; /* Prevents iOS auto-zoom */
+    padding: 0.65rem 1rem 0.65rem 2.5rem !important;
+  }
+
+  .zenith-hero-search-wrapper .search-shortcut {
+    display: none !important;
+  }
+
+  .suite-search-container {
+    max-width: 100% !important;
+    margin: 0.6rem auto 1rem !important;
+    padding: 0 !important;
+  }
+
+  /* 3. Section Title & Category Badges */
+  .zenith-section-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.4rem !important;
+    margin: 0.85rem auto 0.75rem !important;
+    padding: 0 !important;
+  }
+
+  .zenith-section-title {
+    font-size: 1.25rem !important;
+  }
+
+  .zenith-count-capsule {
+    font-size: 0.72rem !important;
+    padding: 0.25rem 0.65rem !important;
+    line-height: 1.35 !important;
+    white-space: normal !important;
+  }
+
+  /* 4. Directory & Calculators Page Layout */
+  .calc-page-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.25rem !important;
+    margin: 0.5rem 0 2rem !important;
+  }
+
+  .calc-directory-main {
+    order: 1 !important;
+    width: 100% !important;
+  }
+
+  .calc-directory-sidebar {
+    order: 2 !important;
+    width: 100% !important;
+    position: static !important;
+    top: auto !important;
+  }
+
+  .sidebar-sticky-inner {
+    max-height: none !important;
+  }
+
+  .sidebar-nav-list {
+    max-height: 320px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .sidebar-search-input {
+    font-size: 16px !important;
+  }
+
+  .view-mode-toolbar {
+    padding: 0.5rem 0.75rem !important;
+    gap: 0.5rem !important;
+  }
+
+  /* 5. Interactive Calculator Panel */
+  .calc-panel {
+    border-radius: 14px !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .panel-header {
+    padding: 0.85rem 1rem !important;
+    gap: 0.5rem !important;
+  }
+
+  .panel-title {
+    font-size: 1.15rem !important;
+  }
+
+  .panel-subtitle {
+    font-size: 0.78rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .calc-split-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .calc-inputs-side {
+    padding: 1.15rem 0.85rem !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--card-border) !important;
+    gap: 1rem !important;
+  }
+
+  .calc-results-side {
+    padding: 1.25rem 0.85rem !important;
+    gap: 1rem !important;
+  }
+
+  /* Touch targets & inputs (no iOS zoom) */
+  .form-input,
+  .form-select,
+  input[type="text"],
+  input[type="number"],
+  select {
+    font-size: 16px !important;
+    min-height: 44px !important;
+  }
+
+  .action-btn-row {
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    min-height: 46px !important;
+    flex: 1 1 130px !important;
+  }
+
+  /* Results typography */
+  .result-value-huge {
+    font-size: 1.75rem !important;
+    word-break: break-word !important;
+  }
+
+  .result-stat-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.5rem !important;
+  }
+
+  .stat-box {
+    padding: 0.7rem 0.75rem !important;
+  }
+
+  .stat-box-val {
+    font-size: 1.05rem !important;
+  }
+
+  /* 6. Settings Popover as Mobile Bottom Sheet */
+  .settings-popover {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 22px 22px 0 0 !important;
+    max-height: 82vh !important;
+    overflow-y: auto !important;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.28) !important;
+    padding: 1.3rem 1.15rem 2rem !important;
+    z-index: 2000 !important;
+    transform: translateY(105%) !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .settings-popover.open {
+    transform: translateY(0) !important;
+  }
+
+  /* 7. Legal Modal on Mobile */
+  .legal-modal-container {
+    width: 96% !important;
+    max-height: 94vh !important;
+    border-radius: 16px !important;
+  }
+
+  .legal-modal-header {
+    padding: 0.9rem 1.1rem !important;
+  }
+
+  .legal-modal-nav {
+    padding: 0.5rem 0.8rem !important;
+    gap: 0.35rem !important;
+  }
+
+  .legal-modal-body {
+    padding: 1rem 0.9rem !important;
+    max-height: calc(94vh - 125px) !important;
+  }
+
+  .legal-highlights-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .contact-split-layout {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .legal-modal-footer {
+    padding: 0.75rem 1rem !important;
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 0.4rem !important;
+  }
+
+  /* 8. Footer on Mobile */
+  .app-footer {
+    padding: 2.25rem 0.85rem 1.75rem !important;
+  }
+
+  .footer-bottom-row {
+    flex-direction: column !important;
+    gap: 0.85rem !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .footer-legal-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 0.65rem 1.1rem !important;
+  }
+
+  /* 9. SEO Clinical Guide Section */
+  .seo-guide-section {
+    margin: 1.5rem auto 2.5rem !important;
+    padding: 0 !important;
+  }
+
+  .seo-guide-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .seo-card {
+    padding: 1.15rem 1rem !important;
+    border-radius: 14px !important;
+  }
+
+  .formula-box {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 0.65rem 0.85rem !important;
+    font-size: 0.82rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra compact phone refinements (iPhone SE / mini / standard Android) */
+  .history-drawer {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .result-value-huge {
+    font-size: 1.55rem !important;
+  }
+
+  .topic-compact-list {
+    grid-template-columns: 1fr !important;
+  }
+
+  .zenith-pills-row {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    justify-content: flex-start !important;
+    padding: 0.2rem 0.1rem 0.5rem !important;
+    scrollbar-width: none !important;
+  }
+
+  .zenith-pills-row::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .zenith-pill {
+    flex-shrink: 0 !important;
+    font-size: 0.78rem !important;
+    height: 34px !important;
+    padding: 0 0.85rem !important;
+  }
+}
+
+
 
