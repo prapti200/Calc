@@ -1,0 +1,24 @@
+# Node / npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Backups and temporary workspace files
+*.bak
+*.bak_*
+scratch/
+.tempmediaStorage/
+.system_generated/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
