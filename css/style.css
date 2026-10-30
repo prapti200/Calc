@@ -4525,6 +4525,14 @@ input, select, textarea {
   flex-wrap: wrap;
 }
 
+.btn-text-mobile {
+  display: none;
+}
+
+.btn-text-full {
+  display: inline;
+}
+
 .pdf-btn-download {
   display: inline-flex;
   align-items: center;
@@ -5865,6 +5873,139 @@ input, select, textarea {
   .seo-card {
     padding: 1.15rem 1rem !important;
     border-radius: 14px !important;
+  }
+
+  /* 11. PDF Report Modal & Document Preview on Mobile */
+  .pdf-report-modal-backdrop {
+    padding: 0.5rem !important;
+  }
+
+  .pdf-modal-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 96vh !important;
+    border-radius: 14px !important;
+    margin: auto !important;
+  }
+
+  .pdf-modal-header {
+    padding: 0.75rem 0.85rem !important;
+    gap: 0.45rem !important;
+  }
+
+  .pdf-modal-title-wrap {
+    gap: 0.45rem !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .pdf-modal-title {
+    font-size: 0.92rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .pdf-modal-actions {
+    gap: 0.35rem !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .pdf-btn-download {
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  .pdf-btn-secondary {
+    padding: 0.4rem 0.65rem !important;
+    font-size: 0.78rem !important;
+  }
+
+  .pdf-btn-close {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 1rem !important;
+  }
+
+  .pdf-modal-body {
+    padding: 0.5rem !important;
+    max-height: calc(96vh - 65px) !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .pdf-modal-body .calc-pdf-document {
+    padding: 16px 14px !important;
+    border-radius: 10px !important;
+    font-size: 11px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .pdf-modal-body .pdf-primary-val {
+    font-size: 1.6rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* PDF Modal Compact View for Mobile Phones */
+  .btn-text-full {
+    display: none !important;
+  }
+  .btn-text-mobile {
+    display: inline !important;
+  }
+
+  .pdf-modal-body .pdf-tables-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .pdf-modal-body .pdf-primary-box {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    padding: 12px 14px !important;
+  }
+
+  .pdf-modal-body .pdf-doc-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .pdf-modal-body .pdf-doc-meta {
+    text-align: left !important;
+    width: 100% !important;
+  }
+
+  .pdf-modal-body .pdf-verified-tag {
+    justify-content: flex-start !important;
+  }
+
+  .pdf-modal-body .pdf-doc-footer {
+    flex-direction: column !important;
+    gap: 6px !important;
+    text-align: center !important;
+  }
+
+  .pdf-modal-body .calc-pdf-document td {
+    padding: 6px 6px !important;
+    font-size: 11px !important;
+    word-break: break-word !important;
+  }
+
+  .pdf-modal-header {
+    flex-wrap: wrap !important;
+  }
+
+  .pdf-modal-actions {
+    width: 100% !important;
+    justify-content: flex-end !important;
+  }
+
+  .pdf-btn-download {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
   }
 }
 
