@@ -83,6 +83,7 @@
   // --- 4. SETTINGS POPOVER MENU ---
   const settingsToggleBtn = document.getElementById('settings-toggle-btn');
   const settingsPopover = document.getElementById('settings-popover');
+  const settingsBackdrop = document.getElementById('settings-backdrop');
   const settingsCloseBtn = document.getElementById('settings-close-btn');
   const settingsOpenHistory = document.getElementById('settings-open-history');
   const settingsClearHistory = document.getElementById('settings-clear-history');
@@ -92,23 +93,37 @@
     const isOpen = settingsPopover.classList.contains('open');
     if (forceClose || isOpen) {
       settingsPopover.classList.remove('open');
+      if (settingsBackdrop) settingsBackdrop.classList.remove('open');
       if (settingsToggleBtn) {
         settingsToggleBtn.classList.remove('active');
         settingsToggleBtn.setAttribute('aria-expanded', 'false');
       }
+      document.body.classList.remove('settings-sheet-open');
     } else {
       settingsPopover.classList.add('open');
+      if (settingsBackdrop) settingsBackdrop.classList.add('open');
       if (settingsToggleBtn) {
         settingsToggleBtn.classList.add('active');
         settingsToggleBtn.setAttribute('aria-expanded', 'true');
       }
+      if (window.innerWidth <= 820) {
+        document.body.classList.add('settings-sheet-open');
+      }
     }
   }
+  window.toggleSettings = toggleSettings;
 
   if (settingsToggleBtn) {
     settingsToggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       toggleSettings();
+    });
+  }
+
+  if (settingsBackdrop) {
+    settingsBackdrop.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleSettings(true);
     });
   }
 
@@ -122,7 +137,7 @@
   // Close Settings on clicking outside
   document.addEventListener('click', (e) => {
     if (settingsPopover && settingsPopover.classList.contains('open')) {
-      if (!settingsPopover.contains(e.target) && !settingsToggleBtn.contains(e.target)) {
+      if (!settingsPopover.contains(e.target) && !settingsToggleBtn?.contains(e.target) && !settingsBackdrop?.contains(e.target)) {
         toggleSettings(true);
       }
     }
@@ -269,12 +284,47 @@
       }
     }
 
+    // Ensure prominent, dedicated PDF export action in the calculator results area
+    setTimeout(() => ensureCalculatorPdfButton(calcId), 60);
+
     if (window.AppRouter && !window.AppRouter.isDispatching) {
       window.AppRouter.onCalculatorOpened(calcId, category);
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  function ensureCalculatorPdfButton(calcId) {
+    if (!calcId) return;
+    const panel = document.getElementById(calcId);
+    if (!panel) return;
+    const resultsSide = panel.querySelector('.calc-results-side');
+    if (!resultsSide || resultsSide.querySelector('.calc-pdf-action-block')) return;
+
+    const pdfBlock = document.createElement('div');
+    pdfBlock.className = 'calc-pdf-action-block';
+    pdfBlock.innerHTML = `
+      <button type="button" class="btn-dedicated-pdf" onclick="CalcPdfReport && CalcPdfReport.downloadCurrentPdf()" title="Download official verified calculation report as PDF">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="12" y1="18" x2="12" y2="12"></line>
+          <polyline points="9 15 12 18 15 15"></polyline>
+        </svg>
+        <span>Download Official PDF Report</span>
+      </button>
+    `;
+    resultsSide.appendChild(pdfBlock);
+  }
+  window.ensureCalculatorPdfButton = ensureCalculatorPdfButton;
+
+  // Global listener for switcher pills to attach PDF button to whichever calculator is active
+  document.addEventListener('click', (e) => {
+    const pill = e.target.closest('.switcher-pill');
+    if (pill && pill.dataset.target) {
+      setTimeout(() => ensureCalculatorPdfButton(pill.dataset.target), 60);
+    }
+  });
 
   window.backToZenithHub = function () {
     document.querySelectorAll('.view-section').forEach(sec => {
@@ -386,39 +436,299 @@
     }
   };
 
-  // --- 6. SEARCH SYSTEM (FILEZENITH REAL-TIME SEARCH) ---
+  // --- 6. SEARCH SYSTEM (FILEZENITH REAL-TIME SEARCH & LIVE DROPDOWN) ---
   const globalSearchInput = document.getElementById('global-search-input');
   const searchShortcut = document.getElementById('search-shortcut');
+  const globalSearchClear = document.getElementById('global-search-clear');
+  const globalSearchDropdown = document.getElementById('global-search-dropdown');
 
-  if (globalSearchInput) {
-    globalSearchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
+  let indexedCalcs = [];
+  function buildSearchIndex() {
+    indexedCalcs = [];
+    document.querySelectorAll('.zenith-card').forEach(card => {
+      const titleSpan = card.querySelector('.zenith-card-title span');
+      const title = (titleSpan?.textContent || card.querySelector('.zenith-card-title')?.textContent || '').replace('→', '').trim();
+      const desc = card.querySelector('.zenith-card-desc')?.textContent.trim() || '';
+      const category = card.dataset.category || '';
+      const sub = card.dataset.sub || '';
+      const keywords = (card.dataset.keywords || '').toLowerCase();
+      const onclickAttr = card.getAttribute('onclick') || '';
+      const match = onclickAttr.match(/openZenithCalc\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"]\s*\)/);
+      const categoryKey = match ? match[1] : category;
+      const calcId = match ? match[2] : (card.dataset.calcId || '');
 
-      // Automatically route to zenith-hub if searching
-      const hubSec = document.getElementById('view-zenith-hub');
-      if (hubSec && !hubSec.classList.contains('active')) {
-        document.querySelectorAll('.view-section').forEach(sec => {
-          sec.classList.toggle('active', sec.id === 'view-zenith-hub');
+      if (title && calcId) {
+        indexedCalcs.push({
+          title,
+          desc,
+          category: categoryKey,
+          sub,
+          keywords,
+          calcId,
+          element: card
         });
       }
+    });
+  }
 
-      const cards = document.querySelectorAll('.zenith-card');
-      let visibleCount = 0;
-      cards.forEach(card => {
-        const title = card.querySelector('.zenith-card-title')?.textContent.toLowerCase() || '';
-        const desc = card.querySelector('.zenith-card-desc')?.textContent.toLowerCase() || '';
-        const category = card.dataset.category?.toLowerCase() || '';
-        const sub = card.dataset.sub?.toLowerCase() || '';
-        const keywords = card.dataset.keywords?.toLowerCase() || '';
+  function getCategoryLabel(cat) {
+    switch (cat) {
+      case 'financial': return { text: 'Finance', cls: 'fin' };
+      case 'fitness': return { text: 'Health', cls: 'fit' };
+      case 'math': return { text: 'Math', cls: 'math' };
+      case 'other': return { text: 'Utility', cls: 'util' };
+      case 'standard': return { text: 'Scientific', cls: 'sci' };
+      default: return { text: 'Tool', cls: 'fin' };
+    }
+  }
 
-        const match = query === '' || title.includes(query) || desc.includes(query) || category.includes(query) || sub.includes(query) || keywords.includes(query);
-        card.style.display = match ? 'flex' : 'none';
-        if (match) visibleCount++;
+  function escapeHtml(str) {
+    return (str || '').replace(/[&<>"']/g, m => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+    }[m]));
+  }
+
+  function highlightMatch(text, query) {
+    if (!query) return escapeHtml(text);
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
+    return escapeHtml(text).replace(regex, '<span class="search-match-highlight">$1</span>');
+  }
+
+  const POPULAR_SUGGESTIONS = [
+    { title: 'Mortgage Calculator', desc: 'Home loan P&I, property tax, PMI, HOA & 30-year schedule', category: 'financial', calcId: 'sec-mort-calc' },
+    { title: 'Body Mass Index (BMI) & Gauge', desc: 'WHO clinical weight categories, BMI prime & healthy range', category: 'fitness', calcId: 'sec-bmi-calc' },
+    { title: 'Auto & Personal Loan / EMI', desc: 'Monthly payments, total interest & loan amortization', category: 'financial', calcId: 'sec-loan-calc' },
+    { title: 'Percentage Calculator', desc: 'What is X% of Y, percentage increase, decrease & difference', category: 'math', calcId: 'sec-pct-calc' },
+    { title: 'Compound Interest Calculator', desc: 'Long-term investment compounding with regular contributions', category: 'financial', calcId: 'sec-ci-calc' },
+    { title: 'Unit Converter', desc: 'Convert length, mass, temperature, speed, area & digital storage', category: 'other', calcId: 'sec-unit-calc' },
+    { title: 'Calorie & TDEE Calculator', desc: 'Mifflin-St Jeor daily energy expenditure & macro targets', category: 'fitness', calcId: 'sec-cal-calc' },
+    { title: 'Standard & Scientific Calculator', desc: 'Arithmetic, trig sin/cos/tan, logarithms & exponents', category: 'standard', calcId: 'box-std-mode' }
+  ];
+
+  function showPopularSuggestions() {
+    if (!globalSearchDropdown) return;
+    let html = `
+      <div class="search-dropdown-header">
+        <span>✨ Recommended & Popular Calculators</span>
+        <span>Tap to open</span>
+      </div>
+    `;
+
+    POPULAR_SUGGESTIONS.forEach(item => {
+      const catInfo = getCategoryLabel(item.category);
+      html += `
+        <div class="search-result-item" role="option" onclick="handleSearchResultClick('${item.category}', '${item.calcId}')">
+          <span class="search-result-badge ${catInfo.cls}">${catInfo.text}</span>
+          <div class="search-result-info">
+            <div class="search-result-title">${escapeHtml(item.title)}</div>
+            <div class="search-result-desc">${escapeHtml(item.desc)}</div>
+          </div>
+          <span class="search-result-arrow">→</span>
+        </div>
+      `;
+    });
+
+    globalSearchDropdown.innerHTML = html;
+    globalSearchDropdown.style.display = 'block';
+  }
+
+  function renderSearchDropdown(matches, query) {
+    if (!globalSearchDropdown) return;
+    if (query === '') {
+      showPopularSuggestions();
+      return;
+    }
+
+    if (matches.length === 0) {
+      globalSearchDropdown.innerHTML = `
+        <div class="search-dropdown-empty">
+          <p>No calculators found matching <strong>"${escapeHtml(query)}"</strong></p>
+          <button type="button" class="catalog-no-results-btn" onclick="clearGlobalSearch()" style="margin-top:0.6rem; padding:0.35rem 0.9rem; font-size:0.78rem;">Clear Search</button>
+        </div>
+      `;
+      globalSearchDropdown.style.display = 'block';
+      return;
+    }
+
+    const topMatches = matches.slice(0, 8);
+    let html = `
+      <div class="search-dropdown-header">
+        <span>Matching Calculators (${matches.length} found)</span>
+        <span>Tap to open</span>
+      </div>
+    `;
+
+    topMatches.forEach(item => {
+      const catInfo = getCategoryLabel(item.category);
+      const highlightedTitle = highlightMatch(item.title, query);
+      html += `
+        <div class="search-result-item" role="option" onclick="handleSearchResultClick('${item.category}', '${item.calcId}')">
+          <span class="search-result-badge ${catInfo.cls}">${catInfo.text}</span>
+          <div class="search-result-info">
+            <div class="search-result-title">${highlightedTitle}</div>
+            <div class="search-result-desc">${escapeHtml(item.desc)}</div>
+          </div>
+          <span class="search-result-arrow">→</span>
+        </div>
+      `;
+    });
+
+    globalSearchDropdown.innerHTML = html;
+    globalSearchDropdown.style.display = 'block';
+  }
+
+  window.handleSearchResultClick = function (category, calcId) {
+    if (globalSearchDropdown) globalSearchDropdown.style.display = 'none';
+    if (globalSearchInput) globalSearchInput.blur();
+    window.openZenithCalc(category, calcId);
+  };
+
+  window.clearGlobalSearch = function () {
+    if (globalSearchInput) {
+      globalSearchInput.value = '';
+    }
+    if (globalSearchClear) {
+      globalSearchClear.style.display = 'none';
+    }
+    if (globalSearchDropdown) {
+      globalSearchDropdown.style.display = 'none';
+      globalSearchDropdown.innerHTML = '';
+    }
+
+    // Restore all cards and all topic sections
+    document.querySelectorAll('.zenith-card').forEach(c => c.style.display = 'flex');
+    document.querySelectorAll('.calc-topic-section').forEach(sec => {
+      sec.style.display = 'block';
+    });
+
+    // Reset topic pills to default count
+    const defaultPills = {
+      'hub-topic-financial': '70 Calculators',
+      'hub-topic-fitness': '29 Calculators',
+      'hub-topic-math': '30 Calculators',
+      'hub-topic-other': '55 Calculators',
+      'hub-topic-standard': '1 Calculator'
+    };
+    Object.keys(defaultPills).forEach(id => {
+      const pill = document.querySelector(`#${id} .topic-count-pill`);
+      if (pill) pill.textContent = defaultPills[id];
+    });
+
+    const badge = document.getElementById('zenith-count-badge');
+    if (badge) {
+      badge.textContent = `189 Calculators (70 Financial, 29 Health & Fitness, 29 Math, 55 Daily Utilities, Weather & Transport, 6 Keypads)`;
+    }
+  };
+
+  function performGlobalSearch(query) {
+    if (indexedCalcs.length === 0) buildSearchIndex();
+
+    if (globalSearchClear) {
+      globalSearchClear.style.display = query ? 'flex' : 'none';
+    }
+
+    // Automatically route to zenith-hub if searching
+    const hubSec = document.getElementById('view-zenith-hub');
+    if (hubSec && !hubSec.classList.contains('active')) {
+      document.querySelectorAll('.view-section').forEach(sec => {
+        sec.classList.toggle('active', sec.id === 'view-zenith-hub');
       });
+    }
 
-      const badge = document.getElementById('zenith-count-badge');
-      if (badge) {
-        badge.textContent = `${visibleCount} Calculators`;
+    if (query === '') {
+      window.clearGlobalSearch();
+      return;
+    }
+
+    // Rank matching items
+    const scoredMatches = [];
+    indexedCalcs.forEach(item => {
+      const titleLower = item.title.toLowerCase();
+      const descLower = item.desc.toLowerCase();
+      const keywordsLower = item.keywords;
+      let score = 0;
+
+      if (titleLower === query) score += 200;
+      else if (titleLower.startsWith(query)) score += 120;
+      else if (titleLower.includes(query)) score += 80;
+
+      if (keywordsLower.includes(query)) score += 40;
+      if (descLower.includes(query)) score += 20;
+      if (item.category.includes(query)) score += 10;
+
+      if (score > 0) {
+        scoredMatches.push({ ...item, score });
+      }
+    });
+
+    scoredMatches.sort((a, b) => b.score - a.score);
+
+    // Render instant live dropdown
+    renderSearchDropdown(scoredMatches, query);
+
+    // Filter cards on page and topic sections
+    const matchedCalcIds = new Set(scoredMatches.map(m => m.calcId));
+    let visibleCount = 0;
+
+    document.querySelectorAll('.zenith-card').forEach(card => {
+      const onclickAttr = card.getAttribute('onclick') || '';
+      const match = onclickAttr.match(/openZenithCalc\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"]\s*\)/);
+      const calcId = match ? match[2] : (card.dataset.calcId || '');
+      const isMatch = matchedCalcIds.has(calcId);
+      card.style.display = isMatch ? 'flex' : 'none';
+      if (isMatch) visibleCount++;
+    });
+
+    // Filter each topic section: hide sections with 0 matches!
+    document.querySelectorAll('.calc-topic-section').forEach(sec => {
+      const visibleCards = sec.querySelectorAll('.zenith-card[style*="display: flex"]');
+      if (visibleCards.length === 0) {
+        sec.style.display = 'none';
+      } else {
+        sec.style.display = 'block';
+        const pill = sec.querySelector('.topic-count-pill');
+        if (pill) {
+          pill.textContent = `${visibleCards.length} ${visibleCards.length === 1 ? 'match' : 'matches'}`;
+        }
+      }
+    });
+
+    const badge = document.getElementById('zenith-count-badge');
+    if (badge) {
+      badge.textContent = `${visibleCount} ${visibleCount === 1 ? 'Calculator found' : 'Calculators found'}`;
+    }
+  }
+
+  if (globalSearchInput) {
+    globalSearchInput.addEventListener('focus', () => {
+      const query = globalSearchInput.value.toLowerCase().trim();
+      if (query) {
+        performGlobalSearch(query);
+      } else {
+        showPopularSuggestions();
+      }
+    });
+
+    globalSearchInput.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const query = globalSearchInput.value.toLowerCase().trim();
+      if (query) {
+        performGlobalSearch(query);
+      } else {
+        showPopularSuggestions();
+      }
+    });
+
+    globalSearchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      performGlobalSearch(query);
+    });
+
+    // Close dropdown on click outside
+    document.addEventListener('click', (e) => {
+      if (globalSearchDropdown && !globalSearchDropdown.contains(e.target) && e.target !== globalSearchInput) {
+        globalSearchDropdown.style.display = 'none';
       }
     });
 
@@ -451,11 +761,19 @@
           target.select();
         }
       } else if (e.key === 'Escape') {
+        if (globalSearchDropdown) globalSearchDropdown.style.display = 'none';
         document.querySelectorAll('.zenith-hero-search-input').forEach(inp => {
           if (document.activeElement === inp) inp.blur();
         });
       }
     });
+  }
+
+  // Build index on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', buildSearchIndex);
+  } else {
+    setTimeout(buildSearchIndex, 100);
   }
 
   // --- 7. FULLSCREEN UTILITY ---

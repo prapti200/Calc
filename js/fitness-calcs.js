@@ -2870,6 +2870,10 @@ const FitnessCalcs = {
       window.AppRouter.onCalculatorOpened(calcId, 'fitness');
     }
 
+    if (window.ensureCalculatorPdfButton) {
+      window.ensureCalculatorPdfButton(calcId);
+    }
+
     if (window.SeoGuide) {
       window.SeoGuide.updateGuide(calcId, 'fitness');
     }
