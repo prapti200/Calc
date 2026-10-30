@@ -3227,56 +3227,190 @@ input, select, textarea {
 
 .sidebar-search-wrap {
   position: relative;
+  width: 100%;
   display: flex;
   align-items: center;
+  background: #ffffff;
+  border: 1.5px solid #dbe7f5;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+[data-theme="dark"] .sidebar-search-wrap {
+  background: var(--bg-secondary);
+  border-color: var(--card-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.sidebar-search-wrap:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
+}
+
+[data-theme="dark"] .sidebar-search-wrap:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.sidebar-search-wrap:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14), 0 4px 16px rgba(37, 99, 235, 0.09);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .sidebar-search-wrap:focus-within {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2), 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .sidebar-search-icon {
   position: absolute;
-  left: 0.65rem;
-  font-size: 0.8rem;
-  opacity: 0.6;
+  left: 0.85rem;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
+  transition: color 0.15s ease;
+}
+
+.sidebar-search-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.sidebar-search-wrap:focus-within .sidebar-search-icon {
+  color: #2563eb;
+}
+
+[data-theme="dark"] .sidebar-search-wrap:focus-within .sidebar-search-icon {
+  color: #38bdf8;
 }
 
 .sidebar-search-input {
   width: 100%;
-  padding: 0.45rem 0.65rem 0.45rem 2rem;
-  font-size: 0.82rem;
-  border-radius: 8px;
-  border: 1px solid var(--card-border);
-  background: var(--bg-secondary);
-  color: var(--text-primary);
+  height: 38px;
+  padding: 0 0.85rem 0 2.35rem;
+  background: transparent;
+  border: none;
   outline: none;
-  transition: border-color 0.15s ease;
+  font-size: 0.84rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  border-radius: 9999px;
+  font-family: inherit;
+  box-sizing: border-box;
 }
 
-.sidebar-search-input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
-}
-
-.sidebar-nav-list {
-  padding: 0.5rem;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+.sidebar-search-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
 }
 
 .sidebar-category-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted);
-  padding: 0.55rem 0.65rem 0.25rem;
-  margin-top: 0.35rem;
+  padding: 0.55rem 0.65rem 0.3rem;
+  margin-top: 0.45rem;
   border-top: 1px dashed var(--card-border);
 }
+
 .sidebar-category-header:first-child {
   border-top: none;
   margin-top: 0;
+}
+
+.sidebar-cat-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.08) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.95), 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-cat-icon svg {
+  width: 12px;
+  height: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.sidebar-cat-icon.fin {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(37, 99, 235, 0.08) 100%);
+  border-color: rgba(147, 197, 253, 0.65);
+  color: #1d4ed8;
+}
+[data-theme="dark"] .sidebar-cat-icon.fin {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(56, 189, 248, 0.12) 100%);
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-cat-icon.fitness {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(16, 185, 129, 0.08) 100%);
+  border-color: rgba(110, 231, 183, 0.65);
+  color: #047857;
+}
+[data-theme="dark"] .sidebar-cat-icon.fitness {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(52, 211, 153, 0.12) 100%);
+  border-color: rgba(52, 211, 153, 0.35);
+  color: #34d399;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-cat-icon.math {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(124, 58, 237, 0.08) 100%);
+  border-color: rgba(196, 181, 253, 0.65);
+  color: #6d28d9;
+}
+[data-theme="dark"] .sidebar-cat-icon.math {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(167, 139, 250, 0.12) 100%);
+  border-color: rgba(167, 139, 250, 0.35);
+  color: #a78bfa;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-cat-icon.utility {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(14, 165, 233, 0.08) 100%);
+  border-color: rgba(125, 211, 252, 0.65);
+  color: #0369a1;
+}
+[data-theme="dark"] .sidebar-cat-icon.utility {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(56, 189, 248, 0.12) 100%);
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-cat-icon.sci {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(245, 158, 11, 0.08) 100%);
+  border-color: rgba(252, 211, 77, 0.65);
+  color: #b45309;
+}
+[data-theme="dark"] .sidebar-cat-icon.sci {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(251, 191, 36, 0.12) 100%);
+  border-color: rgba(251, 191, 36, 0.35);
+  color: #fbbf24;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .sidebar-calc-item {
@@ -3418,10 +3552,327 @@ input, select, textarea {
 .topic-accent-icon {
   font-size: 1.25rem;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   PURE CRYSTAL GLASSMORPHISM SUITE ICONS (Fully Transparent & High Glass Shine)
+   ========================================================================== */
+.topic-logo-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(16px) saturate(200%);
+  -webkit-backdrop-filter: blur(16px) saturate(200%);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+/* Glass Specular Glare (Curved Upper Surface Reflection) */
+.topic-logo-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.12) 100%);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Dynamic Glass Shine Beam (Light Glides Across on Hover) */
+.topic-logo-box::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  left: -130%;
+  width: 70%;
+  height: 220%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 25%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0.08) 75%,
+    transparent 100%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  z-index: 2;
+  transition: left 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.topic-header-row:hover .topic-logo-box::after,
+.topic-logo-box:hover::after {
+  left: 150%;
+}
+
+.topic-logo-box svg {
+  position: relative;
+  z-index: 3;
+  width: 21px;
+  height: 21px;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.topic-header-row:hover .topic-logo-box,
+.topic-logo-box:hover {
+  transform: translateY(-2px) scale(1.06);
+}
+
+.topic-header-row:hover .topic-logo-box svg,
+.topic-logo-box:hover svg {
+  transform: scale(1.1);
+}
+
+/* 1. Finance: Crystal Sapphire Glass (Fully Transparent + Radiant Specular Shine) */
+.topic-logo-finance {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(37, 99, 235, 0.08) 50%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.78);
+  border-bottom-color: rgba(37, 99, 235, 0.35);
+  border-right-color: rgba(37, 99, 235, 0.35);
+  color: #1d4ed8;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 2px 0 rgba(37, 99, 235, 0.12),
+    0 8px 24px -4px rgba(37, 99, 235, 0.16),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.topic-logo-finance svg {
+  filter: drop-shadow(0 2px 5px rgba(37, 99, 235, 0.3));
+}
+
+.topic-header-row:hover .topic-logo-finance,
+.topic-logo-finance:hover {
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    inset 0 2px 3px 0 rgba(255, 255, 255, 1),
+    inset 0 -2px 3px 0 rgba(37, 99, 235, 0.22),
+    0 12px 30px -4px rgba(37, 99, 235, 0.32),
+    0 0 0 3px rgba(191, 219, 254, 0.55);
+}
+
+[data-theme="dark"] .topic-logo-finance {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(37, 99, 235, 0.15) 50%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-bottom-color: rgba(96, 165, 250, 0.4);
+  color: #60a5fa;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.4),
+    0 8px 24px -4px rgba(37, 99, 235, 0.4);
+}
+
+[data-theme="dark"] .topic-header-row:hover .topic-logo-finance,
+[data-theme="dark"] .topic-logo-finance:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: 
+    inset 0 2px 3px 0 rgba(255, 255, 255, 0.65),
+    0 12px 32px rgba(37, 99, 235, 0.55),
+    0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+/* 2. Health & Fitness: Crystal Emerald Glass (Fully Transparent + Radiant Specular Shine) */
+.topic-logo-fitness {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(16, 185, 129, 0.08) 50%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.78);
+  border-bottom-color: rgba(16, 185, 129, 0.35);
+  border-right-color: rgba(16, 185, 129, 0.35);
+  color: #047857;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 2px 0 rgba(16, 185, 129, 0.12),
+    0 8px 24px -4px rgba(16, 185, 129, 0.16),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.topic-logo-fitness svg {
+  filter: drop-shadow(0 2px 5px rgba(16, 185, 129, 0.3));
+}
+
+.topic-header-row:hover .topic-logo-fitness,
+.topic-logo-fitness:hover {
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    inset 0 2px 3px 0 rgba(255, 255, 255, 1),
+    inset 0 -2px 3px 0 rgba(16, 185, 129, 0.22),
+    0 12px 30px -4px rgba(16, 185, 129, 0.32),
+    0 0 0 3px rgba(167, 243, 208, 0.55);
+}
+
+[data-theme="dark"] .topic-logo-fitness {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(16, 185, 129, 0.15) 50%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-bottom-color: rgba(52, 211, 153, 0.4);
+  color: #34d399;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.4),
+    0 8px 24px -4px rgba(16, 185, 129, 0.4);
+}
+
+[data-theme="dark"] .topic-header-row:hover .topic-logo-fitness,
+[data-theme="dark"] .topic-logo-fitness:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: 
+    inset 0 2px 3px 0 rgba(255, 255, 255, 0.65),
+    0 12px 32px rgba(16, 185, 129, 0.55),
+    0 0 0 3px rgba(16, 185, 129, 0.3);
+}
+
+/* 3. Math Solutions: Crystal Amethyst Glass (Fully Transparent + Radiant Specular Shine) */
+.topic-logo-math {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(124, 58, 237, 0.08) 50%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.78);
+  border-bottom-color: rgba(124, 58, 237, 0.35);
+  border-right-color: rgba(124, 58, 237, 0.35);
+  color: #6d28d9;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 2px 0 rgba(124, 58, 237, 0.12),
+    0 8px 24px -4px rgba(124, 58, 237, 0.16),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.topic-logo-math svg {
+  filter: drop-shadow(0 2px 5px rgba(124, 58, 237, 0.3));
+}
+
+.topic-header-row:hover .topic-logo-math,
+.topic-logo-math:hover {
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    inset 0 2px 3px 0 rgba(255, 255, 255, 1),
+    inset 0 -2px 3px 0 rgba(124, 58, 237, 0.22),
+    0 12px 30px -4px rgba(124, 58, 237, 0.32),
+    0 0 0 3px rgba(221, 214, 254, 0.55);
+}
+
+[data-theme="dark"] .topic-logo-math {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(124, 58, 237, 0.15) 50%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-bottom-color: rgba(167, 139, 250, 0.4);
+  color: #a78bfa;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.4),
+    0 8px 24px -4px rgba(124, 58, 237, 0.4);
+}
+
+[data-theme="dark"] .topic-header-row:hover .topic-logo-math,
+[data-theme="dark"] .topic-logo-math:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: 
+    inset 0 2px 3px 0 rgba(255, 255, 255, 0.65),
+    0 12px 32px rgba(124, 58, 237, 0.55),
+    0 0 0 3px rgba(124, 58, 237, 0.3);
+}
+
+/* 4. Daily Utilities: Crystal Azure Glass (Fully Transparent + Radiant Specular Shine) */
+.topic-logo-utility {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(14, 165, 233, 0.08) 50%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.78);
+  border-bottom-color: rgba(14, 165, 233, 0.35);
+  border-right-color: rgba(14, 165, 233, 0.35);
+  color: #0369a1;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 2px 0 rgba(14, 165, 233, 0.12),
+    0 8px 24px -4px rgba(14, 165, 233, 0.16),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.topic-logo-utility svg {
+  filter: drop-shadow(0 2px 5px rgba(14, 165, 233, 0.3));
+}
+
+.topic-header-row:hover .topic-logo-utility,
+.topic-logo-utility:hover {
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    inset 0 2px 3px 0 rgba(255, 255, 255, 1),
+    inset 0 -2px 3px 0 rgba(14, 165, 233, 0.22),
+    0 12px 30px -4px rgba(14, 165, 233, 0.32),
+    0 0 0 3px rgba(186, 230, 253, 0.55);
+}
+
+[data-theme="dark"] .topic-logo-utility {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(14, 165, 233, 0.15) 50%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-bottom-color: rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.4),
+    0 8px 24px -4px rgba(14, 165, 233, 0.4);
+}
+
+[data-theme="dark"] .topic-header-row:hover .topic-logo-utility,
+[data-theme="dark"] .topic-logo-utility:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: 
+    inset 0 2px 3px 0 rgba(255, 255, 255, 0.65),
+    0 12px 32px rgba(14, 165, 233, 0.55),
+    0 0 0 3px rgba(14, 165, 233, 0.3);
+}
+
+/* 5. Scientific: Crystal Amber Glass (Fully Transparent + Radiant Specular Shine) */
+.topic-logo-scientific {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(245, 158, 11, 0.08) 50%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.78);
+  border-bottom-color: rgba(245, 158, 11, 0.35);
+  border-right-color: rgba(245, 158, 11, 0.35);
+  color: #b45309;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 2px 0 rgba(245, 158, 11, 0.12),
+    0 8px 24px -4px rgba(245, 158, 11, 0.16),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.topic-logo-scientific svg {
+  filter: drop-shadow(0 2px 5px rgba(245, 158, 11, 0.3));
+}
+
+.topic-header-row:hover .topic-logo-scientific,
+.topic-logo-scientific:hover {
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    inset 0 2px 3px 0 rgba(255, 255, 255, 1),
+    inset 0 -2px 3px 0 rgba(245, 158, 11, 0.22),
+    0 12px 30px -4px rgba(245, 158, 11, 0.32),
+    0 0 0 3px rgba(254, 240, 138, 0.55);
+}
+
+[data-theme="dark"] .topic-logo-scientific {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(245, 158, 11, 0.15) 50%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-bottom-color: rgba(251, 191, 36, 0.4);
+  color: #fbbf24;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.4),
+    0 8px 24px -4px rgba(245, 158, 11, 0.4);
+}
+
+[data-theme="dark"] .topic-header-row:hover .topic-logo-scientific,
+[data-theme="dark"] .topic-logo-scientific:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: 
+    inset 0 2px 3px 0 rgba(255, 255, 255, 0.65),
+    0 12px 32px rgba(245, 158, 11, 0.55),
+    0 0 0 3px rgba(245, 158, 11, 0.3);
 }
 
 .topic-heading {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;

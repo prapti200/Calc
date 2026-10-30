@@ -252,7 +252,12 @@
                 <span class="sidebar-count-badge">185</span>
               </div>
               <div class="sidebar-search-wrap">
-                <span class="sidebar-search-icon">🔍</span>
+                <span class="sidebar-search-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
                 <input 
                   type="text" 
                   class="sidebar-search-input" 
@@ -264,7 +269,17 @@
               </div>
             </div>
             <nav class="sidebar-nav-list" id="sidebar-list-all">
-          <div class="sidebar-category-header">💼 Financial Calculators (70)</div>
+          <div class="sidebar-category-header">
+            <span class="sidebar-cat-icon fin">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="3"></rect>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path>
+                <line x1="2" y1="13" x2="22" y2="13"></line>
+                <path d="M12 12v3"></path>
+              </svg>
+            </span>
+            <span>Finance Calculators (70)</span>
+          </div>
           <a class="sidebar-calc-item" data-calc-id="sec-mort-calc" data-category="financial" data-sub="mortgage" data-keywords="mortgage calculator home loan us property tax pmi insurance 30-year 15-year fixed" title="Mortgage Calculator" onclick="openZenithCalc('financial', 'sec-mort-calc')">
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Mortgage Calculator</span>
@@ -545,7 +560,14 @@
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Commission Calculator</span>
           </a>
-          <div class="sidebar-category-header">🥗 Health & Fitness Calculators (29)</div>
+          <div class="sidebar-category-header">
+            <span class="sidebar-cat-icon fitness">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+            </span>
+            <span>Health & Fitness (29)</span>
+          </div>
           <a class="sidebar-calc-item" data-calc-id="sec-bmi-calc" data-category="fitness" data-sub="body" data-keywords="bmi body mass index gauge health weight height imperial metric clinical" title="Body Mass Index & Gauge ..." onclick="openZenithCalc('fitness', 'sec-bmi-calc')">
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Body Mass Index & Gauge ...</span>
@@ -662,7 +684,16 @@
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">BAC Calculator</span>
           </a>
-          <div class="sidebar-category-header">📐 Math Solvers & Calculators (30)</div>
+          <div class="sidebar-category-header">
+            <span class="sidebar-cat-icon math">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 4H6l7 8-7 8h12"></path>
+                <line x1="6" y1="4" x2="18" y2="4"></line>
+                <line x1="6" y1="20" x2="18" y2="20"></line>
+              </svg>
+            </span>
+            <span>Math Solutions (30)</span>
+          </div>
           <a class="sidebar-calc-item" data-calc-id="sec-pct-calc" data-category="math" data-sub="algebra" data-keywords="percentage percent what is x of y increase decrease ratio" title="Percentage Calculator 3-in-1 ..." onclick="openZenithCalc('math', 'sec-pct-calc')">
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Percentage Calculator 3-in-1 ...</span>
@@ -783,7 +814,14 @@
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">sec-right-triangle-calc</span>
           </a>
-          <div class="sidebar-category-header">⚡ Daily Utilities, Weather & Transport (55)</div>
+          <div class="sidebar-category-header">
+            <span class="sidebar-cat-icon utility">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </span>
+            <span>Daily Utilities (55)</span>
+          </div>
           <a class="sidebar-calc-item" data-calc-id="sec-unit-calc" data-category="other" data-sub="payroll" data-keywords="unit converter length weight mass temperature speed area digital storage" title="Universal Unit Converter ..." onclick="openZenithCalc('other', 'sec-unit-calc')">
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Universal Unit Converter ...</span>
@@ -1004,7 +1042,16 @@
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Love Calculator</span>
           </a>
-          <div class="sidebar-category-header">🧮 Keypad & Scientific Core (1)</div>
+          <div class="sidebar-category-header">
+            <span class="sidebar-cat-icon sci">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="2"></circle>
+                <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(30 12 12)"></ellipse>
+                <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(-30 12 12)"></ellipse>
+              </svg>
+            </span>
+            <span>Scientific (1)</span>
+          </div>
           <a class="sidebar-calc-item" data-calc-id="box-std-mode" data-category="standard" data-sub="algebra" data-keywords="standard scientific calculator math sin cos tan memory log square root" title="Standard & Scientific Engine ..." onclick="openZenithCalc('standard', 'box-std-mode')">
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Standard & Scientific Engine ...</span>
@@ -1039,8 +1086,15 @@
         <div class="calc-topic-section" id="hub-topic-financial">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">💼</span>
-              <h3 class="topic-heading">Financial Calculators</h3>
+              <div class="topic-logo-box topic-logo-finance" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="3"></rect>
+                  <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path>
+                  <line x1="2" y1="13" x2="22" y2="13"></line>
+                  <path d="M12 12v3"></path>
+                </svg>
+              </div>
+              <h3 class="topic-heading">Finance Calculators</h3>
             </div>
             <span class="topic-count-pill">70 Calculators</span>
           </div>
@@ -2699,7 +2753,11 @@
         <div class="calc-topic-section" id="hub-topic-fitness">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🥗</span>
+              <div class="topic-logo-box topic-logo-fitness" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+              </div>
               <h3 class="topic-heading">Health & Fitness Calculators</h3>
             </div>
             <span class="topic-count-pill">29 Calculators</span>
@@ -3370,12 +3428,18 @@
           </div>
         </div>
 
-        <!-- Suite Section: Math Solvers & Calculators -->
+        <!-- Suite Section: Math Solutions -->
         <div class="calc-topic-section" id="hub-topic-math">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">📐</span>
-              <h3 class="topic-heading">Math Solvers & Calculators</h3>
+              <div class="topic-logo-box topic-logo-math" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 4H6l7 8-7 8h12"></path>
+                  <line x1="6" y1="4" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="18" y2="20"></line>
+                </svg>
+              </div>
+              <h3 class="topic-heading">Math Solutions</h3>
             </div>
             <span class="topic-count-pill">30 Calculators</span>
           </div>
@@ -4057,12 +4121,16 @@
           </div>
         </div>
 
-        <!-- Suite Section: Daily Utilities, Weather & Transport -->
+        <!-- Suite Section: Daily Utilities -->
         <div class="calc-topic-section" id="hub-topic-other">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">⚡</span>
-              <h3 class="topic-heading">Daily Utilities, Weather & Transport</h3>
+              <div class="topic-logo-box topic-logo-utility" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </div>
+              <h3 class="topic-heading">Daily Utilities</h3>
             </div>
             <span class="topic-count-pill">55 Calculators</span>
           </div>
@@ -5524,12 +5592,18 @@
           </div>
         </div>
 
-        <!-- Suite Section: Keypad & Scientific Core -->
+        <!-- Suite Section: Scientific -->
         <div class="calc-topic-section" id="hub-topic-standard">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🧮</span>
-              <h3 class="topic-heading">Keypad & Scientific Core</h3>
+              <div class="topic-logo-box topic-logo-scientific" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="2"></circle>
+                  <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(30 12 12)"></ellipse>
+                  <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(-30 12 12)"></ellipse>
+                </svg>
+              </div>
+              <h3 class="topic-heading">Scientific</h3>
             </div>
             <span class="topic-count-pill">1 Calculator</span>
           </div>
@@ -5787,7 +5861,9 @@
                 <span class="sidebar-count-badge">70</span>
               </div>
               <div class="sidebar-search-wrap">
-                <span class="sidebar-search-icon">🔍</span>
+                <span class="sidebar-search-icon" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
                 <input 
                   type="text" 
                   class="sidebar-search-input" 
@@ -6109,7 +6185,14 @@
         <div class="calc-topic-section" id="topic-financial-tax-salary">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">💼</span>
+              <div class="topic-logo-box topic-logo-finance" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                  <path d="M7 8h10M7 12h5"></path>
+                </svg>
+              </div>
               <h3 class="topic-heading">Taxes & Salary Calculators</h3>
             </div>
             <span class="topic-count-pill">6 Calculators</span>
@@ -6301,7 +6384,12 @@
         <div class="calc-topic-section" id="topic-financial-mortgage-real-estate">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🏠</span>
+              <div class="topic-logo-box topic-logo-finance" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              </div>
               <h3 class="topic-heading">Mortgage & Real Estate Calculators</h3>
             </div>
             <span class="topic-count-pill">14 Calculators</span>
@@ -6716,7 +6804,12 @@
         <div class="calc-topic-section" id="topic-financial-loans-debt">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">💳</span>
+              <div class="topic-logo-box topic-logo-finance" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+              </div>
               <h3 class="topic-heading">Loan & Debt Payoff Calculators</h3>
             </div>
             <span class="topic-count-pill">14 Calculators</span>
@@ -7134,7 +7227,12 @@
         <div class="calc-topic-section" id="topic-financial-investments-wealth">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">📈</span>
+              <div class="topic-logo-box topic-logo-finance" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </div>
               <h3 class="topic-heading">Investment, Interest & Savings Calculators</h3>
             </div>
             <span class="topic-count-pill">16 Calculators</span>
@@ -7602,7 +7700,12 @@
         <div class="calc-topic-section" id="topic-financial-retirement-pension">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🏖️</span>
+              <div class="topic-logo-box topic-logo-finance" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2v20"></path>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
               <h3 class="topic-heading">Retirement, Annuities & Pension Calculators</h3>
             </div>
             <span class="topic-count-pill">9 Calculators</span>
@@ -7878,7 +7981,13 @@
         <div class="calc-topic-section" id="topic-financial-commercial-business">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">📊</span>
+              <div class="topic-logo-box topic-logo-finance" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </div>
               <h3 class="topic-heading">Business, Budgeting & Planning Calculators</h3>
             </div>
             <span class="topic-count-pill">7 Calculators</span>
@@ -8099,7 +8208,14 @@
         <div class="calc-topic-section" id="topic-financial-auto-financing">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🚗</span>
+              <div class="topic-logo-box topic-logo-finance" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.9 2 11.2 2 11.5V16c0 .6.4 1 1 1h2"></path>
+                  <circle cx="7" cy="17" r="2"></circle>
+                  <path d="M9 17h6"></path>
+                  <circle cx="17" cy="17" r="2"></circle>
+                </svg>
+              </div>
               <h3 class="topic-heading">Auto & Vehicle Financing Calculators</h3>
             </div>
             <span class="topic-count-pill">3 Calculators</span>
@@ -8201,7 +8317,13 @@
         <div class="calc-topic-section" id="topic-financial-forex-currency">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🌐</span>
+              <div class="topic-logo-box topic-logo-finance" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+              </div>
               <h3 class="topic-heading">Forex & Currency Calculators</h3>
             </div>
             <span class="topic-count-pill">1 Calculator</span>
@@ -16490,7 +16612,9 @@
                 <span class="sidebar-count-badge">29</span>
               </div>
               <div class="sidebar-search-wrap">
-                <span class="sidebar-search-icon">🔍</span>
+                <span class="sidebar-search-icon" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
                 <input 
                   type="text" 
                   class="sidebar-search-input" 
@@ -16648,7 +16772,11 @@
         <div class="calc-topic-section" id="topic-fitness-body-composition">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">⚖️</span>
+              <div class="topic-logo-box topic-logo-fitness" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+              </div>
               <h3 class="topic-heading">Body Composition & Metrics</h3>
             </div>
             <span class="topic-count-pill">8 Calculators</span>
@@ -17005,7 +17133,11 @@
         <div class="calc-topic-section" id="topic-fitness-diet-nutrition">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🥗</span>
+              <div class="topic-logo-box topic-logo-fitness" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                </svg>
+              </div>
               <h3 class="topic-heading">Diet, Nutrition & Hydration</h3>
             </div>
             <span class="topic-count-pill">5 Calculators</span>
@@ -17165,7 +17297,12 @@
         <div class="calc-topic-section" id="topic-fitness-cardio-training">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🏃</span>
+              <div class="topic-logo-box topic-logo-fitness" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
               <h3 class="topic-heading">Cardio, Pace & Athletic Training</h3>
             </div>
             <span class="topic-count-pill">3 Calculators</span>
@@ -17261,7 +17398,11 @@
         <div class="calc-topic-section" id="topic-fitness-pregnancy-family">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">👶</span>
+              <div class="topic-logo-box topic-logo-fitness" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+                </svg>
+              </div>
               <h3 class="topic-heading">Pregnancy & Family Planning</h3>
             </div>
             <span class="topic-count-pill">7 Calculators</span>
@@ -21021,7 +21162,9 @@
                 <span class="sidebar-count-badge">30</span>
               </div>
               <div class="sidebar-search-wrap">
-                <span class="sidebar-search-icon">🔍</span>
+                <span class="sidebar-search-icon" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
                 <input 
                   type="text" 
                   class="sidebar-search-input" 
@@ -21183,7 +21326,14 @@
         <div class="calc-topic-section" id="topic-math-algebra-arithmetic">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🔢</span>
+              <div class="topic-logo-box topic-logo-math" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="4" y1="9" x2="20" y2="9"></line>
+                  <line x1="4" y1="15" x2="20" y2="15"></line>
+                  <line x1="10" y1="3" x2="8" y2="21"></line>
+                  <line x1="16" y1="3" x2="14" y2="21"></line>
+                </svg>
+              </div>
               <h3 class="topic-heading">Algebra, Numbers & Arithmetic</h3>
             </div>
             <span class="topic-count-pill">17 Calculators</span>
@@ -21682,7 +21832,16 @@
         <div class="calc-topic-section" id="topic-math-geometry-trig">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">📐</span>
+              <div class="topic-logo-box topic-logo-math" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 21l18 0"></path>
+                  <path d="M3 21l0 -18"></path>
+                  <path d="M3 3l18 18"></path>
+                  <path d="M3 17l4 0"></path>
+                  <path d="M3 13l3 0"></path>
+                  <path d="M3 9l4 0"></path>
+                </svg>
+              </div>
               <h3 class="topic-heading">Geometry & Trigonometry Solvers</h3>
             </div>
             <span class="topic-count-pill">9 Calculators</span>
@@ -21925,7 +22084,13 @@
         <div class="calc-topic-section" id="topic-math-computer-math">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">💻</span>
+              <div class="topic-logo-box topic-logo-math" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
               <h3 class="topic-heading">Computer Math & Binary</h3>
             </div>
             <span class="topic-count-pill">2 Calculators</span>
@@ -22001,7 +22166,13 @@
         <div class="calc-topic-section" id="topic-math-stats-science">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">📊</span>
+              <div class="topic-logo-box topic-logo-math" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </div>
               <h3 class="topic-heading">Statistics & Analysis</h3>
             </div>
             <span class="topic-count-pill">2 Calculators</span>
@@ -23904,7 +24075,9 @@
                 <span class="sidebar-count-badge">56</span>
               </div>
               <div class="sidebar-search-wrap">
-                <span class="sidebar-search-icon">🔍</span>
+                <span class="sidebar-search-icon" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
                 <input 
                   type="text" 
                   class="sidebar-search-input" 
@@ -24170,7 +24343,14 @@
         <div class="calc-topic-section" id="topic-other-date-time">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">📅</span>
+              <div class="topic-logo-box topic-logo-utility" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
               <h3 class="topic-heading">Date, Time & Timesheet Utilities</h3>
             </div>
             <span class="topic-count-pill">10 Calculators</span>
@@ -24448,7 +24628,13 @@
         <div class="calc-topic-section" id="topic-other-internet-web">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🌐</span>
+              <div class="topic-logo-box topic-logo-utility" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+              </div>
               <h3 class="topic-heading">Internet, Network & Web Tools</h3>
             </div>
             <span class="topic-count-pill">5 Calculators</span>
@@ -24601,7 +24787,12 @@
         <div class="calc-topic-section" id="topic-other-construction-housing">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🏠</span>
+              <div class="topic-logo-box topic-logo-utility" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              </div>
               <h3 class="topic-heading">Housing, Construction & Landscaping</h3>
             </div>
             <span class="topic-count-pill">8 Calculators</span>
@@ -24827,7 +25018,11 @@
         <div class="calc-topic-section" id="topic-other-everyday-life">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">✨</span>
+              <div class="topic-logo-box topic-logo-utility" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+              </div>
               <h3 class="topic-heading">Everyday Life, Academics & Clothing</h3>
             </div>
             <span class="topic-count-pill">8 Calculators</span>
@@ -25059,7 +25254,13 @@
         <div class="calc-topic-section" id="topic-other-weather-climate">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🌦️</span>
+              <div class="topic-logo-box topic-logo-utility" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>
+                  <line x1="8" y1="15" x2="16" y2="15"></line>
+                  <line x1="10" y1="18" x2="14" y2="18"></line>
+                </svg>
+              </div>
               <h3 class="topic-heading">Weather & Climate</h3>
             </div>
             <span class="topic-count-pill">3 Calculators</span>
@@ -25158,7 +25359,14 @@
         <div class="calc-topic-section" id="topic-other-transportation-auto">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🚗</span>
+              <div class="topic-logo-box topic-logo-utility" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </div>
               <h3 class="topic-heading">Transportation & Automotive</h3>
             </div>
             <span class="topic-count-pill">6 Calculators</span>
@@ -25338,7 +25546,16 @@
         <div class="calc-topic-section" id="topic-other-entertainment-games">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🎲</span>
+              <div class="topic-logo-box topic-logo-utility" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <circle cx="15.5" cy="8.5" r="1.5"></circle>
+                  <circle cx="15.5" cy="15.5" r="1.5"></circle>
+                  <circle cx="8.5" cy="15.5" r="1.5"></circle>
+                  <circle cx="12" cy="12" r="1.5"></circle>
+                </svg>
+              </div>
               <h3 class="topic-heading">Entertainment & Games</h3>
             </div>
             <span class="topic-count-pill">2 Calculators</span>
@@ -25410,7 +25627,11 @@
         <div class="calc-topic-section" id="topic-other-electronics-circuits">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">⚡</span>
+              <div class="topic-logo-box topic-logo-utility" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </div>
               <h3 class="topic-heading">Electronics & Electrical</h3>
             </div>
             <span class="topic-count-pill">4 Calculators</span>
@@ -25532,7 +25753,13 @@
         <div class="calc-topic-section" id="topic-other-physics-units">
           <div class="topic-header-row">
             <div class="topic-title-wrap">
-              <span class="topic-accent-icon">🧪</span>
+              <div class="topic-logo-box topic-logo-utility" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 2v7.31L4.69 17.5a2 2 0 0 0 1.7 3.5h11.22a2 2 0 0 0 1.7-3.5L14 9.31V2"></path>
+                  <line x1="8.5" y1="2" x2="15.5" y2="2"></line>
+                  <line x1="14" y1="9" x2="10" y2="9"></line>
+                </svg>
+              </div>
               <h3 class="topic-heading">Physics, Chemistry & Unit Converters</h3>
             </div>
             <span class="topic-count-pill">10 Calculators</span>
