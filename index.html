@@ -21,8 +21,8 @@
   <meta property="og:image" content="/assets/calc-logo-full.jpg">
 
   <!-- CSS Stylesheets -->
-  <link rel="stylesheet" href="/css/style.css?v=20261030_v10">
-  <link rel="stylesheet" href="/css/calculators.css?v=20261030_v10">
+  <link rel="stylesheet" href="/css/style.css?v=20261030_v9">
+  <link rel="stylesheet" href="/css/calculators.css?v=20261030_v9">
 </head>
 <body>
 
@@ -67,14 +67,6 @@
     <!-- Header Actions (Professional Settings & History) -->
     <div class="header-actions">
       <!-- Quick History Button (Clean SVG Clock with Counter Badge) -->
-      <!-- Quick Search Trigger Button (Prominent for Mobile & Desktop) -->
-      <button class="icon-btn header-action-btn header-search-trigger-btn" id="header-quick-search-btn" title="Quick Search Calculators" aria-label="Search all calculators">
-        <svg class="header-svg-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-      </button>
-
       <button class="icon-btn header-action-btn" id="history-toggle-btn" title="Calculation History" aria-label="Calculation History">
         <svg class="header-svg-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
@@ -233,149 +225,11 @@
             type="text" 
             id="global-search-input" 
             class="zenith-hero-search-input"
-            placeholder="Search across all 189 calculators (e.g. Mortgage, BMI, EMI, Salary, Age, Percentage)..." 
+            placeholder="Search across all 189 calculators (e.g. Wind Chill, Fuel Cost, Horsepower, Dice Roller, Love Calculator, Mortgage, BMI)..." 
             autocomplete="off"
-            aria-label="Search all 189 calculators"
           >
-          <button type="button" class="search-clear-btn" id="search-clear-btn" aria-label="Clear search query" style="display:none;">✕</button>
           <span class="search-shortcut" id="search-shortcut">⌘K</span>
-
-          <!-- Smart Real-Time Auto-Suggestions Box (Populated Dynamically) -->
-          <div class="zenith-search-suggestions" id="zenith-search-suggestions" style="display:none;" role="listbox"></div>
         </div>
-      </div>
-
-      <!-- User-Friendly Quick Finder: Category Small Boxes & Popular Tools -->
-      <div class="zenith-quick-finder-wrap">
-
-        <!-- 1. Category Small Boxes Grid -->
-        <div class="zenith-quick-categories-grid">
-          <button type="button" class="quick-category-box box-finance" onclick="navigateToTab('financial', this)">
-            <div class="quick-box-icon fin">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="3"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path><line x1="2" y1="13" x2="22" y2="13"></line><path d="M12 12v3"></path></svg>
-            </div>
-            <div class="quick-box-content">
-              <div class="quick-box-title">Finance Suite</div>
-              <div class="quick-box-sub">Mortgage, EMI, Loans, Taxes</div>
-            </div>
-            <span class="quick-box-badge fin">70 Tools</span>
-          </button>
-
-          <button type="button" class="quick-category-box box-fitness" onclick="navigateToTab('fitness', this)">
-            <div class="quick-box-icon fit">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-            </div>
-            <div class="quick-box-content">
-              <div class="quick-box-title">Health &amp; Fitness</div>
-              <div class="quick-box-sub">BMI, Calories, BMR, Pace</div>
-            </div>
-            <span class="quick-box-badge fit">29 Tools</span>
-          </button>
-
-          <button type="button" class="quick-category-box box-math" onclick="navigateToTab('math', this)">
-            <div class="quick-box-icon math">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="19" x2="20" y2="19"></line><line x1="4" y1="5" x2="20" y2="5"></line><line x1="4" y1="12" x2="11" y2="12"></line><line x1="13" y1="12" x2="20" y2="12"></line><circle cx="12" cy="12" r="1"></circle></svg>
-            </div>
-            <div class="quick-box-content">
-              <div class="quick-box-title">Math Solvers</div>
-              <div class="quick-box-sub">Scientific, Percent, Matrix</div>
-            </div>
-            <span class="quick-box-badge math">29 Tools</span>
-          </button>
-
-          <button type="button" class="quick-category-box box-other" onclick="navigateToTab('other', this)">
-            <div class="quick-box-icon util">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-            </div>
-            <div class="quick-box-content">
-              <div class="quick-box-title">Daily Utilities</div>
-              <div class="quick-box-sub">Age, Units, Time, GPA, Fuel</div>
-            </div>
-            <span class="quick-box-badge util">55 Tools</span>
-          </button>
-
-          <button type="button" class="quick-category-box box-sci" onclick="openZenithCalc('standard', 'box-sci-mode')">
-            <div class="quick-box-icon sci">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="8" y1="10" x2="16" y2="10"></line><line x1="8" y1="14" x2="10" y2="14"></line><line x1="14" y1="14" x2="16" y2="14"></line><line x1="8" y1="18" x2="10" y2="18"></line><line x1="14" y1="18" x2="16" y2="18"></line></svg>
-            </div>
-            <div class="quick-box-content">
-              <div class="quick-box-title">Scientific Keypad</div>
-              <div class="quick-box-sub">Interactive Math Solver</div>
-            </div>
-            <span class="quick-box-badge sci">Live Pad</span>
-          </button>
-        </div>
-
-        <!-- 2. Most Popular Calculators Small Boxes Grid -->
-        <div class="zenith-popular-bar">
-          <div class="popular-bar-header">
-            <span class="popular-bar-label">⚡ Most Popular Calculators</span>
-            <span class="popular-bar-hint">Tap any box to open immediately</span>
-          </div>
-          <div class="popular-boxes-grid">
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('financial', 'sec-mort-calc')">
-              <span class="mini-box-icon">🏠</span>
-              <span class="mini-box-title">Mortgage</span>
-              <span class="mini-box-cat fin">Finance</span>
-            </button>
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('financial', 'sec-loan-calc')">
-              <span class="mini-box-icon">💳</span>
-              <span class="mini-box-title">Loan &amp; EMI</span>
-              <span class="mini-box-cat fin">Finance</span>
-            </button>
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('fitness', 'sec-bmi-calc')">
-              <span class="mini-box-icon">⚖️</span>
-              <span class="mini-box-title">BMI</span>
-              <span class="mini-box-cat fit">Health</span>
-            </button>
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('financial', 'sec-salary-calc')">
-              <span class="mini-box-icon">💵</span>
-              <span class="mini-box-title">Salary &amp; Wage</span>
-              <span class="mini-box-cat fin">Finance</span>
-            </button>
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('financial', 'sec-ci-calc')">
-              <span class="mini-box-icon">📈</span>
-              <span class="mini-box-title">Compound Int</span>
-              <span class="mini-box-cat fin">Finance</span>
-            </button>
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('math', 'sec-percentage-calc')">
-              <span class="mini-box-icon">🔢</span>
-              <span class="mini-box-title">Percentage</span>
-              <span class="mini-box-cat math">Math</span>
-            </button>
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('other', 'sec-age-calc')">
-              <span class="mini-box-icon">🎂</span>
-              <span class="mini-box-title">Age</span>
-              <span class="mini-box-cat util">Utility</span>
-            </button>
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('financial', 'sec-currency-calc')">
-              <span class="mini-box-icon">💱</span>
-              <span class="mini-box-title">Currency</span>
-              <span class="mini-box-cat fin">Finance</span>
-            </button>
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('financial', 'sec-auto-loan-calc')">
-              <span class="mini-box-icon">🚗</span>
-              <span class="mini-box-title">Auto Loan</span>
-              <span class="mini-box-cat fin">Finance</span>
-            </button>
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('standard', 'box-sci-mode')">
-              <span class="mini-box-icon">🧮</span>
-              <span class="mini-box-title">Scientific</span>
-              <span class="mini-box-cat sci">Keypad</span>
-            </button>
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('other', 'sec-unit-calc')">
-              <span class="mini-box-icon">📏</span>
-              <span class="mini-box-title">Unit Convert</span>
-              <span class="mini-box-cat util">Utility</span>
-            </button>
-            <button type="button" class="popular-mini-box" onclick="openZenithCalc('fitness', 'sec-calorie-calc')">
-              <span class="mini-box-icon">🔥</span>
-              <span class="mini-box-title">Calorie</span>
-              <span class="mini-box-cat fit">Health</span>
-            </button>
-          </div>
-        </div>
-
       </div>
 
       <!-- Section Title Row -->
@@ -30759,6 +30613,5 @@
   <script src="/js/html2pdf.bundle.min.js"></script>
   <script src="/js/pdf-report.js"></script>
   <script src="/js/app.js?v=20261024_2"></script>
-  <script src="/js/search-suggestions.js?v=20261030_v10"></script>
 </body>
 </html>
