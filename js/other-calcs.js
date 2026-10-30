@@ -3939,10 +3939,6 @@ const OtherCalcs = {
       window.AppRouter.onCalculatorOpened(calcId, 'other');
     }
 
-    if (window.ensureCalculatorPdfButton) {
-      window.ensureCalculatorPdfButton(calcId);
-    }
-
     if (window.SeoGuide) {
       window.SeoGuide.updateGuide(calcId, 'other');
     }
