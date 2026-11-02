@@ -993,101 +993,160 @@ const MathCalcs = {
 
     // Setup listeners
 
+// ------------------------------------------------------------------------
+  // 9 ADVANCED GEOMETRY & TRIGONOMETRY SOLVERS
+  // ------------------------------------------------------------------------
+
+  // Helper for simplifying radicals: sqrt(n) = k * sqrt(m)
+  simplifyRadical(num) {
+    if (num <= 0) return { k: 0, m: 0, str: '0' };
+    const rounded = Math.round(num * 1e4) / 1e4;
+    if (Number.isInteger(rounded)) {
+      const n = Math.round(rounded);
+      let k = 1;
+      let temp = n;
+      for (let i = 2; i * i <= temp; i++) {
+        while (temp % (i * i) === 0) {
+          k *= i;
+          temp = Math.floor(temp / (i * i));
+        }
+      }
+      const m = temp;
+      if (m === 1) return { k, m: 1, str: `${k}` };
+      if (k === 1) return { k: 1, m, str: `√${m}` };
+      return { k, m, str: `${k}√${m}` };
+    }
+    return { k: 1, m: num, str: Math.sqrt(num).toFixed(4) };
+  },
+
+  // 21. Triangle Calculator
   calcTriangle() {
     const mode = document.getElementById('tri-mode')?.value || 'sss';
     const sssWrap = document.getElementById('tri-sss-inputs');
+    const sasWrap = document.getElementById('tri-sas-inputs');
     const bhWrap = document.getElementById('tri-bh-inputs');
     if (sssWrap) sssWrap.style.display = mode === 'sss' ? 'grid' : 'none';
+    if (sasWrap) sasWrap.style.display = mode === 'sas' ? 'grid' : 'none';
     if (bhWrap) bhWrap.style.display = mode === 'bh' ? 'grid' : 'none';
+
+    const banner = document.getElementById('tri-formula-banner');
+    const stepBox = document.getElementById('tri-step-box');
+    const elArea = document.getElementById('res-tri-area');
+    const elPerim = document.getElementById('res-tri-perim');
+    const elType = document.getElementById('res-tri-type');
+    const elAngles = document.getElementById('res-tri-angles');
+    const elInR = document.getElementById('res-tri-inradius');
+    const elCircR = document.getElementById('res-tri-circumradius');
+    const elAlt = document.getElementById('res-tri-altitudes');
+
+    const clearOutputs = (msg) => {
+      if (banner) {
+        banner.className = 'equation-preview-box error';
+        banner.textContent = msg;
+      }
+      if (elArea) elArea.textContent = '—';
+      if (elPerim) elPerim.textContent = '—';
+      if (elType) elType.textContent = 'Invalid Geometry';
+      if (elAngles) elAngles.textContent = '—';
+      if (elInR) elInR.textContent = '—';
+      if (elCircR) elCircR.textContent = '—';
+      if (elAlt) elAlt.textContent = '—';
+      if (stepBox) stepBox.textContent = msg;
+    };
 
     if (mode === 'bh') {
       const b = parseFloat(document.getElementById('tri-base')?.value) || 0;
       const h = parseFloat(document.getElementById('tri-height')?.value) || 0;
-      if (b <= 0 || h <= 0) return;
+      if (b <= 0 || h <= 0) {
+        clearOutputs('⚠️ Base and height must both be positive numbers (> 0).');
+        return;
+      }
       const area = 0.5 * b * h;
-      const elArea = document.getElementById('res-tri-area');
+      if (banner) {
+        banner.className = 'equation-preview-box';
+        banner.innerHTML = `Area = ½ × Base × Height = ½ × ${b} × ${h} = <strong>${area.toFixed(4)}</strong>`;
+      }
       if (elArea) elArea.textContent = area.toLocaleString(undefined, { maximumFractionDigits: 4 });
-      const elType = document.getElementById('res-tri-type');
+      if (elPerim) elPerim.textContent = 'N/A (Provide 3 sides for perimeter)';
       if (elType) elType.textContent = 'Base & Height Mode';
-      const elAngles = document.getElementById('res-tri-angles');
-      if (elAngles) elAngles.textContent = 'N/A (Provide 3 sides for angle calculations)';
-      const elPerim = document.getElementById('res-tri-perim');
-      if (elPerim) elPerim.textContent = 'N/A';
-      const elInR = document.getElementById('res-tri-inradius');
+      if (elAngles) elAngles.textContent = 'N/A (Provide 3 sides for angles)';
       if (elInR) elInR.textContent = 'N/A';
-      const elCircR = document.getElementById('res-tri-circumradius');
       if (elCircR) elCircR.textContent = 'N/A';
-      const elAlt = document.getElementById('res-tri-altitudes');
-      if (elAlt) elAlt.textContent = `h_b = ${h}`;
-      const banner = document.getElementById('tri-formula-banner');
-      if (banner) banner.textContent = `Area = 0.5 × Base × Height = 0.5 × ${b} × ${h} = ${area}`;
+      if (elAlt) elAlt.textContent = `hb = ${h.toFixed(2)}`;
+      if (stepBox) stepBox.textContent = `Calculated planar area for base b = ${b} and perpendicular height h = ${h}.`;
       return;
     }
 
-    const a = parseFloat(document.getElementById('tri-side-a')?.value) || 0;
-    const b = parseFloat(document.getElementById('tri-side-b')?.value) || 0;
-    const c = parseFloat(document.getElementById('tri-side-c')?.value) || 0;
+    let a = 0, b = 0, c = 0, degA = 0, degB = 0, degC = 0;
 
-    const banner = document.getElementById('tri-formula-banner');
-    if (a <= 0 || b <= 0 || c <= 0) {
-      if (banner) banner.textContent = '⚠️ All three side lengths must be positive numbers.';
-      return;
-    }
-
-    if (a + b <= c || a + c <= b || b + c <= a) {
-      if (banner) banner.textContent = `⚠️ Invalid Triangle: The sum of any two sides must be strictly greater than the third side (${a} + ${b} ≤ ${c} or similar).`;
-      return;
+    if (mode === 'sas') {
+      a = parseFloat(document.getElementById('tri-sas-a')?.value) || 0;
+      b = parseFloat(document.getElementById('tri-sas-b')?.value) || 0;
+      degC = parseFloat(document.getElementById('tri-sas-c')?.value) || 0;
+      if (a <= 0 || b <= 0 || degC <= 0 || degC >= 180) {
+        clearOutputs('⚠️ Sides must be positive and included angle ∠C must be between 0° and 180°.');
+        return;
+      }
+      const radC = (degC * Math.PI) / 180;
+      c = Math.sqrt(Math.max(0.0001, a * a + b * b - 2 * a * b * Math.cos(radC)));
+    } else {
+      a = parseFloat(document.getElementById('tri-side-a')?.value) || 0;
+      b = parseFloat(document.getElementById('tri-side-b')?.value) || 0;
+      c = parseFloat(document.getElementById('tri-side-c')?.value) || 0;
+      if (a <= 0 || b <= 0 || c <= 0) {
+        clearOutputs('⚠️ All three side lengths must be positive numbers (> 0).');
+        return;
+      }
+      if (a + b <= c || a + c <= b || b + c <= a) {
+        clearOutputs(`⚠️ Triangle Inequality Violated: The sum of any two sides must exceed the third (${a} + ${b} ≤ ${c} or similar).`);
+        return;
+      }
     }
 
     const s = (a + b + c) / 2;
     const area = Math.sqrt(Math.max(0, s * (s - a) * (s - b) * (s - c)));
     const perimeter = a + b + c;
 
-    // Law of cosines
-    const radA = Math.acos(Math.max(-1, Math.min(1, (b*b + c*c - a*a) / (2*b*c))));
-    const radB = Math.acos(Math.max(-1, Math.min(1, (a*a + c*c - b*b) / (2*a*c))));
-    const degA = radA * (180 / Math.PI);
-    const degB = radB * (180 / Math.PI);
-    const degC = 180 - degA - degB;
+    // Law of cosines for angles
+    const radA = Math.acos(Math.max(-1, Math.min(1, (b * b + c * c - a * a) / (2 * b * c))));
+    const radB = Math.acos(Math.max(-1, Math.min(1, (a * a + c * c - b * b) / (2 * a * c))));
+    degA = radA * (180 / Math.PI);
+    degB = radB * (180 / Math.PI);
+    degC = 180 - degA - degB;
 
-    const inradius = area / s;
-    const circumradius = (a * b * c) / (4 * area);
+    const inradius = s > 0 ? area / s : 0;
+    const circumradius = area > 0 ? (a * b * c) / (4 * area) : 0;
 
-    const ha = (2 * area) / a;
-    const hb = (2 * area) / b;
-    const hc = (2 * area) / c;
+    const ha = a > 0 ? (2 * area) / a : 0;
+    const hb = b > 0 ? (2 * area) / b : 0;
+    const hc = c > 0 ? (2 * area) / c : 0;
 
-    // Type classification
+    // Classification
     let sideType = 'Scalene';
-    if (Math.abs(a - b) < 1e-5 && Math.abs(b - c) < 1e-5) sideType = 'Equilateral';
-    else if (Math.abs(a - b) < 1e-5 || Math.abs(b - c) < 1e-5 || Math.abs(a - c) < 1e-5) sideType = 'Isosceles';
+    if (Math.abs(a - b) < 1e-4 && Math.abs(b - c) < 1e-4) sideType = 'Equilateral';
+    else if (Math.abs(a - b) < 1e-4 || Math.abs(b - c) < 1e-4 || Math.abs(a - c) < 1e-4) sideType = 'Isosceles';
 
     let angleType = 'Acute';
     const maxDeg = Math.max(degA, degB, degC);
-    if (Math.abs(maxDeg - 90) < 0.01) angleType = 'Right';
+    if (Math.abs(maxDeg - 90) < 0.05) angleType = 'Right';
     else if (maxDeg > 90) angleType = 'Obtuse';
 
-    const elArea = document.getElementById('res-tri-area');
-    if (elArea) elArea.textContent = area.toLocaleString(undefined, { maximumFractionDigits: 4 });
-    const elPerim = document.getElementById('res-tri-perim');
-    if (elPerim) elPerim.textContent = `${perimeter.toFixed(2)} (Semi-perimeter s = ${s.toFixed(2)})`;
-    const elType = document.getElementById('res-tri-type');
-    if (elType) elType.textContent = `${sideType} & ${angleType} Triangle`;
-    const elAngles = document.getElementById('res-tri-angles');
-    if (elAngles) elAngles.textContent = `∠A = ${degA.toFixed(2)}°, ∠B = ${degB.toFixed(2)}°, ∠C = ${degC.toFixed(2)}°`;
-    const elInR = document.getElementById('res-tri-inradius');
-    if (elInR) elInR.textContent = inradius.toFixed(4);
-    const elCircR = document.getElementById('res-tri-circumradius');
-    if (elCircR) elCircR.textContent = circumradius.toFixed(4);
-    const elAlt = document.getElementById('res-tri-altitudes');
-    if (elAlt) elAlt.textContent = `h_a = ${ha.toFixed(2)}, h_b = ${hb.toFixed(2)}, h_c = ${hc.toFixed(2)}`;
-
     if (banner) {
-      banner.innerHTML = `<strong>Heron's Formula:</strong> s = (${a}+${b}+${c})/2 = ${s.toFixed(2)}<br>` +
-        `Area = √[${s.toFixed(2)} × (${s.toFixed(2)}-${a}) × (${s.toFixed(2)}-${b}) × (${s.toFixed(2)}-${c})] = <strong>${area.toFixed(4)}</strong>`;
+      banner.className = 'equation-preview-box';
+      banner.innerHTML = `<strong>Heron's Formula:</strong> s = ½(${a.toFixed(2)}+${b.toFixed(2)}+${c.toFixed(2)}) = ${s.toFixed(2)} &nbsp;|&nbsp; Area = <strong>${area.toFixed(4)}</strong>`;
+    }
+    if (elArea) elArea.textContent = area.toLocaleString(undefined, { maximumFractionDigits: 4 });
+    if (elPerim) elPerim.textContent = `${perimeter.toFixed(2)} (s = ${s.toFixed(2)})`;
+    if (elType) elType.textContent = `${sideType} & ${angleType} Triangle`;
+    if (elAngles) elAngles.textContent = `∠A = ${degA.toFixed(2)}°, ∠B = ${degB.toFixed(2)}°, ∠C = ${degC.toFixed(2)}°`;
+    if (elInR) elInR.textContent = `r = ${inradius.toFixed(3)}, R = ${circumradius.toFixed(3)}`;
+    if (elAlt) elAlt.textContent = `ha = ${ha.toFixed(2)}, hb = ${hb.toFixed(2)}, hc = ${hc.toFixed(2)}`;
+    if (stepBox) {
+      stepBox.innerHTML = `Solved with sides a = ${a.toFixed(2)}, b = ${b.toFixed(2)}, c = ${c.toFixed(2)}. Semi-perimeter s = ${s.toFixed(2)}. Altitudes: ha = ${ha.toFixed(2)}, hb = ${hb.toFixed(2)}, hc = ${hc.toFixed(2)}.`;
     }
   },
 
+  // 22. Volume Calculator
   updateVolumeFields() {
     const shape = document.getElementById('vol-shape')?.value || 'sphere';
     const l1 = document.getElementById('vol-label-1');
@@ -1100,7 +1159,7 @@ const MathCalcs = {
       if (l1) l1.textContent = 'Radius (r):';
       if (w2) w2.style.display = 'none';
       if (w3) w3.style.display = 'none';
-    } else if (shape === 'cylinder' || shape === 'cone') {
+    } else if (shape === 'cylinder' || shape === 'cone' || shape === 'capsule') {
       if (l1) l1.textContent = 'Radius (r):';
       if (l2) l2.textContent = 'Height (h):';
       if (w2) w2.style.display = 'block';
@@ -1136,101 +1195,216 @@ const MathCalcs = {
     const p2 = parseFloat(document.getElementById('vol-p2')?.value) || 0;
     const p3 = parseFloat(document.getElementById('vol-p3')?.value) || 0;
 
-    let v = 0;
-    let formula = '';
-    if (shape === 'sphere') {
-      v = (4 / 3) * Math.PI * Math.pow(p1, 3);
-      formula = `V = 4/3 × π × r³ = 4/3 × π × ${p1}³ = ${v.toFixed(4)}`;
-    } else if (shape === 'cylinder') {
-      v = Math.PI * Math.pow(p1, 2) * p2;
-      formula = `V = π × r² × h = π × ${p1}² × ${p2} = ${v.toFixed(4)}`;
-    } else if (shape === 'cone') {
-      v = (1 / 3) * Math.PI * Math.pow(p1, 2) * p2;
-      formula = `V = 1/3 × π × r² × h = 1/3 × π × ${p1}² × ${p2} = ${v.toFixed(4)}`;
-    } else if (shape === 'cube') {
-      v = Math.pow(p1, 3);
-      formula = `V = s³ = ${p1}³ = ${v.toFixed(4)}`;
-    } else if (shape === 'cuboid') {
-      v = p1 * p2 * p3;
-      formula = `V = l × w × h = ${p1} × ${p2} × ${p3} = ${v.toFixed(4)}`;
-    } else if (shape === 'pyramid') {
-      v = (1 / 3) * Math.pow(p1, 2) * p2;
-      formula = `V = 1/3 × s² × h = 1/3 × ${p1}² × ${p2} = ${v.toFixed(4)}`;
-    } else if (shape === 'ellipsoid') {
-      v = (4 / 3) * Math.PI * p1 * p2 * p3;
-      formula = `V = 4/3 × π × a × b × c = 4/3 × π × ${p1} × ${p2} × ${p3} = ${v.toFixed(4)}`;
+    const banner = document.getElementById('vol-formula-banner');
+    const stepBox = document.getElementById('vol-step-box');
+    const elVol = document.getElementById('res-vol-value');
+    const elLiters = document.getElementById('res-vol-liters');
+    const elGallons = document.getElementById('res-vol-gallons');
+    const elCm3 = document.getElementById('res-vol-cm3');
+    const elFt3 = document.getElementById('res-vol-ft3');
+
+    const clearOutputs = (msg) => {
+      if (banner) {
+        banner.className = 'equation-preview-box error';
+        banner.textContent = msg;
+      }
+      if (elVol) elVol.textContent = '—';
+      if (elLiters) elLiters.textContent = '—';
+      if (elGallons) elGallons.textContent = '—';
+      if (elCm3) elCm3.textContent = '—';
+      if (elFt3) elFt3.textContent = '—';
+      if (stepBox) stepBox.textContent = msg;
+    };
+
+    if (p1 <= 0) {
+      clearOutputs('⚠️ Please enter positive dimensions (> 0).');
+      return;
     }
 
-    const elVol = document.getElementById('res-vol-value');
+    let v = 0;
+    let formula = '';
+
+    if (shape === 'sphere') {
+      v = (4 / 3) * Math.PI * Math.pow(p1, 3);
+      formula = `V = ⁴⁄₃ π r³ = ⁴⁄₃ × π × ${p1}³ = <strong>${v.toFixed(4)}</strong>`;
+    } else if (shape === 'cylinder') {
+      if (p2 <= 0) { clearOutputs('⚠️ Height (h) must be greater than zero.'); return; }
+      v = Math.PI * Math.pow(p1, 2) * p2;
+      formula = `V = π r² h = π × ${p1}² × ${p2} = <strong>${v.toFixed(4)}</strong>`;
+    } else if (shape === 'cone') {
+      if (p2 <= 0) { clearOutputs('⚠️ Height (h) must be greater than zero.'); return; }
+      v = (1 / 3) * Math.PI * Math.pow(p1, 2) * p2;
+      formula = `V = ⅓ π r² h = ⅓ × π × ${p1}² × ${p2} = <strong>${v.toFixed(4)}</strong>`;
+    } else if (shape === 'cube') {
+      v = Math.pow(p1, 3);
+      formula = `V = s³ = ${p1}³ = <strong>${v.toFixed(4)}</strong>`;
+    } else if (shape === 'cuboid') {
+      if (p2 <= 0 || p3 <= 0) { clearOutputs('⚠️ Width and height must be greater than zero.'); return; }
+      v = p1 * p2 * p3;
+      formula = `V = l × w × h = ${p1} × ${p2} × ${p3} = <strong>${v.toFixed(4)}</strong>`;
+    } else if (shape === 'pyramid') {
+      if (p2 <= 0) { clearOutputs('⚠️ Height (h) must be greater than zero.'); return; }
+      v = (1 / 3) * Math.pow(p1, 2) * p2;
+      formula = `V = ⅓ s² h = ⅓ × ${p1}² × ${p2} = <strong>${v.toFixed(4)}</strong>`;
+    } else if (shape === 'ellipsoid') {
+      if (p2 <= 0 || p3 <= 0) { clearOutputs('⚠️ Semi-axes b and c must be greater than zero.'); return; }
+      v = (4 / 3) * Math.PI * p1 * p2 * p3;
+      formula = `V = ⁴⁄₃ π a b c = ⁴⁄₃ × π × ${p1} × ${p2} × ${p3} = <strong>${v.toFixed(4)}</strong>`;
+    } else if (shape === 'capsule') {
+      if (p2 <= 0) { clearOutputs('⚠️ Height (h) must be greater than zero.'); return; }
+      v = Math.PI * Math.pow(p1, 2) * p2 + (4 / 3) * Math.PI * Math.pow(p1, 3);
+      formula = `V = πr²h + ⁴⁄₃πr³ = <strong>${v.toFixed(4)}</strong>`;
+    }
+
+    if (banner) {
+      banner.className = 'equation-preview-box';
+      banner.innerHTML = formula;
+    }
     if (elVol) elVol.textContent = v.toLocaleString(undefined, { maximumFractionDigits: 4 });
-
-    const elLiters = document.getElementById('res-vol-liters');
     if (elLiters) elLiters.textContent = (v * 1000).toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' L';
-
-    const elGallons = document.getElementById('res-vol-gallons');
-    if (elGallons) elGallons.textContent = (v * 264.172).toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' gal (US)';
-
-    const elCm3 = document.getElementById('res-vol-cm3');
+    if (elGallons) elGallons.textContent = (v * 264.172).toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' gal';
     if (elCm3) elCm3.textContent = (v * 1e6).toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' cm³';
-
-    const elFt3 = document.getElementById('res-vol-ft3');
     if (elFt3) elFt3.textContent = (v * 35.3147).toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' ft³';
-
-    const banner = document.getElementById('vol-formula-banner');
-    if (banner) banner.textContent = formula;
+    if (stepBox) {
+      stepBox.innerHTML = `Computed 3D volume: <strong>${v.toFixed(4)} cubic units</strong>. Equivalent to <strong>${(v * 1000).toLocaleString(undefined, { maximumFractionDigits: 2 })} Liters</strong> or <strong>${(v * 264.172).toLocaleString(undefined, { maximumFractionDigits: 2 })} US Gallons</strong>.`;
+    }
   },
 
+  // 23. Slope Calculator
   calcSlope() {
-    const x1 = parseFloat(document.getElementById('slope-x1')?.value) || 0;
-    const y1 = parseFloat(document.getElementById('slope-y1')?.value) || 0;
-    const x2 = parseFloat(document.getElementById('slope-x2')?.value) || 0;
-    const y2 = parseFloat(document.getElementById('slope-y2')?.value) || 0;
+    const x1 = parseFloat(document.getElementById('slope-x1')?.value);
+    const y1 = parseFloat(document.getElementById('slope-y1')?.value);
+    const x2 = parseFloat(document.getElementById('slope-x2')?.value);
+    const y2 = parseFloat(document.getElementById('slope-y2')?.value);
 
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-
+    const banner = document.getElementById('slope-banner');
+    const stepBox = document.getElementById('slope-step-box');
     const elSlope = document.getElementById('res-slope-m');
     const elEq = document.getElementById('res-slope-eq');
+    const elStd = document.getElementById('res-slope-standard');
     const elAngle = document.getElementById('res-slope-angle');
     const elGrade = document.getElementById('res-slope-grade');
     const elPerp = document.getElementById('res-slope-perp');
     const elDist = document.getElementById('res-slope-dist');
-    const banner = document.getElementById('slope-banner');
 
-    if (Math.abs(dx) < 1e-9) {
-      if (elSlope) elSlope.textContent = 'Undefined (Vertical)';
-      if (elEq) elEq.textContent = `x = ${x1}`;
-      if (elAngle) elAngle.textContent = '90.00° (π/2 rad)';
-      if (elGrade) elGrade.textContent = 'Undefined (∞)';
-      if (elPerp) elPerp.textContent = '0 (Horizontal)';
-      if (elDist) elDist.textContent = Math.abs(dy).toFixed(4);
-      if (banner) banner.textContent = `Vertical Line through x = ${x1}. Δx = 0, Δy = ${dy}`;
+    if (isNaN(x1) || isNaN(y1) || isNaN(x2) || isNaN(y2)) {
+      if (banner) {
+        banner.className = 'equation-preview-box error';
+        banner.textContent = '⚠️ Please enter valid numeric coordinates for both points.';
+      }
       return;
     }
 
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const midX = (x1 + x2) / 2;
+    const midY = (y1 + y2) / 2;
+
+    // Coincident points
+    if (Math.abs(dx) < 1e-9 && Math.abs(dy) < 1e-9) {
+      if (banner) {
+        banner.className = 'equation-preview-box error';
+        banner.textContent = `⚠️ Coincident Points: (${x1}, ${y1}) and (${x2}, ${y2}) are the identical point. Infinite lines pass through a single point.`;
+      }
+      if (elSlope) elSlope.textContent = 'Undefined (Single Point)';
+      if (elEq) elEq.textContent = `Point (${x1}, ${y1})`;
+      if (elStd) elStd.textContent = '—';
+      if (elAngle) elAngle.textContent = '—';
+      if (elGrade) elGrade.textContent = '—';
+      if (elPerp) elPerp.textContent = '—';
+      if (elDist) elDist.textContent = 'd = 0.0000';
+      if (stepBox) stepBox.textContent = 'Distance between points is zero. Please specify two distinct coordinates.';
+      return;
+    }
+
+    // Vertical line
+    if (Math.abs(dx) < 1e-9) {
+      if (banner) {
+        banner.className = 'equation-preview-box';
+        banner.innerHTML = `Vertical Line through x = ${x1} &nbsp;|&nbsp; Δx = 0, Δy = ${dy.toFixed(2)}`;
+      }
+      if (elSlope) elSlope.textContent = 'Undefined (Vertical, ∞)';
+      if (elEq) elEq.textContent = `x = ${x1}`;
+      if (elStd) elStd.textContent = `x = ${x1}`;
+      if (elAngle) elAngle.textContent = '90.00° (π/2 rad)';
+      if (elGrade) elGrade.textContent = 'Undefined (Vertical)';
+      if (elPerp) elPerp.textContent = '0.0000 (Horizontal Line y = c)';
+      if (elDist) elDist.textContent = `d = ${Math.abs(dy).toFixed(4)} | M(${midX.toFixed(2)}, ${midY.toFixed(2)})`;
+      if (stepBox) stepBox.innerHTML = `Vertical line at x = ${x1}. Division by zero Δy/0 yields undefined slope. Perpendicular line is horizontal with slope 0.`;
+      return;
+    }
+
+    // Horizontal line
+    if (Math.abs(dy) < 1e-9) {
+      if (banner) {
+        banner.className = 'equation-preview-box';
+        banner.innerHTML = `Horizontal Line y = ${y1} &nbsp;|&nbsp; Slope m = 0.0000`;
+      }
+      if (elSlope) elSlope.textContent = '0.0000 (Horizontal)';
+      if (elEq) elEq.textContent = `y = ${y1}`;
+      if (elStd) elStd.textContent = `y = ${y1}`;
+      if (elAngle) elAngle.textContent = '0.00° (0 rad)';
+      if (elGrade) elGrade.textContent = '0.00%';
+      if (elPerp) elPerp.textContent = 'Undefined (Vertical Line x = c)';
+      if (elDist) elDist.textContent = `d = ${Math.abs(dx).toFixed(4)} | M(${midX.toFixed(2)}, ${midY.toFixed(2)})`;
+      if (stepBox) stepBox.innerHTML = `Horizontal line at y = ${y1}. Rise Δy is zero, slope m = 0. Perpendicular line is vertical.`;
+      return;
+    }
+
+    // General line
     const m = dy / dx;
     const b = y1 - m * x1;
     const angleDeg = Math.atan(m) * (180 / Math.PI);
-    const angleRad = Math.atan(m);
     const gradePct = m * 100;
-    const perpSlope = m !== 0 ? -1 / m : 'Undefined (Vertical)';
-    const dist = Math.sqrt(dx * dx + dy * dy);
+    const perpSlope = -1 / m;
+
+    // Helper for GCD to format exact fraction and standard form
+    const getGcd = (u, v) => {
+      u = Math.abs(Math.round(u));
+      v = Math.abs(Math.round(v));
+      while (v) { const t = v; v = u % v; u = t; }
+      return u || 1;
+    };
+    const fNum = Math.round(dy * 1000);
+    const fDen = Math.round(dx * 1000);
+    const fGcd = getGcd(fNum, fDen);
+    const simpNum = Math.round(fNum / fGcd);
+    const simpDen = Math.round(fDen / fGcd);
+    const fractionStr = Math.abs(simpDen) === 1 ? `${simpNum}` : `${simpNum}/${simpDen}`;
 
     const bSign = b >= 0 ? `+ ${b.toFixed(4)}` : `- ${Math.abs(b).toFixed(4)}`;
-    const eq = `y = ${m.toFixed(4)}x ${b !== 0 ? bSign : ''}`;
+    const eq = `y = ${m.toFixed(4)}x ${Math.abs(b) > 1e-5 ? bSign : ''}`;
 
-    if (elSlope) elSlope.textContent = `${m.toFixed(4)} (${dy}/${dx})`;
-    if (elEq) elEq.textContent = eq;
-    if (elAngle) elAngle.textContent = `${angleDeg.toFixed(2)}° (${angleRad.toFixed(4)} rad)`;
-    if (elGrade) elGrade.textContent = `${gradePct.toFixed(2)}%`;
-    if (elPerp) elPerp.textContent = typeof perpSlope === 'number' ? perpSlope.toFixed(4) : perpSlope;
-    if (elDist) elDist.textContent = dist.toFixed(4);
+    // Standard Form Ax + By = C
+    let A = Math.round(m * 1000);
+    let B = -1000;
+    let C = -Math.round(b * 1000);
+    const gStd = getGcd(getGcd(A, B), C);
+    A = Math.round(A / gStd);
+    B = Math.round(B / gStd);
+    C = Math.round(C / gStd);
+    if (A < 0 || (A === 0 && B < 0)) { A = -A; B = -B; C = -C; }
+    const stdBSign = B >= 0 ? `+ ${B === 1 ? '' : B}` : `- ${Math.abs(B) === 1 ? '' : Math.abs(B)}`;
+    const stdForm = `${A === 1 ? '' : (A === 0 ? '' : A)}x ${stdBSign}y = ${C}`;
 
     if (banner) {
-      banner.innerHTML = `<strong>Formula:</strong> m = (y₂ - y₁) / (x₂ - x₁) = (${y2} - ${y1}) / (${x2} - ${x1}) = <strong>${m.toFixed(4)}</strong> | y-intercept b = <strong>${b.toFixed(4)}</strong>`;
+      banner.className = 'equation-preview-box';
+      banner.innerHTML = `m = (y₂ - y₁) / (x₂ - x₁) = (${y2} - ${y1}) / (${x2} - ${x1}) = <strong>${m.toFixed(4)}</strong>`;
+    }
+    if (elSlope) elSlope.textContent = `${m.toFixed(4)} (${fractionStr})`;
+    if (elEq) elEq.textContent = eq;
+    if (elStd) elStd.textContent = stdForm;
+    if (elAngle) elAngle.textContent = `${angleDeg.toFixed(2)}°`;
+    if (elGrade) elGrade.textContent = `${gradePct.toFixed(2)}%`;
+    if (elPerp) elPerp.textContent = perpSlope.toFixed(4);
+    if (elDist) elDist.textContent = `d = ${dist.toFixed(4)} | M(${midX.toFixed(2)}, ${midY.toFixed(2)})`;
+    if (stepBox) {
+      stepBox.innerHTML = `<strong>Step-by-step:</strong> Rise Δy = ${dy.toFixed(2)}, Run Δx = ${dx.toFixed(2)}. Slope m = ${fractionStr} = ${m.toFixed(4)}. Y-intercept b = ${b.toFixed(4)}.`;
     }
   },
 
+  // 24. Area Calculator
   updateAreaFields() {
     const shape = document.getElementById('area-shape')?.value || 'rectangle';
     const l1 = document.getElementById('area-label-1');
@@ -1243,6 +1417,10 @@ const MathCalcs = {
       if (l1) l1.textContent = 'Length (l):';
       if (l2) l2.textContent = 'Width (w):';
       if (w2) w2.style.display = 'block';
+      if (w3) w3.style.display = 'none';
+    } else if (shape === 'square') {
+      if (l1) l1.textContent = 'Side Length (s):';
+      if (w2) w2.style.display = 'none';
       if (w3) w3.style.display = 'none';
     } else if (shape === 'circle') {
       if (l1) l1.textContent = 'Radius (r):';
@@ -1271,7 +1449,7 @@ const MathCalcs = {
       if (w3) w3.style.display = 'none';
     } else if (shape === 'sector') {
       if (l1) l1.textContent = 'Radius (r):';
-      if (l2) l2.textContent = 'Angle (degrees):';
+      if (l2) l2.textContent = 'Angle θ (degrees):';
       if (w2) w2.style.display = 'block';
       if (w3) w3.style.display = 'none';
     }
@@ -1284,60 +1462,97 @@ const MathCalcs = {
     const p2 = parseFloat(document.getElementById('area-p2')?.value) || 0;
     const p3 = parseFloat(document.getElementById('area-p3')?.value) || 0;
 
-    let a = 0;
-    let p = 0;
-    let formula = '';
+    const banner = document.getElementById('area-formula-banner');
+    const stepBox = document.getElementById('area-step-box');
+    const elArea = document.getElementById('res-area-val');
+    const elPerim = document.getElementById('res-area-perim');
+    const elFt2 = document.getElementById('res-area-ft2');
+    const elAcres = document.getElementById('res-area-acres');
+    const elM2 = document.getElementById('res-area-m2');
+
+    const clearOutputs = (msg) => {
+      if (banner) {
+        banner.className = 'equation-preview-box error';
+        banner.textContent = msg;
+      }
+      if (elArea) elArea.textContent = '—';
+      if (elPerim) elPerim.textContent = '—';
+      if (elFt2) elFt2.textContent = '—';
+      if (elAcres) elAcres.textContent = '—';
+      if (elM2) elM2.textContent = '—';
+      if (stepBox) stepBox.textContent = msg;
+    };
+
+    if (p1 <= 0) {
+      clearOutputs('⚠️ Please enter positive dimensions (> 0).');
+      return;
+    }
+
+    let a = 0, p = 0, formula = '';
 
     if (shape === 'rectangle') {
+      if (p2 <= 0) { clearOutputs('⚠️ Width (w) must be greater than zero.'); return; }
       a = p1 * p2;
       p = 2 * (p1 + p2);
-      formula = `Area = l × w = ${p1} × ${p2} = ${a.toFixed(4)} | Perimeter = 2(l + w) = ${p.toFixed(4)}`;
+      formula = `Area = l × w = ${p1} × ${p2} = <strong>${a.toFixed(4)}</strong>`;
+    } else if (shape === 'square') {
+      a = p1 * p1;
+      p = 4 * p1;
+      formula = `Area = s² = ${p1}² = <strong>${a.toFixed(4)}</strong>`;
     } else if (shape === 'circle') {
       a = Math.PI * p1 * p1;
       p = 2 * Math.PI * p1;
-      formula = `Area = π × r² = π × ${p1}² = ${a.toFixed(4)} | Circumference = 2πr = ${p.toFixed(4)}`;
+      formula = `Area = π r² = π × ${p1}² = <strong>${a.toFixed(4)}</strong>`;
     } else if (shape === 'triangle') {
+      if (p2 <= 0) { clearOutputs('⚠️ Height (h) must be greater than zero.'); return; }
       a = 0.5 * p1 * p2;
       p = 0;
-      formula = `Area = 0.5 × Base × Height = 0.5 × ${p1} × ${p2} = ${a.toFixed(4)}`;
+      formula = `Area = ½ × Base × Height = ½ × ${p1} × ${p2} = <strong>${a.toFixed(4)}</strong>`;
     } else if (shape === 'trapezoid') {
+      if (p2 <= 0 || p3 <= 0) { clearOutputs('⚠️ Base b and height must be greater than zero.'); return; }
       a = 0.5 * (p1 + p2) * p3;
-      formula = `Area = 0.5 × (a + b) × h = 0.5 × (${p1} + ${p2}) × ${p3} = ${a.toFixed(4)}`;
+      p = 0;
+      formula = `Area = ½(a + b)h = ½(${p1} + ${p2}) × ${p3} = <strong>${a.toFixed(4)}</strong>`;
     } else if (shape === 'parallelogram') {
+      if (p2 <= 0) { clearOutputs('⚠️ Height (h) must be greater than zero.'); return; }
       a = p1 * p2;
-      formula = `Area = Base × Height = ${p1} × ${p2} = ${a.toFixed(4)}`;
+      p = 0;
+      formula = `Area = Base × Height = ${p1} × ${p2} = <strong>${a.toFixed(4)}</strong>`;
     } else if (shape === 'ellipse') {
+      if (p2 <= 0) { clearOutputs('⚠️ Semi-minor axis (b) must be greater than zero.'); return; }
       a = Math.PI * p1 * p2;
       p = Math.PI * (3 * (p1 + p2) - Math.sqrt((3 * p1 + p2) * (p1 + 3 * p2)));
-      formula = `Area = π × a × b = π × ${p1} × ${p2} = ${a.toFixed(4)} | Approx Perimeter = ${p.toFixed(4)}`;
+      formula = `Area = π a b = π × ${p1} × ${p2} = <strong>${a.toFixed(4)}</strong>`;
     } else if (shape === 'polygon') {
-      const n = Math.max(3, Math.round(p1));
+      const n = Math.round(p1);
+      if (n < 3) { clearOutputs('⚠️ A regular polygon must have at least 3 sides.'); return; }
+      if (p2 <= 0) { clearOutputs('⚠️ Side length (s) must be greater than zero.'); return; }
       const s = p2;
       a = (n * s * s) / (4 * Math.tan(Math.PI / n));
       p = n * s;
-      formula = `Regular ${n}-gon Area = (${n} × ${s}²) / [4 × tan(π/${n})] = ${a.toFixed(4)} | Perimeter = ${p.toFixed(4)}`;
+      formula = `Regular ${n}-gon Area = [${n} × ${s}²] / [4 × tan(π/${n})] = <strong>${a.toFixed(4)}</strong>`;
     } else if (shape === 'sector') {
+      if (p2 <= 0 || p2 > 360) { clearOutputs('⚠️ Sector angle θ must be between 0° and 360°.'); return; }
       a = (p2 / 360) * Math.PI * p1 * p1;
       p = ((p2 / 360) * 2 * Math.PI * p1) + (2 * p1);
-      formula = `Sector Area = (θ/360) × πr² = (${p2}/360) × π × ${p1}² = ${a.toFixed(4)}`;
+      formula = `Sector Area = (θ/360) × π r² = (${p2}/360) × π × ${p1}² = <strong>${a.toFixed(4)}</strong>`;
     }
 
-    const elArea = document.getElementById('res-area-val');
+    if (banner) {
+      banner.className = 'equation-preview-box';
+      banner.innerHTML = formula;
+    }
     if (elArea) elArea.textContent = a.toLocaleString(undefined, { maximumFractionDigits: 4 });
-
-    const elPerim = document.getElementById('res-area-perim');
     if (elPerim) elPerim.textContent = p > 0 ? p.toLocaleString(undefined, { maximumFractionDigits: 4 }) : 'N/A';
-
-    const elFt2 = document.getElementById('res-area-ft2');
     if (elFt2) elFt2.textContent = (a * 10.7639).toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' ft²';
-
-    const elAcres = document.getElementById('res-area-acres');
     if (elAcres) elAcres.textContent = (a / 4046.86).toLocaleString(undefined, { maximumFractionDigits: 4 }) + ' acres';
-
-    const banner = document.getElementById('area-formula-banner');
-    if (banner) banner.textContent = formula;
+    if (elM2) elM2.textContent = a.toLocaleString(undefined, { maximumFractionDigits: 4 }) + ' m²';
+    if (stepBox) {
+      stepBox.innerHTML = `2D Planar surface solved: <strong>${a.toFixed(4)} sq units</strong>. Perimeter/boundary: <strong>${p > 0 ? p.toFixed(4) : 'N/A'}</strong>.`;
+    }
   },
 
+  // 25. Distance Calculator
   updateDistanceDim() {
     const is3D = document.getElementById('dist-dim')?.value === '3d';
     const z1 = document.getElementById('dist-wrap-z1');
@@ -1351,10 +1566,10 @@ const MathCalcs = {
     const is3D = document.getElementById('dist-dim')?.value === '3d';
     const x1 = parseFloat(document.getElementById('dist-x1')?.value) || 0;
     const y1 = parseFloat(document.getElementById('dist-y1')?.value) || 0;
-    const z1 = parseFloat(document.getElementById('dist-z1')?.value) || 0;
+    const z1 = is3D ? (parseFloat(document.getElementById('dist-z1')?.value) || 0) : 0;
     const x2 = parseFloat(document.getElementById('dist-x2')?.value) || 0;
     const y2 = parseFloat(document.getElementById('dist-y2')?.value) || 0;
-    const z2 = parseFloat(document.getElementById('dist-z2')?.value) || 0;
+    const z2 = is3D ? (parseFloat(document.getElementById('dist-z2')?.value) || 0) : 0;
 
     const dx = x2 - x1;
     const dy = y2 - y1;
@@ -1365,99 +1580,140 @@ const MathCalcs = {
     const midY = (y1 + y2) / 2;
     const midZ = (z1 + z2) / 2;
     const manhattan = Math.abs(dx) + Math.abs(dy) + (is3D ? Math.abs(dz) : 0);
-
-    const elDist = document.getElementById('res-dist-val');
-    if (elDist) elDist.textContent = d.toLocaleString(undefined, { maximumFractionDigits: 4 });
-
-    const elMid = document.getElementById('res-dist-mid');
-    if (elMid) elMid.textContent = is3D ? `(${midX.toFixed(2)}, ${midY.toFixed(2)}, ${midZ.toFixed(2)})` : `(${midX.toFixed(2)}, ${midY.toFixed(2)})`;
-
-    const elVec = document.getElementById('res-dist-vec');
-    if (elVec) elVec.textContent = is3D ? `⟨${dx.toFixed(2)}, ${dy.toFixed(2)}, ${dz.toFixed(2)}⟩` : `⟨${dx.toFixed(2)}, ${dy.toFixed(2)}⟩`;
-
-    const elMan = document.getElementById('res-dist-manhattan');
-    if (elMan) elMan.textContent = manhattan.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    const chebyshev = Math.max(Math.abs(dx), Math.abs(dy), is3D ? Math.abs(dz) : 0);
 
     const banner = document.getElementById('dist-formula-banner');
+    const stepBox = document.getElementById('dist-step-box');
+    const elDist = document.getElementById('res-dist-val');
+    const elMid = document.getElementById('res-dist-mid');
+    const elVec = document.getElementById('res-dist-vec');
+    const elMan = document.getElementById('res-dist-manhattan');
+    const elCheb = document.getElementById('res-dist-chebyshev');
+
     if (banner) {
+      banner.className = 'equation-preview-box';
       if (!is3D) {
-        banner.innerHTML = `<strong>Formula:</strong> d = √[(x₂ - x₁)² + (y₂ - y₁)²] = √[(${x2} - ${x1})² + (${y2} - ${y1})²] = √[${(dx*dx).toFixed(2)} + ${(dy*dy).toFixed(2)}] = <strong>${d.toFixed(4)}</strong>`;
+        banner.innerHTML = `d = √[(${x2} - ${x1})² + (${y2} - ${y1})²] = √[${(dx * dx).toFixed(2)} + ${(dy * dy).toFixed(2)}] = <strong>${d.toFixed(4)}</strong>`;
       } else {
-        banner.innerHTML = `<strong>Formula:</strong> d = √[(Δx)² + (Δy)² + (Δz)²] = √[${(dx*dx).toFixed(2)} + ${(dy*dy).toFixed(2)} + ${(dz*dz).toFixed(2)}] = <strong>${d.toFixed(4)}</strong>`;
+        banner.innerHTML = `d = √[(Δx)² + (Δy)² + (Δz)²] = √[${(dx * dx).toFixed(2)} + ${(dy * dy).toFixed(2)} + ${(dz * dz).toFixed(2)}] = <strong>${d.toFixed(4)}</strong>`;
       }
+    }
+    if (elDist) elDist.textContent = d.toLocaleString(undefined, { maximumFractionDigits: 4 });
+    if (elMid) elMid.textContent = is3D ? `(${midX.toFixed(2)}, ${midY.toFixed(2)}, ${midZ.toFixed(2)})` : `(${midX.toFixed(2)}, ${midY.toFixed(2)})`;
+    if (elVec) elVec.textContent = is3D ? `⟨${dx.toFixed(2)}, ${dy.toFixed(2)}, ${dz.toFixed(2)}⟩` : `⟨${dx.toFixed(2)}, ${dy.toFixed(2)}⟩`;
+    if (elMan) elMan.textContent = manhattan.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    if (elCheb) elCheb.textContent = chebyshev.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    if (stepBox) {
+      stepBox.innerHTML = `Straight-line displacement vector: <strong>${elVec ? elVec.textContent : ''}</strong> with Manhattan distance = <strong>${manhattan.toFixed(2)}</strong>.`;
     }
   },
 
-  calcCircle(source = 'r') {
-    let r = 0;
-    if (source === 'r') {
-      r = parseFloat(document.getElementById('circ-r')?.value) || 0;
-    } else if (source === 'd') {
-      const d = parseFloat(document.getElementById('circ-d')?.value) || 0;
-      r = d / 2;
-    } else if (source === 'c') {
-      const c = parseFloat(document.getElementById('circ-c')?.value) || 0;
-      r = c / (2 * Math.PI);
-    } else if (source === 'a') {
-      const a = parseFloat(document.getElementById('circ-a')?.value) || 0;
-      r = a > 0 ? Math.sqrt(a / Math.PI) : 0;
+  // 26. Circle Calculator
+  syncCircleInput() {
+    const mode = document.getElementById('circ-mode')?.value || 'r';
+    const label = document.getElementById('circ-input-label');
+    const input = document.getElementById('circ-input-val');
+    if (mode === 'r') {
+      if (label) label.textContent = 'Radius (r):';
+      if (input) input.value = document.getElementById('circ-r')?.value || '5';
+    } else if (mode === 'd') {
+      if (label) label.textContent = 'Diameter (d):';
+      if (input) input.value = document.getElementById('circ-d')?.value || '10';
+    } else if (mode === 'c') {
+      if (label) label.textContent = 'Circumference (C):';
+      if (input) input.value = document.getElementById('circ-c')?.value || '31.4159';
+    } else if (mode === 'a') {
+      if (label) label.textContent = 'Area (A):';
+      if (input) input.value = document.getElementById('circ-a')?.value || '78.5398';
+    }
+    this.calcCircleUnified();
+  },
+
+  calcCircleUnified() {
+    const mode = document.getElementById('circ-mode')?.value || 'r';
+    const val = parseFloat(document.getElementById('circ-input-val')?.value) || 0;
+    const banner = document.getElementById('circ-formula-banner');
+    const stepBox = document.getElementById('circ-step-box');
+    const elR = document.getElementById('res-circ-r');
+    const elC = document.getElementById('res-circ-c');
+    const elA = document.getElementById('res-circ-a');
+    const elArc = document.getElementById('res-circ-arc');
+    const elSec = document.getElementById('res-circ-sec');
+    const elChord = document.getElementById('res-circ-chord');
+    const elSeg = document.getElementById('res-circ-seg');
+
+    const clearOutputs = (msg) => {
+      if (banner) {
+        banner.className = 'equation-preview-box error';
+        banner.textContent = msg;
+      }
+      if (elR) elR.textContent = '—';
+      if (elC) elC.textContent = '—';
+      if (elA) elA.textContent = '—';
+      if (elArc) elArc.textContent = '—';
+      if (elSec) elSec.textContent = '—';
+      if (elChord) elChord.textContent = '—';
+      if (elSeg) elSeg.textContent = '—';
+      if (stepBox) stepBox.textContent = msg;
+    };
+
+    if (val <= 0) {
+      clearOutputs('⚠️ Please enter a positive value (> 0).');
+      return;
     }
 
-    if (r <= 0) return;
+    let r = 0;
+    if (mode === 'r') r = val;
+    else if (mode === 'd') r = val / 2;
+    else if (mode === 'c') r = val / (2 * Math.PI);
+    else if (mode === 'a') r = Math.sqrt(val / Math.PI);
 
     const d = 2 * r;
     const c = 2 * Math.PI * r;
     const a = Math.PI * r * r;
 
-    // Update other input fields without triggering infinite loop
-    if (source !== 'r') {
-      const inp = document.getElementById('circ-r');
-      if (inp) inp.value = r.toFixed(4);
-    }
-    if (source !== 'd') {
-      const inp = document.getElementById('circ-d');
-      if (inp) inp.value = d.toFixed(4);
-    }
-    if (source !== 'c') {
-      const inp = document.getElementById('circ-c');
-      if (inp) inp.value = c.toFixed(4);
-    }
-    if (source !== 'a') {
-      const inp = document.getElementById('circ-a');
-      if (inp) inp.value = a.toFixed(4);
-    }
+    // Sync legacy inputs
+    const setVal = (id, num) => { const el = document.getElementById(id); if (el) el.value = num.toFixed(4); };
+    setVal('circ-r', r);
+    setVal('circ-d', d);
+    setVal('circ-c', c);
+    setVal('circ-a', a);
 
-    const thetaDeg = parseFloat(document.getElementById('circ-theta')?.value) || 360;
-    const thetaRad = (thetaDeg * Math.PI) / 180;
-    const arcLen = (thetaDeg / 360) * c;
-    const sectorArea = (thetaDeg / 360) * a;
+    const thetaDeg = parseFloat(document.getElementById('circ-theta')?.value) || 60;
+    const thetaClamped = Math.max(0.01, Math.min(360, thetaDeg));
+    const thetaRad = (thetaClamped * Math.PI) / 180;
+    const arcLen = (thetaClamped / 360) * c;
+    const sectorArea = (thetaClamped / 360) * a;
     const chordLen = 2 * r * Math.sin(thetaRad / 2);
     const segmentArea = sectorArea - 0.5 * r * r * Math.sin(thetaRad);
 
-    const elR = document.getElementById('res-circ-r');
-    if (elR) elR.textContent = r.toFixed(4);
-    const elD = document.getElementById('res-circ-d');
-    if (elD) elD.textContent = d.toFixed(4);
-    const elC = document.getElementById('res-circ-c');
-    if (elC) elC.textContent = c.toFixed(4);
-    const elA = document.getElementById('res-circ-a');
-    if (elA) elA.textContent = a.toFixed(4);
-
-    const elArc = document.getElementById('res-circ-arc');
-    if (elArc) elArc.textContent = `${arcLen.toFixed(4)} (at θ = ${thetaDeg}°)`;
-    const elSec = document.getElementById('res-circ-sec');
-    if (elSec) elSec.textContent = `${sectorArea.toFixed(4)} (at θ = ${thetaDeg}°)`;
-    const elChord = document.getElementById('res-circ-chord');
-    if (elChord) elChord.textContent = chordLen.toFixed(4);
-    const elSeg = document.getElementById('res-circ-seg');
-    if (elSeg) elSeg.textContent = segmentArea.toFixed(4);
-
-    const banner = document.getElementById('circ-formula-banner');
     if (banner) {
-      banner.innerHTML = `<strong>Circle Relations:</strong> Diameter = 2r = <strong>${d.toFixed(4)}</strong> | Circumference = 2πr = <strong>${c.toFixed(4)}</strong> | Area = πr² = <strong>${a.toFixed(4)}</strong>`;
+      banner.className = 'equation-preview-box';
+      banner.innerHTML = `d = 2r = <strong>${d.toFixed(4)}</strong> &nbsp;|&nbsp; C = 2πr = <strong>${c.toFixed(4)}</strong> &nbsp;|&nbsp; A = πr² = <strong>${a.toFixed(4)}</strong>`;
+    }
+    if (elA) elA.textContent = a.toFixed(4);
+    if (elC) elC.textContent = c.toFixed(4);
+    if (elR) elR.textContent = `r = ${r.toFixed(4)}, d = ${d.toFixed(4)}`;
+    if (elArc) elArc.textContent = `${arcLen.toFixed(4)} (at θ = ${thetaClamped}°)`;
+    if (elSec) elSec.textContent = `${sectorArea.toFixed(4)} (at θ = ${thetaClamped}°)`;
+    if (elChord) elChord.textContent = chordLen.toFixed(4);
+    if (elSeg) elSeg.textContent = segmentArea.toFixed(4);
+    if (stepBox) {
+      stepBox.innerHTML = `Radius r = ${r.toFixed(4)}, Diameter d = ${d.toFixed(4)}. Arc length for θ = ${thetaClamped}° is ${arcLen.toFixed(4)} and sector area is ${sectorArea.toFixed(4)}.`;
     }
   },
 
+  calcCircle(source = 'r') {
+    const modeEl = document.getElementById('circ-mode');
+    if (modeEl && modeEl.value !== source) {
+      modeEl.value = source;
+      this.syncCircleInput();
+    } else {
+      this.calcCircleUnified();
+    }
+  },
+
+  // 27. Surface Area Calculator
   updateSurfaceAreaFields() {
     const shape = document.getElementById('sa-shape')?.value || 'sphere';
     const l1 = document.getElementById('sa-label-1');
@@ -1500,75 +1756,120 @@ const MathCalcs = {
     const p2 = parseFloat(document.getElementById('sa-p2')?.value) || 0;
     const p3 = parseFloat(document.getElementById('sa-p3')?.value) || 0;
 
-    let total = 0;
-    let lateral = 0;
-    let base = 0;
-    let formula = '';
+    const banner = document.getElementById('sa-formula-banner');
+    const stepBox = document.getElementById('sa-step-box');
+    const elTotal = document.getElementById('res-sa-total');
+    const elLat = document.getElementById('res-sa-lateral');
+    const elBase = document.getElementById('res-sa-base');
+    const elSlant = document.getElementById('res-sa-slant');
+    const elRatio = document.getElementById('res-sa-ratio');
+
+    const clearOutputs = (msg) => {
+      if (banner) {
+        banner.className = 'equation-preview-box error';
+        banner.textContent = msg;
+      }
+      if (elTotal) elTotal.textContent = '—';
+      if (elLat) elLat.textContent = '—';
+      if (elBase) elBase.textContent = '—';
+      if (elSlant) elSlant.textContent = '—';
+      if (elRatio) elRatio.textContent = '—';
+      if (stepBox) stepBox.textContent = msg;
+    };
+
+    if (p1 <= 0) {
+      clearOutputs('⚠️ Please enter positive dimensions (> 0).');
+      return;
+    }
+
+    let total = 0, lateral = 0, base = 0, slant = 'N/A', vol = 0, formula = '';
 
     if (shape === 'sphere') {
       total = 4 * Math.PI * p1 * p1;
       lateral = total;
       base = 0;
-      formula = `Total Area = 4πr² = 4 × π × ${p1}² = ${total.toFixed(4)}`;
+      vol = (4 / 3) * Math.PI * Math.pow(p1, 3);
+      formula = `Total Area = 4πr² = 4 × π × ${p1}² = <strong>${total.toFixed(4)}</strong>`;
     } else if (shape === 'cylinder') {
+      if (p2 <= 0) { clearOutputs('⚠️ Height (h) must be greater than zero.'); return; }
       base = 2 * Math.PI * p1 * p1;
       lateral = 2 * Math.PI * p1 * p2;
       total = base + lateral;
-      formula = `Total = Lateral (2πrh = ${lateral.toFixed(2)}) + 2 Bases (2πr² = ${base.toFixed(2)}) = ${total.toFixed(4)}`;
+      vol = Math.PI * Math.pow(p1, 2) * p2;
+      formula = `Total = Lateral (2πrh = ${lateral.toFixed(2)}) + 2 Bases (2πr² = ${base.toFixed(2)}) = <strong>${total.toFixed(4)}</strong>`;
     } else if (shape === 'cone') {
+      if (p2 <= 0) { clearOutputs('⚠️ Height (h) must be greater than zero.'); return; }
       const s = Math.sqrt(p1 * p1 + p2 * p2);
+      slant = s.toFixed(4);
       base = Math.PI * p1 * p1;
       lateral = Math.PI * p1 * s;
       total = base + lateral;
-      formula = `Slant Height s = √(r²+h²) = ${s.toFixed(2)} | Total = πrs + πr² = ${total.toFixed(4)}`;
+      vol = (1 / 3) * Math.PI * Math.pow(p1, 2) * p2;
+      formula = `Slant Height s = √(r²+h²) = ${slant} &nbsp;|&nbsp; Total Area = <strong>${total.toFixed(4)}</strong>`;
     } else if (shape === 'cube') {
       total = 6 * p1 * p1;
       lateral = 4 * p1 * p1;
       base = 2 * p1 * p1;
-      formula = `Total Area = 6s² = 6 × ${p1}² = ${total.toFixed(4)}`;
+      vol = Math.pow(p1, 3);
+      formula = `Total Area = 6s² = 6 × ${p1}² = <strong>${total.toFixed(4)}</strong>`;
     } else if (shape === 'cuboid') {
-      total = 2 * (p1*p2 + p1*p3 + p2*p3);
+      if (p2 <= 0 || p3 <= 0) { clearOutputs('⚠️ Width and height must be greater than zero.'); return; }
+      total = 2 * (p1 * p2 + p1 * p3 + p2 * p3);
       lateral = 2 * p3 * (p1 + p2);
       base = 2 * p1 * p2;
-      formula = `Total Area = 2(lw + lh + wh) = ${total.toFixed(4)}`;
+      vol = p1 * p2 * p3;
+      formula = `Total Area = 2(lw + lh + wh) = <strong>${total.toFixed(4)}</strong>`;
     } else if (shape === 'pyramid') {
-      const slant = Math.sqrt(Math.pow(p1 / 2, 2) + p2 * p2);
+      if (p2 <= 0) { clearOutputs('⚠️ Height (h) must be greater than zero.'); return; }
+      const s = Math.sqrt(Math.pow(p1 / 2, 2) + p2 * p2);
+      slant = s.toFixed(4);
       base = p1 * p1;
-      lateral = 2 * p1 * slant;
+      lateral = 2 * p1 * s;
       total = base + lateral;
-      formula = `Slant Height = ${slant.toFixed(2)} | Total = s² + 2s(slant) = ${total.toFixed(4)}`;
+      vol = (1 / 3) * Math.pow(p1, 2) * p2;
+      formula = `Slant Height = ${slant} &nbsp;|&nbsp; Total = s² + 2s(slant) = <strong>${total.toFixed(4)}</strong>`;
     } else if (shape === 'capsule') {
+      if (p2 <= 0) { clearOutputs('⚠️ Height (h) must be greater than zero.'); return; }
       lateral = 2 * Math.PI * p1 * p2;
-      base = 4 * Math.PI * p1 * p1; // 2 hemispherical caps
+      base = 4 * Math.PI * p1 * p1;
       total = lateral + base;
-      formula = `Total = Cylinder Body (2πrh = ${lateral.toFixed(2)}) + 2 Hemispheres (4πr² = ${base.toFixed(2)}) = ${total.toFixed(4)}`;
+      vol = Math.PI * Math.pow(p1, 2) * p2 + (4 / 3) * Math.PI * Math.pow(p1, 3);
+      formula = `Total = Cylinder Body (2πrh = ${lateral.toFixed(2)}) + 2 Hemisphere Caps (4πr² = ${base.toFixed(2)}) = <strong>${total.toFixed(4)}</strong>`;
     }
 
-    const elTotal = document.getElementById('res-sa-total');
+    const saVolRatio = vol > 0 ? (total / vol).toFixed(4) : 'N/A';
+
+    if (banner) {
+      banner.className = 'equation-preview-box';
+      banner.innerHTML = formula;
+    }
     if (elTotal) elTotal.textContent = total.toLocaleString(undefined, { maximumFractionDigits: 4 });
-
-    const elLat = document.getElementById('res-sa-lateral');
     if (elLat) elLat.textContent = lateral.toLocaleString(undefined, { maximumFractionDigits: 4 });
-
-    const elBase = document.getElementById('res-sa-base');
     if (elBase) elBase.textContent = base.toLocaleString(undefined, { maximumFractionDigits: 4 });
-
-    const banner = document.getElementById('sa-formula-banner');
-    if (banner) banner.textContent = formula;
+    if (elSlant) elSlant.textContent = slant !== 'N/A' ? `Slant = ${slant}` : 'N/A';
+    if (elRatio) elRatio.textContent = saVolRatio;
+    if (stepBox) {
+      stepBox.innerHTML = `Total 3D surface area: <strong>${total.toFixed(4)}</strong>. Lateral surface: <strong>${lateral.toFixed(4)}</strong>, Base(s): <strong>${base.toFixed(4)}</strong>. Surface-to-volume ratio: <strong>${saVolRatio}</strong>.`;
+    }
   },
 
+  // 28. Pythagorean Theorem Calculator
   updatePythagoreanMode() {
     const mode = document.getElementById('pyth-solve-mode')?.value || 'c';
-    const wrapA = document.getElementById('pyth-wrap-a');
-    const wrapB = document.getElementById('pyth-wrap-b');
-    const wrapC = document.getElementById('pyth-wrap-c');
     const inpA = document.getElementById('pyth-a');
     const inpB = document.getElementById('pyth-b');
     const inpC = document.getElementById('pyth-c');
+    const lblA = document.getElementById('pyth-label-a');
+    const lblB = document.getElementById('pyth-label-b');
+    const lblC = document.getElementById('pyth-label-c');
 
     if (inpA) inpA.disabled = mode === 'a';
     if (inpB) inpB.disabled = mode === 'b';
     if (inpC) inpC.disabled = mode === 'c';
+
+    if (lblA) lblA.textContent = mode === 'a' ? 'Leg a (Solved):' : 'Leg a:';
+    if (lblB) lblB.textContent = mode === 'b' ? 'Leg b (Solved):' : 'Leg b:';
+    if (lblC) lblC.textContent = mode === 'c' ? 'Hypotenuse c (Solved):' : 'Hypotenuse c:';
 
     this.calcPythagorean();
   },
@@ -1580,32 +1881,64 @@ const MathCalcs = {
     let c = parseFloat(document.getElementById('pyth-c')?.value) || 0;
 
     const banner = document.getElementById('pyth-formula-banner');
-    let solvedVal = 0;
+    const stepBox = document.getElementById('pyth-step-box');
+    const resLabel = document.getElementById('res-pyth-label');
+    const elHyp = document.getElementById('res-pyth-hyp');
+    const elArea = document.getElementById('res-pyth-area');
+    const elPerim = document.getElementById('res-pyth-perim');
+    const elAlt = document.getElementById('res-pyth-alt');
+    const elAngles = document.getElementById('res-pyth-angles');
+    const elTriple = document.getElementById('res-pyth-triple');
+
+    const clearOutputs = (msg) => {
+      if (banner) {
+        banner.className = 'equation-preview-box error';
+        banner.textContent = msg;
+      }
+      if (elHyp) elHyp.textContent = '—';
+      if (elArea) elArea.textContent = '—';
+      if (elPerim) elPerim.textContent = '—';
+      if (elAlt) elAlt.textContent = '—';
+      if (elAngles) elAngles.textContent = '—';
+      if (elTriple) elTriple.textContent = '—';
+      if (stepBox) stepBox.textContent = msg;
+    };
+
+    let radicalStr = '';
+    let formulaHtml = '';
 
     if (mode === 'c') {
-      if (a <= 0 || b <= 0) return;
-      solvedVal = Math.sqrt(a * a + b * b);
-      c = solvedVal;
+      if (a <= 0 || b <= 0) { clearOutputs('⚠️ Legs a and b must both be positive numbers (> 0).'); return; }
+      const sumSq = a * a + b * b;
+      c = Math.sqrt(sumSq);
+      const simp = this.simplifyRadical(sumSq);
+      radicalStr = simp.str;
       const inpC = document.getElementById('pyth-c');
       if (inpC) inpC.value = c.toFixed(4);
+      formulaHtml = `c = √(a² + b²) = √(${a}² + ${b}²) = √${sumSq} = <strong>${radicalStr}</strong> ≈ <strong>${c.toFixed(4)}</strong>`;
+      if (resLabel) resLabel.textContent = 'Solved Hypotenuse (c)';
     } else if (mode === 'a') {
-      if (c <= b || b <= 0) {
-        if (banner) banner.textContent = '⚠️ Hypotenuse c must be strictly greater than leg b.';
-        return;
-      }
-      solvedVal = Math.sqrt(c * c - b * b);
-      a = solvedVal;
+      if (b <= 0 || c <= 0) { clearOutputs('⚠️ Leg b and hypotenuse c must both be positive numbers (> 0).'); return; }
+      if (c <= b) { clearOutputs(`⚠️ Hypotenuse c (${c}) must be strictly greater than leg b (${b}).`); return; }
+      const diffSq = c * c - b * b;
+      a = Math.sqrt(diffSq);
+      const simp = this.simplifyRadical(diffSq);
+      radicalStr = simp.str;
       const inpA = document.getElementById('pyth-a');
       if (inpA) inpA.value = a.toFixed(4);
+      formulaHtml = `a = √(c² - b²) = √(${c}² - ${b}²) = √${diffSq} = <strong>${radicalStr}</strong> ≈ <strong>${a.toFixed(4)}</strong>`;
+      if (resLabel) resLabel.textContent = 'Solved Leg (a)';
     } else if (mode === 'b') {
-      if (c <= a || a <= 0) {
-        if (banner) banner.textContent = '⚠️ Hypotenuse c must be strictly greater than leg a.';
-        return;
-      }
-      solvedVal = Math.sqrt(c * c - a * a);
-      b = solvedVal;
+      if (a <= 0 || c <= 0) { clearOutputs('⚠️ Leg a and hypotenuse c must both be positive numbers (> 0).'); return; }
+      if (c <= a) { clearOutputs(`⚠️ Hypotenuse c (${c}) must be strictly greater than leg a (${a}).`); return; }
+      const diffSq = c * c - a * a;
+      b = Math.sqrt(diffSq);
+      const simp = this.simplifyRadical(diffSq);
+      radicalStr = simp.str;
       const inpB = document.getElementById('pyth-b');
       if (inpB) inpB.value = b.toFixed(4);
+      formulaHtml = `b = √(c² - a²) = √(${c}² - ${a}²) = √${diffSq} = <strong>${radicalStr}</strong> ≈ <strong>${b.toFixed(4)}</strong>`;
+      if (resLabel) resLabel.textContent = 'Solved Leg (b)';
     }
 
     const perimeter = a + b + c;
@@ -1614,36 +1947,30 @@ const MathCalcs = {
     const angleA = Math.asin(Math.max(-1, Math.min(1, a / c))) * (180 / Math.PI);
     const angleB = 90 - angleA;
 
-    const isTriple = Number.isInteger(Math.round(a*1e4)/1e4) &&
-                     Number.isInteger(Math.round(b*1e4)/1e4) &&
-                     Number.isInteger(Math.round(c*1e4)/1e4);
+    const isIntA = Number.isInteger(Math.round(a * 1e4) / 1e4);
+    const isIntB = Number.isInteger(Math.round(b * 1e4) / 1e4);
+    const isIntC = Number.isInteger(Math.round(c * 1e4) / 1e4);
+    const isTriple = isIntA && isIntB && isIntC;
 
-    const elHyp = document.getElementById('res-pyth-hyp');
-    if (elHyp) elHyp.textContent = c.toFixed(4);
-
-    const elArea = document.getElementById('res-pyth-area');
+    if (banner) {
+      banner.className = 'equation-preview-box';
+      banner.innerHTML = formulaHtml;
+    }
+    const solvedVal = mode === 'c' ? c : (mode === 'a' ? a : b);
+    if (elHyp) elHyp.textContent = `${solvedVal.toFixed(4)} (Exact: ${radicalStr})`;
     if (elArea) elArea.textContent = area.toFixed(4);
-
-    const elPerim = document.getElementById('res-pyth-perim');
     if (elPerim) elPerim.textContent = perimeter.toFixed(4);
-
-    const elAlt = document.getElementById('res-pyth-alt');
     if (elAlt) elAlt.textContent = altitude.toFixed(4);
-
-    const elAngles = document.getElementById('res-pyth-angles');
-    if (elAngles) elAngles.textContent = `∠A = ${angleA.toFixed(2)}°, ∠B = ${angleB.toFixed(2)}°, ∠C = 90.00°`;
-
-    const elTriple = document.getElementById('res-pyth-triple');
+    if (elAngles) elAngles.textContent = `∠A = ${angleA.toFixed(2)}°, ∠B = ${angleB.toFixed(2)}°`;
     if (elTriple) {
       elTriple.textContent = isTriple ? `✅ Yes, (${Math.round(a)}, ${Math.round(b)}, ${Math.round(c)}) is a Pythagorean Triple!` : 'No (Non-integer sides)';
     }
-
-    if (banner) {
-      banner.innerHTML = `<strong>Pythagorean Theorem:</strong> a² + b² = c² &nbsp;➔&nbsp; ` +
-        `<strong>${a.toFixed(2)}² + ${b.toFixed(2)}² = ${(a*a).toFixed(2)} + ${(b*b).toFixed(2)} = ${(c*c).toFixed(2)} = ${c.toFixed(4)}²</strong>`;
+    if (stepBox) {
+      stepBox.innerHTML = `Sides: a = ${a.toFixed(2)}, b = ${b.toFixed(2)}, c = ${c.toFixed(2)}. Altitude to hypotenuse = ${altitude.toFixed(4)}. Area = ${area.toFixed(4)}.`;
     }
   },
 
+  // 29. Right Triangle Calculator
   updateRightTriangleMode() {
     const mode = document.getElementById('rt-mode')?.value || 'two_legs';
     const l1 = document.getElementById('rt-label-1');
@@ -1657,10 +1984,10 @@ const MathCalcs = {
       if (l2) l2.textContent = 'Hypotenuse c:';
     } else if (mode === 'leg_angle') {
       if (l1) l1.textContent = 'Leg a:';
-      if (l2) l2.textContent = 'Angle α (degrees):';
+      if (l2) l2.textContent = 'Acute Angle α (degrees):';
     } else if (mode === 'hyp_angle') {
       if (l1) l1.textContent = 'Hypotenuse c:';
-      if (l2) l2.textContent = 'Angle α (degrees):';
+      if (l2) l2.textContent = 'Acute Angle α (degrees):';
     }
     this.calcRightTriangle();
   },
@@ -1671,7 +1998,34 @@ const MathCalcs = {
     const p2 = parseFloat(document.getElementById('rt-p2')?.value) || 0;
 
     const banner = document.getElementById('rt-formula-banner');
-    if (p1 <= 0 || p2 <= 0) return;
+    const stepBox = document.getElementById('rt-step-box');
+    const elSides = document.getElementById('res-rt-sides');
+    const elAngles = document.getElementById('res-rt-angles');
+    const elArea = document.getElementById('res-rt-area');
+    const elPerim = document.getElementById('res-rt-perim');
+    const elAlt = document.getElementById('res-rt-alt');
+    const elTrig = document.getElementById('res-rt-trig');
+    const elTrigRecip = document.getElementById('res-rt-trig-recip');
+
+    const clearOutputs = (msg) => {
+      if (banner) {
+        banner.className = 'equation-preview-box error';
+        banner.textContent = msg;
+      }
+      if (elSides) elSides.textContent = '—';
+      if (elAngles) elAngles.textContent = '—';
+      if (elArea) elArea.textContent = '—';
+      if (elPerim) elPerim.textContent = '—';
+      if (elAlt) elAlt.textContent = '—';
+      if (elTrig) elTrig.textContent = '—';
+      if (elTrigRecip) elTrigRecip.textContent = '—';
+      if (stepBox) stepBox.textContent = msg;
+    };
+
+    if (p1 <= 0 || p2 <= 0) {
+      clearOutputs('⚠️ Please enter positive numbers (> 0) for both inputs.');
+      return;
+    }
 
     let a = 0, b = 0, c = 0, angleA = 0, angleB = 0;
 
@@ -1683,7 +2037,7 @@ const MathCalcs = {
     } else if (mode === 'leg_hyp') {
       a = p1; c = p2;
       if (c <= a) {
-        if (banner) banner.textContent = '⚠️ Hypotenuse c must be strictly larger than leg a.';
+        clearOutputs(`⚠️ Hypotenuse c (${c}) must be strictly greater than leg a (${a}).`);
         return;
       }
       b = Math.sqrt(c * c - a * a);
@@ -1692,7 +2046,7 @@ const MathCalcs = {
     } else if (mode === 'leg_angle') {
       a = p1; angleA = p2;
       if (angleA <= 0 || angleA >= 90) {
-        if (banner) banner.textContent = '⚠️ Acute angle α must be strictly between 0° and 90°.';
+        clearOutputs('⚠️ Acute angle α must be strictly between 0° and 90°.');
         return;
       }
       angleB = 90 - angleA;
@@ -1702,7 +2056,7 @@ const MathCalcs = {
     } else if (mode === 'hyp_angle') {
       c = p1; angleA = p2;
       if (angleA <= 0 || angleA >= 90) {
-        if (banner) banner.textContent = '⚠️ Acute angle α must be strictly between 0° and 90°.';
+        clearOutputs('⚠️ Acute angle α must be strictly between 0° and 90°.');
         return;
       }
       angleB = 90 - angleA;
@@ -1715,37 +2069,31 @@ const MathCalcs = {
     const perimeter = a + b + c;
     const altitude = (a * b) / c;
 
-    const elSides = document.getElementById('res-rt-sides');
-    if (elSides) elSides.textContent = `a = ${a.toFixed(4)}, b = ${b.toFixed(4)}, c = ${c.toFixed(4)}`;
-
-    const elAngles = document.getElementById('res-rt-angles');
-    if (elAngles) elAngles.textContent = `α = ${angleA.toFixed(2)}°, β = ${angleB.toFixed(2)}°, γ = 90.00°`;
-
-    const elArea = document.getElementById('res-rt-area');
-    if (elArea) elArea.textContent = area.toFixed(4);
-
-    const elPerim = document.getElementById('res-rt-perim');
-    if (elPerim) elPerim.textContent = perimeter.toFixed(4);
-
-    const elAlt = document.getElementById('res-rt-alt');
-    if (elAlt) elAlt.textContent = altitude.toFixed(4);
-
     const radA = (angleA * Math.PI) / 180;
     const sinA = Math.sin(radA);
     const cosA = Math.cos(radA);
     const tanA = Math.tan(radA);
-
-    const elTrig = document.getElementById('res-rt-trig');
-    if (elTrig) {
-      elTrig.textContent = `sin α = ${sinA.toFixed(4)} | cos α = ${cosA.toFixed(4)} | tan α = ${tanA.toFixed(4)}`;
-    }
+    const cscA = sinA !== 0 ? 1 / sinA : 0;
+    const secA = cosA !== 0 ? 1 / cosA : 0;
+    const cotA = tanA !== 0 ? 1 / tanA : 0;
 
     if (banner) {
-      banner.innerHTML = `<strong>Solved Right Triangle:</strong> Sides: [${a.toFixed(2)}, ${b.toFixed(2)}, ${c.toFixed(2)}] | Angles: [${angleA.toFixed(1)}°, ${angleB.toFixed(1)}°, 90°] | Area = <strong>${area.toFixed(4)}</strong>`;
+      banner.className = 'equation-preview-box';
+      banner.innerHTML = `Sides: [${a.toFixed(2)}, ${b.toFixed(2)}, ${c.toFixed(2)}] &nbsp;|&nbsp; Angles: [${angleA.toFixed(1)}°, ${angleB.toFixed(1)}°, 90°] &nbsp;|&nbsp; Area = <strong>${area.toFixed(4)}</strong>`;
+    }
+    if (elSides) elSides.textContent = `a = ${a.toFixed(4)}, b = ${b.toFixed(4)}, c = ${c.toFixed(4)}`;
+    if (elAngles) elAngles.textContent = `α = ${angleA.toFixed(2)}°, β = ${angleB.toFixed(2)}°, γ = 90.00°`;
+    if (elArea) elArea.textContent = area.toFixed(4);
+    if (elPerim) elPerim.textContent = perimeter.toFixed(4);
+    if (elAlt) elAlt.textContent = altitude.toFixed(4);
+    if (elTrig) elTrig.textContent = `sin α = ${sinA.toFixed(4)} | cos α = ${cosA.toFixed(4)} | tan α = ${tanA.toFixed(4)}`;
+    if (elTrigRecip) elTrigRecip.textContent = `csc α = ${cscA.toFixed(4)} | sec α = ${secA.toFixed(4)} | cot α = ${cotA.toFixed(4)}`;
+    if (stepBox) {
+      stepBox.innerHTML = `Right triangle resolved with hypotenuse c = ${c.toFixed(4)}. Acute angles: α = ${angleA.toFixed(2)}°, β = ${angleB.toFixed(2)}°. Altitude to hypotenuse: ${altitude.toFixed(4)}.`;
     }
   },
 
-  init() {
+    init() {
     // 1. Percentage
     ['pct1-p', 'pct1-y', 'pct2-x', 'pct2-y', 'pct3-x', 'pct3-y'].forEach(id => {
       document.getElementById(id)?.addEventListener('input', () => this.calcPercentages());
@@ -1861,8 +2209,8 @@ const MathCalcs = {
     });
     document.getElementById('bignum-op')?.addEventListener('change', () => this.calcBigNumber());
 
-    // 22. Triangle
-    ['tri-side-a', 'tri-side-b', 'tri-side-c', 'tri-base', 'tri-height'].forEach(id => {
+// 22. Triangle
+    ['tri-side-a', 'tri-side-b', 'tri-side-c', 'tri-sas-a', 'tri-sas-b', 'tri-sas-c', 'tri-base', 'tri-height'].forEach(id => {
       document.getElementById(id)?.addEventListener('input', () => this.calcTriangle());
     });
     document.getElementById('tri-mode')?.addEventListener('change', () => this.calcTriangle());
@@ -1891,11 +2239,13 @@ const MathCalcs = {
     document.getElementById('dist-dim')?.addEventListener('change', () => this.updateDistanceDim());
 
     // 27. Circle
+    document.getElementById('circ-mode')?.addEventListener('change', () => this.syncCircleInput());
+    document.getElementById('circ-input-val')?.addEventListener('input', () => this.calcCircleUnified());
     document.getElementById('circ-r')?.addEventListener('input', () => this.calcCircle('r'));
     document.getElementById('circ-d')?.addEventListener('input', () => this.calcCircle('d'));
     document.getElementById('circ-c')?.addEventListener('input', () => this.calcCircle('c'));
     document.getElementById('circ-a')?.addEventListener('input', () => this.calcCircle('a'));
-    document.getElementById('circ-theta')?.addEventListener('input', () => this.calcCircle('r'));
+    document.getElementById('circ-theta')?.addEventListener('input', () => this.calcCircleUnified());
 
     // 28. Surface Area
     ['sa-p1', 'sa-p2', 'sa-p3'].forEach(id => {
@@ -1954,7 +2304,7 @@ const MathCalcs = {
     this.calcSlope();
     this.updateAreaFields();
     this.updateDistanceDim();
-    this.calcCircle('r');
+    this.syncCircleInput();
     this.updateSurfaceAreaFields();
     this.updatePythagoreanMode();
     this.updateRightTriangleMode();
@@ -2080,6 +2430,10 @@ const MathCalcs = {
     if (catalogView) catalogView.style.display = 'none';
     if (detailView) detailView.style.display = 'block';
 
+    if (window.updateActiveCalculatorTitle) {
+      window.updateActiveCalculatorTitle('math', calcId);
+    }
+
     document.querySelectorAll('.math-calc-unit').forEach(panel => {
       panel.style.display = panel.id === calcId ? 'block' : 'none';
     });
@@ -2087,6 +2441,11 @@ const MathCalcs = {
     document.querySelectorAll('#math-detail-view .switcher-pill').forEach(pill => {
       pill.classList.toggle('active', pill.dataset.target === calcId);
     });
+
+    const activePill = document.querySelector('#math-detail-view .switcher-pill.active');
+    if (activePill) {
+      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
 
     if (window.AppRouter && !window.AppRouter.isDispatching) {
       window.AppRouter.onCalculatorOpened(calcId, 'math');
@@ -2096,7 +2455,7 @@ const MathCalcs = {
       window.SeoGuide.updateGuide(calcId, 'math');
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.scrollToActiveCalculator) { window.scrollToActiveCalculator('math'); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   },
 
   closeCalculator() {

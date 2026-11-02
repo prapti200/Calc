@@ -3899,6 +3899,10 @@ const OtherCalcs = {
     if (catalogView) catalogView.style.display = 'none';
     if (detailView) detailView.style.display = 'block';
 
+    if (window.updateActiveCalculatorTitle) {
+      window.updateActiveCalculatorTitle('other', calcId);
+    }
+
     document.querySelectorAll('.other-calc-unit').forEach(panel => {
       panel.style.display = panel.id === calcId ? 'block' : 'none';
     });
@@ -3906,6 +3910,11 @@ const OtherCalcs = {
     document.querySelectorAll('#other-detail-view .switcher-pill').forEach(pill => {
       pill.classList.toggle('active', pill.dataset.target === calcId);
     });
+
+    const activePill = document.querySelector('#other-detail-view .switcher-pill.active');
+    if (activePill) {
+      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
 
     // Automatically trigger initial calculation when opening tool
     try {
@@ -3943,7 +3952,7 @@ const OtherCalcs = {
       window.SeoGuide.updateGuide(calcId, 'other');
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.scrollToActiveCalculator) { window.scrollToActiveCalculator('other'); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   },
 
   closeCalculator() {

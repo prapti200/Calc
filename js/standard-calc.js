@@ -7,7 +7,7 @@ class StandardCalculator {
     this.currentInput = '0';
     this.expression = '';
     this.memory = 0;
-    this.isScientific = false;
+    this.isScientific = true;
     this.angleMode = 'DEG'; // 'DEG' or 'RAD'
     this.history = JSON.parse(localStorage.getItem('omnicalc_history') || '[]');
     this.audioEnabled = true;
@@ -75,6 +75,8 @@ class StandardCalculator {
     this.memIndicator = document.getElementById('calc-memory-indicator');
     this.historyList = document.getElementById('history-list');
     this.keypad = document.getElementById('calc-keypad');
+    this.machine = document.getElementById('calc-machine');
+    this.sciBlock = document.getElementById('keypad-sci-block');
   }
 
   bindEvents() {
@@ -199,8 +201,17 @@ class StandardCalculator {
   setScientificMode(isSci) {
     this.isScientific = isSci;
     const toggleSciBtn = document.getElementById('toggle-sci-mode-btn');
-    if (toggleSciBtn) toggleSciBtn.classList.toggle('active', this.isScientific);
+    if (toggleSciBtn) {
+      toggleSciBtn.classList.toggle('active', this.isScientific);
+      toggleSciBtn.textContent = this.isScientific ? 'Hide Sci' : 'Sci Keys';
+    }
     if (this.keypad) this.keypad.classList.toggle('scientific-active', this.isScientific);
+    if (!this.machine) this.machine = document.getElementById('calc-machine');
+    if (this.machine) this.machine.classList.toggle('scientific-mode', this.isScientific);
+    if (!this.sciBlock) this.sciBlock = document.getElementById('keypad-sci-block');
+    if (this.sciBlock) {
+      this.sciBlock.style.display = this.isScientific ? 'grid' : 'none';
+    }
     document.querySelectorAll('.sci-key').forEach(el => {
       el.style.display = this.isScientific ? 'flex' : 'none';
     });
@@ -210,6 +221,11 @@ class StandardCalculator {
     // Update selector card active states
     document.getElementById('box-std-mode')?.classList.toggle('active', !this.isScientific);
     document.getElementById('box-sci-mode')?.classList.toggle('active', this.isScientific);
+
+    const titleEl = document.getElementById('std-active-calc-title');
+    if (titleEl) {
+      titleEl.textContent = this.isScientific ? 'Scientific Calculator' : 'Standard 4-Function Calculator';
+    }
 
     if (window.AppRouter && !window.AppRouter.isDispatching) {
       window.AppRouter.onCalculatorOpened(this.isScientific ? 'box-sci-mode' : 'box-std-mode', 'standard');
@@ -458,8 +474,24 @@ class StandardCalculator {
   }
 
   updateDisplay() {
-    if (this.screenExpr) this.screenExpr.textContent = this.expression;
-    if (this.screenCurrent) this.screenCurrent.textContent = this.currentInput;
+    if (this.screenExpr) {
+      // Use non-breaking space if expression is empty so expression row always preserves exact height without shifting numbers
+      this.screenExpr.textContent = this.expression || '\u00A0';
+    }
+    if (this.screenCurrent) {
+      this.screenCurrent.textContent = this.currentInput;
+      // Auto-scale font size dynamically for long numbers so digits never clip vertically
+      const len = this.currentInput.length;
+      if (len > 16) {
+        this.screenCurrent.style.fontSize = '1.35rem';
+      } else if (len > 12) {
+        this.screenCurrent.style.fontSize = '1.65rem';
+      } else if (len > 9) {
+        this.screenCurrent.style.fontSize = '1.9rem';
+      } else {
+        this.screenCurrent.style.fontSize = ''; // Uses CSS 2.2rem default
+      }
+    }
   }
 }
 

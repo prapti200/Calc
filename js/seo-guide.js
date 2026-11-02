@@ -975,6 +975,273 @@
           a: 'No. Approximately 90% to 98% of alcohol is metabolized solely by liver enzymes (alcohol dehydrogenase and CYP2E1) at a fixed biological rate of ~0.015% BAC per hour. Neither caffeine nor physical activity can accelerate this enzymatic process.'
         }
       ]
+    },
+    'sec-sci-calc': {
+      title: 'Standard & Scientific Calculator',
+      category: 'Math Solvers & Analysis',
+      badge: 'IEEE 754 High-Precision Math Standard',
+      tagline: 'Dual-mode arithmetic, trigonometric angles, powers, logs, and interactive calculation memory registers.',
+      overview: 'The <strong>Standard & Scientific Calculator</strong> provides high-precision mathematical evaluation for both daily arithmetic and advanced STEM computation. It features full parenthesis precedence, degree and radian angle modes, exponential and logarithmic functions, and memory storage registers (M+, M-, MR, MC, MS).',
+      steps: [
+        { title: 'Choose Mode & Units', desc: 'Toggle between Standard 4-function arithmetic or Scientific mode, and choose DEG or RAD for trigonometry.' },
+        { title: 'Input Numbers & Operations', desc: 'Enter calculations using on-screen keys or physical keyboard buttons with algebraic operator precedence.' },
+        { title: 'Use Memory Registers', desc: 'Store running totals using MS (Memory Store), M+ (Add to Memory), or MR (Memory Recall).' },
+        { title: 'Export or Copy Results', desc: 'Click the display number to copy it to your clipboard or download a complete computation PDF report.' }
+      ],
+      formulaName: 'Algebraic Order of Operations (PEMDAS/BODMAS)',
+      formulaExpr: 'f(x) \in \{\sin(\theta), \cos(\theta), \tan(\theta), x^y, \log_{10}(x), \ln(x), \sqrt{x}\}',
+      formulaExplanation: 'Calculations follow algebraic operator hierarchy: Parentheses, Exponents, Multiplication & Division, Addition & Subtraction.',
+      example: '<strong>Example:</strong> Calculating <code>sin(30°) = 0.5</code>, <code>2^10 = 1024</code>, or <code>log10(1000) = 3</code> instantaneously with IEEE 754 double precision.',
+      faqs: [
+        {
+          q: 'How do I toggle between Degrees and Radians?',
+          a: 'Click the angle unit button (DEG/RAD) in the top-right header of the calculator display to switch instantly.'
+        },
+        {
+          q: 'Can I type calculations with my physical keyboard?',
+          a: 'Yes! The calculator supports standard keyboard input: numbers 0-9, operators (+, -, *, /), Enter for equals (=), and Escape to clear (C).'
+        },
+        {
+          q: 'How does the Memory (M+, MR, MC) feature work?',
+          a: 'Press MS to save the active number, M+ to add to it, M- to subtract from it, MR to display the saved value, and MC to reset memory to zero.'
+        }
+      ]
+    },
+
+    'sec-fraction-calc': {
+      title: 'Fraction Calculator & Simplifier',
+      category: 'Arithmetic & Number Theory',
+      badge: 'Rational Number Arithmetic Standard',
+      tagline: 'Add, subtract, multiply, and divide proper and improper fractions with mixed numbers and lowest-term reduction.',
+      overview: 'The <strong>Fraction Calculator</strong> performs exact rational arithmetic with fractions and mixed numbers. It finds the Least Common Denominator (LCD), converts between improper fractions and mixed numbers, and computes reduced lowest terms with decimal equivalents.',
+      steps: [
+        { title: 'Select Arithmetic Operation', desc: 'Choose Addition (+), Subtraction (-), Multiplication (×), or Division (÷).' },
+        { title: 'Enter Numerators and Denominators', desc: 'Provide whole numbers, numerators, and non-zero denominators for both fractions.' },
+        { title: 'Inspect Reduced Fractions', desc: 'Review the lowest-term simplified fraction, improper fraction form, and precise decimal value.' }
+      ],
+      formulaName: 'Rational Fraction Arithmetic',
+      formulaExpr: '\frac{a}{b} \pm \frac{c}{d} = \frac{ad \pm bc}{bd}, \quad \frac{a}{b} \times \frac{c}{d} = \frac{ac}{bd}, \quad \frac{a}{b} \div \frac{c}{d} = \frac{ad}{bc}',
+      formulaExplanation: 'Fractions are computed using common denominators and reduced using Euclidean Greatest Common Divisor (GCD) division.',
+      example: '<strong>Example:</strong> <code>1/2 + 1/3 = (3 + 2)/6 = 5/6</code> (decimal: <code>0.8333...</code>).',
+      faqs: [
+        {
+          q: 'How does the calculator reduce fractions to lowest terms?',
+          a: 'It computes the Greatest Common Divisor (GCD) of the numerator and denominator using the Euclidean algorithm and divides both by that factor.'
+        },
+        {
+          q: 'Does it support mixed numbers like 2 3/4?',
+          a: 'Yes, mixed numbers are automatically converted to improper fractions for exact calculation and converted back in the final result.'
+        }
+      ]
+    },
+
+    'sec-percentage-calc': {
+      title: 'Percentage Calculator & Delta Solver',
+      category: 'Financial & Mathematical Analysis',
+      badge: 'Percentage & Ratio Benchmark',
+      tagline: 'Calculate percentage of numbers, percentage increase or decrease, discount markdowns, and relative proportions.',
+      overview: 'The <strong>Percentage Calculator</strong> solves all common percentage relationships: what is X% of Y, finding what percent X is of Y, calculating percentage increase/decrease, and finding the base value before a percentage change.',
+      steps: [
+        { title: 'Choose Percentage Mode', desc: 'Select standard percentage, percentage change, or proportional ratio.' },
+        { title: 'Enter Input Values', desc: 'Enter baseline numbers and target percentage or final comparison amounts.' },
+        { title: 'View Immediate Results', desc: 'Inspect the resulting value, percentage delta, and step-by-step arithmetic breakdown.' }
+      ],
+      formulaName: 'Percentage & Change Formulas',
+      formulaExpr: 'P = \frac{X}{100} \times Y, \quad \Delta \% = \frac{V_2 - V_1}{|V_1|} \times 100\%',
+      formulaExplanation: 'Where P is the percentage amount, V1 is the original value, and V2 is the final value.',
+      example: '<strong>Example:</strong> An increase from $80 to $100 is <code>((100 - 80) / 80) * 100 = +25%</code>.',
+      faqs: [
+        {
+          q: 'What is the difference between percentage change and percentage points?',
+          a: 'Percentage change measures the relative proportional change of a value, while percentage points measure the arithmetic difference between two percentage rates.'
+        }
+      ]
+    },
+
+    'sec-random-calc': {
+      title: 'Random Number Generator & Picker',
+      category: 'Probability & Statistics',
+      badge: 'Cryptographic Browser Entropy Standard',
+      tagline: 'Generate true non-repeating or repeating random numbers, coin flips, dice rolls, and custom sample sets.',
+      overview: 'The <strong>Random Number Generator</strong> utilizes hardware-backed browser cryptographic entropy (window.crypto) to generate unbiased, uniform random numbers across any user-defined minimum and maximum range.',
+      steps: [
+        { title: 'Define Range (Min & Max)', desc: 'Enter lower and upper bounds (e.g. 1 to 100).' },
+        { title: 'Set Quantity & Duplicates', desc: 'Choose how many numbers to generate and toggle duplicate exclusion on or off.' },
+        { title: 'Generate & Copy Results', desc: 'Click Generate to produce results instantly; click any number to copy it to clipboard.' }
+      ],
+      formulaName: 'Uniform Discrete Distribution',
+      formulaExpr: 'R = \lfloor U \times (\text{Max} - \text{Min} + 1) \rfloor + \text{Min}',
+      formulaExplanation: 'Where U is a uniform random real number in [0, 1) derived from cryptographic entropy.',
+      example: '<strong>Example:</strong> Generating 5 non-repeating lottery numbers between 1 and 50 produces an evenly distributed, unbiased sample set.',
+      faqs: [
+        {
+          q: 'Are these numbers truly random?',
+          a: 'Yes, they use the Web Cryptography API (crypto.getRandomValues) which accesses high-entropy hardware noise sources in your operating system.'
+        }
+      ]
+    },
+
+    'sec-quadratic-calc': {
+      title: 'Quadratic Equation Solver',
+      category: 'Algebra & Polynomials',
+      badge: 'Algebraic Polynomial Standard',
+      tagline: 'Solve ax² + bx + c = 0 with real and complex imaginary roots, parabola vertex, and discriminant analysis.',
+      overview: 'The <strong>Quadratic Equation Solver</strong> finds exact roots (solutions) for second-degree polynomials ax² + bx + c = 0. It displays discriminant analysis (Δ = b² - 4ac), identifies whether roots are real or complex, and computes parabola vertex coordinates.',
+      steps: [
+        { title: 'Enter Coefficients a, b, and c', desc: 'Input real numbers for quadratic coefficient (a ≠ 0), linear coefficient (b), and constant (c).' },
+        { title: 'Inspect Roots & Discriminant', desc: 'Review the discriminant value (positive = 2 real roots, zero = 1 real root, negative = 2 complex roots).' },
+        { title: 'Examine Parabola Vertex', desc: 'Identify the vertex point (h, k) and axis of symmetry for curve graphing.' }
+      ],
+      formulaName: 'Quadratic Formula & Discriminant',
+      formulaExpr: 'x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}, \quad \Delta = b^2 - 4ac',
+      formulaExplanation: 'Where Δ determines root nature: Δ > 0 yields two distinct real roots, Δ = 0 yields one repeated root, and Δ < 0 yields complex conjugate roots.',
+      example: '<strong>Example:</strong> For <code>x² - 5x + 6 = 0</code>, <code>a=1, b=-5, c=6</code>: Discriminant Δ = 25 - 24 = 1. Roots: <code>x₁ = 3, x₂ = 2</code>.',
+      faqs: [
+        {
+          q: 'What does a negative discriminant mean?',
+          a: 'When Δ < 0, the equation has no real x-intercepts. The solutions exist as a pair of complex conjugate numbers involving the imaginary unit i (where i² = -1).'
+        }
+      ]
+    },
+
+    'sec-unit-calc': {
+      title: 'Universal Unit Converter',
+      category: 'Measurements & Physical Sciences',
+      badge: 'NIST & ISO 80000 International Standard',
+      tagline: 'Instant conversions for Length, Weight, Volume, Temperature, Area, Speed, Pressure, and Energy.',
+      overview: 'The <strong>Universal Unit Converter</strong> delivers precision bidirectional conversions across Metric, Imperial, and US Customary systems. Built with verified international scientific conversion factors, it enables instantaneous calculations without rounding degradation.',
+      steps: [
+        { title: 'Select Physical Quantity', desc: 'Choose Length, Mass/Weight, Temperature, Volume, Area, Speed, or Pressure.' },
+        { title: 'Choose From & To Units', desc: 'Select source and target units from the interactive dropdown selectors.' },
+        { title: 'Enter Quantity', desc: 'Type any quantity into the input field to see instantaneous results in the converted unit.' }
+      ],
+      formulaName: 'Linear Unit Transformation',
+      formulaExpr: 'V_{\text{target}} = (V_{\text{source}} \times k) + \text{offset}',
+      formulaExplanation: 'Where k is the exact physical ratio coefficient and offset handles affine scales such as Celsius, Fahrenheit, and Kelvin.',
+      example: '<strong>Example:</strong> Converting <code>100 Kilograms</code> yields <code>220.462 Pounds (lbs)</code>; converting <code>100°C</code> yields <code>212°F</code>.',
+      faqs: [
+        {
+          q: 'Are the conversion coefficients verified?',
+          a: 'Yes, all coefficients are calibrated against NIST Special Publication 811 and ISO 80000 physical quantities standards.'
+        }
+      ]
+    },
+
+    'sec-age-calc': {
+      title: 'Age & Date Difference Calculator',
+      category: 'Calendar & Chronometry',
+      badge: 'Gregorian Calendar Astronomical Precision',
+      tagline: 'Calculate exact chronological age in years, months, days, hours, and minutes with upcoming birthday countdown.',
+      overview: 'The <strong>Age & Date Calculator</strong> computes exact chronological elapsed time between two dates. It accounts for leap years, variable calendar month lengths, and day boundaries to provide exact age breakdowns.',
+      steps: [
+        { title: 'Input Date of Birth', desc: 'Select your birth year, month, and day.' },
+        { title: 'Select Reference Date', desc: 'Defaults to current date or choose any future/past target date.' },
+        { title: 'View Exact Age & Milestones', desc: 'Inspect age in years/months/days, total days lived, and countdown to your next birthday.' }
+      ],
+      formulaName: 'Gregorian Chronometric Delta',
+      formulaExpr: '\Delta T = T_{\text{target}} - T_{\text{birth}} \quad (\text{exact calendar alignment})',
+      formulaExplanation: 'Accounts for leap centuries (divisible by 400) and varying month horizons (28, 29, 30, 31 days).',
+      example: '<strong>Example:</strong> A person born June 15, 1995 evaluated today displays exact completed years, elapsed months, remaining days, and total days lived.',
+      faqs: [
+        {
+          q: 'Does this calculator account for leap years?',
+          a: 'Yes, every 4-year leap cycle (including February 29th) is fully handled according to the Gregorian calendar rules.'
+        }
+      ]
+    },
+
+    'sec-gpa-calc': {
+      title: 'College & High School GPA Calculator',
+      category: 'Academic Evaluation',
+      badge: 'Standard 4.0 Academic Grade Scale',
+      tagline: 'Calculate cumulative semester and overall Grade Point Average (GPA) with course credit weighting.',
+      overview: 'The <strong>GPA Calculator</strong> determines your cumulative Grade Point Average across high school or university semesters. It computes weighted credit averages based on standard 4.0 letter grade points (A=4.0, B=3.0, C=2.0, D=1.0, F=0.0).',
+      steps: [
+        { title: 'Add Course Rows', desc: 'Enter course titles, credit weights (e.g. 3 or 4 credits), and letter grades.' },
+        { title: 'Input Existing Cumulative GPA (Optional)', desc: 'Include prior completed credits and cumulative GPA to calculate new overall GPA.' },
+        { title: 'View Semester & Cumulative GPA', desc: 'Inspect your exact GPA score and credit hour summation.' }
+      ],
+      formulaName: 'Credit-Weighted Grade Point Average',
+      formulaExpr: '\text{GPA} = \frac{\sum (\text{Grade Points}_i \times \text{Credits}_i)}{\sum \text{Credits}_i}',
+      formulaExplanation: 'Where each letter grade corresponds to numerical points multiplied by the course credit value.',
+      example: '<strong>Example:</strong> Taking a 4-credit course with grade A (4.0) and a 3-credit course with grade B (3.0) gives: <code>(16 + 9) / 7 = 3.57 GPA</code>.',
+      faqs: [
+        {
+          q: 'What scale is used for letter grades?',
+          a: 'Standard 4.0 scale: A=4.0, A-=3.7, B+=3.3, B=3.0, B-=2.7, C+=2.3, C=2.0, D=1.0, F=0.0.'
+        }
+      ]
+    },
+
+    'sec-sales-tax-calc': {
+      title: 'Sales Tax & VAT Calculator',
+      category: 'Commercial Taxation',
+      badge: 'Retail Commercial Tax Standard',
+      tagline: 'Calculate net price, sales tax amount, gross total, and reverse tax-inclusive deductions.',
+      overview: 'The <strong>Sales Tax Calculator</strong> calculates state/local sales tax, GST, or VAT for retail purchases, invoicing, and accounting. It supports both forward calculation (adding tax to net price) and reverse calculation (extracting net price from tax-inclusive total).',
+      steps: [
+        { title: 'Input Net or Total Price', desc: 'Enter purchase amount before tax or total receipt sum.' },
+        { title: 'Specify Sales Tax Rate (%)', desc: 'Enter your applicable state, municipal, or country VAT/GST rate.' },
+        { title: 'Review Exact Figures', desc: 'Inspect exact tax liability, pre-tax net sum, and final gross total.' }
+      ],
+      formulaName: 'Sales Tax & VAT Formulation',
+      formulaExpr: '\text{Tax} = P_{\text{net}} \times \frac{r}{100}, \quad P_{\text{net}} = \frac{P_{\text{gross}}}{1 + \frac{r}{100}}',
+      formulaExplanation: 'Where r is tax percentage rate, P_net is pre-tax price, and P_gross is final total price.',
+      example: '<strong>Example:</strong> A $250 purchase with an 8.25% tax rate yields $20.63 in tax for a total of $270.63.',
+      faqs: [
+        {
+          q: 'Can this calculate tax backwards from a receipt total?',
+          a: 'Yes, select reverse mode or tax-inclusive mode to find out how much of your total receipt was original price vs sales tax.'
+        }
+      ]
+    },
+
+    'sec-credit-card-calc': {
+      title: 'Credit Card Minimum & Payoff Calculator',
+      category: 'Debt Amortization',
+      badge: 'Revolving Credit APR Benchmark',
+      tagline: 'Calculate how long minimum payments take to eliminate card debt and interest saved with accelerated payments.',
+      overview: 'The <strong>Credit Card Payoff Calculator</strong> simulates revolving card balance amortization under monthly compounding APR. It highlights the true cost of paying only minimum amounts vs fixed accelerated payments to become debt-free faster.',
+      steps: [
+        { title: 'Enter Card Balance', desc: 'Input your current credit card statement balance (e.g. $5,000).' },
+        { title: 'Enter Card APR (%)', desc: 'Specify your card interest rate (e.g. 24.99% APR).' },
+        { title: 'Configure Payment Strategy', desc: 'Compare minimum payments vs a fixed monthly payment amount.' },
+        { title: 'Review Interest & Timeline', desc: 'Inspect months to debt freedom and total cumulative interest charges.' }
+      ],
+      formulaName: 'Daily Periodic Rate Compounding',
+      formulaExpr: 'I_{\text{month}} = B \times \left(\frac{\text{APR}}{365}\right) \times 30, \quad B_{\text{new}} = B + I_{\text{month}} - P_{\text{monthly}}',
+      formulaExplanation: 'Interest accrues daily on remaining balance. Extra payments go directly toward principal reduction.',
+      example: '<strong>Example:</strong> A $5,000 balance at 22% APR paying only minimums takes over 14 years and costs $5,800+ in interest; paying $200/mo clears it in 33 months and saves $4,300+.',
+      faqs: [
+        {
+          q: 'Why does paying only the minimum take so long?',
+          a: 'Minimum payments are often set at just 1% to 2% of principal plus monthly accrued interest, meaning almost your entire payment goes to bank interest.'
+        }
+      ]
+    },
+
+    'sec-retirement-calc': {
+      title: 'Retirement Savings & 4% Safe Withdrawal Planner',
+      category: 'Wealth Accumulation',
+      badge: 'Trinity Study 4% Safe Withdrawal Benchmark',
+      tagline: 'Forecast investment growth, annual compounding returns, retirement nest egg, and safe annual income.',
+      overview: 'The <strong>Retirement Calculator</strong> projects your retirement nest egg based on current savings, monthly contributions, annual investment yield, and retirement age horizon. It models portfolio depletion longevity using the Trinity 4% safe withdrawal rule.',
+      steps: [
+        { title: 'Input Current Age & Target Retirement Age', desc: 'Define your investment runway horizon (e.g. current age 30, retiring at 65).' },
+        { title: 'Enter Current Savings & Monthly Deposit', desc: 'Specify starting principal and monthly automated investments.' },
+        { title: 'Set Expected Return & Inflation', desc: 'Configure annual compound rate of return (e.g. 7% to 9% historical index benchmark).' },
+        { title: 'Inspect Nest Egg & Annual Income', desc: 'Review projected portfolio balance at retirement and estimated sustainable monthly income.' }
+      ],
+      formulaName: 'Future Value of Annuity Compounding',
+      formulaExpr: 'FV = PV(1 + r)^n + PMT \left[ \frac{(1 + r)^n - 1}{r} \right]',
+      formulaExplanation: 'Where PV is starting balance, PMT is periodic contribution, r is monthly return, and n is total months.',
+      example: '<strong>Example:</strong> Saving $500/month starting at age 30 with 8% average return yields over <strong>$1,146,000</strong> by age 65.',
+      faqs: [
+        {
+          q: 'What is the 4% safe withdrawal rule?',
+          a: 'Derived from the landmark Trinity Study, withdrawing 4% of your portfolio value in year one (adjusted for inflation thereafter) historically provided a 95%+ probability of lasting 30+ years.'
+        }
+      ]
     }
   };
 
@@ -1049,8 +1316,8 @@
       </div>
     `).join('');
 
-    const faqsHtml = data.faqs.map(faq => `
-      <details class="seo-faq-item" open>
+    const faqsHtml = data.faqs.map((faq, idx) => `
+      <details class="seo-faq-item"${idx === 0 ? ' open' : ''}>
         <summary class="seo-faq-question">
           <span>${faq.q}</span>
           <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -1063,28 +1330,6 @@
 
     return `
       <section class="calc-seo-guide-wrap" aria-labelledby="seo-guide-heading">
-        <!-- Client-Side Security & Privacy Highlight Banner (User Requested) -->
-        <div class="seo-privacy-banner">
-          <div class="seo-privacy-icon-box">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              <polyline points="9 12 11 14 15 10"></polyline>
-            </svg>
-          </div>
-          <div class="seo-privacy-content">
-            <div class="seo-privacy-title">
-              <span>100% Client-Side & Private Calculation</span>
-              <span class="seo-verified-badge">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                ${data.badge || 'Verified Standard'}
-              </span>
-            </div>
-            <p class="seo-privacy-text">
-              All computations run directly within your web browser using pure client-side JavaScript. <strong>Zero financial figures, personal data, or calculations are ever sent over the network or logged on remote servers.</strong> Completely safe, instant, private, and 100% free to use.
-            </p>
-          </div>
-        </div>
-
         <!-- Section Title Row -->
         <div class="seo-header-row">
           <div class="seo-header-text">
@@ -1166,6 +1411,28 @@
             ${faqsHtml}
           </div>
         </article>
+
+        <!-- Client-Side Security & Privacy Highlight Banner (User Requested) -->
+        <div class="seo-privacy-banner" style="margin-top: 1rem;">
+          <div class="seo-privacy-icon-box">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <polyline points="9 12 11 14 15 10"></polyline>
+            </svg>
+          </div>
+          <div class="seo-privacy-content">
+            <div class="seo-privacy-title">
+              <span>100% Client-Side & Private Calculation</span>
+              <span class="seo-verified-badge">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                ${data.badge || 'Verified Standard'}
+              </span>
+            </div>
+            <p class="seo-privacy-text">
+              All computations run directly within your web browser using pure client-side JavaScript. <strong>Zero financial figures, personal data, or calculations are ever sent over the network or logged on remote servers.</strong> Completely safe, instant, private, and 100% free to use.
+            </p>
+          </div>
+        </div>
       </section>
     `;
   }
@@ -1229,5 +1496,11 @@
     updateGuide('sec-mort-calc', 'financial');
     // Check initial fitness calculator
     updateGuide('sec-bmi-calc', 'fitness');
+    // Check initial math calculator
+    updateGuide('sec-sci-calc', 'math');
+    // Check initial other calculator
+    updateGuide('sec-unit-calc', 'other');
+    // Check scientific calculator
+    updateGuide('sec-sci-calc', 'standard');
   });
 })();

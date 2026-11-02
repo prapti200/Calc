@@ -5459,6 +5459,10 @@ const FinancialCalcs = {
     if (catalogView) catalogView.style.display = 'none';
     if (detailView) detailView.style.display = 'block';
 
+    if (window.updateActiveCalculatorTitle) {
+      window.updateActiveCalculatorTitle('fin', calcId);
+    }
+
     // Show only the selected calculator, hide all others
     document.querySelectorAll('.fin-calc-unit').forEach(panel => {
       panel.style.display = panel.id === calcId ? 'block' : 'none';
@@ -5469,6 +5473,11 @@ const FinancialCalcs = {
       pill.classList.toggle('active', pill.dataset.target === calcId);
     });
 
+    const activePill = document.querySelector('#fin-detail-view .switcher-pill.active');
+    if (activePill) {
+      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+
     if (window.AppRouter && !window.AppRouter.isDispatching) {
       window.AppRouter.onCalculatorOpened(calcId, 'financial');
     }
@@ -5477,7 +5486,7 @@ const FinancialCalcs = {
       window.SeoGuide.updateGuide(calcId, 'financial');
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.scrollToActiveCalculator) { window.scrollToActiveCalculator('fin'); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   },
 
   closeCalculator() {

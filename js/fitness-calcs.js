@@ -2858,6 +2858,10 @@ const FitnessCalcs = {
     if (catalogView) catalogView.style.display = 'none';
     if (detailView) detailView.style.display = 'block';
 
+    if (window.updateActiveCalculatorTitle) {
+      window.updateActiveCalculatorTitle('fit', calcId);
+    }
+
     document.querySelectorAll('.fit-calc-unit').forEach(panel => {
       panel.style.display = panel.id === calcId ? 'block' : 'none';
     });
@@ -2865,6 +2869,11 @@ const FitnessCalcs = {
     document.querySelectorAll('#fit-detail-view .switcher-pill').forEach(pill => {
       pill.classList.toggle('active', pill.dataset.target === calcId);
     });
+
+    const activePill = document.querySelector('#fit-detail-view .switcher-pill.active');
+    if (activePill) {
+      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
 
     if (window.AppRouter && !window.AppRouter.isDispatching) {
       window.AppRouter.onCalculatorOpened(calcId, 'fitness');
@@ -2874,7 +2883,7 @@ const FitnessCalcs = {
       window.SeoGuide.updateGuide(calcId, 'fitness');
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.scrollToActiveCalculator) { window.scrollToActiveCalculator('fit'); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   },
 
   closeCalculator() {

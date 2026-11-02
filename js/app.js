@@ -237,6 +237,172 @@
     switchView(category, calcId);
   };
 
+  // --- FILEZENITH SUITE DETAIL SIDEBAR SEARCH FILTER ---
+  function normalizeSearchText(str) {
+    if (!str) return '';
+    return str
+      .toLowerCase()
+      .replace(/&amp;/g, ' and ')
+      .replace(/&/g, ' and ')
+      .replace(/[+]/g, ' and ')
+      .replace(/[\/\-_]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  window.filterDetailSwitcher = function (suitePrefix, rawQuery) {
+    const query = normalizeSearchText(rawQuery);
+    const clearBtn = document.getElementById(`${suitePrefix}-detail-search-clear`);
+    if (clearBtn) {
+      clearBtn.style.display = query ? 'flex' : 'none';
+    }
+
+    // Lazy index calculator keywords from catalog cards if not already indexed
+    if (!window._detailKeywordsCache) {
+      window._detailKeywordsCache = {};
+      try {
+        document.querySelectorAll('.zenith-card').forEach(card => {
+          const oc = card.getAttribute('onclick') || '';
+          const m = oc.match(/'([^']+)'/g);
+          if (m && m.length >= 2) {
+            const targetId = m[1].replace(/'/g, '');
+            const title = card.querySelector('.zenith-card-title')?.textContent || '';
+            const kw = (card.getAttribute('data-keywords') || '') + ' ' + title;
+            window._detailKeywordsCache[targetId] = normalizeSearchText(kw);
+          }
+        });
+      } catch (err) {
+        console.warn('Keywords index error:', err);
+      }
+    }
+
+    const words = query ? query.split(/\s+/).filter(Boolean) : [];
+    const pills = document.querySelectorAll(`#${suitePrefix}-detail-view .switcher-pill`);
+    let matchedCount = 0;
+    const matchingCategories = new Set();
+
+    pills.forEach(pill => {
+      const text = normalizeSearchText(pill.textContent || '');
+      const target = normalizeSearchText(pill.getAttribute('data-target') || '');
+      const cat = pill.getAttribute('data-category') || '';
+      const extraKw = (window._detailKeywordsCache && window._detailKeywordsCache[pill.getAttribute('data-target')]) || '';
+      const searchable = `${text} ${target} ${cat} ${extraKw}`;
+
+      const isMatch = words.length === 0 || words.every(w => searchable.includes(w));
+
+      if (isMatch) {
+        pill.classList.remove('switcher-pill-hidden');
+        pill.style.setProperty('display', '', '');
+        pill.style.removeProperty('display');
+        pill.removeAttribute('hidden');
+        matchedCount++;
+        if (cat) matchingCategories.add(cat);
+      } else {
+        pill.classList.add('switcher-pill-hidden');
+        pill.style.setProperty('display', 'none', 'important');
+        pill.setAttribute('hidden', 'true');
+      }
+    });
+
+    // Handle Category Headers: Show header only if it contains visible pills or if query is empty
+    const headers = document.querySelectorAll(`#${suitePrefix}-detail-view .sidebar-category-header-pill`);
+    headers.forEach(hdr => {
+      const cat = hdr.getAttribute('data-category');
+      const showHeader = !query || matchingCategories.has(cat);
+      if (showHeader) {
+        hdr.classList.remove('switcher-pill-hidden');
+        hdr.style.removeProperty('display');
+        hdr.removeAttribute('hidden');
+      } else {
+        hdr.classList.add('switcher-pill-hidden');
+        hdr.style.setProperty('display', 'none', 'important');
+        hdr.setAttribute('hidden', 'true');
+      }
+    });
+
+    let noMatchMsg = document.getElementById(`${suitePrefix}-switcher-no-match`);
+    if (!noMatchMsg) {
+      noMatchMsg = document.createElement('div');
+      noMatchMsg.id = `${suitePrefix}-switcher-no-match`;
+      noMatchMsg.className = 'switcher-no-match-msg';
+      noMatchMsg.textContent = 'No calculators match your search';
+      const pillGroup = document.getElementById(`${suitePrefix}-switcher-pill-group`);
+      if (pillGroup) pillGroup.appendChild(noMatchMsg);
+    }
+    if (noMatchMsg) {
+      noMatchMsg.style.display = (matchedCount === 0 && query) ? 'block' : 'none';
+    }
+  };
+
+  window.clearDetailSearch = function (suitePrefix) {
+    const input = document.getElementById(`${suitePrefix}-detail-search`);
+    if (input) {
+      input.value = '';
+      window.filterDetailSwitcher(suitePrefix, '');
+      input.focus();
+    }
+  };
+
+  // --- UNIFIED LEFT SIDEBAR CALCULATOR SWITCHER CLICK HANDLER ---
+  document.addEventListener('click', function (e) {
+    const pill = e.target.closest('.calc-detail-sidebar .switcher-pill');
+    if (!pill) return;
+    const cat = pill.getAttribute('data-category');
+    const target = pill.getAttribute('data-target');
+    if (cat && target && window.openZenithCalc) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      window.openZenithCalc(cat, target);
+    }
+  }, true);
+
+  // --- FILEZENITH ACTIVE CALCULATOR TITLE SYNCHRONIZER ---
+  window.updateActiveCalculatorTitle = function (suitePrefix, calcId) {
+    const titleEl = document.getElementById(`${suitePrefix}-active-calc-title`);
+    if (!titleEl) return;
+
+    let title = '';
+    const panel = document.getElementById(calcId);
+    if (panel) {
+      const heading = panel.querySelector('.panel-title-group h2, .section-heading, .panel-title, h2');
+      if (heading) {
+        title = heading.textContent.trim();
+      }
+    }
+
+    if (!title) {
+      const pill = document.querySelector(`#${suitePrefix}-detail-view .switcher-pill[data-target="${calcId}"]`);
+      if (pill) {
+        title = pill.textContent.trim();
+      }
+    }
+
+    if (!title && window.ZenithTitles && window.ZenithTitles[calcId]) {
+      title = window.ZenithTitles[calcId];
+    }
+
+    if (!title) {
+      title = calcId.replace(/^sec-/, '').replace(/-calc$/, '').replace(/-/g, ' ').replace(/\w/g, c => c.toUpperCase());
+    }
+
+    titleEl.textContent = title;
+  };
+
+  // --- FILEZENITH MOBILE-FRIENDLY SMOOTH SCROLL HELPER ---
+  window.scrollToActiveCalculator = function (suitePrefix) {
+    setTimeout(function () {
+      var detailView = document.getElementById(suitePrefix + '-detail-view');
+      if (detailView && detailView.style.display !== 'none') {
+        var headerCard = detailView.querySelector('.calc-detail-header-card') || detailView;
+        var rect = headerCard.getBoundingClientRect();
+        var topOffset = rect.top + (window.pageYOffset || document.documentElement.scrollTop) - 10;
+        window.scrollTo({ top: Math.max(0, topOffset), behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 40);
+  };
+
   // --- FILEZENITH ROUTING & FILTERING SYSTEM ---
   window.openZenithCalc = function (category, calcId) {
     // Hide all view sections
@@ -269,11 +435,20 @@
       }
     }
 
+    const suiteMap = { financial: 'fin', fitness: 'fit', math: 'math', other: 'other' };
+    if (suiteMap[category] && window.updateActiveCalculatorTitle) {
+      window.updateActiveCalculatorTitle(suiteMap[category], calcId);
+    }
+
     if (window.AppRouter && !window.AppRouter.isDispatching) {
       window.AppRouter.onCalculatorOpened(calcId, category);
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (suiteMap[category] && window.scrollToActiveCalculator) {
+      window.scrollToActiveCalculator(suiteMap[category]);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   window.backToZenithHub = function () {
@@ -318,6 +493,8 @@
         window.MathCalcs.showCatalog();
       } else if (tabKey === 'other' && window.OtherCalcs) {
         window.OtherCalcs.showCatalog();
+      } else if (tabKey === 'standard' && window.stdCalc) {
+        window.stdCalc.setScientificMode(true);
       }
       if (window.AppRouter && !window.AppRouter.isDispatching) {
         window.AppRouter.onCatalogOpened(tabKey);
