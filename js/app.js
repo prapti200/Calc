@@ -466,6 +466,7 @@
     if (!query) {
       if (suggestionsEl) {
         suggestionsEl.innerHTML = '';
+        suggestionsEl.classList.remove('active');
         suggestionsEl.style.display = 'none';
       }
 
@@ -549,46 +550,58 @@
     // Sort descending by relevance score (highest priority first)
     scoredList.sort((a, b) => b.score - a.score);
 
-    // --- RENDER DOWNWARD AUTO-SUGGESTIONS DROPDOWN ---
+    // --- RENDER DOWNWARD AUTO-SUGGESTIONS DROPDOWN (MOBILE ONLY) ---
+    const isMobile = window.innerWidth <= 820;
+
     if (suggestionsEl) {
-      if (scoredList.length === 0) {
-        suggestionsEl.innerHTML = `
-          <div class="detail-suggestion-empty">
-            No calculators matching "<strong>${rawQuery.trim()}</strong>"
-          </div>
-        `;
-        suggestionsEl.style.display = 'flex';
+      // On PC / Laptop, NEVER show the popup suggestions dropdown
+      if (!isMobile) {
+        suggestionsEl.innerHTML = '';
+        suggestionsEl.classList.remove('active');
+        suggestionsEl.style.display = 'none';
       } else {
-        const topMatches = scoredList.slice(0, 9);
-        let itemsHtml = '';
-        topMatches.forEach(({ calc }, index) => {
-          const highlightedTitle = highlightMatches(calc.title, rawQuery);
-          itemsHtml += `
-            <div class="detail-suggestion-item ${index === 0 ? 'selected' : ''}" 
-                 data-category="${calc.category}" 
-                 data-target="${calc.id}" 
-                 onclick="window.selectDetailSuggestion('${calc.category}', '${calc.id}', '${suitePrefix}')"
-                 role="option">
-              <div class="suggestion-left">
-                <div class="suggestion-title-row">
-                  <span class="suggestion-title">${highlightedTitle}</span>
-                  <span class="suggestion-category-badge category-badge-${calc.categoryBadge}">${calc.categoryLabel}</span>
-                </div>
-              </div>
-              <span class="suggestion-arrow">→</span>
+        // On Mobile, show downward suggestions box
+        if (scoredList.length === 0) {
+          suggestionsEl.innerHTML = `
+            <div class="detail-suggestion-empty">
+              No calculators matching "<strong>${rawQuery.trim()}</strong>"
             </div>
           `;
-        });
+          suggestionsEl.classList.add('active');
+          suggestionsEl.style.display = 'flex';
+        } else {
+          const topMatches = scoredList.slice(0, 9);
+          let itemsHtml = '';
+          topMatches.forEach(({ calc }, index) => {
+            const highlightedTitle = highlightMatches(calc.title, rawQuery);
+            itemsHtml += `
+              <div class="detail-suggestion-item ${index === 0 ? 'selected' : ''}" 
+                   data-category="${calc.category}" 
+                   data-target="${calc.id}" 
+                   onclick="window.selectDetailSuggestion('${calc.category}', '${calc.id}', '${suitePrefix}')"
+                   role="option">
+                <div class="suggestion-left">
+                  <div class="suggestion-title-row">
+                    <span class="suggestion-title">${highlightedTitle}</span>
+                    <span class="suggestion-category-badge category-badge-${calc.categoryBadge}">${calc.categoryLabel}</span>
+                  </div>
+                </div>
+                <span class="suggestion-arrow">→</span>
+              </div>
+            `;
+          });
 
-        itemsHtml += `
-          <div class="detail-suggestion-hint">
-            <span>Showing top ${topMatches.length} of ${scoredList.length} calculators across all suites</span>
-            <span>Tap to open</span>
-          </div>
-        `;
+          itemsHtml += `
+            <div class="detail-suggestion-hint">
+              <span>Showing top ${topMatches.length} of ${scoredList.length} calculators across all suites</span>
+              <span>Tap to open</span>
+            </div>
+          `;
 
-        suggestionsEl.innerHTML = itemsHtml;
-        suggestionsEl.style.display = 'flex';
+          suggestionsEl.innerHTML = itemsHtml;
+          suggestionsEl.classList.add('active');
+          suggestionsEl.style.display = 'flex';
+        }
       }
     }
 
@@ -643,6 +656,7 @@
     const suggestionsEl = document.getElementById(`${suitePrefix}-detail-suggestions`);
     if (suggestionsEl) {
       suggestionsEl.innerHTML = '';
+      suggestionsEl.classList.remove('active');
       suggestionsEl.style.display = 'none';
     }
 

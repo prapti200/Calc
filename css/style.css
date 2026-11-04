@@ -6682,43 +6682,55 @@ input, select, textarea {
 }
 
 /* ==========================================================================
-   DOWNWARD AUTO-SUGGESTIONS DROPDOWN (185+ ALL CALCULATORS ACROSS ALL SECTORS)
-   Appears directly below the search bar on mobile & desktop when typing
+   DOWNWARD AUTO-SUGGESTIONS DROPDOWN (STRICTLY MOBILE ONLY)
+   On PC / Laptop, this popup dropdown is COMPLETELY REMOVED / HIDDEN.
+   On PC / Laptop, search only filters the downward linear list in the sidebar.
    ========================================================================== */
 .detail-sidebar-search-wrap {
   position: relative !important;
-  z-index: 100 !important;
 }
 
-.calc-detail-sidebar {
-  overflow: visible !important;
-}
-
+/* Completely hide on PC / Laptop (default) - eliminates blank rounded area */
 .detail-search-suggestions {
-  position: absolute !important;
-  top: calc(100% + 5px) !important;
-  left: 0 !important;
-  right: 0 !important;
-  width: 100% !important;
-  max-height: 320px !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  background: var(--card-bg-solid, #ffffff) !important;
-  border: 1.5px solid #3b82f6 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.22), 0 4px 12px -2px rgba(15, 23, 42, 0.12) !important;
-  z-index: 999999 !important;
-  box-sizing: border-box !important;
-  padding: 5px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 3px !important;
+  display: none !important;
 }
 
-[data-theme="dark"] .detail-search-suggestions {
-  background: #0f172a !important;
-  border-color: #38bdf8 !important;
-  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(56, 189, 248, 0.2) !important;
+/* Mobile only (<= 820px) when actively searching */
+@media (max-width: 820px) {
+  .detail-sidebar-search-wrap {
+    z-index: 100 !important;
+  }
+
+  .calc-detail-sidebar {
+    overflow: visible !important;
+  }
+
+  .detail-search-suggestions.active {
+    display: flex !important;
+    flex-direction: column !important;
+    position: absolute !important;
+    top: calc(100% + 5px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-height: 320px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    background: var(--card-bg-solid, #ffffff) !important;
+    border: 1.5px solid #3b82f6 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.22), 0 4px 12px -2px rgba(15, 23, 42, 0.12) !important;
+    z-index: 999999 !important;
+    box-sizing: border-box !important;
+    padding: 5px !important;
+    gap: 3px !important;
+  }
+
+  [data-theme="dark"] .detail-search-suggestions.active {
+    background: #0f172a !important;
+    border-color: #38bdf8 !important;
+    box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(56, 189, 248, 0.2) !important;
+  }
 }
 
 .detail-suggestion-item {
