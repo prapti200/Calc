@@ -1474,8 +1474,8 @@ input, select, textarea {
 
 @media (max-width: 520px) {
   .feature-big-box-grid {
-    grid-template-columns: 1fr;
-    gap: 0.65rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
   }
 }
 
@@ -6265,11 +6265,11 @@ input, select, textarea {
     padding-bottom: 0.65rem !important;
   }
 
-  /* Phone Single Column Card Optimization */
+  /* Phone 2-Column Card Optimization (Uniform across All Calculators & Suites) */
   .zenith-tools-grid,
   .feature-big-box-grid {
-    grid-template-columns: 1fr !important;
-    gap: 0.75rem !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.55rem !important;
   }
 
   .zenith-card,
@@ -8998,22 +8998,49 @@ aside.calc-detail-sidebar .switcher-pill-group button.switcher-pill[hidden],
     margin: 0 !important;
   }
 
-  /* 6. Compact 2-column calculator cards grid */
-  .zenith-topic-section {
+  /* 6. Compact 2-column calculator cards grid (Uniform across All, Finance, Health, Math, Daily Utilities) */
+  .zenith-topic-section,
+  .calc-topic-section {
     padding: 0.65rem 0.5rem !important;
     margin-bottom: 0.85rem !important;
     border-radius: 12px !important;
   }
 
-  .zenith-topic-header {
+  .zenith-topic-header,
+  .topic-header-row {
     margin-bottom: 0.45rem !important;
+    padding-bottom: 0.35rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
   }
 
-  .zenith-topic-title {
+  .zenith-topic-title,
+  .topic-heading {
     font-size: 0.95rem !important;
+    font-weight: 750 !important;
   }
 
-  .zenith-tools-grid {
+  .topic-logo-box {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+  }
+
+  .topic-logo-box svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  .topic-count-pill {
+    font-size: 0.7rem !important;
+    padding: 0.12rem 0.4rem !important;
+  }
+
+  /* 2-Columns grid for all features (Finance, Health, Math, Daily Utilities, All Calculators) */
+  .zenith-tools-grid,
+  .feature-big-box-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 0.55rem !important;
     padding: 0 !important;
@@ -9022,19 +9049,23 @@ aside.calc-detail-sidebar .switcher-pill-group button.switcher-pill[hidden],
     box-sizing: border-box !important;
   }
 
-  .zenith-card {
+  /* Sleek, uniform cards across all suites */
+  .zenith-card,
+  .feature-big-box {
     min-height: 72px !important;
     height: auto !important;
     padding: 0.55rem 0.6rem 0.45rem 0.6rem !important;
     border-radius: 10px !important;
     box-sizing: border-box !important;
-    display: flex;
+    display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
+    margin: 0 !important;
   }
 
   .zenith-card-header,
-  .zenith-card-top {
+  .zenith-card-top,
+  .box-header-row {
     margin-bottom: 0.25rem !important;
     display: flex !important;
     align-items: center !important;
@@ -9042,7 +9073,8 @@ aside.calc-detail-sidebar .switcher-pill-group button.switcher-pill[hidden],
   }
 
   .zenith-icon-box,
-  .zenith-card-icon-wrap {
+  .zenith-card-icon-wrap,
+  .box-icon-container {
     width: 26px !important;
     height: 26px !important;
     min-width: 26px !important;
@@ -9051,12 +9083,15 @@ aside.calc-detail-sidebar .switcher-pill-group button.switcher-pill[hidden],
   }
 
   .zenith-icon-box svg,
-  .zenith-card-icon-wrap svg {
+  .zenith-card-icon-wrap svg,
+  .box-svg-icon {
     width: 14px !important;
     height: 14px !important;
   }
 
-  .zenith-card-title {
+  /* Proper, legible calculator naming (2-line clamp, proportional typography) */
+  .zenith-card-title,
+  .box-title {
     font-size: 0.82rem !important;
     font-weight: 750 !important;
     line-height: 1.22 !important;
@@ -9067,16 +9102,31 @@ aside.calc-detail-sidebar .switcher-pill-group button.switcher-pill[hidden],
     overflow: hidden !important;
   }
 
-  .zenith-card-arrow {
+  /* REMOVE ALL "NEW" WORD BADGES FROM BOXES ON MOBILE */
+  .box-new-badge {
     display: none !important;
   }
 
-  .zenith-card-desc {
-    display: none !important; /* Hide long description so 2-col cards remain sleek & proportional */
+  .zenith-badge,
+  .box-region-badge {
+    font-size: 0.62rem !important;
+    padding: 0.15rem 0.35rem !important;
+    border-radius: 4px !important;
+    max-width: 82px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    line-height: 1.2 !important;
   }
 
-  .zenith-card-footer {
-    display: none !important; /* Hide footer tags on mobile */
+  /* Hide long descriptions, tags, arrows & footers on mobile so 2-column cards stay sleek & balanced */
+  .zenith-card-arrow,
+  .zenith-card-desc,
+  .zenith-card-footer,
+  .box-description,
+  .box-tags-row,
+  .box-footer-row {
+    display: none !important;
   }
 }
 

@@ -88,14 +88,17 @@
   const settingsOpenHistory = document.getElementById('settings-open-history');
   const settingsClearHistory = document.getElementById('settings-clear-history');
 
-  function toggleSettings(forceClose = false) {
+  function toggleSettings(forceClose = false, popHistory = true) {
     if (!settingsPopover) return;
-    const isOpen = settingsPopover.classList.contains('open');
-    if (forceClose || isOpen) {
+    const wasOpen = settingsPopover.classList.contains('open');
+    if (forceClose || wasOpen) {
       settingsPopover.classList.remove('open');
       if (settingsToggleBtn) {
         settingsToggleBtn.classList.remove('active');
         settingsToggleBtn.setAttribute('aria-expanded', 'false');
+      }
+      if (wasOpen && popHistory && history.state && history.state.mobileOverlay === 'settings') {
+        history.back();
       }
     } else {
       settingsPopover.classList.add('open');
@@ -103,6 +106,9 @@
         settingsToggleBtn.classList.add('active');
         settingsToggleBtn.setAttribute('aria-expanded', 'true');
       }
+      try {
+        history.pushState({ mobileOverlay: 'settings' }, '', window.location.href);
+      } catch (_) {}
     }
   }
 
@@ -162,11 +168,22 @@
   const closeHistoryBtn = document.getElementById('close-history-btn');
 
   function openHistory() {
-    if (historyDrawerBackdrop) historyDrawerBackdrop.classList.add('open');
+    if (historyDrawerBackdrop) {
+      historyDrawerBackdrop.classList.add('open');
+      try {
+        history.pushState({ mobileOverlay: 'history' }, '', window.location.href);
+      } catch (_) {}
+    }
   }
 
-  function closeHistory() {
-    if (historyDrawerBackdrop) historyDrawerBackdrop.classList.remove('open');
+  function closeHistory(popHistory = true) {
+    if (historyDrawerBackdrop) {
+      const wasOpen = historyDrawerBackdrop.classList.contains('open');
+      historyDrawerBackdrop.classList.remove('open');
+      if (wasOpen && popHistory && history.state && history.state.mobileOverlay === 'history') {
+        history.back();
+      }
+    }
   }
 
   if (historyToggleBtn) historyToggleBtn.addEventListener('click', openHistory);
@@ -1013,44 +1030,62 @@
       e.stopPropagation();
     }
     const popover = document.getElementById('mobile-nav-popover');
-    const btn = document.getElementById('mobile-menu-toggle-btn');
     if (!popover) return;
-    const isOpen = popover.classList.contains('open');
-    if (isOpen) {
-      window.closeMobileNavMenu();
+    if (popover.classList.contains('open')) {
+      window.closeMobileNavMenu(true);
     } else {
-      popover.classList.add('open');
-      btn?.classList.add('active');
-      btn?.setAttribute('aria-expanded', 'true');
-
-      // Sync active state with currently visible section
-      const activeSec = document.querySelector('.view-section.active');
-      let activeKey = 'zenith-hub';
-      if (activeSec) {
-        if (activeSec.id === 'view-financial') activeKey = 'finance';
-        else if (activeSec.id === 'view-fitness') activeKey = 'fitness';
-        else if (activeSec.id === 'view-math') activeKey = 'math';
-        else if (activeSec.id === 'view-other') activeKey = 'other';
-        else if (activeSec.id === 'view-standard') activeKey = 'standard';
-      }
-      document.querySelectorAll('.mobile-nav-item').forEach(item => {
-        item.classList.toggle('active', item.getAttribute('data-tab') === activeKey);
-      });
+      window.openMobileNavMenu();
     }
   };
 
-  window.closeMobileNavMenu = function () {
+  window.openMobileNavMenu = function () {
     const popover = document.getElementById('mobile-nav-popover');
     const btn = document.getElementById('mobile-menu-toggle-btn');
+    if (!popover) return;
+
+    popover.classList.add('open');
+    btn?.classList.add('active');
+    btn?.setAttribute('aria-expanded', 'true');
+
+    // Push history state so the phone hardware / gesture Back button closes this menu
+    try {
+      history.pushState({ mobileOverlay: 'suites-menu' }, '', window.location.href);
+    } catch (_) {}
+
+    // Sync active state with currently visible section
+    const activeSec = document.querySelector('.view-section.active');
+    let activeKey = 'zenith-hub';
+    if (activeSec) {
+      if (activeSec.id === 'view-financial') activeKey = 'finance';
+      else if (activeSec.id === 'view-fitness') activeKey = 'fitness';
+      else if (activeSec.id === 'view-math') activeKey = 'math';
+      else if (activeSec.id === 'view-other') activeKey = 'other';
+      else if (activeSec.id === 'view-standard') activeKey = 'standard';
+    }
+    document.querySelectorAll('.mobile-nav-item').forEach(item => {
+      item.classList.toggle('active', item.getAttribute('data-tab') === activeKey);
+    });
+  };
+
+  window.closeMobileNavMenu = function (popHistory = true) {
+    const popover = document.getElementById('mobile-nav-popover');
+    const btn = document.getElementById('mobile-menu-toggle-btn');
+    const wasOpen = popover?.classList.contains('open');
+
     if (popover) popover.classList.remove('open');
     if (btn) {
       btn.classList.remove('active');
       btn.setAttribute('aria-expanded', 'false');
     }
+
+    // If closed via cross button (or code) and history was pushed, pop it cleanly
+    if (wasOpen && popHistory && history.state && history.state.mobileOverlay === 'suites-menu') {
+      history.back();
+    }
   };
 
   window.handleMobileNavSelect = function (tabKey, btnEl) {
-    window.closeMobileNavMenu();
+    window.closeMobileNavMenu(true);
     let navKey = tabKey;
     if (tabKey === 'zenith-hub') navKey = 'all';
     if (tabKey === 'finance') navKey = 'financial';
@@ -1061,7 +1096,23 @@
 
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.mobile-menu-anchor-wrap')) {
-      window.closeMobileNavMenu();
+      window.closeMobileNavMenu(true);
+    }
+  });
+
+  // Dual dismissal for phone Back button / gesture (Way 1: Cross button, Way 2: Phone Back)
+  window.addEventListener('popstate', (e) => {
+    const mobileMenu = document.getElementById('mobile-nav-popover');
+    if (mobileMenu && mobileMenu.classList.contains('open')) {
+      window.closeMobileNavMenu(false); // Closed via phone back, don't call history.back again
+    }
+    const settingsPop = document.getElementById('settings-popover');
+    if (settingsPop && settingsPop.classList.contains('open')) {
+      if (typeof toggleSettings === 'function') toggleSettings(true, false);
+    }
+    const historyBackdrop = document.getElementById('history-drawer-backdrop');
+    if (historyBackdrop && historyBackdrop.classList.contains('open')) {
+      if (typeof closeHistory === 'function') closeHistory(false);
     }
   });
 
