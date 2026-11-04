@@ -1085,7 +1085,7 @@
   };
 
   window.handleMobileNavSelect = function (tabKey, btnEl) {
-    window.closeMobileNavMenu(true);
+    window.closeMobileNavMenu(false);
     let navKey = tabKey;
     if (tabKey === 'zenith-hub') navKey = 'all';
     if (tabKey === 'finance') navKey = 'financial';
