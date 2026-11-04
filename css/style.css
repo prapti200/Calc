@@ -6681,6 +6681,188 @@ input, select, textarea {
   color: #cbd5e1 !important;
 }
 
+/* ==========================================================================
+   DOWNWARD AUTO-SUGGESTIONS DROPDOWN (185+ ALL CALCULATORS ACROSS ALL SECTORS)
+   Appears directly below the search bar on mobile & desktop when typing
+   ========================================================================== */
+.detail-sidebar-search-wrap {
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+.calc-detail-sidebar {
+  overflow: visible !important;
+}
+
+.detail-search-suggestions {
+  position: absolute !important;
+  top: calc(100% + 5px) !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  max-height: 320px !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  background: var(--card-bg-solid, #ffffff) !important;
+  border: 1.5px solid #3b82f6 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.22), 0 4px 12px -2px rgba(15, 23, 42, 0.12) !important;
+  z-index: 999999 !important;
+  box-sizing: border-box !important;
+  padding: 5px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+[data-theme="dark"] .detail-search-suggestions {
+  background: #0f172a !important;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(56, 189, 248, 0.2) !important;
+}
+
+.detail-suggestion-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.65rem !important;
+  padding: 0.6rem 0.75rem !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.12s ease !important;
+  user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  min-height: 46px !important;
+  box-sizing: border-box !important;
+  border: 1px solid transparent !important;
+}
+
+.detail-suggestion-item:hover,
+.detail-suggestion-item.selected {
+  background: #eff6ff !important;
+  border-color: #bfdbfe !important;
+}
+
+[data-theme="dark"] .detail-suggestion-item:hover,
+[data-theme="dark"] .detail-suggestion-item.selected {
+  background: rgba(56, 189, 248, 0.14) !important;
+  border-color: rgba(56, 189, 248, 0.3) !important;
+}
+
+.suggestion-left {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.suggestion-title-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.45rem !important;
+  flex-wrap: nowrap !important;
+}
+
+.suggestion-title {
+  font-size: 0.88rem !important;
+  font-weight: 650 !important;
+  color: var(--text-primary, #0f172a) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+[data-theme="dark"] .suggestion-title {
+  color: #f8fafc !important;
+}
+
+.suggestion-title mark {
+  background: transparent !important;
+  color: #2563eb !important;
+  font-weight: 800 !important;
+  text-decoration: underline !important;
+}
+
+[data-theme="dark"] .suggestion-title mark {
+  color: #38bdf8 !important;
+}
+
+.suggestion-category-badge {
+  font-size: 0.66rem !important;
+  font-weight: 750 !important;
+  padding: 2px 7px !important;
+  border-radius: 6px !important;
+  flex-shrink: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+}
+
+.category-badge-finance {
+  background: rgba(37, 99, 235, 0.12) !important;
+  color: #2563eb !important;
+}
+[data-theme="dark"] .category-badge-finance {
+  background: rgba(56, 189, 248, 0.2) !important;
+  color: #38bdf8 !important;
+}
+
+.category-badge-fitness {
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #059669 !important;
+}
+[data-theme="dark"] .category-badge-fitness {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+}
+
+.category-badge-math {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #d97706 !important;
+}
+[data-theme="dark"] .category-badge-math {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #fbbf24 !important;
+}
+
+.category-badge-other {
+  background: rgba(139, 92, 246, 0.12) !important;
+  color: #7c3aed !important;
+}
+[data-theme="dark"] .category-badge-other {
+  background: rgba(139, 92, 246, 0.2) !important;
+  color: #a78bfa !important;
+}
+
+.suggestion-arrow {
+  font-size: 0.95rem !important;
+  color: var(--text-muted, #94a3b8) !important;
+  font-weight: 600 !important;
+  padding-left: 0.3rem !important;
+  flex-shrink: 0 !important;
+}
+
+.detail-suggestion-empty {
+  padding: 1rem 0.8rem !important;
+  text-align: center !important;
+  font-size: 0.84rem !important;
+  color: var(--text-muted, #64748b) !important;
+}
+
+.detail-suggestion-hint {
+  font-size: 0.68rem !important;
+  color: var(--text-muted, #94a3b8) !important;
+  padding: 0.3rem 0.6rem 0.2rem !important;
+  border-top: 1px solid var(--card-border, #e2e8f0) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+[data-theme="dark"] .detail-suggestion-hint {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+  color: #64748b !important;
+}
+
 /* Switcher inside Left Sidebar on Desktop */
 .calc-detail-sidebar .calc-quick-switcher {
   display: flex !important;

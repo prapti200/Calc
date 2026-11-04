@@ -744,6 +744,8 @@
   };
 
   // Expose globally
+  AppRouter.registry = CALC_REGISTRY;
+  window.CALC_REGISTRY = CALC_REGISTRY;
   window.AppRouter = AppRouter;
 
 })();

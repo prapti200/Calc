@@ -385,6 +385,72 @@
       .trim();
   }
 
+  // Helper to escape regex special characters
+  function escapeRegExp(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // Master Calculator Registry for instant search across all 185+ calculators
+  window.getAllCalculatorsRegistry = function () {
+    if (window._allCalculatorsMasterCache) {
+      return window._allCalculatorsMasterCache;
+    }
+
+    const reg = (window.CALC_REGISTRY || window.AppRouter?.registry || []).map(r => {
+      let rawCat = r.cat || 'other';
+      let effectiveCat = rawCat;
+      if (effectiveCat === 'utility' || effectiveCat === 'internet') effectiveCat = 'other';
+
+      let catLabel = 'Daily Utilities';
+      let catBadge = 'other';
+      if (effectiveCat === 'financial') { catLabel = 'Finance'; catBadge = 'finance'; }
+      else if (effectiveCat === 'fitness') { catLabel = 'Health & Fitness'; catBadge = 'fitness'; }
+      else if (effectiveCat === 'math') { catLabel = 'Math'; catBadge = 'math'; }
+      else if (effectiveCat === 'standard') { catLabel = 'Standard'; catBadge = 'finance'; }
+
+      return {
+        id: r.id,
+        title: r.title,
+        category: effectiveCat,
+        categoryLabel: catLabel,
+        categoryBadge: catBadge,
+        slug: r.slug || '',
+        aliases: (r.aliases || []).slice(),
+        keywords: ''
+      };
+    });
+
+    // Enrich with keywords from DOM cards if available
+    try {
+      document.querySelectorAll('.zenith-card, .feature-big-box, .compact-calc-link').forEach(el => {
+        let targetId = el.getAttribute('data-calc-id');
+        if (!targetId) {
+          const oc = el.getAttribute('onclick') || '';
+          const m = oc.match(/'([^']+)'/g);
+          if (m && m.length >= 2) targetId = m[1].replace(/'/g, '');
+        }
+        if (!targetId) return;
+        const kw = el.getAttribute('data-keywords') || '';
+        const entry = reg.find(c => c.id === targetId);
+        if (entry && kw) {
+          entry.keywords = (entry.keywords + ' ' + kw).trim();
+        }
+      });
+    } catch (e) {}
+
+    window._allCalculatorsMasterCache = reg;
+    return reg;
+  };
+
+  // Helper to highlight matching characters in title
+  function highlightMatches(text, query) {
+    if (!query) return text;
+    const cleanQ = query.trim();
+    const regex = new RegExp(`(${escapeRegExp(cleanQ)})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+  }
+
+  // --- 185+ ALL CALCULATORS DOWNWARD AUTO-SUGGESTIONS & SWITCHER ENGINE ---
   window.filterDetailSwitcher = function (suitePrefix, rawQuery) {
     const query = normalizeSearchText(rawQuery);
     const clearBtn = document.getElementById(`${suitePrefix}-detail-search-clear`);
@@ -392,49 +458,154 @@
       clearBtn.style.display = query ? 'flex' : 'none';
     }
 
-    // Lazy index calculator keywords from catalog cards if not already indexed
-    if (!window._detailKeywordsCache) {
-      window._detailKeywordsCache = {};
-      try {
-        document.querySelectorAll('.zenith-card').forEach(card => {
-          const oc = card.getAttribute('onclick') || '';
-          const m = oc.match(/'([^']+)'/g);
-          if (m && m.length >= 2) {
-            const targetId = m[1].replace(/'/g, '');
-            const title = card.querySelector('.zenith-card-title')?.textContent || '';
-            const kw = (card.getAttribute('data-keywords') || '') + ' ' + title;
-            window._detailKeywordsCache[targetId] = normalizeSearchText(kw);
-          }
+    const suggestionsEl = document.getElementById(`${suitePrefix}-detail-suggestions`);
+    const allCalculators = window.getAllCalculatorsRegistry();
+    const words = query ? query.split(/\s+/).filter(Boolean) : [];
+
+    // If query is empty, close suggestions dropdown and restore switch tab pills
+    if (!query) {
+      if (suggestionsEl) {
+        suggestionsEl.innerHTML = '';
+        suggestionsEl.style.display = 'none';
+      }
+
+      // Restore all pills
+      document.querySelectorAll(`#${suitePrefix}-detail-view .switcher-pill`).forEach(pill => {
+        pill.classList.remove('switcher-pill-hidden');
+        pill.style.removeProperty('display');
+        pill.removeAttribute('hidden');
+      });
+
+      // Restore all category headers
+      document.querySelectorAll(`#${suitePrefix}-detail-view .sidebar-category-header-pill`).forEach(hdr => {
+        hdr.classList.remove('switcher-pill-hidden');
+        hdr.style.removeProperty('display');
+        hdr.removeAttribute('hidden');
+      });
+
+      const noMatchMsg = document.getElementById(`${suitePrefix}-switcher-no-match`);
+      if (noMatchMsg) noMatchMsg.style.display = 'none';
+      return;
+    }
+
+    // High-precision priority scoring across all 185+ calculators
+    const scoredList = [];
+    allCalculators.forEach(calc => {
+      const title = normalizeSearchText(calc.title || '');
+      const id = normalizeSearchText(calc.id || '');
+      const slug = normalizeSearchText(calc.slug || '');
+      const aliases = (calc.aliases || []).map(a => normalizeSearchText(a));
+      const keywords = normalizeSearchText(calc.keywords || '');
+      const q = query;
+
+      let score = 0;
+
+      // 1. Exact match in title (top priority)
+      if (title === q) {
+        score += 100000;
+      }
+      // 2. Title starts with query (e.g. "age" -> "Age Calculator")
+      else if (title.startsWith(q)) {
+        score += 80000;
+      }
+      // 3. Word in title starts with query (e.g. "loan" -> "Auto Loan")
+      else if (new RegExp('\\b' + escapeRegExp(q), 'i').test(title)) {
+        score += 50000;
+      }
+      // 4. Exact match in alias or slug
+      else if (aliases.includes(q) || slug === q) {
+        score += 45000;
+      }
+      // 5. Alias starts with query
+      else if (aliases.some(a => a.startsWith(q))) {
+        score += 35000;
+      }
+      // 6. Word in alias starts with query
+      else if (aliases.some(a => new RegExp('\\b' + escapeRegExp(q), 'i').test(a))) {
+        score += 25000;
+      }
+      // 7. Multi-word all match in title or aliases
+      else if (words.length > 1 && words.every(w => title.includes(w) || aliases.some(a => a.includes(w)))) {
+        score += 20000;
+      }
+      // 8. Keyword word boundary match
+      else if (new RegExp('\\b' + escapeRegExp(q), 'i').test(keywords)) {
+        score += 15000;
+      }
+      // 9. Substring match inside title (e.g. "mortgage" matching "age")
+      else if (title.includes(q)) {
+        score += 3000;
+      }
+      // 10. Substring match inside keywords or aliases
+      else if (keywords.includes(q) || aliases.some(a => a.includes(q))) {
+        score += 1000;
+      }
+
+      if (score > 0) {
+        scoredList.push({ calc, score });
+      }
+    });
+
+    // Sort descending by relevance score (highest priority first)
+    scoredList.sort((a, b) => b.score - a.score);
+
+    // --- RENDER DOWNWARD AUTO-SUGGESTIONS DROPDOWN ---
+    if (suggestionsEl) {
+      if (scoredList.length === 0) {
+        suggestionsEl.innerHTML = `
+          <div class="detail-suggestion-empty">
+            No calculators matching "<strong>${rawQuery.trim()}</strong>"
+          </div>
+        `;
+        suggestionsEl.style.display = 'flex';
+      } else {
+        const topMatches = scoredList.slice(0, 9);
+        let itemsHtml = '';
+        topMatches.forEach(({ calc }, index) => {
+          const highlightedTitle = highlightMatches(calc.title, rawQuery);
+          itemsHtml += `
+            <div class="detail-suggestion-item ${index === 0 ? 'selected' : ''}" 
+                 data-category="${calc.category}" 
+                 data-target="${calc.id}" 
+                 onclick="window.selectDetailSuggestion('${calc.category}', '${calc.id}', '${suitePrefix}')"
+                 role="option">
+              <div class="suggestion-left">
+                <div class="suggestion-title-row">
+                  <span class="suggestion-title">${highlightedTitle}</span>
+                  <span class="suggestion-category-badge category-badge-${calc.categoryBadge}">${calc.categoryLabel}</span>
+                </div>
+              </div>
+              <span class="suggestion-arrow">→</span>
+            </div>
+          `;
         });
-      } catch (err) {
-        console.warn('Keywords index error:', err);
+
+        itemsHtml += `
+          <div class="detail-suggestion-hint">
+            <span>Showing top ${topMatches.length} of ${scoredList.length} calculators across all suites</span>
+            <span>Tap to open</span>
+          </div>
+        `;
+
+        suggestionsEl.innerHTML = itemsHtml;
+        suggestionsEl.style.display = 'flex';
       }
     }
 
-    const words = query ? query.split(/\s+/).filter(Boolean) : [];
+    // --- SYNCHRONIZE SWITCH TAB PILLS BELOW SEARCH BAR ---
+    const matchingIds = new Set(scoredList.map(item => item.calc.id));
+    const matchingCategories = new Set(scoredList.map(item => item.calc.category));
+    let visibleCount = 0;
+
     const pills = document.querySelectorAll(`#${suitePrefix}-detail-view .switcher-pill`);
-    let matchedCount = 0;
-    const matchingCategories = new Set();
-
     pills.forEach(pill => {
-      const text = normalizeSearchText(pill.textContent || '');
-      const target = normalizeSearchText(pill.getAttribute('data-target') || '');
-      const cat = pill.getAttribute('data-category') || '';
-      const extraKw = (window._detailKeywordsCache && window._detailKeywordsCache[pill.getAttribute('data-target')]) || '';
-      const searchable = `${text} ${target} ${cat} ${extraKw}`;
-
-      const isMatch = words.length === 0 || words.every(w => {
-        const terms = getSearchTerms(w);
-        return terms.some(t => searchable.includes(t));
-      });
-
+      const targetId = pill.getAttribute('data-target');
+      const isMatch = matchingIds.has(targetId);
       if (isMatch) {
         pill.classList.remove('switcher-pill-hidden');
-        pill.style.setProperty('display', '', '');
         pill.style.removeProperty('display');
         pill.removeAttribute('hidden');
-        matchedCount++;
-        if (cat) matchingCategories.add(cat);
+        visibleCount++;
       } else {
         pill.classList.add('switcher-pill-hidden');
         pill.style.setProperty('display', 'none', 'important');
@@ -442,11 +613,11 @@
       }
     });
 
-    // Handle Category Headers: Show header only if it contains visible pills or if query is empty
+    // Update category headers in the switch tab
     const headers = document.querySelectorAll(`#${suitePrefix}-detail-view .sidebar-category-header-pill`);
     headers.forEach(hdr => {
       const cat = hdr.getAttribute('data-category');
-      const showHeader = !query || matchingCategories.has(cat);
+      const showHeader = matchingCategories.has(cat);
       if (showHeader) {
         hdr.classList.remove('switcher-pill-hidden');
         hdr.style.removeProperty('display');
@@ -458,19 +629,88 @@
       }
     });
 
-    let noMatchMsg = document.getElementById(`${suitePrefix}-switcher-no-match`);
-    if (!noMatchMsg) {
-      noMatchMsg = document.createElement('div');
-      noMatchMsg.id = `${suitePrefix}-switcher-no-match`;
-      noMatchMsg.className = 'switcher-no-match-msg';
-      noMatchMsg.textContent = 'No calculators match your search';
-      const pillGroup = document.getElementById(`${suitePrefix}-switcher-pill-group`);
-      if (pillGroup) pillGroup.appendChild(noMatchMsg);
-    }
+    const noMatchMsg = document.getElementById(`${suitePrefix}-switcher-no-match`);
     if (noMatchMsg) {
-      noMatchMsg.style.display = (matchedCount === 0 && query) ? 'block' : 'none';
+      noMatchMsg.style.display = (visibleCount === 0 && query) ? 'block' : 'none';
     }
   };
+
+  // Click handler for suggestion item
+  window.selectDetailSuggestion = function (category, calcId, suitePrefix) {
+    const input = document.getElementById(`${suitePrefix}-detail-search`);
+    if (input) input.value = '';
+
+    const suggestionsEl = document.getElementById(`${suitePrefix}-detail-suggestions`);
+    if (suggestionsEl) {
+      suggestionsEl.innerHTML = '';
+      suggestionsEl.style.display = 'none';
+    }
+
+    const clearBtn = document.getElementById(`${suitePrefix}-detail-search-clear`);
+    if (clearBtn) clearBtn.style.display = 'none';
+
+    window.filterDetailSwitcher(suitePrefix, '');
+
+    if (window.openZenithCalc) {
+      window.openZenithCalc(category, calcId);
+    }
+  };
+
+  // Keyboard navigation & click-outside listeners for detail search
+  document.addEventListener('keydown', function (e) {
+    const activeInput = document.activeElement;
+    if (!activeInput || !activeInput.classList.contains('detail-sidebar-search-input')) return;
+
+    const wrap = activeInput.closest('.detail-sidebar-search-wrap');
+    if (!wrap) return;
+    const suggEl = wrap.querySelector('.detail-search-suggestions');
+    if (!suggEl || suggEl.style.display === 'none') return;
+
+    const items = Array.from(suggEl.querySelectorAll('.detail-suggestion-item'));
+    if (items.length === 0) return;
+
+    const currentIndex = items.findIndex(item => item.classList.contains('selected'));
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIndex = (currentIndex + 1) % items.length;
+      items.forEach(item => item.classList.remove('selected'));
+      items[nextIndex].classList.add('selected');
+      items[nextIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = (currentIndex - 1 + items.length) % items.length;
+      items.forEach(item => item.classList.remove('selected'));
+      items[prevIndex].classList.add('selected');
+      items[prevIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const selected = items[currentIndex >= 0 ? currentIndex : 0];
+      if (selected) selected.click();
+    } else if (e.key === 'Escape') {
+      suggEl.style.display = 'none';
+    }
+  });
+
+  // Re-open suggestions when clicking or focusing an input that already has text
+  document.addEventListener('focusin', function (e) {
+    if (e.target && e.target.classList.contains('detail-sidebar-search-input')) {
+      const id = e.target.id || '';
+      const prefix = id.split('-')[0];
+      if (prefix && e.target.value.trim()) {
+        window.filterDetailSwitcher(prefix, e.target.value);
+      }
+    }
+  });
+
+  // Close suggestions when clicking outside
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.detail-sidebar-search-wrap')) {
+      document.querySelectorAll('.detail-search-suggestions').forEach(sugg => {
+        sugg.style.display = 'none';
+      });
+    }
+  });
 
   window.clearDetailSearch = function (suitePrefix) {
     const input = document.getElementById(`${suitePrefix}-detail-search`);
@@ -545,6 +785,17 @@
 
   // --- FILEZENITH ROUTING & FILTERING SYSTEM ---
   window.openZenithCalc = function (category, calcId) {
+    if (category === 'utility' || category === 'internet') category = 'other';
+    // Clear and close any open detail search suggestions dropdowns
+    ['fin', 'fit', 'math', 'other'].forEach(p => {
+      const inp = document.getElementById(`${p}-detail-search`);
+      if (inp) inp.value = '';
+      const sugg = document.getElementById(`${p}-detail-suggestions`);
+      if (sugg) { sugg.innerHTML = ''; sugg.style.display = 'none'; }
+      const clr = document.getElementById(`${p}-detail-search-clear`);
+      if (clr) clr.style.display = 'none';
+    });
+
     // Hide all view sections
     document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
     // Activate target view section
