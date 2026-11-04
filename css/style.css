@@ -3090,8 +3090,8 @@ input, select, textarea {
 
 @media (max-width: 520px) {
   .zenith-tools-grid {
-    grid-template-columns: 1fr;
-    gap: 0.65rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.55rem !important;
   }
 }
 
@@ -8380,9 +8380,10 @@ aside.calc-detail-sidebar .switcher-pill-group button.switcher-pill.active,
     border-radius: 12px !important;
   }
 
-  .zenith-tools-grid {
-    grid-template-columns: 1fr !important;
-    gap: 0.65rem !important;
+  .zenith-tools-grid,
+  .feature-big-box-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.55rem !important;
   }
 
   .zenith-card {
@@ -9637,5 +9638,67 @@ body[data-theme="dark"],
   [data-theme="dark"] .mobile-nav-item:hover {
     background: rgba(56, 189, 248, 0.14) !important;
     color: #38bdf8 !important;
+  }
+}
+
+/* ==========================================================================
+   FINAL MANDATORY MOBILE 2-COLUMN CARDS GRID (ALL SUITES: 2 BOXES PER ROW)
+   Strictly enforces 2 boxes per row on mobile (Finance, Health, Math, Utility, All)
+   Desktop remains untouched at 4 columns.
+   ========================================================================== */
+@media (max-width: 900px) {
+  .topic-cards-grid,
+  .zenith-tools-grid,
+  .feature-big-box-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.55rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  [data-catalog-mode="list"] .topic-cards-grid,
+  [data-catalog-mode="list"] .zenith-tools-grid,
+  [data-catalog-mode="list"] .feature-big-box-grid {
+    display: none !important;
+  }
+
+  .zenith-card,
+  .feature-big-box {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    min-height: 72px !important;
+    height: auto !important;
+    padding: 0.55rem 0.6rem 0.45rem 0.6rem !important;
+    border-radius: 10px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  .box-new-badge {
+    display: none !important;
+  }
+
+  .zenith-card-title,
+  .box-title {
+    font-size: 0.82rem !important;
+    font-weight: 750 !important;
+    line-height: 1.22 !important;
+    margin-bottom: 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  .zenith-card-desc,
+  .box-description,
+  .box-tags-row,
+  .box-footer-row,
+  .zenith-card-arrow,
+  .zenith-card-footer {
+    display: none !important;
   }
 }
