@@ -1,7 +1,8 @@
 {
+  "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!about-us|privacy-policy|contact|editorial-policy|affiliate-disclosure|security|terms-of-service|sandbox).*)",
       "destination": "/index.html"
     }
   ],

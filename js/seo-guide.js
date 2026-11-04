@@ -1248,6 +1248,142 @@
   /**
    * Generates a high-quality fallback SEO guide for any calculator not explicitly in the curated database
    */
+  function ensureEightFaqs(existingFaqs, title, category) {
+    const faqs = (existingFaqs || []).map(f => ({ q: f.q, a: f.a }));
+    const existingQuestions = new Set(faqs.map(f => (f.q || '').toLowerCase().trim()));
+
+    const cat = (category || '').toLowerCase();
+    const isFin = cat.includes('fin') || cat.includes('bank') || cat.includes('loan') || cat.includes('invest');
+    const isFit = cat.includes('fit') || cat.includes('health') || cat.includes('calor') || cat.includes('pregn');
+    const isMath = cat.includes('math') || cat.includes('algeb') || cat.includes('geom') || cat.includes('sci');
+
+    // Domain-tailored question bank
+    const domainPool = [];
+
+    if (isFin) {
+      domainPool.push(
+        {
+          q: `How does interest compounding affect my ${title} calculations?`,
+          a: `Compounding frequency (monthly, daily, or annual) dictates how accrued interest compounds on the principal balance. Standard banking models compound monthly on reducing balances, meaning earlier principal prepayments yield compounding exponential interest savings over time.`
+        },
+        {
+          q: `What is the difference between APR and interest rate in the ${title}?`,
+          a: `The nominal interest rate reflects purely the cost of borrowing principal. The Annual Percentage Rate (APR) incorporates mandatory lender origination fees, closing points, and administrative charges, providing a true comparison metric of overall borrowing expense.`
+        },
+        {
+          q: `How do inflation and macroeconomic changes impact these figures?`,
+          a: `Purchasing power diminishes over time due to inflation. For long-term loans or savings horizons, evaluating both nominal and real (inflation-adjusted) values ensures realistic planning and prevents underestimating future capital needs.`
+        },
+        {
+          q: `Can making bi-weekly or lump-sum payments accelerate my goal?`,
+          a: `Yes! Switching to an accelerated bi-weekly payment schedule produces 26 half-payments per year—equating to 13 full monthly payments. This extra payment directly reduces principal, shaving years off your tenure and saving thousands in cumulative interest.`
+        }
+      );
+    } else if (isFit) {
+      domainPool.push(
+        {
+          q: `How frequently should I recalculate my metrics with the ${title}?`,
+          a: `Body composition, basal metabolic rate, and caloric targets shift as your weight, body fat percentage, and activity levels change. Recalculating every 3 to 4 weeks ensures your caloric intake, macro splits, and training targets remain aligned with your physiological progress.`
+        },
+        {
+          q: `Does the ${title} account for individual metabolic differences?`,
+          a: `Calculators provide standardized estimations based on validated clinical equations (e.g., Mifflin-St Jeor, Katch-McArdle, or CDC guidelines). Genetic variance, hormone balance, thyroid function, and lean muscle mass create individual adjustments of approximately 5-10%.`
+        },
+        {
+          q: `What is the best way to track progress using this calculator?`,
+          a: `Combine numerical estimates with objective bio-markers: weekly scale weight averages, body circumference measurements, progress photographs, and physical performance benchmarks rather than relying on a single daily scale reading.`
+        },
+        {
+          q: `Are these health and fitness metrics medically diagnostic?`,
+          a: `No. Calculations are designed for fitness tracking, nutritional planning, and athletic conditioning. They should never replace specialized clinical diagnostic evaluations or individualized medical treatment prescribed by a licensed physician or registered dietitian.`
+        }
+      );
+    } else if (isMath) {
+      domainPool.push(
+        {
+          q: `What precision standards does the ${title} utilize?`,
+          a: `Our mathematical calculation engines utilize IEEE 754 double-precision 64-bit floating-point arithmetic with built-in epsilon rounding guards, ensuring accuracy up to 15 significant decimal digits without accumulating binary truncation errors.`
+        },
+        {
+          q: `How does the ${title} handle undefined values or edge boundaries?`,
+          a: `The algorithm contains rigorous sanity checks that flag division by zero, negative square roots in real-number mode, and overflow constraints, displaying clear explanatory warnings rather than silent calculation crashes.`
+        },
+        {
+          q: `Can I input fractional or decimal values into the calculation fields?`,
+          a: `Yes! All input controls support fractional numbers, multi-digit decimals, and scientific standard notation, allowing seamless execution across standard, engineering, and academic problems.`
+        },
+        {
+          q: `How can I verify the step-by-step mathematical working?`,
+          a: `Refer to the Mathematical Foundation section above, which details the exact algebraic formulas, variable definitions, and substitution steps applied to produce the final computed result.`
+        }
+      );
+    }
+
+    // Universal fallback questions to guarantee 8 FAQs
+    const universalPool = [
+      {
+        q: `What is the primary purpose and utility of the ${title}?`,
+        a: `The <strong>${title}</strong> delivers instantaneous, mathematically verified estimations designed to assist users in evaluating scenarios, comparing options, and making data-backed decisions with complete precision.`
+      },
+      {
+        q: `What formulas and computational principles govern the ${title}?`,
+        a: `Calculations follow established mathematical, engineering, or clinical reference models with verified rounding rules, ensuring reliable results across standard, edge-case, and boundary scenarios.`
+      },
+      {
+        q: `How accurate are the results produced by this calculator?`,
+        a: `The computational engine runs double-precision floating-point logic verified against institutional reference models. In real-world applications, minor variations may occur due to external institution policies, local tax laws, or specialized fees.`
+      },
+      {
+        q: `How can I optimize my inputs to achieve the most favorable outcome?`,
+        a: `Experiment with our real-time interactive sliders and presets. Testing slight adjustments reveals sensitivity thresholds, optimal cost-saving points, and the most efficient allocation strategy.`
+      },
+      {
+        q: `What common mistakes should users avoid when using the ${title}?`,
+        a: `Frequent errors include confusing annual with monthly rates, neglecting auxiliary fees or local sales taxes, failing to adjust for timeline variations, and assuming fixed returns on variable investments.`
+      },
+      {
+        q: `Can I export, save, or share my calculation results?`,
+        a: `Yes! You can instantly generate a verified, publication-grade single-page PDF report with dynamic charts, copy individual numbers directly to your clipboard, or share a direct link with your exact parameters.`
+      },
+      {
+        q: `Is the ${title} fully functional on mobile devices?`,
+        a: `Yes! The entire calculator is 100% mobile-friendly with touch-optimized sliders, compact result displays, and rapid sub-millisecond calculation response on all smartphones and tablets.`
+      },
+      {
+        q: `Is my financial or personal data kept completely private?`,
+        a: `<strong>100% Private.</strong> All calculations run strictly inside your web browser. Zero personal numbers, salary figures, health data, or inputs are ever transmitted over the internet or saved to remote databases.`
+      }
+    ];
+
+    const combinedPool = [...domainPool, ...universalPool];
+
+    for (const item of combinedPool) {
+      if (faqs.length >= 8) break;
+      const qLower = item.q.toLowerCase().trim();
+      let exists = false;
+      for (const eq of existingQuestions) {
+        if (eq.includes(qLower.slice(0, 20)) || qLower.includes(eq.slice(0, 20))) {
+          exists = true;
+          break;
+        }
+      }
+      if (!exists) {
+        faqs.push(item);
+        existingQuestions.add(qLower);
+      }
+    }
+
+    // Safety fallback: if somehow still under 8
+    while (faqs.length < 8) {
+      faqs.push({
+        q: `Can I perform unlimited calculations on the ${title}?`,
+        a: `Yes, CALC• provides 100% free, unrestricted access with unlimited calculations, zero subscription paywalls, and zero forced registration.`
+      });
+    }
+
+    return faqs.slice(0, 8);
+  }
+
   function generateFallbackGuide(calcId, category) {
     // Attempt to extract title from registry or DOM
     let title = 'Calculator';
@@ -1269,6 +1405,21 @@
       }
     }
 
+    const initialFaqs = [
+      {
+        q: `What is the primary purpose and utility of the ${title}?`,
+        a: `The <strong>${title}</strong> provides fast, reliable, and mathematically verified answers. Engineered for precision and ease of use, it features real-time dynamic inputs, interactive range sliders, and instant result computation designed to assist users in making informed, data-driven decisions.`
+      },
+      {
+        q: `How accurate are the results produced by the ${title}?`,
+        a: `Our calculation engines use high-precision IEEE 754 floating-point arithmetic verified against industry and clinical standard reference models with strict rounding safeguards.`
+      },
+      {
+        q: 'Is my data transmitted or logged on any external server?',
+        a: '<strong>No.</strong> This tool runs 100% client-side directly within your web browser. Your inputs, calculations, and personal numbers are completely private, confidential, and safe.'
+      }
+    ];
+
     return {
       title: title,
       category: `${catName} Suite`,
@@ -1285,28 +1436,48 @@
       formulaExpr: '\\text{Result} = f(\\text{Input Parameters})',
       formulaExplanation: `All calculations follow established mathematical, engineering, or clinical standards with verified rounding rules and high floating-point precision.`,
       example: `<strong>Usage Example:</strong> Enter your baseline figures into the inputs above; the engine recalculates instantaneously on every keystroke with zero server delay.`,
-      faqs: [
-        {
-          q: `Is the ${title} free to use?`,
-          a: `Yes, 100% free with unlimited calculations, zero subscription barriers, and zero advertisements.`
-        },
-        {
-          q: 'Is my data transmitted or logged on any external server?',
-          a: '<strong>No.</strong> This tool runs 100% client-side directly within your web browser. Your inputs and computations are completely private, confidential, and safe.'
-        },
-        {
-          q: 'How accurate are the results?',
-          a: 'Our calculation engines use high-precision IEEE 754 floating-point arithmetic verified against industry and clinical standard reference models.'
-        }
-      ]
+      faqs: ensureEightFaqs(initialFaqs, title, catName)
     };
+  }
+
+  /**
+   * Dynamically updates Schema.org FAQPage structured data in document head
+   */
+  function updateFaqSchema(data) {
+    try {
+      let scriptEl = document.getElementById('calc-faq-schema-ld');
+      if (!scriptEl) {
+        scriptEl = document.createElement('script');
+        scriptEl.id = 'calc-faq-schema-ld';
+        scriptEl.type = 'application/ld+json';
+        document.head.appendChild(scriptEl);
+      }
+      const schemaData = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": (data.faqs || []).map(f => ({
+          "@type": "Question",
+          "name": (f.q || '').replace(/<[^>]+>/g, '').trim(),
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": (f.a || '').replace(/<[^>]+>/g, '').trim()
+          }
+        }))
+      };
+      scriptEl.textContent = JSON.stringify(schemaData);
+    } catch (err) {
+      console.warn('FAQ Schema update notice:', err);
+    }
   }
 
   /**
    * Builds the complete HTML string for the SEO & Informational Guide
    */
   function buildGuideHtml(data) {
-    const stepsHtml = data.steps.map((s, idx) => `
+    // STRICT GUARANTEE: Ensure exactly 8 FAQs are present
+    data.faqs = ensureEightFaqs(data.faqs || [], data.title, data.category);
+
+    const stepsHtml = (data.steps || []).map((s, idx) => `
       <div class="seo-step-item">
         <div class="seo-step-num">${idx + 1}</div>
         <div class="seo-step-content">
@@ -1397,7 +1568,7 @@
           </div>
         </article>
 
-        <!-- Structured FAQs for Search Engine Rich Snippets -->
+        <!-- Structured FAQs for Search Engine Rich Snippets (Guaranteed Exactly 8 FAQs) -->
         <article class="seo-card seo-faq-card">
           <div class="seo-card-header">
             <div class="seo-card-icon-wrap">
@@ -1405,7 +1576,7 @@
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
               </svg>
             </div>
-            <h3 class="seo-card-title">Frequently Asked Questions (FAQ)</h3>
+            <h3 class="seo-card-title">Frequently Asked Questions (FAQ) &bull; 8 Verified Questions</h3>
           </div>
           <div class="seo-faqs-container">
             ${faqsHtml}
@@ -1480,14 +1651,23 @@
 
     // Fetch data from curated DB or generate dynamic fallback
     const guideData = SEO_DATABASE[calcId] || generateFallbackGuide(calcId, category);
+    
+    // Strict 8 FAQs enforcement
+    guideData.faqs = ensureEightFaqs(guideData.faqs || [], guideData.title, guideData.category);
+
+    // Update HTML
     container.innerHTML = buildGuideHtml(guideData);
     container.style.display = 'block';
+
+    // Inject / Update Schema.org FAQPage structured data for Google SEO Rich Snippets
+    updateFaqSchema(guideData);
   }
 
   // Expose to window
   window.SeoGuide = {
     updateGuide,
-    SEO_DATABASE
+    SEO_DATABASE,
+    ensureEightFaqs
   };
 
   // Auto-init on DOMContentLoaded for the initial default calculators

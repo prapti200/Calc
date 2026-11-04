@@ -36,6 +36,7 @@
 
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
+    if (document.body) document.body.setAttribute('data-theme', theme);
     localStorage.setItem('filezenith_theme', theme);
     if (themeBtnLight) themeBtnLight.classList.toggle('active', theme === 'light');
     if (themeBtnDark) themeBtnDark.classList.toggle('active', theme === 'dark');
@@ -237,6 +238,140 @@
     switchView(category, calcId);
   };
 
+  // --- COMPREHENSIVE SYNONYMS & RELATED KEYWORDS DICTIONARY ---
+  const SYNONYM_MAP = {
+    // Vehicles & Auto
+    'car': ['auto loan', 'auto lease', 'car loan', 'auto financing', 'vehicle', 'automobile', 'gas mileage', 'fuel cost', 'horsepower', 'auto rebate', 'auto'],
+    'cars': ['auto loan', 'auto lease', 'car loan', 'vehicle', 'automobile', 'car', 'auto'],
+    'vehicle': ['auto loan', 'auto lease', 'car loan', 'automobile', 'gas mileage', 'fuel cost', 'car', 'auto'],
+    'vehicles': ['auto loan', 'auto lease', 'car loan', 'automobile', 'car', 'auto'],
+    'auto': ['auto loan', 'auto lease', 'car loan', 'vehicle', 'automobile', 'car', 'auto rebate'],
+    'bike': ['bicycle', 'cycling', 'speed', 'distance', 'pace', 'calories burned'],
+    'fuel': ['gas', 'gasoline', 'petrol', 'diesel', 'mileage', 'mpg', 'fuel cost'],
+    'gas': ['fuel', 'petrol', 'gasoline', 'mileage', 'mpg', 'fuel cost'],
+    'mileage': ['gas', 'fuel', 'mpg', 'distance', 'speed', 'commute'],
+    'horsepower': ['hp', 'engine', 'power', 'torque', 'watts', 'vehicle'],
+
+    // Real Estate & Homes
+    'home': ['mortgage', 'house', 'property', 'flat', 'realty', 'rent vs buy', 'refinance', 'down payment', 'amortization', 'real estate'],
+    'house': ['home', 'mortgage', 'property', 'flat', 'realty', 'rent vs buy', 'refinance', 'down payment'],
+    'flat': ['home', 'house', 'apartment', 'rent', 'mortgage'],
+    'property': ['mortgage', 'home', 'real estate', 'depreciation', 'rent', 'refinance', 'tax'],
+    'rent': ['rent vs buy', 'lease', 'rental', 'landlord', 'tenant'],
+    'mortgage': ['home loan', 'house loan', 'amortization', 'pmi', 'property tax', 'refinance'],
+
+    // Loans, Debt & Banking
+    'loan': ['emi', 'borrow', 'lending', 'debt', 'mortgage', 'personal loan', 'student loan', 'interest', 'amortization'],
+    'loans': ['loan', 'emi', 'borrow', 'debt', 'mortgage'],
+    'emi': ['loan', 'monthly payment', 'installment', 'debt', 'interest', 'borrow'],
+    'debt': ['payoff', 'snowball', 'avalanche', 'credit card', 'loan', 'emi', 'borrow'],
+    'borrow': ['loan', 'emi', 'debt', 'credit', 'interest'],
+    'credit': ['credit card', 'payoff', 'score', 'debt', 'interest', 'apr'],
+    'interest': ['simple interest', 'compound interest', 'apr', 'apy', 'fd', 'rd', 'return'],
+    'fd': ['fixed deposit', 'certificate of deposit', 'cd', 'compound interest', 'savings'],
+    'rd': ['recurring deposit', 'sip', 'savings', 'interest'],
+    'sip': ['mutual fund', 'systematic investment', 'compound interest', 'wealth', 'invest'],
+    'invest': ['investment', 'roi', 'stocks', 'crypto', 'return', 'wealth', 'sip', '401k'],
+    'investment': ['invest', 'roi', 'stocks', 'crypto', 'return', 'wealth', 'sip', '401k', 'roth ira'],
+
+    // Taxes & Salary
+    'tax': ['sales tax', 'income tax', 'vat', 'gst', 'paycheck', 'salary', 'bracket', 'deduction'],
+    'taxes': ['tax', 'sales tax', 'income tax', 'vat', 'gst', 'paycheck'],
+    'salary': ['income', 'paycheck', 'wages', 'hourly', 'pay', 'net pay', 'take home'],
+    'wages': ['salary', 'hourly', 'paycheck', 'income', 'overtime'],
+    'income': ['salary', 'paycheck', 'wages', 'earnings', 'tax'],
+    'pay': ['salary', 'paycheck', 'wage', 'hourly', 'overtime'],
+    'vat': ['sales tax', 'goods and services', 'gst', 'tax'],
+    'gst': ['sales tax', 'vat', 'tax', 'duty'],
+
+    // Diet, Fitness & Health
+    'diet': ['calorie', 'deficit', 'macro', 'protein', 'carb', 'fat', 'nutrition', 'meal', 'tdee', 'bmr', 'weight loss'],
+    'food': ['diet', 'calorie', 'macro', 'protein', 'nutrition', 'meal'],
+    'nutrition': ['macro', 'protein', 'carb', 'fat', 'calorie', 'diet'],
+    'gym': ['workout', 'one rep max', '1rm', 'exercise', 'muscle', 'strength', 'bench press', 'squat', 'deadlift', 'heart rate'],
+    'workout': ['gym', 'exercise', 'calories burned', 'one rep max', 'heart rate', 'cardio', 'strength'],
+    'exercise': ['workout', 'calories burned', 'met', 'running', 'cycling', 'gym', 'cardio'],
+    'muscle': ['lean body mass', 'lbm', 'one rep max', 'protein', 'strength', 'muscle mass'],
+    'weight': ['body mass index', 'bmi', 'ideal weight', 'healthy weight', 'weight loss', 'calorie deficit', 'body fat'],
+    'bmi': ['body mass index', 'bmi calculator', 'bmi gauge', 'ideal weight', 'healthy weight', 'obesity'],
+    'fat': ['body fat', 'army body fat', 'skin fold', 'bmi', 'lean body mass', 'weight loss', 'calorie'],
+    'baby': ['pregnancy', 'due date', 'conception', 'ovulation', 'period', 'fetal', 'trimester', 'child'],
+    'pregnant': ['pregnancy', 'due date', 'conception', 'ovulation', 'period', 'gestational'],
+    'pregnancy': ['baby', 'due date', 'conception', 'ovulation', 'period', 'trimester', 'fertility'],
+    'delivery': ['pregnancy due date', 'edd', 'birth', 'baby', 'conception'],
+    'heart': ['heart rate', 'target heart rate', 'thr', 'pulse', 'bpm', 'cardio'],
+    'cardio': ['running', 'pace', 'marathon', 'target heart rate', 'calories burned', 'cycling'],
+    'run': ['running', 'pace', '5k', '10k', 'marathon', 'half marathon', 'speed', 'calories burned'],
+    'running': ['pace', 'marathon', '5k', 'speed', 'run', 'calories burned'],
+
+    // Math & Tools
+    'percentage': ['percent', 'pct', 'ratio', 'fraction', 'discount', 'markup'],
+    'percent': ['percentage', 'pct', 'ratio', 'fraction', 'discount'],
+    'fraction': ['fractions', 'reducer', 'numerator', 'denominator', 'decimal', 'ratio', 'math'],
+    'fractions': ['fraction', 'reducer', 'numerator', 'denominator', 'decimal'],
+    'equation': ['quadratic', 'algebra', 'roots', 'parabola', 'solver'],
+    'average': ['mean', 'median', 'mode', 'statistics', 'stats', 'data'],
+    'stats': ['statistics', 'mean', 'median', 'mode', 'standard deviation', 'variance'],
+    'probability': ['dice', 'coin flip', 'random', 'odds', 'lottery'],
+    'dice': ['dice roller', 'random number', 'probability', 'roll', 'd6', 'd20'],
+    'coin': ['coin flipper', 'heads tails', 'random', 'flip', 'probability'],
+    'random': ['random number generator', 'rng', 'dice', 'coin flip', 'lottery', 'picker'],
+
+    // Everyday Utilities
+    'time': ['time duration', 'hours', 'minutes', 'time card', 'work hours', 'clock'],
+    'hours': ['time duration', 'time card', 'work hours', 'hourly', 'paycheck'],
+    'clock': ['time duration', 'world clock', 'stopwatch', 'timer', 'time zone'],
+    'date': ['date difference', 'age calculator', 'calendar', 'countdown', 'days between'],
+    'age': ['age calculator', 'age difference', 'birthday', 'date difference', 'chronological age', 'how old', 'days lived', 'birth date'],
+    'birthday': ['age', 'age calculator', 'date difference', 'countdown', 'birth date'],
+    'unit': ['unit converter', 'conversion', 'metric', 'imperial', 'length', 'weight', 'temperature'],
+    'units': ['unit converter', 'conversion', 'metric', 'imperial'],
+    'convert': ['converter', 'conversion', 'unit', 'currency', 'metric'],
+    'conversion': ['unit converter', 'currency converter', 'convert', 'metric', 'imperial'],
+    'temp': ['temperature', 'celsius', 'fahrenheit', 'kelvin', 'weather'],
+    'temperature': ['celsius', 'fahrenheit', 'kelvin', 'weather', 'wind chill', 'heat index'],
+    'weather': ['wind chill', 'heat index', 'dew point', 'humidity', 'temperature'],
+    'speed': ['distance', 'time', 'pace', 'mph', 'kmh', 'velocity'],
+    'love': ['love calculator', 'flames', 'crush', 'romance', 'relationship', 'compatibility'],
+    'grade': ['gpa', 'grade calculator', 'college', 'school', 'marks', 'score', 'percentage'],
+    'grades': ['gpa', 'grade calculator', 'college', 'school', 'marks'],
+    'gpa': ['grade point average', 'college gpa', 'high school', 'grades', 'semester', 'cumulative'],
+    'tip': ['tip calculator', 'gratuity', 'restaurant', 'bill split', 'dining'],
+    'bill': ['bill split', 'tip calculator', 'split bill', 'dining', 'friends', 'expense'],
+    'crypto': ['cryptocurrency', 'bitcoin', 'btc', 'ethereum', 'eth', 'profit', 'roi', 'coin'],
+    'discount': ['sale', 'discount calculator', 'coupon', 'savings', 'percentage off'],
+    'dog': ['dog age', 'puppy', 'pet', 'cat age'],
+    'cat': ['cat age', 'kitten', 'pet', 'dog age']
+  };
+
+  function getSearchTerms(word) {
+    if (!word) return [];
+    const list = [word];
+    if (word.endsWith('s') && word.length > 3) {
+      list.push(word.slice(0, -1));
+    }
+    if (word.endsWith('es') && word.length > 4) {
+      list.push(word.slice(0, -2));
+    }
+    const syns = SYNONYM_MAP[word];
+    if (syns && Array.isArray(syns)) {
+      syns.forEach(s => {
+        if (!list.includes(s)) list.push(s);
+      });
+    }
+    return list;
+  }
+
+  function matchesTerm(text, term) {
+    if (!text || !term) return false;
+    const cleanTerm = term.trim();
+    if (!cleanTerm) return false;
+    const escaped = cleanTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // Prefix match at word boundary: word starts with the term (e.g. 'ag' matches 'Age', 'lo' matches 'Loan')
+    const regex = new RegExp(`(^|[^a-z0-9])${escaped}`, 'i');
+    return regex.test(text);
+  }
+
   // --- FILEZENITH SUITE DETAIL SIDEBAR SEARCH FILTER ---
   function normalizeSearchText(str) {
     if (!str) return '';
@@ -288,7 +423,10 @@
       const extraKw = (window._detailKeywordsCache && window._detailKeywordsCache[pill.getAttribute('data-target')]) || '';
       const searchable = `${text} ${target} ${cat} ${extraKw}`;
 
-      const isMatch = words.length === 0 || words.every(w => searchable.includes(w));
+      const isMatch = words.length === 0 || words.every(w => {
+        const terms = getSearchTerms(w);
+        return terms.some(t => searchable.includes(t));
+      });
 
       if (isMatch) {
         pill.classList.remove('switcher-pill-hidden');
@@ -394,8 +532,10 @@
       var detailView = document.getElementById(suitePrefix + '-detail-view');
       if (detailView && detailView.style.display !== 'none') {
         var headerCard = detailView.querySelector('.calc-detail-header-card') || detailView;
+        var headerEl = document.querySelector('.app-header');
+        var headerHeight = headerEl ? headerEl.offsetHeight : 64;
         var rect = headerCard.getBoundingClientRect();
-        var topOffset = rect.top + (window.pageYOffset || document.documentElement.scrollTop) - 10;
+        var topOffset = rect.top + (window.pageYOffset || document.documentElement.scrollTop) - headerHeight - 12;
         window.scrollTo({ top: Math.max(0, topOffset), behavior: 'smooth' });
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -500,8 +640,165 @@
         window.AppRouter.onCatalogOpened(tabKey);
       }
     }
+    // Sync mobile hamburger menu active highlights
+    document.querySelectorAll('.mobile-nav-item').forEach(item => {
+      const itemTab = item.getAttribute('data-tab');
+      const isMatch = (itemTab === 'zenith-hub' && (tabKey === 'all' || tabKey === 'zenith-hub')) ||
+                      (itemTab === 'finance' && (tabKey === 'financial' || tabKey === 'finance')) ||
+                      (itemTab === tabKey);
+      item.classList.toggle('active', !!isMatch);
+    });
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // --- STANDALONE PAGES (Privacy, About, Contact, Terms, etc.) ---
+  window.navigateToPage = function (pageKey, pushHistory = true) {
+    const pageMeta = {
+      about: { slug: '/about-us', file: 'about-us.html', title: 'About Us & Mission' },
+      contact: { slug: '/contact', file: 'contact.html', title: 'Contact & Support' },
+      privacy: { slug: '/privacy-policy', file: 'privacy-policy.html', title: 'Privacy Policy' },
+      terms: { slug: '/terms-of-service', file: 'terms-of-service.html', title: 'Terms of Service' },
+      editorial: { slug: '/editorial-policy', file: 'editorial-policy.html', title: 'Editorial Policy & Standards' },
+      affiliate: { slug: '/affiliate-disclosure', file: 'affiliate-disclosure.html', title: 'Affiliate Disclosure' },
+      security: { slug: '/security', file: 'security.html', title: 'Security Architecture' }
+    };
+
+    const targetId = `view-page-${pageKey}`;
+    const targetSection = document.getElementById(targetId);
+    if (!targetSection) {
+      const info = pageMeta[pageKey];
+      if (info && info.file) {
+        window.location.href = info.file;
+      }
+      return;
+    }
+
+    // Remember previous calculator view to restore on Back / Close
+    const activeSec = document.querySelector('.view-section.active');
+    if (activeSec && !activeSec.id.startsWith('view-page-')) {
+      window._lastActiveView = activeSec.id;
+    }
+
+    // Hide all view-sections, show target standalone page
+    document.querySelectorAll('.view-section').forEach(sec => {
+      sec.classList.toggle('active', sec.id === targetId);
+    });
+
+    // Un-highlight top ribbon tabs & mobile menu items
+    document.querySelectorAll('.zenith-nav-dropdown, .cat-tab-btn, .mobile-nav-item').forEach(el => {
+      el.classList.remove('active');
+    });
+
+    const info = pageMeta[pageKey] || { slug: `/${pageKey}`, title: pageKey.toUpperCase() };
+
+    if (pushHistory && window.AppRouter && !window.AppRouter.isDispatching) {
+      try {
+        window.AppRouter.setAddressUrl(info.slug, info.title);
+      } catch (e) {}
+    } else {
+      document.title = `${info.title} | CALC• Modern Calculator`;
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.backToPreviousView = function () {
+    const targetId = window._lastActiveView || 'view-zenith-hub';
+    const targetSec = document.getElementById(targetId) || document.getElementById('view-zenith-hub');
+
+    document.querySelectorAll('.view-section').forEach(sec => {
+      sec.classList.toggle('active', sec === targetSec);
+    });
+
+    // Ensure all calculator cards and sections are visible in Zenith Hub
+    document.querySelectorAll('#view-zenith-hub .calc-topic-section').forEach(sec => {
+      sec.classList.remove('calc-search-hidden');
+      sec.style.display = '';
+    });
+    document.querySelectorAll('#view-zenith-hub .zenith-card, #view-zenith-hub .compact-calc-link').forEach(el => {
+      el.classList.remove('calc-search-hidden');
+      el.style.display = '';
+    });
+
+    if (targetId === 'view-zenith-hub') {
+      document.querySelectorAll('.zenith-nav-dropdown').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick')?.includes("'all'"));
+      });
+      if (window.AppRouter && !window.AppRouter.isDispatching) {
+        window.AppRouter.onHubOpened();
+      }
+    } else {
+      const cat = targetId.replace('view-', '');
+      document.querySelectorAll('.zenith-nav-dropdown').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick')?.includes(`'${cat}'`));
+      });
+      if (window.AppRouter && !window.AppRouter.isDispatching) {
+        window.AppRouter.onCatalogOpened(cat);
+      }
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // --- MOBILE TOP-RIGHT 3-DASH HAMBURGER MENU HANDLERS ---
+  window.toggleMobileNavMenu = function (e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const popover = document.getElementById('mobile-nav-popover');
+    const btn = document.getElementById('mobile-menu-toggle-btn');
+    if (!popover) return;
+    const isOpen = popover.classList.contains('open');
+    if (isOpen) {
+      window.closeMobileNavMenu();
+    } else {
+      popover.classList.add('open');
+      btn?.classList.add('active');
+      btn?.setAttribute('aria-expanded', 'true');
+
+      // Sync active state with currently visible section
+      const activeSec = document.querySelector('.view-section.active');
+      let activeKey = 'zenith-hub';
+      if (activeSec) {
+        if (activeSec.id === 'view-financial') activeKey = 'finance';
+        else if (activeSec.id === 'view-fitness') activeKey = 'fitness';
+        else if (activeSec.id === 'view-math') activeKey = 'math';
+        else if (activeSec.id === 'view-other') activeKey = 'other';
+        else if (activeSec.id === 'view-standard') activeKey = 'standard';
+      }
+      document.querySelectorAll('.mobile-nav-item').forEach(item => {
+        item.classList.toggle('active', item.getAttribute('data-tab') === activeKey);
+      });
+    }
+  };
+
+  window.closeMobileNavMenu = function () {
+    const popover = document.getElementById('mobile-nav-popover');
+    const btn = document.getElementById('mobile-menu-toggle-btn');
+    if (popover) popover.classList.remove('open');
+    if (btn) {
+      btn.classList.remove('active');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  };
+
+  window.handleMobileNavSelect = function (tabKey, btnEl) {
+    window.closeMobileNavMenu();
+    let navKey = tabKey;
+    if (tabKey === 'zenith-hub') navKey = 'all';
+    if (tabKey === 'finance') navKey = 'financial';
+    if (typeof window.navigateToTab === 'function') {
+      window.navigateToTab(navKey);
+    }
+  };
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.mobile-menu-anchor-wrap')) {
+      window.closeMobileNavMenu();
+    }
+  });
 
   window.filterZenith = function (filterKey, btnEl) {
     // Ensure Zenith Hub is the active view
@@ -563,13 +860,118 @@
     }
   };
 
-  // --- 6. SEARCH SYSTEM (FILEZENITH REAL-TIME SEARCH) ---
+  // --- 6. SMART SEARCH SYSTEM (INSTANT CALCULATOR BOXES SUGGESTIONS & PRIORITY RANKING) ---
   const globalSearchInput = document.getElementById('global-search-input');
   const searchShortcut = document.getElementById('search-shortcut');
+  const searchSuggestions = document.getElementById('global-search-suggestions');
+  const hubSearchSection = document.getElementById('hub-search-results-section');
+  const hubSearchGrid = document.getElementById('hub-search-results-grid');
+  const hubSearchCompact = document.getElementById('hub-search-results-compact');
+  const hubSearchNoResults = document.getElementById('hub-search-no-results');
+  const hubSearchTitle = document.getElementById('hub-search-results-title');
+  const hubSearchCount = document.getElementById('hub-search-results-count');
+
+  const STOP_WORDS = new Set([
+    'calculator', 'calculators', 'calc', 'calcs',
+    'tool', 'tools', 'free', 'online', 'app', 'apps',
+    'solver', 'solvers', 'software', 'suite', 'helper'
+  ]);
+
+  function calculateCardScore(card, rawQuery, rawWords, coreWords) {
+    const titleText = card.querySelector('.zenith-card-title')?.textContent?.trim() || '';
+    const title = normalizeSearchText(titleText);
+    const descText = card.querySelector('.zenith-card-desc')?.textContent?.trim() || '';
+    const desc = normalizeSearchText(descText);
+    const category = (card.dataset.category || '').toLowerCase();
+    const sub = (card.dataset.sub || '').toLowerCase();
+    const keywords = normalizeSearchText(card.dataset.keywords || '');
+
+    const searchWords = coreWords.length > 0 ? coreWords : rawWords;
+
+    // Check if card matches core terms
+    const isMatch = searchWords.length === 0 || searchWords.every(w => {
+      if (matchesTerm(title, w) || matchesTerm(keywords, w) || matchesTerm(sub, w) || matchesTerm(category, w) || matchesTerm(desc, w)) {
+        return true;
+      }
+      const terms = getSearchTerms(w);
+      for (let i = 1; i < terms.length; i++) {
+        const t = terms[i];
+        if (matchesTerm(title, t) || matchesTerm(keywords, t) || matchesTerm(sub, t) || matchesTerm(desc, t)) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    if (!isMatch) return -1;
+
+    // Compute priority ranking score
+    let score = 0;
+    const cleanRaw = normalizeSearchText(rawQuery);
+
+    // Exact title match or title starts with query
+    if (title === cleanRaw) {
+      score += 50000;
+    } else if (title.startsWith(cleanRaw)) {
+      score += 30000;
+    } else if (matchesTerm(title, cleanRaw)) {
+      score += 20000;
+    }
+
+    searchWords.forEach(w => {
+      // Direct word match in title with word boundary
+      if (title.startsWith(w)) {
+        score += 18000;
+      } else if (matchesTerm(title, w)) {
+        score += 12000;
+      }
+
+      // Keyword match with word boundary
+      if (matchesTerm(keywords, w)) {
+        score += 5000;
+      }
+
+      // Subcategory match
+      if (matchesTerm(sub, w)) {
+        score += 3000;
+      }
+
+      // Category match
+      if (matchesTerm(category, w)) {
+        score += 1500;
+      }
+
+      // Synonyms match in title or keywords
+      const terms = getSearchTerms(w);
+      for (let i = 1; i < terms.length; i++) {
+        const syn = terms[i];
+        if (matchesTerm(title, syn)) score += 3500;
+        else if (matchesTerm(keywords, syn)) score += 2500;
+        else if (matchesTerm(sub, syn)) score += 1800;
+        else if (matchesTerm(desc, syn)) score += 500;
+      }
+
+      // Description match
+      if (matchesTerm(desc, w)) {
+        score += 300;
+      }
+    });
+
+    return score;
+  }
 
   if (globalSearchInput) {
     globalSearchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
+      const rawVal = e.target.value;
+      const query = typeof normalizeSearchText === 'function' ? normalizeSearchText(rawVal) : rawVal.toLowerCase().trim();
+      const rawWords = query ? query.split(/\s+/).filter(Boolean) : [];
+      const coreWords = rawWords.filter(w => !STOP_WORDS.has(w));
+
+      // Ensure dropdown popup is completely hidden - calculator boxes below are the suggestions
+      if (searchSuggestions) {
+        searchSuggestions.innerHTML = '';
+        searchSuggestions.style.display = 'none';
+      }
 
       // Automatically route to zenith-hub if searching
       const hubSec = document.getElementById('view-zenith-hub');
@@ -577,26 +979,124 @@
         document.querySelectorAll('.view-section').forEach(sec => {
           sec.classList.toggle('active', sec.id === 'view-zenith-hub');
         });
+        document.querySelectorAll('.zenith-nav-dropdown').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('onclick')?.includes("'all'"));
+        });
       }
 
-      const cards = document.querySelectorAll('.zenith-card');
-      let visibleCount = 0;
-      cards.forEach(card => {
-        const title = card.querySelector('.zenith-card-title')?.textContent.toLowerCase() || '';
-        const desc = card.querySelector('.zenith-card-desc')?.textContent.toLowerCase() || '';
-        const category = card.dataset.category?.toLowerCase() || '';
-        const sub = card.dataset.sub?.toLowerCase() || '';
-        const keywords = card.dataset.keywords?.toLowerCase() || '';
+      const standardSections = document.querySelectorAll('#view-zenith-hub .calc-topic-section:not(#hub-search-results-section)');
 
-        const match = query === '' || title.includes(query) || desc.includes(query) || category.includes(query) || sub.includes(query) || keywords.includes(query);
-        card.style.display = match ? 'flex' : 'none';
-        if (match) visibleCount++;
+      if (!query) {
+        // Query cleared: restore pristine standard view
+        if (hubSearchSection) hubSearchSection.style.display = 'none';
+        if (hubSearchGrid) hubSearchGrid.innerHTML = '';
+        if (hubSearchCompact) hubSearchCompact.innerHTML = '';
+        if (hubSearchNoResults) hubSearchNoResults.style.display = 'none';
+
+        standardSections.forEach(sec => {
+          sec.classList.remove('calc-search-hidden');
+          sec.style.display = '';
+        });
+
+        document.querySelectorAll('#view-zenith-hub .zenith-card, #view-zenith-hub .compact-calc-link, .calc-directory-sidebar .sidebar-calc-item').forEach(el => {
+          el.classList.remove('calc-search-hidden');
+          el.style.display = '';
+        });
+
+        const badge = document.getElementById('zenith-count-badge');
+        if (badge) badge.textContent = '189 Calculators (70 Financial, 29 Health & Fitness, 29 Math, 55 Daily Utilities, Weather & Transport, 6 Keypads)';
+        const hint = document.querySelector('.view-mode-hint');
+        if (hint) hint.textContent = 'Organized by suite • 185 calculators';
+        return;
+      }
+
+      // Hide all standard topic sections
+      standardSections.forEach(sec => {
+        sec.classList.add('calc-search-hidden');
+        sec.style.display = 'none';
       });
 
-      const badge = document.getElementById('zenith-count-badge');
-      if (badge) {
-        badge.textContent = `${visibleCount} Calculators`;
+      // Get all original cards from standard sections
+      const originalCards = [];
+      standardSections.forEach(sec => {
+        sec.querySelectorAll('.zenith-card').forEach(card => originalCards.push(card));
+      });
+
+      // Score and rank cards
+      const scored = [];
+      originalCards.forEach(card => {
+        const score = calculateCardScore(card, rawVal, rawWords, coreWords);
+        if (score >= 0) {
+          scored.push({ card, score });
+        }
+      });
+
+      // Sort in descending order of relevance priority (highest score first)
+      scored.sort((a, b) => b.score - a.score);
+
+      // If highest score is strong (>= 2000), filter out very weak matches (< 350)
+      const topScore = scored.length > 0 ? scored[0].score : 0;
+      const matches = topScore >= 2000 ? scored.filter(item => item.score >= 350) : scored;
+
+      // Show search results section
+      if (hubSearchSection) hubSearchSection.style.display = '';
+      if (hubSearchTitle) hubSearchTitle.textContent = `Search Results for "${rawVal.trim()}"`;
+      if (hubSearchCount) hubSearchCount.textContent = `${matches.length} ${matches.length === 1 ? 'Calculator' : 'Calculators'}`;
+
+      if (hubSearchGrid) {
+        hubSearchGrid.innerHTML = '';
+        matches.forEach(({ card }) => {
+          const clone = card.cloneNode(true);
+          clone.classList.remove('calc-search-hidden');
+          clone.style.display = 'flex';
+          hubSearchGrid.appendChild(clone);
+        });
       }
+
+      if (hubSearchCompact) {
+        hubSearchCompact.innerHTML = '';
+        matches.forEach(({ card }) => {
+          const onclickAttr = card.getAttribute('onclick') || '';
+          const match = onclickAttr.match(/'([^']+)'/g);
+          if (match && match.length >= 2) {
+            const calcId = match[1].replace(/'/g, '');
+            const origLink = document.querySelector(`.calc-topic-section:not(#hub-search-results-section) .compact-calc-link[data-calc-id="${calcId}"]`);
+            if (origLink) {
+              const clone = origLink.cloneNode(true);
+              clone.classList.remove('calc-search-hidden');
+              clone.style.display = 'flex';
+              hubSearchCompact.appendChild(clone);
+            }
+          }
+        });
+      }
+
+      const isListMode = (localStorage.getItem('calcCatalogViewMode') || 'grid') === 'list';
+      if (hubSearchGrid) {
+        hubSearchGrid.style.setProperty('display', (matches.length === 0 || isListMode) ? 'none' : 'grid', 'important');
+      }
+      if (hubSearchCompact) {
+        hubSearchCompact.style.setProperty('display', (matches.length === 0 || !isListMode) ? 'none' : 'grid', 'important');
+      }
+
+      if (hubSearchNoResults) {
+        hubSearchNoResults.style.display = matches.length === 0 ? 'block' : 'none';
+      }
+
+      // Filter left directory sidebar items on desktop to match search results
+      const sidebarItems = document.querySelectorAll('.calc-directory-sidebar .sidebar-calc-item');
+      sidebarItems.forEach(item => {
+        const calcId = item.dataset.calcId;
+        const matched = matches.some(m => (m.card.getAttribute('onclick') || '').includes(calcId));
+        item.classList.toggle('calc-search-hidden', !matched);
+        item.style.display = matched ? 'flex' : 'none';
+      });
+
+      // Update badge and hint
+      const badge = document.getElementById('zenith-count-badge');
+      if (badge) badge.textContent = `${matches.length} ${matches.length === 1 ? 'Calculator' : 'Calculators'}`;
+      const hint = document.querySelector('.view-mode-hint');
+      if (hint) hint.textContent = `${matches.length} ${matches.length === 1 ? 'Calculator' : 'Calculators'} found`;
     });
 
     // Keyboard shortcut '/' or Ctrl+K / Cmd+K to jump to active view search bar
@@ -693,32 +1193,86 @@
 
   // --- 11. SIDEBAR FILTER & VIEW MODE TOGGLE (Grid vs Compact List) ---
   window.setCatalogViewMode = function (mode, btnEl) {
-    localStorage.setItem('calcCatalogViewMode', mode);
+    const validMode = mode === 'list' ? 'list' : 'grid';
+    try {
+      localStorage.setItem('calcCatalogViewMode', validMode);
+    } catch (e) {}
 
-    const activeView = document.querySelector('.view-section.active');
-    const container = activeView || document;
+    // 1. Enforce data-catalog-mode attribute globally on root elements
+    document.documentElement.setAttribute('data-catalog-mode', validMode);
+    if (document.body) {
+      document.body.setAttribute('data-catalog-mode', validMode);
+    }
 
-    container.querySelectorAll('.view-mode-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.mode === mode);
+    // 2. Synchronize all view-mode toggle buttons across Zenith Hub & all Suite views
+    document.querySelectorAll('.view-mode-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.mode === validMode);
     });
 
-    container.querySelectorAll('.topic-cards-grid').forEach(grid => {
-      grid.style.display = mode === 'list' ? 'none' : '';
+    // 3. Explicitly toggle card grids across the entire application
+    document.querySelectorAll('.topic-cards-grid, .zenith-tools-grid:not(#hub-search-results-grid), .feature-big-box-grid').forEach(grid => {
+      if (grid.id === 'hub-search-results-grid') return;
+      if (validMode === 'list') {
+        grid.style.setProperty('display', 'none', 'important');
+      } else {
+        grid.style.setProperty('display', 'grid', 'important');
+      }
     });
-    container.querySelectorAll('.topic-compact-list').forEach(list => {
-      list.style.display = mode === 'list' ? 'grid' : 'none';
+
+    // 4. Explicitly toggle compact lists across the entire application
+    document.querySelectorAll('.topic-compact-list').forEach(list => {
+      if (list.id === 'hub-search-results-compact') return;
+      if (validMode === 'list') {
+        list.style.setProperty('display', 'grid', 'important');
+      } else {
+        list.style.setProperty('display', 'none', 'important');
+      }
     });
+
+    // 5. Synchronize dynamic search results if currently open on Zenith Hub
+    const searchSection = document.getElementById('hub-search-results-section');
+    const hubSearchGrid = document.getElementById('hub-search-results-grid');
+    const hubSearchCompact = document.getElementById('hub-search-results-compact');
+    if (searchSection && searchSection.style.display !== 'none') {
+      if (hubSearchGrid) {
+        hubSearchGrid.style.setProperty('display', validMode === 'list' ? 'none' : 'grid', 'important');
+      }
+      if (hubSearchCompact) {
+        hubSearchCompact.style.setProperty('display', validMode === 'list' ? 'grid' : 'none', 'important');
+      }
+    }
   };
 
   window.filterSidebarList = function (inputEl, category) {
-    const query = (inputEl.value || '').trim().toLowerCase();
+    const rawVal = inputEl.value || '';
+    const query = typeof normalizeSearchText === 'function' ? normalizeSearchText(rawVal) : rawVal.trim().toLowerCase();
     const listEl = document.getElementById(`sidebar-list-${category}`);
     if (!listEl) return;
 
+    const words = query ? query.split(/\s+/).filter(Boolean) : [];
+    const coreWords = words.filter(w => !STOP_WORDS.has(w));
+    const searchWords = coreWords.length > 0 ? coreWords : words;
+
     const items = listEl.querySelectorAll('.sidebar-calc-item');
     items.forEach(item => {
-      const text = item.textContent.toLowerCase();
-      const match = !query || text.includes(query);
+      if (!query) {
+        item.style.display = 'flex';
+        return;
+      }
+      const title = normalizeSearchText(item.textContent || '');
+      const keywords = normalizeSearchText(item.dataset.keywords || '');
+      const sub = (item.dataset.sub || '').toLowerCase();
+      const cat = (item.dataset.category || '').toLowerCase();
+
+      const match = searchWords.every(w => {
+        if (matchesTerm(title, w) || matchesTerm(keywords, w) || matchesTerm(sub, w) || matchesTerm(cat, w)) return true;
+        const terms = getSearchTerms(w);
+        for (let i = 1; i < terms.length; i++) {
+          if (matchesTerm(title, terms[i]) || matchesTerm(keywords, terms[i])) return true;
+        }
+        return false;
+      });
+
       item.style.display = match ? 'flex' : 'none';
     });
 
@@ -733,7 +1287,7 @@
         }
         next = next.nextElementSibling;
       }
-      h.style.display = hasVisible ? '' : 'none';
+      h.style.display = hasVisible ? 'flex' : 'none';
     });
   };
 
@@ -753,9 +1307,7 @@
 
     // Initialize View Mode (Grid vs Compact List)
     const savedMode = localStorage.getItem('calcCatalogViewMode') || 'grid';
-    if (savedMode === 'list') {
-      window.setCatalogViewMode('list');
-    }
+    window.setCatalogViewMode(savedMode);
   });
 
   // --- 11. COMPANY & LEGAL MODAL CONTROLLER ---
@@ -796,14 +1348,19 @@
   };
 
   window.handleContactSubmit = function (e) {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     if (window.showToast) {
-      window.showToast('✓ Message sent! Our engineering team will respond within 24 hours.');
+      window.showToast('✓ Message sent! Our engineering team will respond within 24 hours.', '✉️');
+    } else {
+      alert('✓ Message sent! Our engineering team will respond within 24 hours.');
     }
-    e.target.reset();
-    setTimeout(() => {
+    if (e && e.target && typeof e.target.reset === 'function') {
+      e.target.reset();
+    }
+    if (typeof window.closeLegalModal === 'function') {
       window.closeLegalModal();
-    }, 1200);
+    }
+    return false;
   };
 
   // Keyboard and backdrop dismiss for legal modal

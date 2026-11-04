@@ -2189,3 +2189,131 @@
 
 
 
+
+/* ==========================================================================
+   CALCULATOR SUITE DARK MODE REFINEMENT
+   ========================================================================== */
+[data-theme="dark"] #standard-active-header {
+  background: #111e38 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .calc-circle-back-btn {
+  background: #1e293b !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  color: #f8fafc !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .calc-circle-back-btn:hover {
+  background: #334155 !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] #standard-active-header .calc-quick-switcher {
+  background: #0b1329 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] #standard-active-header .switcher-pill {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] #standard-active-header .switcher-pill:hover {
+  color: #f8fafc !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] #standard-active-header .switcher-pill.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Standard & Scientific Machine Keypad */
+[data-theme="dark"] .calc-machine {
+  background: #111e38 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .calc-keypad {
+  background: #111e38 !important;
+}
+
+[data-theme="dark"] .key-btn {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .key-btn:hover {
+  background: #334155 !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .key-btn.sci {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #7dd3fc !important;
+}
+
+[data-theme="dark"] .key-btn.sci:hover {
+  background: #334155 !important;
+  border-color: #38bdf8 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .key-btn.operator {
+  background: rgba(14, 165, 233, 0.22) !important;
+  border: 1.5px solid #0284c7 !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .key-btn.operator:hover {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .key-btn.action-clear {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border: 1.5px solid #ef4444 !important;
+  color: #fca5a5 !important;
+}
+
+[data-theme="dark"] .key-btn.action-clear:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .key-btn.action-back {
+  background: rgba(245, 158, 11, 0.25) !important;
+  border: 1.5px solid #f59e0b !important;
+  color: #fde68a !important;
+}
+
+[data-theme="dark"] .key-btn.action-back:hover {
+  background: #f59e0b !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .key-btn.equals {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #3b82f6 !important;
+}
+
+[data-theme="dark"] .mem-btn {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .mem-btn:hover {
+  background: #334155 !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}

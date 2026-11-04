@@ -3913,7 +3913,10 @@ const OtherCalcs = {
 
     const activePill = document.querySelector('#other-detail-view .switcher-pill.active');
     if (activePill) {
-      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      var cont = activePill.closest('.switcher-pill-group');
+      if (cont) {
+        cont.scrollTo({ left: activePill.offsetLeft - (cont.clientWidth / 2) + (activePill.offsetWidth / 2), behavior: 'smooth' });
+      }
     }
 
     // Automatically trigger initial calculation when opening tool

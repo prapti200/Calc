@@ -45,29 +45,40 @@ const server = http.createServer((req, res) => {
       return res.end('403 Forbidden');
     }
 
+    const servePath = (filePath) => {
+      const ext = path.extname(filePath).toLowerCase();
+      const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+      res.writeHead(200, {
+        'Content-Type': contentType,
+        'Cache-Control': 'no-cache'
+      });
+      fs.createReadStream(filePath).pipe(res);
+    };
+
     fs.stat(safePath, (err, stats) => {
       if (!err && stats.isFile()) {
-        // Physical file exists -> serve directly with correct MIME
-        const ext = path.extname(safePath).toLowerCase();
-        const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-        res.writeHead(200, {
-          'Content-Type': contentType,
-          'Cache-Control': 'no-cache'
-        });
-        fs.createReadStream(safePath).pipe(res);
+        servePath(safePath);
       } else {
-        // SPA Fallback: Any route without a physical file is rewritten to index.html
-        const indexPath = path.join(ROOT, 'index.html');
-        fs.readFile(indexPath, (readErr, content) => {
-          if (readErr) {
-            res.writeHead(500, { 'Content-Type': 'text/plain' });
-            return res.end('500 Internal Server Error: index.html not found');
+        // Check if clean URL has a corresponding .html file (e.g. /privacy-policy -> privacy-policy.html)
+        const htmlPath = safePath + '.html';
+        fs.stat(htmlPath, (hErr, hStats) => {
+          if (!hErr && hStats.isFile()) {
+            servePath(htmlPath);
+          } else {
+            // SPA Fallback: Any route without a physical file is rewritten to index.html
+            const indexPath = path.join(ROOT, 'index.html');
+            fs.readFile(indexPath, (readErr, content) => {
+              if (readErr) {
+                res.writeHead(500, { 'Content-Type': 'text/plain' });
+                return res.end('500 Internal Server Error: index.html not found');
+              }
+              res.writeHead(200, {
+                'Content-Type': 'text/html; charset=UTF-8',
+                'Cache-Control': 'no-cache'
+              });
+              res.end(content);
+            });
           }
-          res.writeHead(200, {
-            'Content-Type': 'text/html; charset=UTF-8',
-            'Cache-Control': 'no-cache'
-          });
-          res.end(content);
         });
       }
     });

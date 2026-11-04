@@ -21,8 +21,20 @@
   <meta property="og:image" content="/assets/calc-logo-full.jpg">
 
   <!-- CSS Stylesheets -->
-  <link rel="stylesheet" href="/css/style.css?v=20261102_v36">
-  <link rel="stylesheet" href="/css/calculators.css?v=20261102_v36">
+  <link rel="stylesheet" href="/css/style.css?v=20261103_v46">
+  <link rel="stylesheet" href="/css/calculators.css?v=20261103_v42">
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('filezenith_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', t);
+        if (document.body) document.body.setAttribute('data-theme', t);
+        var m = localStorage.getItem('calcCatalogViewMode') || 'grid';
+        document.documentElement.setAttribute('data-catalog-mode', m);
+        if (document.body) document.body.setAttribute('data-catalog-mode', m);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
@@ -203,6 +215,82 @@
         </div>
       </div>
 
+      <!-- Mobile Navigation Hamburger Menu Anchor (Top-Right 3-Dash Menu) -->
+      <div class="mobile-menu-anchor-wrap">
+        <button class="mobile-hamburger-btn" id="mobile-menu-toggle-btn" title="Calculator Suites" aria-label="Open Navigation Menu" aria-expanded="false" aria-haspopup="true" onclick="window.toggleMobileNavMenu(event)">
+          <svg class="hamburger-svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3.5" y1="6" x2="20.5" y2="6"></line>
+            <line x1="3.5" y1="12" x2="20.5" y2="12"></line>
+            <line x1="3.5" y1="18" x2="20.5" y2="18"></line>
+          </svg>
+        </button>
+
+        <!-- Mobile Navigation Popover Tab -->
+        <div class="mobile-nav-popover" id="mobile-nav-popover" role="dialog" aria-label="Calculator Suites">
+          <div class="mobile-nav-popover-header">
+            <div class="mobile-nav-popover-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              <span>Calculator Suites</span>
+            </div>
+            <button type="button" class="mobile-nav-close-btn" id="mobile-nav-close-btn" aria-label="Close Suites Menu" onclick="window.closeMobileNavMenu()">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="mobile-nav-list" role="menu">
+            <button class="mobile-nav-item active" type="button" role="menuitem" data-tab="zenith-hub" onclick="window.handleMobileNavSelect('zenith-hub', this)">
+              <span class="mobile-nav-item-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              </span>
+              <span class="mobile-nav-item-text">All Calculators</span>
+              <span class="mobile-nav-item-badge">187</span>
+            </button>
+            <button class="mobile-nav-item" type="button" role="menuitem" data-tab="finance" onclick="window.handleMobileNavSelect('finance', this)">
+              <span class="mobile-nav-item-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </span>
+              <span class="mobile-nav-item-text">Finance</span>
+              <span class="mobile-nav-item-badge">70+</span>
+            </button>
+            <button class="mobile-nav-item" type="button" role="menuitem" data-tab="fitness" onclick="window.handleMobileNavSelect('fitness', this)">
+              <span class="mobile-nav-item-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              </span>
+              <span class="mobile-nav-item-text">Health & Fitness</span>
+              <span class="mobile-nav-item-badge">30+</span>
+            </button>
+            <button class="mobile-nav-item" type="button" role="menuitem" data-tab="math" onclick="window.handleMobileNavSelect('math', this)">
+              <span class="mobile-nav-item-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+              </span>
+              <span class="mobile-nav-item-text">Math Solvers</span>
+              <span class="mobile-nav-item-badge">30+</span>
+            </button>
+            <button class="mobile-nav-item" type="button" role="menuitem" data-tab="other" onclick="window.handleMobileNavSelect('other', this)">
+              <span class="mobile-nav-item-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+              </span>
+              <span class="mobile-nav-item-text">Daily Utilities</span>
+              <span class="mobile-nav-item-badge">55+</span>
+            </button>
+            <button class="mobile-nav-item" type="button" role="menuitem" data-tab="standard" onclick="window.handleMobileNavSelect('standard', this)">
+              <span class="mobile-nav-item-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><line x1="8" y1="2" x2="16" y2="2"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
+              </span>
+              <span class="mobile-nav-item-text">Scientific</span>
+              <span class="mobile-nav-item-badge">Pro</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Hidden elements for legacy script hooks -->
       <button class="icon-btn" id="sound-toggle-btn" style="display:none;" title="Toggle Sound FX"></button>
       <button class="icon-btn" id="theme-toggle-btn" style="display:none;" title="Toggle Theme"></button>
@@ -235,6 +323,7 @@
             autocomplete="off"
           >
           <span class="search-shortcut" id="search-shortcut">⌘K</span>
+        <div class="zenith-search-suggestions" id="global-search-suggestions" style="display:none;" role="listbox"></div>
         </div>
       </div>
 
@@ -574,9 +663,9 @@
             </span>
             <span>Health & Fitness (29)</span>
           </div>
-          <a class="sidebar-calc-item" data-calc-id="sec-bmi-calc" data-category="fitness" data-sub="body" data-keywords="bmi body mass index gauge health weight height imperial metric clinical" title="Body Mass Index & Gauge ..." onclick="openZenithCalc('fitness', 'sec-bmi-calc')">
+          <a class="sidebar-calc-item" data-calc-id="sec-bmi-calc" data-category="fitness" data-sub="body" data-keywords="bmi calculator body mass index gauge health weight height imperial metric clinical obesity bmi calc" title="BMI Calculator & Gauge" onclick="openZenithCalc('fitness', 'sec-bmi-calc')">
             <span class="sidebar-calc-dot"></span>
-            <span class="sidebar-calc-name">Body Mass Index & Gauge ...</span>
+            <span class="sidebar-calc-name">BMI Calculator & Gauge</span>
           </a>
           <a class="sidebar-calc-item" data-calc-id="sec-bmr-calc" data-category="fitness" data-sub="hydration" data-keywords="bmr tdee calorie metabolic rate energy calories deficit surplus" title="BMR & TDEE Calorie Target ..." onclick="openZenithCalc('fitness', 'sec-bmr-calc')">
             <span class="sidebar-calc-dot"></span>
@@ -832,9 +921,9 @@
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Universal Unit Converter ...</span>
           </a>
-          <a class="sidebar-calc-item" data-calc-id="sec-age-calc" data-category="other" data-sub="body" data-keywords="age date difference birthday countdown days hours lived chronology" title="Age & Date Difference ..." onclick="openZenithCalc('other', 'sec-age-calc')">
+          <a class="sidebar-calc-item" data-calc-id="sec-age-calc" data-category="other" data-sub="body" data-keywords="age calculator age calc age difference date difference birthday countdown days hours lived chronology chronological age how old am i" title="Age & Date Calculator" onclick="openZenithCalc('other', 'sec-age-calc')">
             <span class="sidebar-calc-dot"></span>
-            <span class="sidebar-calc-name">Age & Date Difference ...</span>
+            <span class="sidebar-calc-name">Age & Date Calculator</span>
           </a>
           <a class="sidebar-calc-item" data-calc-id="sec-gpa-calc" data-category="other" data-sub="stats" data-keywords="gpa grade point average college university school credits weighted" title="College & School GPA ..." onclick="openZenithCalc('other', 'sec-gpa-calc')">
             <span class="sidebar-calc-dot"></span>
@@ -1088,6 +1177,32 @@
 
           <!-- Topics Container -->
           <div class="calc-topics-container">
+
+            <!-- Dynamic Priority Search Results Section -->
+            <div class="calc-topic-section" id="hub-search-results-section" style="display:none;">
+              <div class="topic-header-row">
+                <div class="topic-title-wrap">
+                  <div class="topic-logo-box topic-logo-search" aria-hidden="true" style="background: rgba(37, 99, 235, 0.12); color: #2563eb;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                  </div>
+                  <h3 class="topic-heading" id="hub-search-results-title">Search Results</h3>
+                </div>
+                <span class="topic-count-pill" id="hub-search-results-count">0 Calculators</span>
+              </div>
+              <!-- Cards Grid View -->
+              <div class="zenith-tools-grid topic-cards-grid" id="hub-search-results-grid"></div>
+              <!-- Compact List View -->
+              <div class="compact-calc-grid topic-compact-list" id="hub-search-results-compact" style="display:none;"></div>
+              <!-- No Results State -->
+              <div id="hub-search-no-results" style="display:none; text-align:center; padding: 2.5rem 1rem; color: #64748b;">
+                <p style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; color: #1e293b;">No calculators found</p>
+                <p style="font-size: 0.92rem; color: #64748b;">Try searching for <strong>age</strong>, <strong>mortgage</strong>, <strong>loan</strong>, <strong>bmi</strong>, <strong>percentage</strong>, or <strong>fuel cost</strong>.</p>
+              </div>
+            </div>
+
         <!-- Suite Section: Financial Calculators -->
         <div class="calc-topic-section" id="hub-topic-financial">
           <div class="topic-header-row">
@@ -2771,7 +2886,7 @@
 
           <!-- Cards Grid View -->
           <div class="zenith-tools-grid topic-cards-grid">
-            <div class="zenith-card" data-category="fitness" data-sub="body" data-keywords="bmi body mass index gauge health weight height imperial metric clinical" onclick="openZenithCalc('fitness', 'sec-bmi-calc')">
+            <div class="zenith-card" data-category="fitness" data-sub="body" data-keywords="bmi calculator body mass index gauge health weight height imperial metric clinical obesity bmi calc" onclick="openZenithCalc('fitness', 'sec-bmi-calc')">
           <div class="zenith-card-header">
             <div class="zenith-icon-box icon-theme-rose">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -2779,7 +2894,7 @@
             <span class="zenith-badge">Clinical WHO</span>
           </div>
           <div class="zenith-card-title">
-            <span>Body Mass Index & Gauge ...</span>
+            <span>BMI Calculator & Gauge</span>
             <span class="zenith-card-arrow">→</span>
           </div>
           <p class="zenith-card-desc">WHO classification tiers with interactive visual needle gauge, healthy target ranges, and dual units.</p>
@@ -3228,10 +3343,10 @@
 
           <!-- Compact List View -->
           <div class="topic-compact-list" style="display:none;">
-            <a class="compact-calc-link" data-calc-id="sec-bmi-calc" data-category="fitness" data-sub="body" data-keywords="bmi body mass index gauge health weight height imperial metric clinical" onclick="openZenithCalc('fitness', 'sec-bmi-calc')" title="Body Mass Index & Gauge ...">
+            <a class="compact-calc-link" data-calc-id="sec-bmi-calc" data-category="fitness" data-sub="body" data-keywords="bmi calculator body mass index gauge health weight height imperial metric clinical obesity bmi calc" onclick="openZenithCalc('fitness', 'sec-bmi-calc')" title="BMI Calculator & Gauge">
               <div class="compact-calc-left">
                 <span class="compact-calc-bullet"></span>
-                <span class="compact-calc-title">Body Mass Index & Gauge ...</span>
+                <span class="compact-calc-title">BMI Calculator & Gauge</span>
               </div>
               <span class="compact-calc-arrow">→</span>
             </a>
@@ -4157,7 +4272,7 @@
           <p class="zenith-card-desc">Bi-directional conversion across Length, Mass, Temperature, Speed, Land Area, and Digital Storage.</p>
         </div>
 
-            <div class="zenith-card" data-category="other" data-sub="body" data-keywords="age date difference birthday countdown days hours lived chronology" onclick="openZenithCalc('other', 'sec-age-calc')">
+            <div class="zenith-card" data-category="other" data-sub="body" data-keywords="age calculator age calc age difference date difference birthday countdown days hours lived chronology chronological age how old am i" onclick="openZenithCalc('other', 'sec-age-calc')">
           <div class="zenith-card-header">
             <div class="zenith-icon-box icon-theme-pink">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
@@ -4165,7 +4280,7 @@
             <span class="zenith-badge">Chronology</span>
           </div>
           <div class="zenith-card-title">
-            <span>Age & Date Difference ...</span>
+            <span>Age & Date Calculator</span>
             <span class="zenith-card-arrow">→</span>
           </div>
           <p class="zenith-card-desc">Precise age breakdown in years, months, days, total elapsed days lived, and countdown to next birthday.</p>
@@ -5217,10 +5332,10 @@
               </div>
               <span class="compact-calc-arrow">→</span>
             </a>
-            <a class="compact-calc-link" data-calc-id="sec-age-calc" data-category="other" data-sub="body" data-keywords="age date difference birthday countdown days hours lived chronology" onclick="openZenithCalc('other', 'sec-age-calc')" title="Age & Date Difference ...">
+            <a class="compact-calc-link" data-calc-id="sec-age-calc" data-category="other" data-sub="body" data-keywords="age calculator age calc age difference date difference birthday countdown days hours lived chronology chronological age how old am i" onclick="openZenithCalc('other', 'sec-age-calc')" title="Age & Date Calculator">
               <div class="compact-calc-left">
                 <span class="compact-calc-bullet"></span>
-                <span class="compact-calc-title">Age & Date Difference ...</span>
+                <span class="compact-calc-title">Age & Date Calculator</span>
               </div>
               <span class="compact-calc-arrow">→</span>
             </a>
@@ -16726,7 +16841,10 @@
           </section>
         </div>
 
-        </div>             </main>
+        </div>           
+    
+
+  </main>
           </div> <!-- /.calc-detail-body-layout -->
         <!-- /#fin-detail-view -->
       </div> <!-- /.calc-workspace-container -->
@@ -31150,6 +31268,613 @@
       </div>
     </section>
 
+  
+
+<!-- ======================================================================
+         STANDALONE PAGE VIEW 1: ABOUT US (/about-us)
+         ====================================================================== -->
+    <section class="view-section page-view-section" id="view-page-about">
+      <div class="page-header-banner">
+        <button class="page-back-btn" onclick="window.backToPreviousView()" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Calculators</span>
+        </button>
+        <div class="page-header-center">
+          <h2>About CALC&bull;</h2>
+        </div>
+        <button class="page-close-btn" onclick="window.backToPreviousView()" type="button" title="Close and return">
+          &times;
+        </button>
+      </div>
+
+      <div class="page-content-card">
+        <h1 class="page-title">Precision Math. Universal Access. Absolute Privacy.</h1>
+        <div class="page-meta-badge">Founded 2026 &bull; Nashik, Maharashtra &bull; 100% Client-Side Engine</div>
+        <p class="page-intro-text">
+          Founded in <strong>2026</strong> in <strong>Nashik, Maharashtra</strong>, <strong>CALC&bull;</strong> was established by a collaborative collective of software engineers, financial quantitative analysts, and health sciences researchers. Our vision was straightforward yet uncompromising: build a modern, lightning-fast suite of high-precision calculations that respects user privacy without compromise.
+        </p>
+
+        <div class="legal-highlights-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1rem; margin-bottom:1.75rem;">
+          <div class="legal-highlight-card" style="padding:1.25rem; border-radius:12px; background:rgba(37,99,235,0.05); border:1px solid rgba(37,99,235,0.12);">
+            <div class="highlight-num" style="font-size:1.8rem; font-weight:800; color:#2563eb;">185+</div>
+            <div class="highlight-label" style="font-weight:700; color:#1e293b; margin:0.3rem 0;">Engineered Calculators</div>
+            <p style="font-size:0.88rem; color:#64748b; line-height:1.5; margin:0;">Covering consumer loans, clinical fitness metrics, college tuition, STEM algebra, and everyday conversions.</p>
+          </div>
+          <div class="legal-highlight-card" style="padding:1.25rem; border-radius:12px; background:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.12);">
+            <div class="highlight-num" style="font-size:1.8rem; font-weight:800; color:#10b981;">100%</div>
+            <div class="highlight-label" style="font-weight:700; color:#1e293b; margin:0.3rem 0;">Client-Side Privacy</div>
+            <p style="font-size:0.88rem; color:#64748b; line-height:1.5; margin:0;">Every single equation executes within your browser's local sandbox. No loan amounts, salaries, or health metrics are ever transmitted to remote servers.</p>
+          </div>
+          <div class="legal-highlight-card" style="padding:1.25rem; border-radius:12px; background:rgba(99,102,241,0.05); border:1px solid rgba(99,102,241,0.12);">
+            <div class="highlight-num" style="font-size:1.8rem; font-weight:800; color:#6366f1;">IEEE 754</div>
+            <div class="highlight-label" style="font-weight:700; color:#1e293b; margin:0.3rem 0;">Precision Standards</div>
+            <p style="font-size:0.88rem; color:#64748b; line-height:1.5; margin:0;">Guaranteed compliance with standard floating-point arithmetic, verified against official federal and clinical benchmarks.</p>
+          </div>
+        </div>
+
+        <div class="page-section-box">
+          <h3>Engineering Philosophy &amp; Architecture</h3>
+          <p>
+            Traditional calculator websites rely on heavy server-side redirects, invasive ad-tracking networks, and bloated tracking telemetry. CALC&bull; rejects that model completely. Our platform is built on an ultra-optimized client-side Single Page Application architecture. Equations execute in sub-millisecond speeds, operate offline, and require zero user accounts or subscriptions.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>Headquarters &amp; Engineering Center</h3>
+          <p>
+            <strong>Location:</strong> City Centre, Nashik, Maharashtra 422002, India.<br>
+            <strong>Global Reach:</strong> Serving users across 140+ countries with localized formatting for currencies (USD $, EUR &euro;, GBP &pound;, INR &#8377;, JPY &yen;) and dynamic metric/imperial unit conversions.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>Frequently Asked Questions (FAQ) - About CALC&bull;</h3>
+          <div class="seo-faqs-container">
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>1. What is CALC&bull; Modern Calculator Suite?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                CALC&bull; is a comprehensive, client-side computational platform featuring 185+ precision calculators across financial underwriting, clinical health, STEM mathematics, engineering, and everyday utilities.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>2. Are all calculations and reports 100% free?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                Yes. 100% of the tools, interactive graphs, and downloadable PDF reports across the entire 185+ calculator suite are free and require no account registration, subscriptions, or paywalls.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>3. How does CALC&bull; protect user privacy and financial figures?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                We operate under a strict Zero Data Retention and zero-tracking architecture. All mathematical operations execute exclusively within your browser's local sandbox memory; zero figures, salaries, loans, or medical metrics are ever transmitted to remote servers.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>4. How are mathematical models and formulas verified?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                Every tool is engineered according to established industry standards, including CFPB and Fannie Mae mortgage standards, US Navy and WHO body composition standards, and ISO 80000 mathematical guidelines. Algorithms undergo dual-pass peer review and automated precision benchmarking.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>5. Can I export and print my calculation results?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                Yes, every calculator provides one-click print-ready reporting and vector PDF export capabilities with full visual amortization schedules, health charts, and step-by-step mathematical proofs.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>6. Does CALC&bull; work on smartphones and mobile browsers?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                Yes, CALC&bull; is fully responsive and optimized for smartphones, tablets, laptops, and ultra-wide desktop monitors. Thanks to its client-side JavaScript architecture and local service caching, it runs at instantaneous speed on mobile connections.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>7. How frequently are financial and tax rates updated?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                Tax brackets, IRS standard deductions, Social Security inflation adjustments, and loan amortization formulas are audited annually and updated immediately whenever regulatory legislation takes effect.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>8. How can I request a new calculator or report an issue?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                Users and financial professionals can submit feature requests or feedback directly through our dedicated <a href="contact.html" onclick="if(window.navigateToPage){navigateToPage('contact');return false;}">Contact &amp; Support</a> page, where our engineering team reviews inquiries within 24 hours.
+              </div>
+            </details>
+          </div>
+        </div>
+
+
+        <div class="page-bottom-actions">
+          <button class="page-back-btn" onclick="window.backToPreviousView()" type="button" style="padding:0.65rem 1.4rem; font-size:0.95rem;">
+            &larr; Back to All Calculators
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         STANDALONE PAGE VIEW 2: CONTACT & SUPPORT (/contact)
+         ====================================================================== -->
+    <section class="view-section page-view-section" id="view-page-contact">
+      <div class="page-header-banner">
+        <button class="page-back-btn" onclick="window.backToPreviousView()" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Calculators</span>
+        </button>
+        <div class="page-header-center">
+          <h2>Contact &amp; Support</h2>
+        </div>
+        <button class="page-close-btn" onclick="window.backToPreviousView()" type="button" title="Close and return">
+          &times;
+        </button>
+      </div>
+
+      <div class="page-content-card">
+        <h1 class="page-title">Contact &amp; Engineering Support</h1>
+        <div class="page-meta-badge">Average Response: &lt; 24 Hours &bull; Nashik Engineering Office</div>
+        <p class="page-intro-text">
+          Have feedback on a calculator, noticed an edge-case calculation, or want to suggest a new financial or engineering formula? Our Nashik, Maharashtra engineering team is at your disposal.
+        </p>
+
+        <div class="contact-split-layout" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
+          <div class="contact-info-card" style="padding:1.5rem; border-radius:14px; background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.06);">
+            <h3 style="margin-top:0; font-size:1.15rem; color:#0f172a;">Direct Communication Channels</h3>
+            <p style="font-size:0.92rem; line-height:1.7; color:#475569;">
+              <strong>General Support:</strong> support@calc-platform.local<br>
+              <strong>Engineering &amp; Algorithms:</strong> math-team@calc-platform.local<br>
+              <strong>Security Inquiries:</strong> security@calc-platform.local<br>
+              <strong>Corporate Office:</strong> City Centre, Nashik, Maharashtra 422002, India
+            </p>
+            <div style="margin-top:1.25rem; padding:0.9rem; border-radius:8px; background:rgba(37,99,235,0.06); border:1px solid rgba(37,99,235,0.15); font-size:0.86rem; color:#1e40af;">
+              <strong>Operating Hours:</strong> Monday &ndash; Friday, 9:00 AM &ndash; 6:30 PM IST.
+            </div>
+          </div>
+
+          <form class="contact-form-card" onsubmit="handleContactSubmit(event)" style="padding:1.5rem; border-radius:14px; background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.06);">
+            <h3 style="margin-top:0; font-size:1.15rem; color:#0f172a;">Send Us a Message</h3>
+            <div class="form-group" style="margin-bottom:0.75rem;">
+              <label style="font-size:0.84rem; font-weight:600; display:block; margin-bottom:0.3rem;">Your Name</label>
+              <input type="text" required class="form-input" placeholder="e.g., Alex Morgan" style="width:100%; padding:0.55rem 0.75rem; font-size:0.88rem; border-radius:8px; border:1px solid rgba(0,0,0,0.15); box-sizing:border-box;">
+            </div>
+            <div class="form-group" style="margin-bottom:0.75rem;">
+              <label style="font-size:0.84rem; font-weight:600; display:block; margin-bottom:0.3rem;">Email Address</label>
+              <input type="email" required class="form-input" placeholder="alex@example.com" style="width:100%; padding:0.55rem 0.75rem; font-size:0.88rem; border-radius:8px; border:1px solid rgba(0,0,0,0.15); box-sizing:border-box;">
+            </div>
+            <div class="form-group" style="margin-bottom:0.75rem;">
+              <label style="font-size:0.84rem; font-weight:600; display:block; margin-bottom:0.3rem;">Inquiry Topic</label>
+              <select class="form-input" style="width:100%; padding:0.55rem 0.75rem; font-size:0.88rem; border-radius:8px; border:1px solid rgba(0,0,0,0.15); box-sizing:border-box;">
+                <option>Formula Feedback / Correction</option>
+                <option>New Calculator Request</option>
+                <option>PDF Export Question</option>
+                <option>General Support</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:1rem;">
+              <label style="font-size:0.84rem; font-weight:600; display:block; margin-bottom:0.3rem;">Message</label>
+              <textarea rows="3" required class="form-input" placeholder="How can we assist you?" style="width:100%; padding:0.55rem 0.75rem; font-size:0.88rem; border-radius:8px; border:1px solid rgba(0,0,0,0.15); resize:vertical; box-sizing:border-box;"></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%; padding:0.65rem; font-weight:700; font-size:0.92rem; border-radius:8px; background:#2563eb; color:#ffffff; border:none; cursor:pointer;">
+              Send Inquiry &rarr;
+            </button>
+          </form>
+        </div>
+
+        <div class="page-bottom-actions">
+          <button class="page-back-btn" onclick="window.backToPreviousView()" type="button" style="padding:0.65rem 1.4rem; font-size:0.95rem;">
+            &larr; Back to All Calculators
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         STANDALONE PAGE VIEW 3: PRIVACY POLICY (/privacy-policy)
+         ====================================================================== -->
+    <section class="view-section page-view-section" id="view-page-privacy">
+      <div class="page-header-banner">
+        <button class="page-back-btn" onclick="window.backToPreviousView()" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Calculators</span>
+        </button>
+        <div class="page-header-center">
+          <h2>Privacy Policy</h2>
+        </div>
+        <button class="page-close-btn" onclick="window.backToPreviousView()" type="button" title="Close and return">
+          &times;
+        </button>
+      </div>
+
+      <div class="page-content-card">
+        <h1 class="page-title">Privacy Policy: 100% Client-Side Guarantee</h1>
+        <div class="page-meta-badge">Zero Server Telemetry &bull; GDPR &amp; CCPA/CPRA Compliant</div>
+        <p class="page-intro-text">
+          Your privacy is not an afterthought&mdash;it is the foundational architecture of CALC&bull;. When you use CALC&bull; to plan your mortgage, evaluate debt payoff, track BMI, or calculate ovulation, your personal financial and medical numbers remain strictly in your browser.
+        </p>
+
+        <div class="page-section-box">
+          <h3>1. Zero Personal Data Transmission</h3>
+          <p>
+            Unlike traditional calculation websites, CALC&bull; does not transmit your numerical inputs, salaries, debts, medical statistics, or body measurements to any cloud server or third-party database. All calculation algorithms execute 100% locally inside your client web browser's JavaScript runtime.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>2. Local Storage Usage (localStorage)</h3>
+          <p>
+            We use your browser's local storage exclusively for essential user preferences: Day/Night theme mode and temporary calculation history. This data remains on your physical machine and can be cleared at any moment using the "Clear History" button in the history drawer.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>3. No Third-Party Trackers or Data Brokers</h3>
+          <p>
+            We do not sell user lead data. When you calculate a $500,000 mortgage or debt consolidation schedule, that information remains strictly on your device and is never bundled as a "lead" to financial sales brokers or lenders.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>4. Cryptographic Document Authentication</h3>
+          <p>
+            When a verified PDF calculation report is generated, a unique document reference ID is generated locally using browser cryptographic APIs (<code>crypto.getRandomValues</code>), ensuring authentic client-side verification timestamps without server-side tracking.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>5. GDPR, CCPA/CPRA &amp; Global Compliance</h3>
+          <p>
+            Because CALC&bull; does not collect, log, track, or sell personally identifiable information (PII), we are inherently compliant with global privacy frameworks including EU GDPR and California CCPA/CPRA.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>Frequently Asked Questions (FAQ) - Privacy &amp; Data Security</h3>
+          <div class="seo-faqs-container">
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>1. Does CALC&bull; store any personal or financial figures on remote servers?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                No. All computational calculations run 100% locally in your web browser. Neither your income, mortgage balance, loan figures, nor health vitals are ever uploaded or saved to remote databases.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>2. Does CALC&bull; track user browsing activity or sell data?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                No. We maintain an uncompromising Zero Tracking policy. We do not use third-party user fingerprinting, behavioural tracking scripts, or data brokers.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>3. How does client-side execution protect my privacy?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                By processing formulas directly within the JavaScript engine of your device (client-side sandbox), your sensitive financial or physiological inputs remain strictly within your device's volatile memory.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>4. What happens to my data when I export a PDF report?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                PDF generation is executed entirely within your browser via HTML5 Canvas and vector generation libraries. No documents are compiled or stored on external cloud infrastructure.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>5. Does CALC&bull; comply with GDPR and California CCPA/CPRA?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                Yes. Because CALC&bull; does not harvest, store, or process Personally Identifiable Information (PII), we inherently satisfy and exceed the data minimization mandates of GDPR and CCPA.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>6. Can network intermediaries or ISPs see my calculation inputs?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                No. In addition to high-grade TLS 1.3 encryption across all network transfers, computational values never travel over the HTTP connection because calculations occur locally after page load.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>7. What local data is saved in my browser?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                Only your personal UI preferences (such as Light/Dark theme selection) and temporary calculation history tape items, stored exclusively in your browser's private localStorage.
+              </div>
+            </details>
+            <details class="seo-faq-item">
+              <summary class="seo-faq-question">
+                <span>8. How can I clear my calculation history and stored preferences?</span>
+                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="seo-faq-answer">
+                You can click the "Clear History" button within the History panel at any time, or clear site data in your browser settings to instantly purge all stored records.
+              </div>
+            </details>
+          </div>
+        </div>
+
+
+        <div class="page-bottom-actions">
+          <button class="page-back-btn" onclick="window.backToPreviousView()" type="button" style="padding:0.65rem 1.4rem; font-size:0.95rem;">
+            &larr; Back to All Calculators
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         STANDALONE PAGE VIEW 4: TERMS OF SERVICE (/terms-of-service)
+         ====================================================================== -->
+    <section class="view-section page-view-section" id="view-page-terms">
+      <div class="page-header-banner">
+        <button class="page-back-btn" onclick="window.backToPreviousView()" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Calculators</span>
+        </button>
+        <div class="page-header-center">
+          <h2>Terms of Service</h2>
+        </div>
+        <button class="page-close-btn" onclick="window.backToPreviousView()" type="button" title="Close and return">
+          &times;
+        </button>
+      </div>
+
+      <div class="page-content-card">
+        <h1 class="page-title">Terms of Service</h1>
+        <div class="page-meta-badge">Effective 2026 &bull; Universal User Agreement</div>
+        <p class="page-intro-text">
+          By accessing or using the CALC&bull; platform and PDF report generation engine, you agree to these Terms of Service. Please review them carefully.
+        </p>
+
+        <div class="page-section-box">
+          <h3>1. Authorized Use &amp; Educational Purpose</h3>
+          <p>
+            The tools, calculators, and verified PDF reports provided by CALC&bull; are intended for personal estimation, professional planning, and educational exploration. Commercial estimation is permitted provided reports retain the original CALC&bull; attribution and reference IDs.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>2. Professional Advice Disclaimer</h3>
+          <p>
+            The outputs generated by CALC&bull; do not constitute official certified financial, legal, tax, or medical advice. Users should consult licensed Certified Public Accountants (CPAs), registered financial advisors, attorneys, or healthcare physicians before finalizing binding financial contracts or medical regimens.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>3. Intellectual Property</h3>
+          <p>
+            The unique interface designs, calculation workflows, design tokens, and software architecture of CALC&bull; are protected under intellectual property laws. Unauthorized mass scraping or commercial reverse-engineering of the platform is prohibited.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>4. Limitation of Liability</h3>
+          <p>
+            While every equation is mathematically verified against authoritative benchmarks, CALC&bull; provides calculation estimates on an "as is" and "as available" basis without warranties of financial outcomes or real estate values.
+          </p>
+        </div>
+
+        <div class="page-bottom-actions">
+          <button class="page-back-btn" onclick="window.backToPreviousView()" type="button" style="padding:0.65rem 1.4rem; font-size:0.95rem;">
+            &larr; Back to All Calculators
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         STANDALONE PAGE VIEW 5: EDITORIAL POLICY (/editorial-policy)
+         ====================================================================== -->
+    <section class="view-section page-view-section" id="view-page-editorial">
+      <div class="page-header-banner">
+        <button class="page-back-btn" onclick="window.backToPreviousView()" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Calculators</span>
+        </button>
+        <div class="page-header-center">
+          <h2>Editorial Policy</h2>
+        </div>
+        <button class="page-close-btn" onclick="window.backToPreviousView()" type="button" title="Close and return">
+          &times;
+        </button>
+      </div>
+
+      <div class="page-content-card">
+        <h1 class="page-title">Editorial Policy &amp; Mathematical Standards</h1>
+        <div class="page-meta-badge">Peer-Reviewed Standard &bull; Official Regulatory Alignment</div>
+        <p class="page-intro-text">
+          At <strong>CALC&bull;</strong>, accuracy and mathematical integrity are our highest priority. All calculation engines, methodologies, and default parameter assumptions undergo strict verification prior to deployment.
+        </p>
+
+        <div class="page-section-box">
+          <h3>1. Verification Against Official Standards</h3>
+          <p>
+            Financial models (such as Loan Amortization, APR, and Mortgages) follow standard U.S. Federal Reserve Regulation Z guidelines and CFPB criteria. Clinical fitness algorithms implement peer-reviewed standards including the Mifflin-St Jeor and Harris-Benedict BMR models, Jackson-Pollock body composition equations, and ACSM aerobic target zones.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>2. Algorithmic Transparency</h3>
+          <p>
+            We disclose formulas directly in the interface and in exported PDF reports. Users can view the exact mathematical expressions and standard variable definitions without paywalls or hidden parameters.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>3. Ongoing Maintenance &amp; Regulatory Audits</h3>
+          <p>
+            All regulatory parameters&mdash;such as IRS tax brackets, standard deduction limits, and Social Security benefit cost-of-living adjustments&mdash;are reviewed and updated annually.
+          </p>
+        </div>
+
+        <div class="page-bottom-actions">
+          <button class="page-back-btn" onclick="window.backToPreviousView()" type="button" style="padding:0.65rem 1.4rem; font-size:0.95rem;">
+            &larr; Back to All Calculators
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         STANDALONE PAGE VIEW 6: AFFILIATE DISCLOSURE (/affiliate-disclosure)
+         ====================================================================== -->
+    <section class="view-section page-view-section" id="view-page-affiliate">
+      <div class="page-header-banner">
+        <button class="page-back-btn" onclick="window.backToPreviousView()" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Calculators</span>
+        </button>
+        <div class="page-header-center">
+          <h2>Affiliate Disclosure</h2>
+        </div>
+        <button class="page-close-btn" onclick="window.backToPreviousView()" type="button" title="Close and return">
+          &times;
+        </button>
+      </div>
+
+      <div class="page-content-card">
+        <h1 class="page-title">Affiliate &amp; Advertising Disclosure</h1>
+        <div class="page-meta-badge">FTC Compliance Certified &bull; 100% Commercial Independence</div>
+        <p class="page-intro-text">
+          In compliance with the Federal Trade Commission (FTC) guidelines, we maintain 100% transparency regarding our business operations and third-party relationships.
+        </p>
+
+        <div class="page-section-box">
+          <h3>1. Zero Commercial Bias in Calculations</h3>
+          <p>
+            Calculation outcomes, rankings, and mathematical estimates are <strong>never altered, weighted, or biased</strong> to favor any commercial bank, lender, credit card issuer, or health product sponsor. An EMI or mortgage payment computed on CALC&bull; is derived solely from pure mathematical formulas.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>2. Independence &amp; Privacy</h3>
+          <p>
+            We do not sell user lead data. When you calculate a $500,000 mortgage or debt consolidation schedule, that information remains strictly on your device and is never bundled as a "lead" to financial sales brokers.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>3. Clear Sponsorship Disclosures</h3>
+          <p>
+            If commercial sponsorships or educational partnerships are ever displayed, they are explicitly labeled as "Sponsored" or "Partner". Such relationships have zero influence on our calculation models or editorial guidelines.
+          </p>
+        </div>
+
+        <div class="page-bottom-actions">
+          <button class="page-back-btn" onclick="window.backToPreviousView()" type="button" style="padding:0.65rem 1.4rem; font-size:0.95rem;">
+            &larr; Back to All Calculators
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         STANDALONE PAGE VIEW 7: SECURITY ARCHITECTURE (/security)
+         ====================================================================== -->
+    <section class="view-section page-view-section" id="view-page-security">
+      <div class="page-header-banner">
+        <button class="page-back-btn" onclick="window.backToPreviousView()" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Calculators</span>
+        </button>
+        <div class="page-header-center">
+          <h2>Security Architecture</h2>
+        </div>
+        <button class="page-close-btn" onclick="window.backToPreviousView()" type="button" title="Close and return">
+          &times;
+        </button>
+      </div>
+
+      <div class="page-content-card">
+        <h1 class="page-title">Security &amp; Sandboxing Architecture</h1>
+        <div class="page-meta-badge">Client-Side Isolation &bull; Cryptographic Precision</div>
+        <p class="page-intro-text">
+          CALC&bull; is designed from the ground up to prevent data leaks, cross-site tracking, and unauthorized data harvesting.
+        </p>
+
+        <div class="page-section-box">
+          <h3>1. Browser Sandbox Isolation</h3>
+          <p>
+            All calculations run inside a sandboxed JavaScript context without external runtime dependencies or unverified third-party ad network scripts that could read DOM input states.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>2. Cryptographic Reference Authentication</h3>
+          <p>
+            When a verified PDF calculation report is generated, a unique document reference ID is generated locally using browser cryptographic APIs (<code>crypto.getRandomValues</code>), ensuring authentic client-side verification timestamps without server-side tracking.
+          </p>
+        </div>
+
+        <div class="page-section-box">
+          <h3>3. Content Security Policy (CSP) &amp; XSS Defense</h3>
+          <p>
+            All inputs are strictly validated, sanitized, and typed to prevent injection attacks and ensure high reliability across all calculation engines.
+          </p>
+        </div>
+
+        <div class="page-bottom-actions">
+          <button class="page-back-btn" onclick="window.backToPreviousView()" type="button" style="padding:0.65rem 1.4rem; font-size:0.95rem;">
+            &larr; Back to All Calculators
+          </button>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Calculation History Drawer (Slide-out) -->
@@ -31279,11 +32004,11 @@
         <div class="footer-col">
           <h4 class="footer-col-title">Company &amp; Trust</h4>
           <ul class="footer-links-list">
-            <li><a href="javascript:void(0)" onclick="openLegalModal('about')">About CALC•</a></li>
-            <li><a href="javascript:void(0)" onclick="openLegalModal('contact')">Contact &amp; Support</a></li>
-            <li><a href="javascript:void(0)" onclick="openLegalModal('editorial')">Editorial Policy &amp; Standards</a></li>
-            <li><a href="javascript:void(0)" onclick="openLegalModal('affiliate')">Affiliate Disclosure</a></li>
-            <li><a href="javascript:void(0)" onclick="openLegalModal('verification')">Mathematical Verification</a></li>
+            <li><a href="about-us.html" onclick="if(window.navigateToPage){navigateToPage('about');return false;}">About CALC•</a></li>
+            <li><a href="contact.html" onclick="if(window.navigateToPage){navigateToPage('contact');return false;}">Contact &amp; Support</a></li>
+            <li><a href="editorial-policy.html" onclick="if(window.navigateToPage){navigateToPage('editorial');return false;}">Editorial Policy &amp; Standards</a></li>
+            <li><a href="affiliate-disclosure.html" onclick="if(window.navigateToPage){navigateToPage('affiliate');return false;}">Affiliate Disclosure</a></li>
+            <li><a href="security.html" onclick="if(window.navigateToPage){navigateToPage('security');return false;}">Mathematical Verification</a></li>
             <li><a href="javascript:void(0)" onclick="CalcPdfReport && CalcPdfReport.openReportModal()">PDF Report Generator</a></li>
           </ul>
         </div>
@@ -31292,12 +32017,12 @@
         <div class="footer-col">
           <h4 class="footer-col-title">Legal &amp; Security</h4>
           <ul class="footer-links-list">
-            <li><a href="javascript:void(0)" onclick="openLegalModal('privacy')">Privacy Policy (Zero Tracking)</a></li>
-            <li><a href="javascript:void(0)" onclick="openLegalModal('terms')">Terms of Service</a></li>
-            <li><a href="javascript:void(0)" onclick="openLegalModal('security')">Security Architecture</a></li>
-            <li><a href="javascript:void(0)" onclick="openLegalModal('disclaimer')">Financial &amp; Medical Disclaimer</a></li>
-            <li><a href="javascript:void(0)" onclick="openLegalModal('cookies')">Cookie &amp; Storage Policy</a></li>
-            <li><a href="javascript:void(0)" onclick="openLegalModal('accessibility')">Accessibility Statement (AA)</a></li>
+            <li><a href="privacy-policy.html" onclick="if(window.navigateToPage){navigateToPage('privacy');return false;}">Privacy Policy (Zero Tracking)</a></li>
+            <li><a href="terms-of-service.html" onclick="if(window.navigateToPage){navigateToPage('terms');return false;}">Terms of Service</a></li>
+            <li><a href="security.html" onclick="if(window.navigateToPage){navigateToPage('security');return false;}">Security Architecture</a></li>
+            <li><a href="terms-of-service.html" onclick="if(window.navigateToPage){navigateToPage('terms');return false;}">Financial &amp; Medical Disclaimer</a></li>
+            <li><a href="privacy-policy.html" onclick="if(window.navigateToPage){navigateToPage('privacy');return false;}">Cookie &amp; Storage Policy</a></li>
+            <li><a href="about-us.html" onclick="if(window.navigateToPage){navigateToPage('about');return false;}">Accessibility Statement (AA)</a></li>
           </ul>
         </div>
 
@@ -31601,15 +32326,15 @@
   </div>
 
   <!-- Scripts -->
-  <script src="/js/router.js?v=20261031_v14"></script>
-  <script src="/js/standard-calc.js?v=20261102_v36"></script>
-  <script src="/js/financial-calcs.js?v=20261102_v36"></script>
-  <script src="/js/fitness-calcs.js?v=20261102_v36"></script>
-  <script src="/js/math-calcs.js?v=20261102_v36"></script>
-  <script src="/js/other-calcs.js?v=20261102_v36"></script>
-  <script src="/js/seo-guide.js?v=20261031_v14"></script>
+  <script src="/js/router.js?v=20261104_v48"></script>
+  <script src="/js/standard-calc.js?v=20261103_v42"></script>
+  <script src="/js/financial-calcs.js?v=20261103_v42"></script>
+  <script src="/js/fitness-calcs.js?v=20261103_v42"></script>
+  <script src="/js/math-calcs.js?v=20261103_v42"></script>
+  <script src="/js/other-calcs.js?v=20261103_v42"></script>
+  <script src="/js/seo-guide.js?v=20261103_v42"></script>
   <script src="/js/html2pdf.bundle.min.js"></script>
   <script src="/js/pdf-report.js"></script>
-  <script src="/js/app.js?v=20261102_v36"></script>
+  <script src="/js/app.js?v=20261104_v48"></script>
 </body>
 </html>

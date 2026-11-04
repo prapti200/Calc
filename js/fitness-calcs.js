@@ -2872,7 +2872,10 @@ const FitnessCalcs = {
 
     const activePill = document.querySelector('#fit-detail-view .switcher-pill.active');
     if (activePill) {
-      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      var cont = activePill.closest('.switcher-pill-group');
+      if (cont) {
+        cont.scrollTo({ left: activePill.offsetLeft - (cont.clientWidth / 2) + (activePill.offsetWidth / 2), behavior: 'smooth' });
+      }
     }
 
     if (window.AppRouter && !window.AppRouter.isDispatching) {

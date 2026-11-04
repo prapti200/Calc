@@ -257,6 +257,27 @@
 
   const BASE_APP_TITLE = 'CALC• Modern Calculator';
 
+  // Master definition of standalone pages (Privacy Policy, About Us, Contact, Terms, etc.)
+  const STANDALONE_PAGES = {
+    'privacy-policy': { key: 'privacy', slug: 'privacy-policy', title: 'Privacy Policy' },
+    'privacy': { key: 'privacy', slug: 'privacy-policy', title: 'Privacy Policy' },
+    'about-us': { key: 'about', slug: 'about-us', title: 'About Us & Mission' },
+    'about': { key: 'about', slug: 'about-us', title: 'About Us & Mission' },
+    'contact': { key: 'contact', slug: 'contact', title: 'Contact & Support' },
+    'contact-us': { key: 'contact', slug: 'contact', title: 'Contact & Support' },
+    'support': { key: 'contact', slug: 'contact', title: 'Contact & Support' },
+    'terms-of-service': { key: 'terms', slug: 'terms-of-service', title: 'Terms of Service' },
+    'terms': { key: 'terms', slug: 'terms-of-service', title: 'Terms of Service' },
+    'tos': { key: 'terms', slug: 'terms-of-service', title: 'Terms of Service' },
+    'editorial-policy': { key: 'editorial', slug: 'editorial-policy', title: 'Editorial Policy & Standards' },
+    'editorial': { key: 'editorial', slug: 'editorial-policy', title: 'Editorial Policy & Standards' },
+    'affiliate-disclosure': { key: 'affiliate', slug: 'affiliate-disclosure', title: 'Affiliate Disclosure' },
+    'affiliate': { key: 'affiliate', slug: 'affiliate-disclosure', title: 'Affiliate Disclosure' },
+    'security': { key: 'security', slug: 'security', title: 'Security Architecture' },
+    'security-architecture': { key: 'security', slug: 'security', title: 'Security Architecture' },
+    'sandbox': { key: 'security', slug: 'security', title: 'Security & Sandboxing Architecture' }
+  };
+
   // HTML5 History API Browser Router Engine
   const AppRouter = {
     registry: CALC_REGISTRY,
@@ -303,6 +324,20 @@
 
       // Path segments
       const segments = pathStr.split('/').filter(Boolean);
+
+      // Check for standalone pages (SEO friendly /privacy-policy, /about-us, /contact, etc.)
+      const lastSegment = segments[segments.length - 1] ? segments[segments.length - 1].toLowerCase().replace(/\.html$/, '') : '';
+      const firstSegment = segments[0] ? segments[0].toLowerCase().replace(/\.html$/, '') : '';
+      const pageMatch = STANDALONE_PAGES[lastSegment] || STANDALONE_PAGES[firstSegment];
+      if (pageMatch) {
+        return {
+          type: 'page',
+          pageKey: pageMatch.key,
+          slug: pageMatch.slug,
+          path: `/${pageMatch.slug}`,
+          title: pageMatch.title
+        };
+      }
 
       // 1. Direct DOM ID match (e.g. /sec-pregnancy-calc)
       const directIdMatch = byId.get(segments[segments.length - 1]) || byId.get(pathStr);
@@ -476,10 +511,14 @@
 
       if (currentFull !== cleanPath) {
         if (window.history && window.history.pushState) {
-          if (replace) {
-            window.history.replaceState({ path: cleanPath }, newTitle || document.title, cleanPath);
-          } else {
-            window.history.pushState({ path: cleanPath }, newTitle || document.title, cleanPath);
+          try {
+            if (replace) {
+              window.history.replaceState({ path: cleanPath }, newTitle || document.title, cleanPath);
+            } else {
+              window.history.pushState({ path: cleanPath }, newTitle || document.title, cleanPath);
+            }
+          } catch (e) {
+            // Safe fallback for file:// protocol or iframe security sandboxes
           }
         }
       }
@@ -540,11 +579,35 @@
     },
 
     /**
+     * Notify router that a standalone page has been opened
+     */
+    onPageOpened(pageKey, targetPath, title) {
+      if (this.isDispatching) return;
+      this.setAddressUrl(targetPath, title);
+    },
+
+    /**
      * Synchronize DOM according to a resolved route.
      */
     applyRoute(route) {
       this.isDispatching = true;
       try {
+        if (route.type === 'page') {
+          if (typeof window.navigateToPage === 'function') {
+            window.navigateToPage(route.pageKey, false);
+          } else {
+            document.querySelectorAll('.view-section').forEach(sec => {
+              sec.classList.toggle('active', sec.id === `view-page-${route.pageKey}`);
+            });
+            document.querySelectorAll('.zenith-nav-dropdown, .cat-tab-btn, .mobile-nav-item').forEach(el => {
+              el.classList.remove('active');
+            });
+          }
+          document.title = `${route.title} | ${BASE_APP_TITLE}`;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+
         if (route.type === 'hub') {
           if (typeof window.backToZenithHub === 'function') {
             window.backToZenithHub();
