@@ -2318,6 +2318,16 @@ const MathCalcs = {
   filterCatalog(filterKey, btnEl) {
     this.currentFilter = filterKey || 'all';
 
+    // Reset any active search query
+    const searchInp = document.getElementById('math-catalog-search');
+    if (searchInp && searchInp.value) {
+      searchInp.value = '';
+      const clearBtn = document.getElementById('math-catalog-search-clear');
+      if (clearBtn) clearBtn.style.display = 'none';
+      const secEl = document.getElementById('math-search-results-section');
+      if (secEl) secEl.style.display = 'none';
+    }
+
     // Update active filter pill
     document.querySelectorAll('.math-filter-pill').forEach(btn => {
       const match = (btnEl && btn === btnEl) || (!btnEl && btn.dataset.filter === filterKey);
@@ -2338,6 +2348,17 @@ const MathCalcs = {
       const match = filterKey === 'all' || groups.includes(filterKey);
       box.style.display = match ? 'flex' : 'none';
       if (match) visibleCount++;
+    });
+
+    // Toggle topic sections so empty ones are hidden
+    document.querySelectorAll('#math-catalog-view .calc-topic-section').forEach(sec => {
+      if (sec.id === 'math-search-results-section') return;
+      if (filterKey === 'all') {
+        sec.style.display = '';
+      } else {
+        const hasVisible = Array.from(sec.querySelectorAll('.feature-big-box')).some(b => b.style.display !== 'none');
+        sec.style.display = hasVisible ? '' : 'none';
+      }
     });
 
     const badge = document.getElementById('math-count-badge');
@@ -2390,38 +2411,25 @@ const MathCalcs = {
   },
 
   searchCatalog(query) {
-    const q = (query || '').toLowerCase().trim();
     const detailView = document.getElementById('math-detail-view');
     const catalogView = document.getElementById('math-catalog-view');
-    if (detailView && detailView.style.display !== 'none' && q !== '') {
+    if (detailView && detailView.style.display !== 'none' && (query || '').trim() !== '') {
       detailView.style.display = 'none';
       if (catalogView) catalogView.style.display = 'block';
     }
 
-    const boxes = document.querySelectorAll('#math-catalog-view .feature-big-box');
-    let visibleCount = 0;
-    boxes.forEach(box => {
-      const title = box.querySelector('.box-title')?.textContent.toLowerCase() || '';
-      const desc = box.querySelector('.box-description')?.textContent.toLowerCase() || '';
-      const tags = box.querySelector('.box-tags-row')?.textContent.toLowerCase() || '';
-      const keywords = (box.dataset.keywords || '').toLowerCase();
-      const match = q === '' || title.includes(q) || desc.includes(q) || tags.includes(q) || keywords.includes(q);
-      box.style.display = match ? 'flex' : 'none';
-      if (match) visibleCount++;
-    });
-
-    const noResults = document.getElementById('math-no-results');
-    if (noResults) {
-      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    if (window.SuiteSearchEngine) {
+      window.SuiteSearchEngine.search('math', query);
     }
   },
 
   resetSearch() {
-    const input = document.getElementById('math-catalog-search');
-    if (input) input.value = '';
-    this.searchCatalog('');
-    const noResults = document.getElementById('math-no-results');
-    if (noResults) noResults.style.display = 'none';
+    if (window.SuiteSearchEngine) {
+      window.SuiteSearchEngine.reset('math');
+    } else {
+      const input = document.getElementById('math-catalog-search');
+      if (input) input.value = '';
+    }
   },
 
   openCalculator(calcId) {

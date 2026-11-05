@@ -1198,246 +1198,461 @@
     }
   };
 
-  // --- 6. SMART SEARCH SYSTEM (INSTANT CALCULATOR BOXES SUGGESTIONS & PRIORITY RANKING) ---
-  const globalSearchInput = document.getElementById('global-search-input');
-  const searchShortcut = document.getElementById('search-shortcut');
-  const searchSuggestions = document.getElementById('global-search-suggestions');
-  const hubSearchSection = document.getElementById('hub-search-results-section');
-  const hubSearchGrid = document.getElementById('hub-search-results-grid');
-  const hubSearchCompact = document.getElementById('hub-search-results-compact');
-  const hubSearchNoResults = document.getElementById('hub-search-no-results');
-  const hubSearchTitle = document.getElementById('hub-search-results-title');
-  const hubSearchCount = document.getElementById('hub-search-results-count');
-
+  // --- 6. UNIFIED INSTANT SEARCH ENGINE (PRE-INDEXED, 0MS LATENCY, PRIORITY RANKING) ---
   const STOP_WORDS = new Set([
     'calculator', 'calculators', 'calc', 'calcs',
     'tool', 'tools', 'free', 'online', 'app', 'apps',
-    'solver', 'solvers', 'software', 'suite', 'helper'
+    'solver', 'solvers', 'software', 'suite', 'helper',
+    'math', 'maths', 'financial', 'finance', 'fitness', 'health', 'utility', 'utilities'
   ]);
 
-  function calculateCardScore(card, rawQuery, rawWords, coreWords) {
-    const titleText = card.querySelector('.zenith-card-title')?.textContent?.trim() || '';
-    const title = normalizeSearchText(titleText);
-    const descText = card.querySelector('.zenith-card-desc')?.textContent?.trim() || '';
-    const desc = normalizeSearchText(descText);
-    const category = (card.dataset.category || '').toLowerCase();
-    const sub = (card.dataset.sub || '').toLowerCase();
-    const keywords = normalizeSearchText(card.dataset.keywords || '');
-
-    const searchWords = coreWords.length > 0 ? coreWords : rawWords;
-
-    // Check if card matches core terms
-    const isMatch = searchWords.length === 0 || searchWords.every(w => {
-      if (matchesTerm(title, w) || matchesTerm(keywords, w) || matchesTerm(sub, w) || matchesTerm(category, w) || matchesTerm(desc, w)) {
-        return true;
+  window.SuiteSearchEngine = {
+    suites: {
+      'financial': {
+        prefix: 'fin',
+        catalogViewId: 'fin-catalog-view',
+        searchInputId: 'fin-catalog-search',
+        clearBtnId: 'fin-catalog-search-clear',
+        sectionId: 'fin-search-results-section',
+        gridId: 'fin-search-results-grid',
+        compactId: 'fin-search-results-compact',
+        titleId: 'fin-search-results-title',
+        countId: 'fin-search-results-count',
+        noResultsId: 'fin-search-no-results',
+        sidebarListId: 'sidebar-list-financial',
+        cardSelector: '.feature-big-box',
+        unitLabel: 'Calculators'
+      },
+      'fitness': {
+        prefix: 'fit',
+        catalogViewId: 'fit-catalog-view',
+        searchInputId: 'fit-catalog-search',
+        clearBtnId: 'fit-catalog-search-clear',
+        sectionId: 'fit-search-results-section',
+        gridId: 'fit-search-results-grid',
+        compactId: 'fit-search-results-compact',
+        titleId: 'fit-search-results-title',
+        countId: 'fit-search-results-count',
+        noResultsId: 'fit-search-no-results',
+        sidebarListId: 'sidebar-list-fitness',
+        cardSelector: '.feature-big-box',
+        unitLabel: 'Calculators'
+      },
+      'math': {
+        prefix: 'math',
+        catalogViewId: 'math-catalog-view',
+        searchInputId: 'math-catalog-search',
+        clearBtnId: 'math-catalog-search-clear',
+        sectionId: 'math-search-results-section',
+        gridId: 'math-search-results-grid',
+        compactId: 'math-search-results-compact',
+        titleId: 'math-search-results-title',
+        countId: 'math-search-results-count',
+        noResultsId: 'math-search-no-results',
+        sidebarListId: 'sidebar-list-math',
+        cardSelector: '.feature-big-box',
+        unitLabel: 'Solvers'
+      },
+      'other': {
+        prefix: 'other',
+        catalogViewId: 'other-catalog-view',
+        searchInputId: 'other-catalog-search',
+        clearBtnId: 'other-catalog-search-clear',
+        sectionId: 'other-search-results-section',
+        gridId: 'other-search-results-grid',
+        compactId: 'other-search-results-compact',
+        titleId: 'other-search-results-title',
+        countId: 'other-search-results-count',
+        noResultsId: 'other-search-no-results',
+        sidebarListId: 'sidebar-list-other',
+        cardSelector: '.feature-big-box',
+        unitLabel: 'Utilities'
+      },
+      'hub': {
+        prefix: 'hub',
+        catalogViewId: 'view-zenith-hub',
+        searchInputId: 'global-search-input',
+        clearBtnId: 'global-search-clear',
+        sectionId: 'hub-search-results-section',
+        gridId: 'hub-search-results-grid',
+        compactId: 'hub-search-results-compact',
+        titleId: 'hub-search-results-title',
+        countId: 'hub-search-results-count',
+        noResultsId: 'hub-search-no-results',
+        sidebarListId: null,
+        cardSelector: '.zenith-card',
+        unitLabel: 'Calculators'
       }
-      const terms = getSearchTerms(w);
-      for (let i = 1; i < terms.length; i++) {
-        const t = terms[i];
-        if (matchesTerm(title, t) || matchesTerm(keywords, t) || matchesTerm(sub, t) || matchesTerm(desc, t)) {
-          return true;
+    },
+
+    _indices: {},
+
+    normalizeKey(k) {
+      if (!k) return 'hub';
+      const s = String(k).toLowerCase();
+      if (s === 'all' || s === 'hub' || s === 'zenith' || s === 'zenith-hub') return 'hub';
+      if (s === 'fin' || s === 'financial') return 'financial';
+      if (s === 'fit' || s === 'fitness' || s === 'health') return 'fitness';
+      if (s === 'math') return 'math';
+      if (s === 'other' || s === 'utilities' || s === 'utility') return 'other';
+      return s;
+    },
+
+    initSuite(suiteKey) {
+      const key = this.normalizeKey(suiteKey);
+      if (this._indices[key]) return this._indices[key];
+
+      const cfg = this.suites[key];
+      if (!cfg) return null;
+
+      const container = document.getElementById(cfg.catalogViewId);
+      if (!container) return null;
+
+      const standardSections = container.querySelectorAll(`.calc-topic-section:not(#${cfg.sectionId})`);
+      const cards = [];
+      const elements = container.querySelectorAll(cfg.cardSelector);
+
+      elements.forEach(el => {
+        // Skip elements inside search results section itself
+        if (el.closest(`#${cfg.sectionId}`)) return;
+
+        const titleEl = el.querySelector('.box-title') || el.querySelector('.zenith-card-title');
+        const descEl = el.querySelector('.box-description') || el.querySelector('.zenith-card-desc');
+        const tagsEl = el.querySelector('.box-tags-row');
+        const rawTitle = (titleEl?.textContent || '').trim();
+        const rawDesc = (descEl?.textContent || '').trim();
+        const rawTags = (tagsEl?.textContent || '').trim();
+        const rawKw = (el.dataset.keywords || '') + ' ' + (el.dataset.category || '') + ' ' + (el.dataset.sub || '');
+
+        const titleLower = normalizeSearchText(rawTitle);
+        const descLower = normalizeSearchText(rawDesc);
+        const tagsLower = normalizeSearchText(rawTags);
+        const kwLower = normalizeSearchText(rawKw);
+
+        const titleWords = titleLower.split(/[\s\-_/]+/).filter(Boolean);
+        const tagWords = tagsLower.split(/[\s\-_/]+/).filter(Boolean);
+        const kwWords = kwLower.split(/[\s\-_/]+/).filter(Boolean);
+        const descWords = descLower.split(/[\s\-_/]+/).filter(Boolean);
+
+        const onclickAttr = el.getAttribute('onclick') || '';
+        const calcIdMatch = onclickAttr.match(/'([^']+)'/);
+        const calcId = calcIdMatch ? calcIdMatch[1] : (el.dataset.calcId || '');
+
+        let compactLink = null;
+        if (calcId) {
+          compactLink = container.querySelector(`.compact-calc-link[data-calc-id="${calcId}"]`);
         }
+
+        cards.push({
+          element: el,
+          calcId,
+          title: rawTitle,
+          titleLower,
+          cleanTitle: titleLower.replace(/\s+calculators?/g, '').replace(/\s+solvers?/g, '').trim(),
+          descLower,
+          tagsLower,
+          kwLower,
+          titleWords,
+          tagWords,
+          kwWords,
+          descWords,
+          compactLink
+        });
+      });
+
+      const index = {
+        cfg,
+        container,
+        standardSections,
+        cards
+      };
+      this._indices[key] = index;
+      return index;
+    },
+
+    scoreCard(card, query, rawWords, coreWords) {
+      const q = query;
+      const isShort = q.length < 3;
+      let score = 0;
+
+      // 1. Exact title match (excluding generic "calculator")
+      if (card.titleLower === q || card.cleanTitle === q) {
+        score += 100000;
       }
-      return false;
-    });
-
-    if (!isMatch) return -1;
-
-    // Compute priority ranking score
-    let score = 0;
-    const cleanRaw = normalizeSearchText(rawQuery);
-
-    // Exact title match or title starts with query
-    if (title === cleanRaw) {
-      score += 50000;
-    } else if (title.startsWith(cleanRaw)) {
-      score += 30000;
-    } else if (matchesTerm(title, cleanRaw)) {
-      score += 20000;
-    }
-
-    searchWords.forEach(w => {
-      // Direct word match in title with word boundary
-      if (title.startsWith(w)) {
-        score += 18000;
-      } else if (matchesTerm(title, w)) {
-        score += 12000;
+      // 2. Title starts with query (e.g. "lo" -> "Loan Calculator")
+      else if (card.titleLower.startsWith(q) || card.cleanTitle.startsWith(q)) {
+        score += 80000;
       }
-
-      // Keyword match with word boundary
-      if (matchesTerm(keywords, w)) {
+      // 3. Word in title starts with query (e.g. "lo" -> "Auto Loan", "Student Loan")
+      else if (card.titleWords.some(w => w.startsWith(q))) {
+        score += 50000;
+      }
+      // 4. Word in tags or keywords starts with query
+      else if (card.tagWords.some(w => w.startsWith(q)) || card.kwWords.some(w => w.startsWith(q))) {
+        score += 35000;
+      }
+      // 5. Word in title ends with query
+      else if (card.titleWords.some(w => w.endsWith(q))) {
+        score += 25000;
+      }
+      // 6. Word in tags or keywords ends with query
+      else if (card.tagWords.some(w => w.endsWith(q)) || card.kwWords.some(w => w.endsWith(q))) {
+        score += 20000;
+      }
+      // 7. Title contains query substring
+      else if (card.titleLower.includes(q)) {
+        score += 15000;
+      }
+      // 8. Tags or keywords contain query substring
+      else if (card.tagsLower.includes(q) || card.kwLower.includes(q)) {
+        score += 10000;
+      }
+      // 9. Word in description starts with query
+      else if (card.descWords.some(w => w.startsWith(q))) {
         score += 5000;
       }
-
-      // Subcategory match
-      if (matchesTerm(sub, w)) {
-        score += 3000;
+      // 10. Word in description ends with query
+      else if (card.descWords.some(w => w.endsWith(q))) {
+        score += 2500;
+      }
+      // 11. Description contains substring (only for queries >= 3 chars to prevent 2-char noise)
+      else if (!isShort && card.descLower.includes(q)) {
+        score += 500;
       }
 
-      // Category match
-      if (matchesTerm(category, w)) {
-        score += 1500;
+      // Synonyms & related terms bonus
+      const searchTerms = getSearchTerms(q);
+      if (searchTerms.length > 1) {
+        for (let i = 1; i < searchTerms.length; i++) {
+          const syn = searchTerms[i];
+          if (card.titleLower.includes(syn)) score += 15000;
+          else if (card.kwLower.includes(syn) || card.tagsLower.includes(syn)) score += 8000;
+          else if (!isShort && card.descLower.includes(syn)) score += 1000;
+        }
       }
 
-      // Synonyms match in title or keywords
-      const terms = getSearchTerms(w);
-      for (let i = 1; i < terms.length; i++) {
-        const syn = terms[i];
-        if (matchesTerm(title, syn)) score += 3500;
-        else if (matchesTerm(keywords, syn)) score += 2500;
-        else if (matchesTerm(sub, syn)) score += 1800;
-        else if (matchesTerm(desc, syn)) score += 500;
+      // Multi-word bonus
+      if (rawWords.length > 1) {
+        const allMatched = rawWords.every(w => {
+          if (card.titleLower.includes(w) || card.tagsLower.includes(w) || card.kwLower.includes(w)) return true;
+          if (!isShort && card.descLower.includes(w)) return true;
+          const terms = getSearchTerms(w);
+          for (let j = 1; j < terms.length; j++) {
+            if (card.titleLower.includes(terms[j]) || card.kwLower.includes(terms[j])) return true;
+          }
+          return false;
+        });
+        if (allMatched) score += 20000;
       }
 
-      // Description match
-      if (matchesTerm(desc, w)) {
-        score += 300;
+      return score;
+    },
+
+    search(suiteKey, rawQuery) {
+      const key = this.normalizeKey(suiteKey);
+      const index = this.initSuite(key);
+      if (!index) return;
+
+      const { cfg, container, standardSections, cards } = index;
+      const rawVal = (rawQuery || '').trim();
+      const query = normalizeSearchText(rawVal);
+      const clearBtn = document.getElementById(cfg.clearBtnId);
+      if (clearBtn) {
+        clearBtn.style.display = query ? 'flex' : 'none';
       }
-    });
 
-    return score;
-  }
-
-  if (globalSearchInput) {
-    globalSearchInput.addEventListener('input', (e) => {
-      const rawVal = e.target.value;
-      const query = typeof normalizeSearchText === 'function' ? normalizeSearchText(rawVal) : rawVal.toLowerCase().trim();
-      const rawWords = query ? query.split(/\s+/).filter(Boolean) : [];
-      const coreWords = rawWords.filter(w => !STOP_WORDS.has(w));
-
-      // Ensure dropdown popup is completely hidden - calculator boxes below are the suggestions
+      // Hide suggestions dropdown if present
+      const searchSuggestions = document.getElementById('global-search-suggestions');
       if (searchSuggestions) {
         searchSuggestions.innerHTML = '';
         searchSuggestions.style.display = 'none';
       }
 
-      // Automatically route to zenith-hub if searching
-      const hubSec = document.getElementById('view-zenith-hub');
-      if (hubSec && !hubSec.classList.contains('active')) {
-        document.querySelectorAll('.view-section').forEach(sec => {
-          sec.classList.toggle('active', sec.id === 'view-zenith-hub');
-        });
-        document.querySelectorAll('.zenith-nav-dropdown').forEach(btn => {
-          btn.classList.toggle('active', btn.getAttribute('onclick')?.includes("'all'"));
-        });
-      }
+      const secEl = document.getElementById(cfg.sectionId);
+      const gridEl = document.getElementById(cfg.gridId);
+      const compactEl = document.getElementById(cfg.compactId);
+      const titleEl = document.getElementById(cfg.titleId);
+      const countEl = document.getElementById(cfg.countId);
+      const noResultsEl = document.getElementById(cfg.noResultsId);
 
-      const standardSections = document.querySelectorAll('#view-zenith-hub .calc-topic-section:not(#hub-search-results-section)');
-
+      // If query is empty: restore default view
       if (!query) {
-        // Query cleared: restore pristine standard view
-        if (hubSearchSection) hubSearchSection.style.display = 'none';
-        if (hubSearchGrid) hubSearchGrid.innerHTML = '';
-        if (hubSearchCompact) hubSearchCompact.innerHTML = '';
-        if (hubSearchNoResults) hubSearchNoResults.style.display = 'none';
+        if (secEl) secEl.style.display = 'none';
+        if (gridEl) gridEl.innerHTML = '';
+        if (compactEl) compactEl.innerHTML = '';
+        if (noResultsEl) noResultsEl.style.display = 'none';
 
         standardSections.forEach(sec => {
           sec.classList.remove('calc-search-hidden');
           sec.style.display = '';
         });
 
-        document.querySelectorAll('#view-zenith-hub .zenith-card, #view-zenith-hub .compact-calc-link, .calc-directory-sidebar .sidebar-calc-item').forEach(el => {
-          el.classList.remove('calc-search-hidden');
-          el.style.display = '';
+        cards.forEach(c => {
+          c.element.classList.remove('calc-search-hidden');
+          c.element.style.display = '';
         });
 
-        const badge = document.getElementById('zenith-count-badge');
-        if (badge) badge.textContent = '189 Calculators (70 Financial, 29 Health & Fitness, 29 Math, 55 Daily Utilities, Weather & Transport, 6 Keypads)';
-        const hint = document.querySelector('.view-mode-hint');
-        if (hint) hint.textContent = 'Organized by suite • 185 calculators';
+        if (cfg.sidebarListId) {
+          document.querySelectorAll(`#${cfg.sidebarListId} .sidebar-calc-item`).forEach(item => {
+            item.classList.remove('calc-search-hidden');
+            item.style.display = '';
+          });
+        } else if (key === 'hub') {
+          document.querySelectorAll('.calc-directory-sidebar .sidebar-calc-item').forEach(el => {
+            el.classList.remove('calc-search-hidden');
+            el.style.display = '';
+          });
+          const badge = document.getElementById('zenith-count-badge');
+          if (badge) badge.textContent = '189 Calculators (70 Financial, 29 Health & Fitness, 29 Math, 55 Daily Utilities, Weather & Transport, 6 Keypads)';
+          const hint = document.querySelector('.view-mode-hint');
+          if (hint) hint.textContent = 'Organized by suite • 185 calculators';
+        }
+
         return;
       }
 
-      // Hide all standard topic sections
+      // If searching in Hub and Hub is not active, switch to Hub view
+      if (key === 'hub') {
+        const hubSec = document.getElementById('view-zenith-hub');
+        if (hubSec && !hubSec.classList.contains('active')) {
+          document.querySelectorAll('.view-section').forEach(sec => {
+            sec.classList.toggle('active', sec.id === 'view-zenith-hub');
+          });
+          document.querySelectorAll('.zenith-nav-dropdown').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('onclick')?.includes("'all'"));
+          });
+        }
+      }
+
+      // Hide standard topic sections
       standardSections.forEach(sec => {
         sec.classList.add('calc-search-hidden');
         sec.style.display = 'none';
       });
 
-      // Get all original cards from standard sections
-      const originalCards = [];
-      standardSections.forEach(sec => {
-        sec.querySelectorAll('.zenith-card').forEach(card => originalCards.push(card));
-      });
-
       // Score and rank cards
+      const rawWords = query.split(/\s+/).filter(Boolean);
+      const coreWords = rawWords.filter(w => !STOP_WORDS.has(w));
       const scored = [];
-      originalCards.forEach(card => {
-        const score = calculateCardScore(card, rawVal, rawWords, coreWords);
-        if (score >= 0) {
+      cards.forEach(card => {
+        const score = this.scoreCard(card, query, rawWords, coreWords);
+        if (score > 0) {
           scored.push({ card, score });
         }
       });
 
-      // Sort in descending order of relevance priority (highest score first)
+      // Sort descending by score (highest priority first)
       scored.sort((a, b) => b.score - a.score);
 
-      // If highest score is strong (>= 2000), filter out very weak matches (< 350)
+      // Filter out very weak matches if strong matches exist
       const topScore = scored.length > 0 ? scored[0].score : 0;
-      const matches = topScore >= 2000 ? scored.filter(item => item.score >= 350) : scored;
+      const matches = topScore >= 50000 ? scored.filter(item => item.score >= 3000) : scored;
 
       // Show search results section
-      if (hubSearchSection) hubSearchSection.style.display = '';
-      if (hubSearchTitle) hubSearchTitle.textContent = `Search Results for "${rawVal.trim()}"`;
-      if (hubSearchCount) hubSearchCount.textContent = `${matches.length} ${matches.length === 1 ? 'Calculator' : 'Calculators'}`;
-
-      if (hubSearchGrid) {
-        hubSearchGrid.innerHTML = '';
-        matches.forEach(({ card }) => {
-          const clone = card.cloneNode(true);
-          clone.classList.remove('calc-search-hidden');
-          clone.style.display = 'flex';
-          hubSearchGrid.appendChild(clone);
-        });
-      }
-
-      if (hubSearchCompact) {
-        hubSearchCompact.innerHTML = '';
-        matches.forEach(({ card }) => {
-          const onclickAttr = card.getAttribute('onclick') || '';
-          const match = onclickAttr.match(/'([^']+)'/g);
-          if (match && match.length >= 2) {
-            const calcId = match[1].replace(/'/g, '');
-            const origLink = document.querySelector(`.calc-topic-section:not(#hub-search-results-section) .compact-calc-link[data-calc-id="${calcId}"]`);
-            if (origLink) {
-              const clone = origLink.cloneNode(true);
-              clone.classList.remove('calc-search-hidden');
-              clone.style.display = 'flex';
-              hubSearchCompact.appendChild(clone);
-            }
-          }
-        });
-      }
+      if (secEl) secEl.style.display = '';
+      if (titleEl) titleEl.textContent = `Search Results for "${rawVal}"`;
+      if (countEl) countEl.textContent = `${matches.length} ${matches.length === 1 ? 'Calculator' : cfg.unitLabel}`;
 
       const isListMode = (localStorage.getItem('calcCatalogViewMode') || 'grid') === 'list';
-      if (hubSearchGrid) {
-        hubSearchGrid.style.setProperty('display', (matches.length === 0 || isListMode) ? 'none' : 'grid', 'important');
-      }
-      if (hubSearchCompact) {
-        hubSearchCompact.style.setProperty('display', (matches.length === 0 || !isListMode) ? 'none' : 'grid', 'important');
+
+      // Populate Grid View
+      if (gridEl) {
+        gridEl.innerHTML = '';
+        if (matches.length > 0) {
+          const frag = document.createDocumentFragment();
+          matches.forEach(({ card }) => {
+            const clone = card.element.cloneNode(true);
+            clone.classList.remove('calc-search-hidden');
+            clone.style.display = 'flex';
+            frag.appendChild(clone);
+          });
+          gridEl.appendChild(frag);
+        }
+        gridEl.style.setProperty('display', (matches.length === 0 || isListMode) ? 'none' : 'grid', 'important');
       }
 
-      if (hubSearchNoResults) {
-        hubSearchNoResults.style.display = matches.length === 0 ? 'block' : 'none';
+      // Populate Compact View
+      if (compactEl) {
+        compactEl.innerHTML = '';
+        if (matches.length > 0) {
+          const frag = document.createDocumentFragment();
+          matches.forEach(({ card }) => {
+            if (card.compactLink) {
+              const clone = card.compactLink.cloneNode(true);
+              clone.classList.remove('calc-search-hidden');
+              clone.style.display = 'flex';
+              frag.appendChild(clone);
+            }
+          });
+          compactEl.appendChild(frag);
+        }
+        compactEl.style.setProperty('display', (matches.length === 0 || !isListMode) ? 'none' : 'grid', 'important');
       }
 
-      // Filter left directory sidebar items on desktop to match search results
-      const sidebarItems = document.querySelectorAll('.calc-directory-sidebar .sidebar-calc-item');
-      sidebarItems.forEach(item => {
-        const calcId = item.dataset.calcId;
-        const matched = matches.some(m => (m.card.getAttribute('onclick') || '').includes(calcId));
-        item.classList.toggle('calc-search-hidden', !matched);
-        item.style.display = matched ? 'flex' : 'none';
-      });
+      // No results state
+      if (noResultsEl) {
+        noResultsEl.style.display = matches.length === 0 ? 'block' : 'none';
+      }
 
-      // Update badge and hint
-      const badge = document.getElementById('zenith-count-badge');
-      if (badge) badge.textContent = `${matches.length} ${matches.length === 1 ? 'Calculator' : 'Calculators'}`;
-      const hint = document.querySelector('.view-mode-hint');
-      if (hint) hint.textContent = `${matches.length} ${matches.length === 1 ? 'Calculator' : 'Calculators'} found`;
+      // Synchronize directory sidebar items
+      if (cfg.sidebarListId) {
+        const matchIds = new Set(matches.map(m => m.card.calcId).filter(Boolean));
+        document.querySelectorAll(`#${cfg.sidebarListId} .sidebar-calc-item`).forEach(item => {
+          const id = item.dataset.calcId;
+          const matched = matchIds.has(id);
+          item.classList.toggle('calc-search-hidden', !matched);
+          item.style.display = matched ? 'flex' : 'none';
+        });
+      } else if (key === 'hub') {
+        const matchIds = new Set(matches.map(m => m.card.calcId).filter(Boolean));
+        document.querySelectorAll('.calc-directory-sidebar .sidebar-calc-item').forEach(item => {
+          const id = item.dataset.calcId;
+          const matched = matchIds.has(id);
+          item.classList.toggle('calc-search-hidden', !matched);
+          item.style.display = matched ? 'flex' : 'none';
+        });
+        const badge = document.getElementById('zenith-count-badge');
+        if (badge) badge.textContent = `${matches.length} ${matches.length === 1 ? 'Calculator' : 'Calculators'}`;
+        const hint = document.querySelector('.view-mode-hint');
+        if (hint) hint.textContent = `${matches.length} ${matches.length === 1 ? 'Calculator' : 'Calculators'} found`;
+      }
+    },
+
+    reset(suiteKey) {
+      const key = this.normalizeKey(suiteKey);
+      const cfg = this.suites[key];
+      if (!cfg) return;
+      const input = document.getElementById(cfg.searchInputId);
+      if (input) input.value = '';
+      this.search(key, '');
+    }
+  };
+
+  // Global search clear helper
+  window.clearGlobalSearch = function() {
+    window.SuiteSearchEngine.reset('hub');
+  };
+
+  // Wire search inputs
+  const globalSearchInput = document.getElementById('global-search-input');
+  if (globalSearchInput) {
+    globalSearchInput.addEventListener('input', (e) => {
+      window.SuiteSearchEngine.search('hub', e.target.value);
     });
+  }
 
-    // Keyboard shortcut '/' or Ctrl+K / Cmd+K to jump to active view search bar
+  ['fin-catalog-search', 'fit-catalog-search', 'math-catalog-search', 'other-catalog-search'].forEach(id => {
+    const inp = document.getElementById(id);
+    if (inp) {
+      inp.addEventListener('input', (e) => {
+        const sKey = id.split('-')[0];
+        window.SuiteSearchEngine.search(sKey, e.target.value);
+      });
+    }
+  });
+
+
+      // Keyboard shortcut '/' or Ctrl+K / Cmd+K to jump to active view search bar
     window.addEventListener('keydown', (e) => {
       const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName);
       if ((e.key === '/' || ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')))) {
@@ -1471,7 +1686,6 @@
         });
       }
     });
-  }
 
   // --- 7. FULLSCREEN UTILITY ---
   window.toggleFullscreen = function () {

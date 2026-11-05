@@ -2782,6 +2782,16 @@ const FitnessCalcs = {
   filterCatalog(filterKey, btnEl) {
     this.currentFilter = filterKey || 'all';
 
+    // Reset any active search query
+    const searchInp = document.getElementById('fit-catalog-search');
+    if (searchInp && searchInp.value) {
+      searchInp.value = '';
+      const clearBtn = document.getElementById('fit-catalog-search-clear');
+      if (clearBtn) clearBtn.style.display = 'none';
+      const secEl = document.getElementById('fit-search-results-section');
+      if (secEl) secEl.style.display = 'none';
+    }
+
     // Update active filter pill
     document.querySelectorAll('.fit-filter-pill').forEach(btn => {
       const match = (btnEl && btn === btnEl) || (!btnEl && btn.dataset.filter === filterKey);
@@ -2802,6 +2812,17 @@ const FitnessCalcs = {
       const match = filterKey === 'all' || groups.includes(filterKey);
       box.style.display = match ? 'flex' : 'none';
       if (match) visibleCount++;
+    });
+
+    // Toggle topic sections so empty ones are hidden
+    document.querySelectorAll('#fit-catalog-view .calc-topic-section').forEach(sec => {
+      if (sec.id === 'fit-search-results-section') return;
+      if (filterKey === 'all') {
+        sec.style.display = '';
+      } else {
+        const hasVisible = Array.from(sec.querySelectorAll('.feature-big-box')).some(b => b.style.display !== 'none');
+        sec.style.display = hasVisible ? '' : 'none';
+      }
     });
 
     const badge = document.getElementById('fit-count-badge');
@@ -2902,40 +2923,25 @@ const FitnessCalcs = {
   },
 
   searchCatalog(query) {
-    const q = (query || '').toLowerCase().trim();
     const detailView = document.getElementById('fit-detail-view');
     const catalogView = document.getElementById('fit-catalog-view');
-    if (detailView && detailView.style.display !== 'none' && q !== '') {
+    if (detailView && detailView.style.display !== 'none' && (query || '').trim() !== '') {
       detailView.style.display = 'none';
       if (catalogView) catalogView.style.display = 'block';
     }
 
-    const boxes = document.querySelectorAll('#fit-catalog-view .feature-big-box');
-    let visibleCount = 0;
-    boxes.forEach(box => {
-      const title = box.querySelector('.box-title')?.textContent.toLowerCase() || '';
-      const desc = box.querySelector('.box-description')?.textContent.toLowerCase() || '';
-      const tags = box.querySelector('.box-tags-row')?.textContent.toLowerCase() || '';
-      const keywords = (box.dataset.keywords || '').toLowerCase();
-      const match = q === '' 
-        ? (this.currentFilter === 'all' || (box.dataset.fitGroup || '').split(' ').includes(this.currentFilter))
-        : (title.includes(q) || desc.includes(q) || tags.includes(q) || keywords.includes(q));
-      box.style.display = match ? 'flex' : 'none';
-      if (match) visibleCount++;
-    });
-
-    const noResults = document.getElementById('fit-no-results');
-    if (noResults) {
-      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    if (window.SuiteSearchEngine) {
+      window.SuiteSearchEngine.search('fitness', query);
     }
   },
 
   resetSearch() {
-    const input = document.getElementById('fit-catalog-search');
-    if (input) input.value = '';
-    this.filterCatalog('all');
-    const noResults = document.getElementById('fit-no-results');
-    if (noResults) noResults.style.display = 'none';
+    if (window.SuiteSearchEngine) {
+      window.SuiteSearchEngine.reset('fitness');
+    } else {
+      const input = document.getElementById('fit-catalog-search');
+      if (input) input.value = '';
+    }
   }
 };
 

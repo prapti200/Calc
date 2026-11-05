@@ -21,8 +21,8 @@
   <meta property="og:image" content="/assets/calc-logo-full.jpg">
 
   <!-- CSS Stylesheets -->
-  <link rel="stylesheet" href="/css/style.css?v=20261105_v57">
-  <link rel="stylesheet" href="/css/calculators.css?v=20261105_v57">
+  <link rel="stylesheet" href="/css/style.css?v=20261105_v58">
+  <link rel="stylesheet" href="/css/calculators.css?v=20261105_v58">
   <script>
     (function() {
       try {
@@ -500,6 +500,7 @@
             autocomplete="off"
           >
           <span class="search-shortcut" id="search-shortcut">⌘K</span>
+          <button type="button" class="zenith-hero-search-clear" id="global-search-clear" onclick="window.clearGlobalSearch()" style="display:none;" aria-label="Clear search">✕</button>
         <div class="zenith-search-suggestions" id="global-search-suggestions" style="display:none;" role="listbox"></div>
         </div>
       </div>
@@ -6131,6 +6132,7 @@
               oninput="FinancialCalcs.searchCatalog(this.value)"
             >
             <span class="search-shortcut">⌘K</span>
+            <button type="button" class="zenith-hero-search-clear" id="fin-catalog-search-clear" onclick="FinancialCalcs.resetSearch()" style="display:none;" aria-label="Clear search">✕</button>
           </div>
         </div>
 
@@ -6481,6 +6483,31 @@
 
           <!-- Topics Container -->
           <div class="calc-topics-container">
+          <!-- Dynamic Priority Search Results Section (Financial Suite) -->
+          <div class="calc-topic-section suite-search-results-section" id="fin-search-results-section" style="display:none;">
+            <div class="topic-header-row">
+              <div class="topic-title-wrap">
+                <div class="topic-logo-box topic-logo-search" aria-hidden="true" style="background: rgba(37, 99, 235, 0.12); color: #2563eb;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </div>
+                <h3 class="topic-heading" id="fin-search-results-title">Search Results</h3>
+              </div>
+              <span class="topic-count-pill" id="fin-search-results-count">0 Calculators</span>
+            </div>
+            <!-- Cards Grid View -->
+            <div class="feature-big-box-grid topic-cards-grid suite-search-results-grid" id="fin-search-results-grid"></div>
+            <!-- Compact List View -->
+            <div class="compact-calc-grid topic-compact-list suite-search-results-compact" id="fin-search-results-compact" style="display:none;"></div>
+            <!-- No Results State -->
+            <div id="fin-search-no-results" style="display:none; text-align:center; padding: 2.5rem 1rem; color: #64748b;">
+              <p style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; color: #1e293b;">No financial calculators found</p>
+              <p style="font-size: 0.92rem; color: #64748b;">Try searching for <strong>loan</strong>, <strong>mortgage</strong>, <strong>tax</strong>, <strong>salary</strong>, <strong>interest</strong>, or <strong>401k</strong>.</p>
+            </div>
+          </div>
+
         <!-- Topic Section: Taxes & Salary Calculators -->
         <div class="calc-topic-section" id="topic-financial-tax-salary">
           <div class="topic-header-row">
@@ -17066,6 +17093,7 @@
               oninput="FitnessCalcs.searchCatalog(this.value)"
             >
             <span class="search-shortcut">⌘K</span>
+            <button type="button" class="zenith-hero-search-clear" id="fit-catalog-search-clear" onclick="FitnessCalcs.resetSearch()" style="display:none;" aria-label="Clear search">✕</button>
           </div>
         </div>
 
@@ -17249,6 +17277,31 @@
 
           <!-- Topics Container -->
           <div class="calc-topics-container">
+          <!-- Dynamic Priority Search Results Section (Health & Fitness Suite) -->
+          <div class="calc-topic-section suite-search-results-section" id="fit-search-results-section" style="display:none;">
+            <div class="topic-header-row">
+              <div class="topic-title-wrap">
+                <div class="topic-logo-box topic-logo-search" aria-hidden="true" style="background: rgba(37, 99, 235, 0.12); color: #2563eb;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </div>
+                <h3 class="topic-heading" id="fit-search-results-title">Search Results</h3>
+              </div>
+              <span class="topic-count-pill" id="fit-search-results-count">0 Calculators</span>
+            </div>
+            <!-- Cards Grid View -->
+            <div class="feature-big-box-grid topic-cards-grid suite-search-results-grid" id="fit-search-results-grid"></div>
+            <!-- Compact List View -->
+            <div class="compact-calc-grid topic-compact-list suite-search-results-compact" id="fit-search-results-compact" style="display:none;"></div>
+            <!-- No Results State -->
+            <div id="fit-search-no-results" style="display:none; text-align:center; padding: 2.5rem 1rem; color: #64748b;">
+              <p style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; color: #1e293b;">No health & fitness calculators found</p>
+              <p style="font-size: 0.92rem; color: #64748b;">Try searching for <strong>bmi</strong>, <strong>calorie</strong>, <strong>pregnancy</strong>, <strong>due date</strong>, or <strong>body fat</strong>.</p>
+            </div>
+          </div>
+
         <!-- Topic Section: Body Composition & Metrics -->
         <div class="calc-topic-section" id="topic-fitness-body-composition">
           <div class="topic-header-row">
@@ -21821,6 +21874,7 @@
               oninput="MathCalcs.searchCatalog(this.value)"
             >
             <span class="search-shortcut">⌘K</span>
+            <button type="button" class="zenith-hero-search-clear" id="math-catalog-search-clear" onclick="MathCalcs.resetSearch()" style="display:none;" aria-label="Clear search">✕</button>
           </div>
         </div>
 
@@ -22008,6 +22062,31 @@
 
           <!-- Topics Container -->
           <div class="calc-topics-container">
+          <!-- Dynamic Priority Search Results Section (Math Solvers Suite) -->
+          <div class="calc-topic-section suite-search-results-section" id="math-search-results-section" style="display:none;">
+            <div class="topic-header-row">
+              <div class="topic-title-wrap">
+                <div class="topic-logo-box topic-logo-search" aria-hidden="true" style="background: rgba(37, 99, 235, 0.12); color: #2563eb;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </div>
+                <h3 class="topic-heading" id="math-search-results-title">Search Results</h3>
+              </div>
+              <span class="topic-count-pill" id="math-search-results-count">0 Solvers</span>
+            </div>
+            <!-- Cards Grid View -->
+            <div class="feature-big-box-grid topic-cards-grid suite-search-results-grid" id="math-search-results-grid"></div>
+            <!-- Compact List View -->
+            <div class="compact-calc-grid topic-compact-list suite-search-results-compact" id="math-search-results-compact" style="display:none;"></div>
+            <!-- No Results State -->
+            <div id="math-search-no-results" style="display:none; text-align:center; padding: 2.5rem 1rem; color: #64748b;">
+              <p style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; color: #1e293b;">No math solvers found</p>
+              <p style="font-size: 0.92rem; color: #64748b;">Try searching for <strong>percentage</strong>, <strong>fraction</strong>, <strong>matrix</strong>, <strong>logarithm</strong>, or <strong>triangle</strong>.</p>
+            </div>
+          </div>
+
         <!-- Topic Section: Algebra, Numbers & Arithmetic -->
         <div class="calc-topic-section" id="topic-math-algebra-arithmetic">
           <div class="topic-header-row">
@@ -25164,6 +25243,7 @@
               oninput="OtherCalcs.searchCatalog(this.value)"
             >
             <span class="search-shortcut">⌘K</span>
+            <button type="button" class="zenith-hero-search-clear" id="other-catalog-search-clear" onclick="OtherCalcs.resetSearch()" style="display:none;" aria-label="Clear search">✕</button>
           </div>
         </div>
 
@@ -25459,6 +25539,31 @@
 
           <!-- Topics Container -->
           <div class="calc-topics-container">
+          <!-- Dynamic Priority Search Results Section (Daily Utilities Suite) -->
+          <div class="calc-topic-section suite-search-results-section" id="other-search-results-section" style="display:none;">
+            <div class="topic-header-row">
+              <div class="topic-title-wrap">
+                <div class="topic-logo-box topic-logo-search" aria-hidden="true" style="background: rgba(37, 99, 235, 0.12); color: #2563eb;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </div>
+                <h3 class="topic-heading" id="other-search-results-title">Search Results</h3>
+              </div>
+              <span class="topic-count-pill" id="other-search-results-count">0 Utilities</span>
+            </div>
+            <!-- Cards Grid View -->
+            <div class="feature-big-box-grid topic-cards-grid suite-search-results-grid" id="other-search-results-grid"></div>
+            <!-- Compact List View -->
+            <div class="compact-calc-grid topic-compact-list suite-search-results-compact" id="other-search-results-compact" style="display:none;"></div>
+            <!-- No Results State -->
+            <div id="other-search-no-results" style="display:none; text-align:center; padding: 2.5rem 1rem; color: #64748b;">
+              <p style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; color: #1e293b;">No utility calculators found</p>
+              <p style="font-size: 0.92rem; color: #64748b;">Try searching for <strong>age</strong>, <strong>gpa</strong>, <strong>unit converter</strong>, <strong>hours</strong>, or <strong>fuel cost</strong>.</p>
+            </div>
+          </div>
+
         <!-- Topic Section: Date, Time & Timesheet Utilities -->
         <div class="calc-topic-section" id="topic-other-date-time">
           <div class="topic-header-row">
@@ -32507,15 +32612,15 @@
   </div>
 
   <!-- Scripts -->
-  <script src="/js/router.js?v=20261105_v57"></script>
-  <script src="/js/standard-calc.js?v=20261105_v57"></script>
-  <script src="/js/financial-calcs.js?v=20261105_v57"></script>
-  <script src="/js/fitness-calcs.js?v=20261105_v57"></script>
-  <script src="/js/math-calcs.js?v=20261105_v57"></script>
-  <script src="/js/other-calcs.js?v=20261105_v57"></script>
-  <script src="/js/seo-guide.js?v=20261105_v57"></script>
+  <script src="/js/router.js?v=20261105_v58"></script>
+  <script src="/js/standard-calc.js?v=20261105_v58"></script>
+  <script src="/js/financial-calcs.js?v=20261105_v58"></script>
+  <script src="/js/fitness-calcs.js?v=20261105_v58"></script>
+  <script src="/js/math-calcs.js?v=20261105_v58"></script>
+  <script src="/js/other-calcs.js?v=20261105_v58"></script>
+  <script src="/js/seo-guide.js?v=20261105_v58"></script>
   <script src="/js/html2pdf.bundle.min.js"></script>
   <script src="/js/pdf-report.js"></script>
-  <script src="/js/app.js?v=20261105_v57"></script>
+  <script src="/js/app.js?v=20261105_v58"></script>
 </body>
 </html>

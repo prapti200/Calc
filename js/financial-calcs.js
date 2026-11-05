@@ -5393,6 +5393,16 @@ const FinancialCalcs = {
       if (catalogView) catalogView.style.display = 'block';
     }
 
+    // Reset any active search query
+    const searchInp = document.getElementById('fin-catalog-search');
+    if (searchInp && searchInp.value) {
+      searchInp.value = '';
+      const clearBtn = document.getElementById('fin-catalog-search-clear');
+      if (clearBtn) clearBtn.style.display = 'none';
+      const secEl = document.getElementById('fin-search-results-section');
+      if (secEl) secEl.style.display = 'none';
+    }
+
     // Update active filter pill
     document.querySelectorAll('.fin-filter-pill').forEach(btn => {
       const match = (btnEl && btn === btnEl) || (!btnEl && btn.dataset.filter === filterKey);
@@ -5408,6 +5418,17 @@ const FinancialCalcs = {
       if (match) visibleCount++;
     });
 
+    // Toggle topic sections so empty ones are hidden
+    document.querySelectorAll('#fin-catalog-view .calc-topic-section').forEach(sec => {
+      if (sec.id === 'fin-search-results-section') return;
+      if (filterKey === 'all') {
+        sec.style.display = '';
+      } else {
+        const hasVisible = Array.from(sec.querySelectorAll('.feature-big-box')).some(b => b.style.display !== 'none');
+        sec.style.display = hasVisible ? '' : 'none';
+      }
+    });
+
     const noResults = document.getElementById('fin-no-results');
     if (noResults) {
       noResults.style.display = visibleCount === 0 ? 'block' : 'none';
@@ -5419,38 +5440,25 @@ const FinancialCalcs = {
   },
 
   searchCatalog(query) {
-    const q = (query || '').toLowerCase().trim();
     const detailView = document.getElementById('fin-detail-view');
     const catalogView = document.getElementById('fin-catalog-view');
-    if (detailView && detailView.style.display !== 'none' && q !== '') {
+    if (detailView && detailView.style.display !== 'none' && (query || '').trim() !== '') {
       detailView.style.display = 'none';
       if (catalogView) catalogView.style.display = 'block';
     }
 
-    const boxes = document.querySelectorAll('#fin-catalog-view .feature-big-box');
-    let visibleCount = 0;
-    boxes.forEach(box => {
-      const title = box.querySelector('.box-title')?.textContent.toLowerCase() || '';
-      const desc = box.querySelector('.box-description')?.textContent.toLowerCase() || '';
-      const tags = box.querySelector('.box-tags-row')?.textContent.toLowerCase() || '';
-      const keywords = (box.dataset.keywords || '').toLowerCase();
-      const match = q === '' || title.includes(q) || desc.includes(q) || tags.includes(q) || keywords.includes(q);
-      box.style.display = match ? 'flex' : 'none';
-      if (match) visibleCount++;
-    });
-
-    const noResults = document.getElementById('fin-no-results');
-    if (noResults) {
-      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    if (window.SuiteSearchEngine) {
+      window.SuiteSearchEngine.search('financial', query);
     }
   },
 
   resetSearch() {
-    const input = document.getElementById('fin-catalog-search');
-    if (input) input.value = '';
-    this.searchCatalog('');
-    const noResults = document.getElementById('fin-no-results');
-    if (noResults) noResults.style.display = 'none';
+    if (window.SuiteSearchEngine) {
+      window.SuiteSearchEngine.reset('financial');
+    } else {
+      const input = document.getElementById('fin-catalog-search');
+      if (input) input.value = '';
+    }
   },
 
   openCalculator(calcId) {
