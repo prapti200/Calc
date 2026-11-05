@@ -816,7 +816,13 @@
 
   // --- FILEZENITH ROUTING & FILTERING SYSTEM ---
   window.openZenithCalc = function (category, calcId) {
-    if (category === 'utility' || category === 'internet') category = 'other';
+    if (typeof window.normalizeSuiteKey === 'function') {
+      category = window.normalizeSuiteKey(category);
+    } else {
+      if (category === 'utility' || category === 'utilities' || category === 'internet' || category === 'everyday' || category === 'weather' || category === 'transportation' || category === 'entertainment') category = 'other';
+      if (category === 'finance') category = 'financial';
+      if (category === 'health') category = 'fitness';
+    }
     // Clear and close any open detail search suggestions dropdowns
     ['fin', 'fit', 'math', 'other'].forEach(p => {
       const inp = document.getElementById(`${p}-detail-search`);
@@ -887,13 +893,26 @@
   };
 
   window.navigateToTab = function (tabKey, btnEl) {
+    const navKey = typeof window.normalizeSuiteKey === 'function' ? window.normalizeSuiteKey(tabKey) : (
+      (tabKey === 'zenith-hub' || tabKey === 'all') ? 'all' :
+      (tabKey === 'finance' || tabKey === 'financial') ? 'financial' :
+      (tabKey === 'health' || tabKey === 'fitness') ? 'fitness' :
+      (tabKey === 'math' || tabKey === 'mathematics') ? 'math' :
+      (tabKey === 'utility' || tabKey === 'utilities' || tabKey === 'other' || tabKey === 'everyday' || tabKey === 'internet' || tabKey === 'weather' || tabKey === 'transportation' || tabKey === 'entertainment') ? 'other' :
+      (tabKey === 'scientific' || tabKey === 'standard') ? 'standard' : tabKey
+    );
+
     // Update active state on upper ribbon navigation buttons
     document.querySelectorAll('.zenith-nav-dropdown').forEach(btn => {
-      const match = (btnEl && btn === btnEl) || (!btnEl && btn.getAttribute('onclick')?.includes(`'${tabKey}'`));
+      const match = (btnEl && btn === btnEl) || (!btnEl && (
+        btn.getAttribute('onclick')?.includes(`'${navKey}'`) ||
+        (navKey === 'financial' && btn.getAttribute('onclick')?.includes("'finance'")) ||
+        (navKey === 'all' && btn.getAttribute('onclick')?.includes("'all'"))
+      ));
       btn.classList.toggle('active', !!match);
     });
 
-    if (tabKey === 'all') {
+    if (navKey === 'all') {
       document.querySelectorAll('.view-section').forEach(sec => {
         sec.classList.toggle('active', sec.id === 'view-zenith-hub');
       });
@@ -905,29 +924,32 @@
       }
     } else {
       document.querySelectorAll('.view-section').forEach(sec => {
-        sec.classList.toggle('active', sec.id === `view-${tabKey}`);
+        sec.classList.toggle('active', sec.id === `view-${navKey}`);
       });
-      if (tabKey === 'financial' && window.FinancialCalcs) {
+      if (navKey === 'financial' && window.FinancialCalcs) {
         window.FinancialCalcs.showCatalog();
-      } else if (tabKey === 'fitness' && window.FitnessCalcs) {
+      } else if (navKey === 'fitness' && window.FitnessCalcs) {
         window.FitnessCalcs.showCatalog();
-      } else if (tabKey === 'math' && window.MathCalcs) {
+      } else if (navKey === 'math' && window.MathCalcs) {
         window.MathCalcs.showCatalog();
-      } else if (tabKey === 'other' && window.OtherCalcs) {
+      } else if (navKey === 'other' && window.OtherCalcs) {
         window.OtherCalcs.showCatalog();
-      } else if (tabKey === 'standard' && window.stdCalc) {
+      } else if (navKey === 'standard' && window.stdCalc) {
         window.stdCalc.setScientificMode(true);
       }
       if (window.AppRouter && !window.AppRouter.isDispatching) {
-        window.AppRouter.onCatalogOpened(tabKey);
+        window.AppRouter.onCatalogOpened(navKey);
       }
     }
     // Sync mobile hamburger menu active highlights
     document.querySelectorAll('.mobile-nav-item').forEach(item => {
       const itemTab = item.getAttribute('data-tab');
-      const isMatch = (itemTab === 'zenith-hub' && (tabKey === 'all' || tabKey === 'zenith-hub')) ||
-                      (itemTab === 'finance' && (tabKey === 'financial' || tabKey === 'finance')) ||
-                      (itemTab === tabKey);
+      const isMatch = (itemTab === 'zenith-hub' && navKey === 'all') ||
+                      (itemTab === 'finance' && navKey === 'financial') ||
+                      (itemTab === 'fitness' && navKey === 'fitness') ||
+                      (itemTab === 'math' && navKey === 'math') ||
+                      (itemTab === 'other' && navKey === 'other') ||
+                      (itemTab === navKey);
       item.classList.toggle('active', !!isMatch);
     });
 
@@ -1086,11 +1108,11 @@
 
   window.handleMobileNavSelect = function (tabKey, btnEl) {
     window.closeMobileNavMenu(false);
-    let navKey = tabKey;
-    if (tabKey === 'zenith-hub') navKey = 'all';
-    if (tabKey === 'finance') navKey = 'financial';
+    const navKey = typeof window.normalizeSuiteKey === 'function' ? window.normalizeSuiteKey(tabKey) : (
+      (tabKey === 'zenith-hub') ? 'all' : (tabKey === 'finance') ? 'financial' : (tabKey === 'health') ? 'fitness' : (tabKey === 'utility' || tabKey === 'utilities') ? 'other' : tabKey
+    );
     if (typeof window.navigateToTab === 'function') {
-      window.navigateToTab(navKey);
+      window.navigateToTab(navKey, btnEl);
     }
   };
 

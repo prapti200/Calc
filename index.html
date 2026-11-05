@@ -21,8 +21,8 @@
   <meta property="og:image" content="/assets/calc-logo-full.jpg">
 
   <!-- CSS Stylesheets -->
-  <link rel="stylesheet" href="/css/style.css?v=20261104_v56">
-  <link rel="stylesheet" href="/css/calculators.css?v=20261103_v42">
+  <link rel="stylesheet" href="/css/style.css?v=20261105_v57">
+  <link rel="stylesheet" href="/css/calculators.css?v=20261105_v57">
   <script>
     (function() {
       try {
@@ -33,6 +33,183 @@
         document.documentElement.setAttribute('data-catalog-mode', m);
         if (document.body) document.body.setAttribute('data-catalog-mode', m);
       } catch (e) {}
+
+      // Robust suite key normalizer (supports all aliases: finance, health, math, utility, etc.)
+      window.normalizeSuiteKey = function(key) {
+        if (!key) return 'all';
+        key = String(key).toLowerCase().trim();
+        if (key === 'finance' || key === 'financial' || key === 'fin') return 'financial';
+        if (key === 'health' || key === 'fitness' || key === 'fit') return 'fitness';
+        if (key === 'math' || key === 'mathematics') return 'math';
+        if (key === 'utility' || key === 'utilities' || key === 'other' || key === 'everyday' || key === 'internet' || key === 'weather' || key === 'transportation' || key === 'entertainment') return 'other';
+        if (key === 'standard' || key === 'scientific') return 'standard';
+        if (key === 'zenith-hub' || key === 'hub' || key === 'all') return 'all';
+        return key;
+      };
+
+      // Immediate early bootstrap navigation (0ms cold start latency for mobile taps)
+      window.navigateToTab = function(tabKey, btnEl) {
+        var navKey = window.normalizeSuiteKey(tabKey);
+        var secId = (navKey === 'all') ? 'view-zenith-hub' : ('view-' + navKey);
+
+        // Track pending suite if DOM is still parsing and target doesn't exist yet
+        var targetSec = document.getElementById(secId);
+        if (!targetSec && document.readyState === 'loading') {
+          window._pendingSuite = navKey;
+        }
+
+        // 1. Immediately activate target view section
+        var sections = document.querySelectorAll('.view-section');
+        for (var i = 0; i < sections.length; i++) {
+          sections[i].classList.toggle('active', sections[i].id === secId);
+        }
+
+        // 2. Immediately highlight active upper ribbon nav buttons
+        var pills = document.querySelectorAll('.zenith-nav-dropdown');
+        for (var j = 0; j < pills.length; j++) {
+          var p = pills[j];
+          var match = (btnEl && p === btnEl) || (!btnEl && p.getAttribute('onclick') && (
+            p.getAttribute('onclick').indexOf("'" + navKey + "'") !== -1 ||
+            (navKey === 'financial' && p.getAttribute('onclick').indexOf("'finance'") !== -1) ||
+            (navKey === 'all' && p.getAttribute('onclick').indexOf("'all'") !== -1)
+          ));
+          p.classList.toggle('active', !!match);
+        }
+
+        // 3. Immediately highlight active mobile popover menu item
+        var menuItems = document.querySelectorAll('.mobile-nav-item');
+        for (var k = 0; k < menuItems.length; k++) {
+          var m = menuItems[k];
+          var mTab = m.getAttribute('data-tab');
+          var mMatch = (mTab === 'zenith-hub' && navKey === 'all') ||
+                       (mTab === 'finance' && navKey === 'financial') ||
+                       (mTab === 'fitness' && navKey === 'fitness') ||
+                       (mTab === 'math' && navKey === 'math') ||
+                       (mTab === 'other' && navKey === 'other') ||
+                       (mTab === navKey);
+          m.classList.toggle('active', !!mMatch);
+        }
+
+        // 4. Ensure catalog views are displayed (and detail views hidden)
+        var catViews = {
+          'financial': { cat: 'fin-catalog-view', det: 'fin-detail-view', obj: window.FinancialCalcs },
+          'fitness': { cat: 'fit-catalog-view', det: 'fit-detail-view', obj: window.FitnessCalcs },
+          'math': { cat: 'math-catalog-view', det: 'math-detail-view', obj: window.MathCalcs },
+          'other': { cat: 'other-catalog-view', det: 'other-detail-view', obj: window.OtherCalcs }
+        };
+        if (catViews[navKey]) {
+          var cEl = document.getElementById(catViews[navKey].cat);
+          var dEl = document.getElementById(catViews[navKey].det);
+          if (cEl) cEl.style.display = 'block';
+          if (dEl) dEl.style.display = 'none';
+          if (catViews[navKey].obj && typeof catViews[navKey].obj.showCatalog === 'function') {
+            catViews[navKey].obj.showCatalog();
+          }
+        } else if (navKey === 'standard' && window.stdCalc) {
+          window.stdCalc.setScientificMode(true);
+        }
+
+        // 5. Update browser router URL and history
+        try {
+          var targetPath = (navKey === 'all') ? '/' : ('/' + navKey);
+          if (window.location.pathname !== targetPath) {
+            history.pushState({ path: targetPath }, '', targetPath);
+          }
+        } catch (_) {}
+
+        if (window.AppRouter && !window.AppRouter.isDispatching) {
+          if (navKey === 'all') {
+            window.AppRouter.onHubOpened();
+          } else {
+            window.AppRouter.onCatalogOpened(navKey);
+          }
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      // Mobile Menu Navigation Select (closes menu cleanly without popping route)
+      window.handleMobileNavSelect = function(tabKey, btnEl) {
+        if (typeof window.closeMobileNavMenu === 'function') {
+          window.closeMobileNavMenu(false);
+        } else {
+          var pop = document.getElementById('mobile-nav-popover');
+          if (pop) pop.classList.remove('open');
+          var btn = document.getElementById('mobile-menu-toggle-btn');
+          if (btn) {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-expanded', 'false');
+          }
+        }
+        var navKey = window.normalizeSuiteKey(tabKey);
+        window.navigateToTab(navKey, btnEl);
+      };
+
+      // Mobile Top-Right 3-Dash Menu Toggle
+      window.toggleMobileNavMenu = function(e) {
+        if (e && e.stopPropagation) e.stopPropagation();
+        var pop = document.getElementById('mobile-nav-popover');
+        var btn = document.getElementById('mobile-menu-toggle-btn');
+        if (!pop) return;
+        if (pop.classList.contains('open')) {
+          if (typeof window.closeMobileNavMenu === 'function') {
+            window.closeMobileNavMenu(true);
+          } else {
+            pop.classList.remove('open');
+            if (btn) {
+              btn.classList.remove('active');
+              btn.setAttribute('aria-expanded', 'false');
+            }
+          }
+        } else {
+          if (typeof window.openMobileNavMenu === 'function') {
+            window.openMobileNavMenu();
+          } else {
+            pop.classList.add('open');
+            if (btn) {
+              btn.classList.add('active');
+              btn.setAttribute('aria-expanded', 'true');
+            }
+          }
+        }
+      };
+
+      window.openMobileNavMenu = function() {
+        var pop = document.getElementById('mobile-nav-popover');
+        var btn = document.getElementById('mobile-menu-toggle-btn');
+        if (!pop) return;
+        pop.classList.add('open');
+        if (btn) {
+          btn.classList.add('active');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+        try {
+          history.pushState({ mobileOverlay: 'suites-menu' }, '', window.location.href);
+        } catch (_) {}
+      };
+
+      window.closeMobileNavMenu = function(popHistory) {
+        if (typeof popHistory === 'undefined') popHistory = true;
+        var pop = document.getElementById('mobile-nav-popover');
+        var btn = document.getElementById('mobile-menu-toggle-btn');
+        var wasOpen = pop && pop.classList.contains('open');
+        if (pop) pop.classList.remove('open');
+        if (btn) {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+        if (wasOpen && popHistory && history.state && history.state.mobileOverlay === 'suites-menu') {
+          history.back();
+        }
+      };
+
+      // Fulfill any pending suite navigation as soon as DOM content finishes parsing
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window._pendingSuite) {
+          window.navigateToTab(window._pendingSuite);
+          window._pendingSuite = null;
+        }
+      });
     })();
   </script>
 </head>
@@ -1205,7 +1382,7 @@
 
         <!-- Suite Section: Financial Calculators -->
         <div class="calc-topic-section" id="hub-topic-financial">
-          <div class="topic-header-row">
+          <div class="topic-header-row" onclick="navigateToTab('financial')" style="cursor:pointer;" title="Open Financial Calculators Suite">
             <div class="topic-title-wrap">
               <div class="topic-logo-box topic-logo-finance" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2872,7 +3049,7 @@
 
         <!-- Suite Section: Health & Fitness Calculators -->
         <div class="calc-topic-section" id="hub-topic-fitness">
-          <div class="topic-header-row">
+          <div class="topic-header-row" onclick="navigateToTab('fitness')" style="cursor:pointer;" title="Open Health & Fitness Calculators Suite">
             <div class="topic-title-wrap">
               <div class="topic-logo-box topic-logo-fitness" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3551,7 +3728,7 @@
 
         <!-- Suite Section: Math Solutions -->
         <div class="calc-topic-section" id="hub-topic-math">
-          <div class="topic-header-row">
+          <div class="topic-header-row" onclick="navigateToTab('math')" style="cursor:pointer;" title="Open Math Tools & Solvers Suite">
             <div class="topic-title-wrap">
               <div class="topic-logo-box topic-logo-math" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -4244,7 +4421,7 @@
 
         <!-- Suite Section: Daily Utilities -->
         <div class="calc-topic-section" id="hub-topic-other">
-          <div class="topic-header-row">
+          <div class="topic-header-row" onclick="navigateToTab('other')" style="cursor:pointer;" title="Open Daily Utilities & Tools Suite">
             <div class="topic-title-wrap">
               <div class="topic-logo-box topic-logo-utility" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -5715,7 +5892,7 @@
 
         <!-- Suite Section: Scientific -->
         <div class="calc-topic-section" id="hub-topic-standard">
-          <div class="topic-header-row">
+          <div class="topic-header-row" onclick="navigateToTab('standard')" style="cursor:pointer;" title="Open Scientific Mode">
             <div class="topic-title-wrap">
               <div class="topic-logo-box topic-logo-scientific" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -32330,15 +32507,15 @@
   </div>
 
   <!-- Scripts -->
-  <script src="/js/router.js?v=20261104_v56"></script>
-  <script src="/js/standard-calc.js?v=20261103_v42"></script>
-  <script src="/js/financial-calcs.js?v=20261103_v42"></script>
-  <script src="/js/fitness-calcs.js?v=20261103_v42"></script>
-  <script src="/js/math-calcs.js?v=20261103_v42"></script>
-  <script src="/js/other-calcs.js?v=20261103_v42"></script>
-  <script src="/js/seo-guide.js?v=20261103_v42"></script>
+  <script src="/js/router.js?v=20261105_v57"></script>
+  <script src="/js/standard-calc.js?v=20261105_v57"></script>
+  <script src="/js/financial-calcs.js?v=20261105_v57"></script>
+  <script src="/js/fitness-calcs.js?v=20261105_v57"></script>
+  <script src="/js/math-calcs.js?v=20261105_v57"></script>
+  <script src="/js/other-calcs.js?v=20261105_v57"></script>
+  <script src="/js/seo-guide.js?v=20261105_v57"></script>
   <script src="/js/html2pdf.bundle.min.js"></script>
   <script src="/js/pdf-report.js"></script>
-  <script src="/js/app.js?v=20261104_v56"></script>
+  <script src="/js/app.js?v=20261105_v57"></script>
 </body>
 </html>

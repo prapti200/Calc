@@ -402,14 +402,25 @@
         }
 
         // Category catalogs
-        const categories = ['financial', 'fitness', 'math', 'other', 'internet', 'utility', 'everyday', 'weather', 'transportation', 'entertainment'];
+        const categories = [
+          'financial', 'finance',
+          'fitness', 'health',
+          'math', 'mathematics',
+          'other', 'utility', 'utilities', 'everyday', 'internet', 'weather', 'transportation', 'entertainment'
+        ];
         if (categories.includes(single)) {
           let catTarget = single;
           let filter = queryParams.filter || null;
-          if (single === 'internet') {
+          if (single === 'finance' || single === 'financial') {
+            catTarget = 'financial';
+          } else if (single === 'health' || single === 'fitness') {
+            catTarget = 'fitness';
+          } else if (single === 'math' || single === 'mathematics') {
+            catTarget = 'math';
+          } else if (single === 'internet') {
             catTarget = 'other';
             filter = 'internet';
-          } else if (single === 'utility' || single === 'everyday') {
+          } else if (single === 'utility' || single === 'utilities' || single === 'everyday') {
             catTarget = 'other';
             filter = 'everyday';
           } else if (single === 'weather') {
@@ -421,8 +432,10 @@
           } else if (single === 'entertainment') {
             catTarget = 'other';
             filter = 'entertainment';
+          } else {
+            catTarget = 'other';
           }
-          let catalogPath = `/${single}`;
+          let catalogPath = `/${catTarget}`;
           if (queryParams.filter && queryParams.filter !== 'all') {
             catalogPath += `?filter=${encodeURIComponent(queryParams.filter)}`;
           }
@@ -431,7 +444,7 @@
             category: catTarget,
             filter: filter,
             path: catalogPath,
-            title: this.getCategoryTitle(single, filter)
+            title: this.getCategoryTitle(catTarget, filter)
           };
         }
 
