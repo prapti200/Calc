@@ -21,8 +21,8 @@
   <meta property="og:image" content="/assets/calc-logo-full.jpg">
 
   <!-- CSS Stylesheets -->
-  <link rel="stylesheet" href="/css/style.css?v=20261105_v58">
-  <link rel="stylesheet" href="/css/calculators.css?v=20261105_v58">
+  <link rel="stylesheet" href="/css/style.css?v=20261108_v59">
+  <link rel="stylesheet" href="/css/calculators.css?v=20261108_v59">
   <script>
     (function() {
       try {
@@ -110,12 +110,14 @@
         }
 
         // 5. Update browser router URL and history
-        try {
-          var targetPath = (navKey === 'all') ? '/' : ('/' + navKey);
-          if (window.location.pathname !== targetPath) {
-            history.pushState({ path: targetPath }, '', targetPath);
-          }
-        } catch (_) {}
+        if (!window.AppRouter || !window.AppRouter.isDispatching) {
+          try {
+            var targetPath = (navKey === 'all') ? '/' : ('/' + navKey);
+            if (window.location.pathname !== targetPath) {
+              history.pushState({ path: targetPath }, '', targetPath);
+            }
+          } catch (_) {}
+        }
 
         if (window.AppRouter && !window.AppRouter.isDispatching) {
           if (navKey === 'all') {
@@ -32612,15 +32614,15 @@
   </div>
 
   <!-- Scripts -->
-  <script src="/js/router.js?v=20261105_v58"></script>
-  <script src="/js/standard-calc.js?v=20261105_v58"></script>
-  <script src="/js/financial-calcs.js?v=20261105_v58"></script>
-  <script src="/js/fitness-calcs.js?v=20261105_v58"></script>
-  <script src="/js/math-calcs.js?v=20261105_v58"></script>
-  <script src="/js/other-calcs.js?v=20261105_v58"></script>
-  <script src="/js/seo-guide.js?v=20261105_v58"></script>
+  <script src="/js/router.js?v=20261108_v59"></script>
+  <script src="/js/standard-calc.js?v=20261108_v59"></script>
+  <script src="/js/financial-calcs.js?v=20261108_v59"></script>
+  <script src="/js/fitness-calcs.js?v=20261108_v59"></script>
+  <script src="/js/math-calcs.js?v=20261108_v59"></script>
+  <script src="/js/other-calcs.js?v=20261108_v59"></script>
+  <script src="/js/seo-guide.js?v=20261108_v59"></script>
   <script src="/js/html2pdf.bundle.min.js"></script>
   <script src="/js/pdf-report.js"></script>
-  <script src="/js/app.js?v=20261105_v58"></script>
+  <script src="/js/app.js?v=20261108_v59"></script>
 </body>
 </html>

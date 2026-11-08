@@ -1,8 +1,7 @@
 {
-  "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/((?!about-us|privacy-policy|contact|editorial-policy|affiliate-disclosure|security|terms-of-service|sandbox).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
@@ -35,16 +34,7 @@
       ]
     },
     {
-      "source": "/",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "/(.*)\\.html",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

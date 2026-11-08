@@ -629,6 +629,13 @@
               sec.classList.toggle('active', sec.id === 'view-zenith-hub');
             });
           }
+          if (typeof window.filterZenith === 'function') {
+            window.filterZenith('all');
+          }
+          document.querySelectorAll('.mobile-nav-item').forEach(item => {
+            const itemTab = item.getAttribute('data-tab');
+            item.classList.toggle('active', itemTab === 'zenith-hub' || itemTab === 'all');
+          });
           document.title = `${BASE_APP_TITLE} - All-in-One Calculator Suite`;
           return;
         }
@@ -657,6 +664,17 @@
             if (route.filter) window.OtherCalcs.filterCatalog(route.filter);
           }
 
+          document.querySelectorAll('.mobile-nav-item').forEach(item => {
+            const itemTab = item.getAttribute('data-tab');
+            const isMatch = (itemTab === 'zenith-hub' && route.category === 'all') ||
+                            (itemTab === 'finance' && route.category === 'financial') ||
+                            (itemTab === 'fitness' && route.category === 'fitness') ||
+                            (itemTab === 'math' && route.category === 'math') ||
+                            (itemTab === 'other' && route.category === 'other') ||
+                            (itemTab === route.category);
+            item.classList.toggle('active', !!isMatch);
+          });
+
           document.title = `${route.title} | ${BASE_APP_TITLE}`;
           return;
         }
@@ -677,6 +695,16 @@
           });
           document.querySelectorAll('.cat-tab-btn').forEach(tab => {
             tab.classList.toggle('active', tab.dataset.view === actualViewCat);
+          });
+          document.querySelectorAll('.mobile-nav-item').forEach(item => {
+            const itemTab = item.getAttribute('data-tab');
+            const isMatch = (itemTab === 'zenith-hub' && actualViewCat === 'all') ||
+                            (itemTab === 'finance' && actualViewCat === 'financial') ||
+                            (itemTab === 'fitness' && actualViewCat === 'fitness') ||
+                            (itemTab === 'math' && actualViewCat === 'math') ||
+                            (itemTab === 'other' && actualViewCat === 'other') ||
+                            (itemTab === actualViewCat);
+            item.classList.toggle('active', !!isMatch);
           });
 
           // 3. Open the specific calculator inside the engine

@@ -1849,12 +1849,11 @@
     if (window.FitnessCalcs) window.FitnessCalcs.init();
     if (window.MathCalcs) window.MathCalcs.init();
     if (window.OtherCalcs) window.OtherCalcs.init();
-    if (typeof window.filterZenith === 'function') {
-      window.filterZenith('all');
-    }
     // Initialize AppRouter for direct deep-linking on load
     if (window.AppRouter) {
       window.AppRouter.init();
+    } else if (typeof window.filterZenith === 'function') {
+      window.filterZenith('all');
     }
 
     // Initialize View Mode (Grid vs Compact List)
