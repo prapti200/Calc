@@ -20,9 +20,14 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="/assets/calc-logo-full.jpg">
 
+  <!-- Anti-Cache Meta Tags to prevent stale mobile browser cache -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <!-- CSS Stylesheets -->
-  <link rel="stylesheet" href="/css/style.css?v=20261108_v59">
-  <link rel="stylesheet" href="/css/calculators.css?v=20261108_v59">
+  <link rel="stylesheet" href="/css/style.css?v=20261109_v60">
+  <link rel="stylesheet" href="/css/calculators.css?v=20261109_v60">
   <script>
     (function() {
       try {
@@ -495,11 +500,16 @@
             </svg>
           </span>
           <input 
-            type="text" 
+            type="search" 
             id="global-search-input" 
             class="zenith-hero-search-input"
-            placeholder="Search across all 189 calculators (e.g. Wind Chill, Fuel Cost, Horsepower, Dice Roller, Love Calculator, Mortgage, BMI)..." 
+            placeholder="Search across all 189 calculators (e.g. Loan, Mortgage, Tax, BMI)..." 
             autocomplete="off"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+            inputmode="search"
+            enterkeyhint="search"
           >
           <span class="search-shortcut" id="search-shortcut">⌘K</span>
           <button type="button" class="zenith-hero-search-clear" id="global-search-clear" onclick="window.clearGlobalSearch()" style="display:none;" aria-label="Clear search">✕</button>
@@ -6126,11 +6136,16 @@
               </svg>
             </span>
             <input 
-              type="text" 
+              type="search" 
               id="fin-catalog-search" 
               class="zenith-hero-search-input" 
-              placeholder="Search across 70 financial calculators (e.g. Sales Tax, Credit Card, Mortgage, Student Loan, Margin, Budget)..." 
+              placeholder="Search across 70 financial calculators (e.g. Loan, Tax, Mortgage, Budget)..." 
               autocomplete="off"
+              autocapitalize="none"
+              autocorrect="off"
+              spellcheck="false"
+              inputmode="search"
+              enterkeyhint="search"
               oninput="FinancialCalcs.searchCatalog(this.value)"
             >
             <span class="search-shortcut">⌘K</span>
@@ -17087,11 +17102,16 @@
               </svg>
             </span>
             <input 
-              type="text" 
+              type="search" 
               id="fit-catalog-search" 
               class="zenith-hero-search-input" 
-              placeholder="Search health, fitness & pregnancy tools (e.g. Pregnancy, Due Date, Ovulation, Period, Weight Gain, Conception, BMI, Calorie, Pace)..." 
+              placeholder="Search across 29 health, fitness & pregnancy tools (e.g. BMI, Calorie, Pace)..." 
               autocomplete="off"
+              autocapitalize="none"
+              autocorrect="off"
+              spellcheck="false"
+              inputmode="search"
+              enterkeyhint="search"
               oninput="FitnessCalcs.searchCatalog(this.value)"
             >
             <span class="search-shortcut">⌘K</span>
@@ -21868,11 +21888,16 @@
               </svg>
             </span>
             <input 
-              type="text" 
+              type="search" 
               id="math-catalog-search" 
               class="zenith-hero-search-input" 
-              placeholder="Search math solvers (e.g. Scientific, Fraction, Percent Error, Exponent, Binary, Hex, Log, Ratio, Root, LCM, GCF, Big Number)..." 
+              placeholder="Search across 29 math solvers (e.g. Percentage, Fraction, Log)..." 
               autocomplete="off"
+              autocapitalize="none"
+              autocorrect="off"
+              spellcheck="false"
+              inputmode="search"
+              enterkeyhint="search"
               oninput="MathCalcs.searchCatalog(this.value)"
             >
             <span class="search-shortcut">⌘K</span>
@@ -25237,11 +25262,16 @@
               </svg>
             </span>
             <input 
-              type="text" 
+              type="search" 
               id="other-catalog-search" 
               class="zenith-hero-search-input" 
-              placeholder="Search daily utilities (e.g. Universal Unit Converter, Age & Date, College GPA, Work Hours & Wages)..." 
+              placeholder="Search across 55 daily utilities (e.g. Age, Tip, Grade, Fuel Cost)..." 
               autocomplete="off"
+              autocapitalize="none"
+              autocorrect="off"
+              spellcheck="false"
+              inputmode="search"
+              enterkeyhint="search"
               oninput="OtherCalcs.searchCatalog(this.value)"
             >
             <span class="search-shortcut">⌘K</span>
@@ -32614,15 +32644,15 @@
   </div>
 
   <!-- Scripts -->
-  <script src="/js/router.js?v=20261108_v59"></script>
-  <script src="/js/standard-calc.js?v=20261108_v59"></script>
-  <script src="/js/financial-calcs.js?v=20261108_v59"></script>
-  <script src="/js/fitness-calcs.js?v=20261108_v59"></script>
-  <script src="/js/math-calcs.js?v=20261108_v59"></script>
-  <script src="/js/other-calcs.js?v=20261108_v59"></script>
-  <script src="/js/seo-guide.js?v=20261108_v59"></script>
+  <script src="/js/router.js?v=20261109_v60"></script>
+  <script src="/js/standard-calc.js?v=20261109_v60"></script>
+  <script src="/js/financial-calcs.js?v=20261109_v60"></script>
+  <script src="/js/fitness-calcs.js?v=20261109_v60"></script>
+  <script src="/js/math-calcs.js?v=20261109_v60"></script>
+  <script src="/js/other-calcs.js?v=20261109_v60"></script>
+  <script src="/js/seo-guide.js?v=20261109_v60"></script>
   <script src="/js/html2pdf.bundle.min.js"></script>
   <script src="/js/pdf-report.js"></script>
-  <script src="/js/app.js?v=20261108_v59"></script>
+  <script src="/js/app.js?v=20261109_v60"></script>
 </body>
 </html>

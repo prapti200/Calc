@@ -1482,6 +1482,11 @@
         if (compactEl) compactEl.innerHTML = '';
         if (noResultsEl) noResultsEl.style.display = 'none';
 
+        const filterControls = container.querySelectorAll('.fin-catalog-controls, .view-mode-bar');
+        filterControls.forEach(ctrl => {
+          ctrl.style.display = '';
+        });
+
         standardSections.forEach(sec => {
           sec.classList.remove('calc-search-hidden');
           sec.style.display = '';
@@ -1529,6 +1534,14 @@
         sec.classList.add('calc-search-hidden');
         sec.style.display = 'none';
       });
+
+      // Hide filter pills & view-mode bar on mobile/narrow screens during active search so results appear right under the search bar
+      if (window.innerWidth <= 900) {
+        const filterControls = container.querySelectorAll('.fin-catalog-controls, .view-mode-bar');
+        filterControls.forEach(ctrl => {
+          ctrl.style.display = 'none';
+        });
+      }
 
       // Score and rank cards
       const rawWords = query.split(/\s+/).filter(Boolean);
