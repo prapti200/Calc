@@ -1,0 +1,2319 @@
+/* ==========================================================================
+   CALC• MODERN CALCULATOR - CALCULATOR SPECIFIC STYLES & INTERACTIVE WIDGETS
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. STANDARD & SCIENTIFIC CALCULATOR
+   -------------------------------------------------------------------------- */
+
+/* ==========================================================================
+   SCIENTIFIC CALCULATOR ACTIVE HEADER (Left Circular Back, Title, Mode Switcher)
+   ========================================================================== */
+#standard-active-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 1rem !important;
+  flex-wrap: wrap !important;
+  background: var(--card-bg-solid, #ffffff) !important;
+  border: 1px solid var(--card-border, #e2e8f0) !important;
+  border-radius: 14px !important;
+  padding: 0.85rem 1.15rem !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important;
+}
+
+[data-theme="dark"] #standard-active-header {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
+#standard-active-header .calc-detail-header-left {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.95rem !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+.calc-title-badge-column {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.2rem !important;
+  min-width: 0 !important;
+}
+
+/* Circular Icon-Only Back Button in the Left Corner */
+.calc-circle-back-btn {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  border-radius: 9999px !important; /* Perfect circular form */
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+  transition: all 0.16s ease !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.calc-circle-back-btn:hover {
+  background: #f1f5f9 !important;
+  border-color: #2563eb !important;
+  color: #2563eb !important;
+  transform: translateX(-2px) !important;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.16) !important;
+}
+
+.calc-circle-back-btn:active {
+  transform: scale(0.94) translateX(-1px) !important;
+}
+
+.calc-circle-back-btn svg {
+  display: block !important;
+  transition: transform 0.16s ease !important;
+}
+
+.calc-circle-back-btn:hover svg {
+  transform: translateX(-1px) !important;
+}
+
+[data-theme="dark"] .calc-circle-back-btn {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  color: #f8fafc !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .calc-circle-back-btn:hover {
+  background: #334155 !important;
+  border-color: #60a5fa !important;
+  color: #60a5fa !important;
+}
+
+/* Increased font size of active calculator titles across ALL suites */
+.calc-active-main-title,
+#std-active-calc-title,
+#fin-active-calc-title,
+#fit-active-calc-title,
+#math-active-calc-title,
+#other-active-calc-title {
+  font-size: 1.95rem !important;
+  font-weight: 850 !important;
+  color: #0f172a !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.25 !important;
+  margin: 0 !important;
+}
+
+[data-theme="dark"] .calc-active-main-title,
+[data-theme="dark"] #std-active-calc-title,
+[data-theme="dark"] #fin-active-calc-title,
+[data-theme="dark"] #fit-active-calc-title,
+[data-theme="dark"] #math-active-calc-title,
+[data-theme="dark"] #other-active-calc-title {
+  color: #f8fafc !important;
+}
+
+/* Individual Opened Calculator Panel Headings (Loan, Mortgage, BMI, etc.) */
+.calc-panel .panel-header h2,
+.calc-panel .panel-header .section-heading,
+.calc-panel .panel-title-group h2,
+.calc-panel h2.section-heading,
+.fin-calc-unit .section-heading,
+.fit-calc-unit .section-heading,
+.math-calc-unit .section-heading,
+.other-calc-unit .section-heading {
+  font-size: 1.65rem !important;
+  font-weight: 800 !important;
+  color: var(--text-primary, #0f172a) !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+}
+
+[data-theme="dark"] .calc-panel .panel-header h2,
+[data-theme="dark"] .calc-panel .panel-header .section-heading,
+[data-theme="dark"] .calc-panel .panel-title-group h2,
+[data-theme="dark"] .calc-panel h2.section-heading {
+  color: #f8fafc !important;
+}
+
+/* Four mode buttons (Standard, Scientific, History, DEG) - Bolder form */
+#standard-active-header .calc-quick-switcher {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  background: #f1f5f9 !important;
+  padding: 0.28rem 0.38rem !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="dark"] #standard-active-header .calc-quick-switcher {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+#standard-active-header .switcher-pill {
+  padding: 0.34rem 0.78rem !important;
+  font-size: 0.84rem !important;
+  font-weight: 650 !important; /* Not much bold, only a few bolder form as requested */
+  letter-spacing: -0.01em !important;
+  border-radius: 6px !important;
+  color: #475569 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  transition: all 0.14s ease !important;
+}
+
+#standard-active-header .switcher-pill:hover {
+  color: #0f172a !important;
+  background: rgba(255, 255, 255, 0.75) !important;
+}
+
+#standard-active-header .switcher-pill.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #2563eb !important;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3) !important;
+  font-weight: 750 !important; /* Slightly bolder for active selection */
+}
+
+[data-theme="dark"] #standard-active-header .switcher-pill {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] #standard-active-header .switcher-pill:hover {
+  color: #f8fafc !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] #standard-active-header .switcher-pill.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
+
+@media (max-width: 680px) {
+  #standard-active-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+  }
+  
+  #standard-active-header .calc-detail-header-left {
+    width: 100% !important;
+  }
+  
+  .calc-active-main-title,
+  #std-active-calc-title,
+  #fin-active-calc-title,
+  #fit-active-calc-title,
+  #math-active-calc-title,
+  #other-active-calc-title {
+    font-size: 1.55rem !important;
+  }
+
+  .calc-panel .panel-header h2,
+  .calc-panel .panel-header .section-heading,
+  .calc-panel .panel-title-group h2,
+  .calc-panel h2.section-heading {
+    font-size: 1.35rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .calc-circle-back-btn {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+  }
+  
+  #standard-active-header .calc-detail-header-right {
+    width: 100% !important;
+    overflow-x: auto !important;
+  }
+  
+  #standard-active-header .calc-quick-switcher {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+}
+
+.calc-machine {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  background: var(--card-bg-solid, #ffffff);
+  border: 1px solid var(--card-border, #e2e8f0);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.03);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: max-width 0.22s ease;
+}
+
+.calc-machine.scientific-mode {
+  max-width: 740px;
+}
+
+/* Calculator Screen - Crystal Clear High-Contrast Obsidian LCD (Zero clipping, Zero jumping) */
+.calc-screen {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  padding: 0.85rem 1.25rem 0.85rem !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  min-height: 124px !important;
+  height: 124px !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+[data-theme="light"] .calc-screen {
+  background: #0f172a !important;
+}
+
+.calc-screen-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 20px !important;
+  margin-bottom: 0.15rem !important;
+  flex-shrink: 0 !important;
+}
+
+.calc-mode-indicator {
+  font-size: 0.72rem !important;
+  font-weight: 750 !important;
+  text-transform: uppercase !important;
+  color: #38bdf8 !important;
+  background: rgba(56, 189, 248, 0.16) !important;
+  padding: 0.12rem 0.55rem !important;
+  border-radius: 4px !important;
+  letter-spacing: 0.06em !important;
+  font-family: var(--font-mono) !important;
+  line-height: 1.2 !important;
+}
+
+.calc-memory-indicator {
+  font-size: 0.72rem !important;
+  font-weight: 750 !important;
+  color: #fbbf24 !important;
+  background: rgba(245, 158, 11, 0.16) !important;
+  padding: 0.12rem 0.45rem !important;
+  border-radius: 4px !important;
+  opacity: 0 !important;
+  transition: opacity 0.15s ease !important;
+  font-family: var(--font-mono) !important;
+  line-height: 1.2 !important;
+}
+
+.calc-memory-indicator.active {
+  opacity: 1 !important;
+}
+
+/* Expression row with reserved fixed height so numbers never shift upward or downward! */
+.calc-expression {
+  font-family: var(--font-mono) !important;
+  font-size: 0.95rem !important;
+  color: #94a3b8 !important;
+  height: 22px !important;
+  line-height: 22px !important;
+  min-height: 22px !important;
+  text-align: right !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  white-space: nowrap !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  flex-shrink: 0 !important;
+  margin-bottom: 0.15rem !important;
+}
+
+.calc-expression::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Main Display / Current Input - Vertically Centered & Ample Height for Full Number 5 Visibility */
+.calc-current-input {
+  font-family: var(--font-mono) !important;
+  font-size: 2.2rem !important;
+  font-weight: 750 !important;
+  color: #ffffff !important;
+  text-align: right !important;
+  height: 46px !important;
+  line-height: 46px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  white-space: nowrap !important;
+  letter-spacing: -0.01em !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+}
+
+.calc-current-input::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Calculator Controls bar */
+.calc-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.mode-toggle-group {
+  display: flex;
+  background: rgba(10, 14, 23, 0.5);
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  gap: 0.25rem;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--card-border);
+}
+
+.mode-btn {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+}
+
+.mode-btn {
+  padding: 0.32rem 0.72rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.mode-btn:hover {
+  color: var(--text-primary);
+  border-color: #2563eb; box-shadow: 0 0 0 1.5px #2563eb, 0 2px 8px rgba(37, 99, 235, 0.16);
+}
+
+.mode-btn:active {
+  transform: scale(0.96);
+}
+
+/* VERY LIGHT SELECT COLOR (in professional way) */
+.mode-btn.active {
+  background: var(--btn-active-bg, rgba(56, 189, 248, 0.14));
+  color: var(--btn-active-text, #7dd3fc);
+  border: 1px solid var(--btn-active-border, rgba(56, 189, 248, 0.5));
+  box-shadow: var(--btn-active-shadow, 0 1px 4px rgba(56, 189, 248, 0.12));
+}
+
+[data-theme="light"] .mode-btn.active {
+  background: #e0f2fe;
+  color: #0284c7;
+  border-color: #7dd3fc;
+}
+
+.memory-btn-row {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.mem-btn {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%), var(--bg-tertiary);
+  border: 1px solid var(--card-border);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.mem-btn:hover {
+  color: var(--accent-secondary);
+  background: linear-gradient(180deg, rgba(6, 182, 212, 0.18) 0%, rgba(6, 182, 212, 0.06) 100%), var(--bg-secondary);
+  border-color: rgba(6, 182, 212, 0.4);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 10px rgba(6, 182, 212, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.mem-btn:active {
+  transform: translateY(1px) scale(0.96);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Keypad Grid & Compact Ergonomic Buttons (No scrolling needed!) */
+.calc-keypad {
+  padding: 0.75rem 0.85rem;
+  background: var(--card-bg-solid, #ffffff);
+  display: flex;
+  justify-content: center;
+  gap: 0.65rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+[data-theme="dark"] .calc-keypad {
+  background: #111e38;
+}
+
+/* Scientific block: 3 columns x 5 rows */
+.keypad-scientific-block {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem;
+  flex: 3;
+}
+
+.calc-machine.scientific-mode .keypad-scientific-block,
+.calc-keypad.scientific-active .keypad-scientific-block {
+  display: grid !important;
+}
+
+/* Standard Numpad block: 4 columns x 5 rows */
+.keypad-standard-block {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.45rem;
+  flex: 4;
+  max-width: 440px;
+  width: 100%;
+}
+
+.calc-machine:not(.scientific-mode) .keypad-standard-block {
+  max-width: 410px;
+  margin: 0 auto;
+}
+
+/* Base Keypad Button */
+.key-btn {
+  height: 44px;
+  min-height: 44px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #dbe5ee;
+  color: #0f172a;
+  font-size: 1.15rem;
+  font-weight: 750;
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s ease;
+  user-select: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  padding: 0;
+}
+
+.key-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+}
+
+.key-btn:active {
+  transform: scale(0.975);
+}
+
+[data-theme="dark"] .key-btn {
+  background: rgba(30, 41, 59, 0.75);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .key-btn:hover {
+  background: rgba(51, 65, 85, 0.85);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+/* 1. All Clear (AC) - Bold, High-Contrast Red Action Button */
+.key-btn.action-clear,
+.key-btn[data-action="clear"] {
+  background: #fef2f2 !important;
+  border: 1.5px solid #fecaca !important;
+  color: #dc2626 !important;
+  font-weight: 850 !important;
+  font-size: 1.05rem !important;
+}
+
+.key-btn.action-clear:hover,
+.key-btn[data-action="clear"]:hover {
+  background: #fee2e2 !important;
+  border-color: #ef4444 !important;
+  color: #b91c1c !important;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2) !important;
+}
+
+[data-theme="dark"] .key-btn.action-clear,
+[data-theme="dark"] .key-btn[data-action="clear"] {
+  background: rgba(239, 68, 68, 0.22) !important;
+  border-color: rgba(239, 68, 68, 0.5) !important;
+  color: #fca5a5 !important;
+}
+
+/* 2. Backspace (⌫) - Bold, High-Contrast Amber Action Button */
+.key-btn.action-back,
+.key-btn[data-action="delete"] {
+  background: #fffbeb !important;
+  border: 1.5px solid #fde68a !important;
+  color: #b45309 !important;
+  font-weight: 850 !important;
+  font-size: 1.25rem !important;
+}
+
+.key-btn.action-back:hover,
+.key-btn[data-action="delete"]:hover {
+  background: #fef3c7 !important;
+  border-color: #f59e0b !important;
+  color: #92400e !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2) !important;
+}
+
+[data-theme="dark"] .key-btn.action-back,
+[data-theme="dark"] .key-btn[data-action="delete"] {
+  background: rgba(245, 158, 11, 0.22) !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  color: #fde68a !important;
+}
+
+/* 3. Arithmetic Operators (÷, ×, −, +, %) */
+.key-btn.operator {
+  background: #e0f2fe !important;
+  border: 1.5px solid #bae6fd !important;
+  color: #0284c7 !important;
+  font-size: 1.3rem !important;
+  font-weight: 850 !important;
+}
+
+.key-btn.operator:hover {
+  background: #bae6fd !important;
+  border-color: #38bdf8 !important;
+  color: #0369a1 !important;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.22) !important;
+}
+
+[data-theme="dark"] .key-btn.operator {
+  background: rgba(56, 189, 248, 0.2) !important;
+  border-color: rgba(56, 189, 248, 0.45) !important;
+  color: #38bdf8 !important;
+}
+
+/* 4. Equals (=) Button */
+.key-btn.equals {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  border: 1px solid #1d4ed8 !important;
+  color: #ffffff !important;
+  font-size: 1.5rem !important;
+  font-weight: 850 !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35) !important;
+}
+
+.key-btn.equals:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45) !important;
+}
+
+/* 5. Scientific Keys */
+.key-btn.sci {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+}
+
+.key-btn.sci:hover {
+  background: #e2e8f0 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="dark"] .key-btn.sci {
+  background: rgba(51, 65, 85, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #e2e8f0 !important;
+}
+
+/* Mobile responsive rules */
+@media (max-width: 680px) {
+  .calc-machine.scientific-mode {
+    max-width: 100% !important;
+  }
+  .calc-machine.scientific-mode .calc-keypad,
+  .calc-keypad.scientific-active {
+    flex-direction: column !important;
+    gap: 0.45rem !important;
+    padding: 0.5rem !important;
+  }
+  .keypad-scientific-block {
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 0.35rem !important;
+  }
+  .keypad-standard-block {
+    grid-template-columns: repeat(4, 1fr) !important;
+    max-width: 100% !important;
+    gap: 0.38rem !important;
+  }
+  .key-btn {
+    height: 44px !important;
+    min-height: 44px !important;
+    font-size: 1.15rem !important;
+    font-weight: 750 !important;
+    border-radius: 8px !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  .key-btn.sci {
+    height: 38px !important;
+    min-height: 38px !important;
+    font-size: 0.78rem !important;
+    font-weight: 650 !important;
+    border-radius: 6px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. FITNESS & HEALTH - BMI GAUGE & WATER COUNTER
+   -------------------------------------------------------------------------- */
+.bmi-gauge-card {
+  padding: 1.25rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bmi-bar-container {
+  width: 100%;
+  margin: 1.5rem 0 0.75rem;
+  position: relative;
+}
+
+.bmi-spectrum-bar {
+  height: 14px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    to right,
+    #38bdf8 0%,    /* Underweight < 18.5 */
+    #38bdf8 20%,
+    #10b981 20%,   /* Normal 18.5 - 24.9 */
+    #10b981 50%,
+    #f59e0b 50%,   /* Overweight 25 - 29.9 */
+    #f59e0b 75%,
+    #ef4444 75%,   /* Obese 30+ */
+    #ef4444 100%
+  );
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.bmi-pointer {
+  position: absolute;
+  top: -10px;
+  left: 35%; /* dynamically set */
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bmi-needle-tip {
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 10px solid #ffffff;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));
+}
+
+.bmi-pointer-tag {
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 800;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2px;
+}
+
+.bmi-labels-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+/* Water Intake Visualization */
+.water-tracker-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.water-bottle {
+  width: 70px;
+  height: 130px;
+  border: 3px solid var(--accent-secondary);
+  border-radius: 14px 14px 20px 20px;
+  position: relative;
+  overflow: hidden;
+  background: rgba(6, 182, 212, 0.05);
+}
+
+.water-bottle::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 8px;
+  background: var(--accent-secondary);
+  border-radius: 4px 4px 0 0;
+}
+
+.water-level {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65%; /* dynamically set */
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+  border-radius: 0 0 16px 16px;
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+}
+
+.water-level::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+}
+
+.water-glasses-count {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.glasses-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  max-width: 180px;
+}
+
+.glass-icon {
+  font-size: 1.25rem;
+  color: var(--accent-secondary);
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* --------------------------------------------------------------------------
+   3. FINANCIAL - SELECTOR BOXES, BREAKDOWN TABLES & DONUT CHARTS
+   -------------------------------------------------------------------------- */
+.financial-selector-header {
+  margin-bottom: 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.currency-picker-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  padding: 0.4rem 0.85rem;
+  border-radius: 10px;
+}
+
+.currency-picker-wrap label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.currency-select {
+  background: transparent;
+  color: var(--accent-secondary);
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.selector-boxes-grid,
+.financial-selector-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  position: sticky;
+  top: calc(var(--header-height) + 52px);
+  z-index: 70;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] .selector-boxes-grid,
+[data-theme="light"] .financial-selector-grid {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.selector-box-card,
+.fin-selector-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.42rem 0.88rem;
+  height: 36px;
+  border-radius: 7px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  color: var(--text-secondary);
+  font-size: 0.83rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.selector-box-card:hover,
+.fin-selector-card:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: #2563eb; box-shadow: 0 0 0 1.5px #2563eb, 0 2px 8px rgba(37, 99, 235, 0.16);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+.selector-box-card:active,
+.fin-selector-card:active {
+  transform: scale(0.97);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+/* VERY LIGHT SELECT COLOR (in professional way) */
+.selector-box-card.active,
+.fin-selector-card.active {
+  background: var(--btn-active-bg, rgba(56, 189, 248, 0.14));
+  border-color: var(--btn-active-border, rgba(56, 189, 248, 0.55));
+  color: var(--btn-active-text, #7dd3fc);
+  box-shadow: var(--btn-active-shadow, 0 2px 8px rgba(56, 189, 248, 0.16)), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.selector-box-card.active:hover,
+.fin-selector-card.active:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+}
+
+[data-theme="light"] .selector-box-card.active,
+[data-theme="light"] .fin-selector-card.active {
+  background: #e0f2fe;
+  border-color: #7dd3fc;
+  color: #0284c7;
+  box-shadow: 0 2px 6px rgba(14, 165, 233, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .selector-box-card.active:hover,
+[data-theme="light"] .fin-selector-card.active:hover {
+  background: #bae6fd;
+}
+
+.selector-box-card::before,
+.fin-selector-card::before {
+  display: none !important;
+}
+
+.selector-box-header,
+.fin-box-header {
+  display: contents;
+}
+
+.selector-box-icon,
+.fin-box-icon {
+  font-size: 1rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.selector-box-title,
+.fin-box-title {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: inherit;
+  line-height: 1.2;
+}
+
+.selector-box-badge,
+.fin-box-badge,
+.selector-box-desc,
+.fin-box-desc {
+  display: none !important;
+}
+
+/* Mortgage Breakdown List */
+.mortgage-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.mortgage-breakdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+}
+
+.mortgage-breakdown-item span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-secondary);
+}
+
+.mortgage-breakdown-item span:last-child {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin-top: 0.75rem;
+}
+
+.breakdown-table th,
+.breakdown-table td {
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.breakdown-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  background: var(--bg-tertiary);
+}
+
+.breakdown-table td {
+  font-family: var(--font-mono);
+}
+
+/* Progress bar for Loan Principal vs Interest */
+.ratio-progress-bar {
+  display: flex;
+  height: 12px;
+  width: 100%;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin: 0.85rem 0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.ratio-seg-principal {
+  background: #10b981;
+  transition: width 0.5s ease;
+}
+
+.ratio-seg-interest {
+  background: #f59e0b;
+  transition: width 0.5s ease;
+}
+
+/* --------------------------------------------------------------------------
+   4. MATH - FRACTIONS & QUADRATIC EQUATION
+   -------------------------------------------------------------------------- */
+.math-fraction {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 0.3rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.math-fraction .numerator {
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 2px;
+}
+
+.math-fraction .denominator {
+  padding-top: 2px;
+}
+
+.equation-preview-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--accent-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.step-box {
+  background: var(--bg-tertiary);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin-top: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   5. OTHER TOOLS - GPA DYNAMIC LIST & CONVERTER
+   -------------------------------------------------------------------------- */
+.course-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.course-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.2fr 40px;
+  gap: 0.5rem;
+  align-items: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--radius-md);
+}
+
+.remove-course-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  color: #fb7185;
+  background: linear-gradient(180deg, rgba(244, 63, 94, 0.16) 0%, rgba(244, 63, 94, 0.05) 100%), var(--bg-secondary);
+  border: 1px solid rgba(244, 63, 94, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.remove-course-btn:hover {
+  background: linear-gradient(180deg, #f43f5e 0%, #e11d48 100%);
+  color: #fff;
+  border-color: #fb7185;
+  transform: translateY(-1.5px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.remove-course-btn:active {
+  transform: translateY(1px) scale(0.95);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Unit Converter Swap row */
+.unit-converter-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .unit-converter-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.swap-btn-circular {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 14px var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -2px 0 rgba(0, 0, 0, 0.25);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  margin: 0 auto;
+  cursor: pointer;
+  user-select: none;
+}
+
+.swap-btn-circular:hover {
+  background: linear-gradient(180deg, #7dd3fc 0%, #0369a1 100%);
+  transform: rotate(180deg) scale(1.12);
+  box-shadow: 0 8px 22px var(--accent-glow), 0 0 16px rgba(56, 189, 248, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.swap-btn-circular:active {
+  transform: rotate(180deg) scale(0.96);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 3px 6px rgba(0, 0, 0, 0.45);
+}
+
+/* --------------------------------------------------------------------------
+   5. TAX & SALARY SUITE (Income Tax, Salary, Marriage, Estate, Paycheck)
+   -------------------------------------------------------------------------- */
+.marriage-verdict-banner {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.marriage-verdict-banner.verdict-bonus {
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #10b981;
+}
+
+[data-theme="light"] .marriage-verdict-banner.verdict-bonus {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #047857;
+}
+
+.marriage-verdict-banner.verdict-penalty {
+  background: rgba(244, 63, 94, 0.14);
+  border: 1px solid rgba(244, 63, 94, 0.45);
+  color: #fb7185;
+}
+
+[data-theme="light"] .marriage-verdict-banner.verdict-penalty {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #be123c;
+}
+
+.marriage-verdict-banner.verdict-neutral {
+  background: rgba(100, 116, 139, 0.14);
+  border: 1px solid rgba(100, 116, 139, 0.35);
+  color: var(--text-secondary);
+}
+
+.comparison-card-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .comparison-card-group {
+    grid-template-columns: 1fr;
+  }
+}
+
+.comparison-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.comparison-card.card-highlight {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.15);
+}
+
+.comparison-card-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.comparison-card-value {
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.comparison-card-sub {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Paystub Digital Simulation */
+.paystub-card {
+  background: var(--bg-secondary);
+  border: 1px dashed var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  font-size: 0.82rem;
+}
+
+.paystub-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .paystub-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.paystub-row.paystub-total-row {
+  font-weight: 800;
+  font-size: 0.95rem;
+  border-top: 1px solid var(--card-border);
+  border-bottom: none;
+  padding-top: 0.65rem;
+  margin-top: 0.4rem;
+  color: var(--text-primary);
+}
+
+.paystub-val {
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.tax-bracket-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 4px;
+  background: rgba(37, 99, 235, 0.15);
+  color: #3b82f6;
+  font-family: var(--font-mono);
+}
+
+/* --------------------------------------------------------------------------
+   6. AUTOMOTIVE SUITE (Auto Loan, Cash Back vs Low APR, Auto Lease)
+   -------------------------------------------------------------------------- */
+.auto-verdict-banner {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.auto-verdict-banner.verdict-option-a {
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #10b981;
+}
+
+[data-theme="light"] .auto-verdict-banner.verdict-option-a {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #047857;
+}
+
+.auto-verdict-banner.verdict-option-b {
+  background: rgba(59, 130, 246, 0.14);
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  color: #60a5fa;
+}
+
+[data-theme="light"] .auto-verdict-banner.verdict-option-b {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.auto-verdict-banner.verdict-neutral {
+  background: rgba(100, 116, 139, 0.14);
+  border: 1px solid rgba(100, 116, 139, 0.35);
+  color: var(--text-secondary);
+}
+
+.ratio-seg-deprec {
+  background: #3b82f6;
+}
+
+.ratio-seg-rent {
+  background: #f59e0b;
+}
+
+.ratio-seg-tax {
+  background: #a855f7;
+}
+
+.ratio-seg-fees {
+  background: #06b6d4;
+}
+
+.lease-anatomy-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   7. INVESTMENT SUITE (Interest Rate, Savings, CD, Bond, Mutual Fund, IRR, Payback, PV, FV)
+   -------------------------------------------------------------------------- */
+.invest-metric-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.invest-metric-badge.badge-premium {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.invest-metric-badge.badge-discount {
+  background: rgba(244, 63, 94, 0.15);
+  color: #fb7185;
+}
+
+.invest-metric-badge.badge-par {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.cf-input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0.65rem;
+}
+
+/* --------------------------------------------------------------------------
+   8. DEBT, BUSINESS & COMMERCIAL SUITE (Budget, Margin, Debt, Depreciation)
+   -------------------------------------------------------------------------- */
+.budget-progress-bar {
+  display: flex;
+  height: 18px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: var(--bg-tertiary);
+  margin: 0.75rem 0;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.budget-seg-needs {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  transition: width 0.3s ease;
+}
+
+.budget-seg-wants {
+  background: linear-gradient(90deg, #ec4899, #f472b6);
+  transition: width 0.3s ease;
+}
+
+.budget-seg-savings {
+  background: linear-gradient(90deg, #10b981, #34d399);
+  transition: width 0.3s ease;
+}
+
+.margin-ratio-bar {
+  display: flex;
+  height: 14px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: var(--bg-tertiary);
+  margin: 0.5rem 0;
+}
+
+.margin-seg-cost {
+  background: #f59e0b;
+  transition: width 0.3s ease;
+}
+
+.margin-seg-profit {
+  background: #10b981;
+  transition: width 0.3s ease;
+}
+
+.dscr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.dscr-badge-approved {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.dscr-badge-tight {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.dscr-badge-risk {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.debt-input-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.debt-input-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .debt-input-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. EXTENDED FITNESS & ATHLETIC PERFORMANCE SUITE
+   -------------------------------------------------------------------------- */
+.thr-zone-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.thr-zone-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  position: relative;
+  overflow: hidden;
+  gap: 0.75rem;
+}
+
+.thr-zone-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--zone-color, #2563eb);
+}
+
+.thr-zone-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.thr-zone-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.thr-zone-desc {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.thr-zone-bpm {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--zone-color, #2563eb);
+  white-space: nowrap;
+}
+
+.army-compliance-banner {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.85rem 0;
+  text-align: center;
+}
+
+.army-pass {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1.5px solid rgba(16, 185, 129, 0.4);
+}
+
+.army-fail {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1.5px solid rgba(239, 68, 68, 0.4);
+}
+
+.orm-table-wrap {
+  overflow-x: auto;
+  margin-top: 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border);
+}
+
+.orm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.orm-table th {
+  background: var(--bg-tertiary);
+  padding: 0.55rem 0.65rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.orm-table td {
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--card-border);
+  color: var(--text-primary);
+}
+
+.orm-table tr:last-child td {
+  border-bottom: none;
+}
+
+.orm-table tr:hover {
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.macro-dist-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  margin: 0.85rem 0;
+}
+
+.macro-card {
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  text-align: center;
+}
+
+.macro-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.25rem;
+}
+
+.macro-grams {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.macro-cals {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.hw-gauge-wrap {
+  margin: 1.25rem 0 0.5rem;
+  position: relative;
+}
+
+.hw-gauge-track {
+  height: 14px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, 
+    #38bdf8 0%, 
+    #38bdf8 25%, 
+    #10b981 25%, 
+    #10b981 75%, 
+    #ef4444 75%, 
+    #ef4444 100%
+  );
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.25);
+}
+
+.hw-gauge-pointer {
+  position: absolute;
+  top: -9px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pace-splits-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.pace-splits-table th, .pace-splits-table td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--card-border);
+  text-align: center;
+}
+
+.pace-splits-table th {
+  background: var(--bg-tertiary);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   MATERNAL, PREGNANCY & WOMEN'S HEALTH CALCULATORS
+   ========================================================================== */
+
+/* Trimester Timeline Visual */
+.preg-timeline-wrap {
+  margin: 1.25rem 0;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+}
+
+.preg-timeline-bar {
+  display: flex;
+  height: 12px;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+  margin: 0.75rem 0 0.5rem;
+  position: relative;
+}
+
+.preg-timeline-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.preg-timeline-segment.tri-1 {
+  background: linear-gradient(90deg, #ec4899, #f43f5e);
+}
+
+.preg-timeline-segment.tri-2 {
+  background: linear-gradient(90deg, #8b5cf6, #a855f7);
+}
+
+.preg-timeline-segment.tri-3 {
+  background: linear-gradient(90deg, #06b6d4, #10b981);
+}
+
+.preg-timeline-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Fetal Fruit Size Comparison Card */
+.fruit-compare-card {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+  border: 1px solid rgba(236, 72, 153, 0.25);
+  border-radius: var(--radius-md);
+  margin-top: 1.25rem;
+}
+
+.fruit-icon-bubble {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(236, 72, 153, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.85rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+}
+
+.fruit-info-group {
+  flex: 1;
+}
+
+.fruit-headline {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: #ec4899;
+  margin-bottom: 0.2rem;
+}
+
+.fruit-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+}
+
+.fruit-stats {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+/* Milestone Schedule Timeline */
+.milestones-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  max-height: 290px;
+  overflow-y: auto;
+  padding-right: 0.35rem;
+}
+
+.milestone-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  font-size: 0.83rem;
+  transition: all 0.15s ease;
+}
+
+.milestone-row.completed {
+  border-left: 3px solid #10b981;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.milestone-row.current {
+  border-left: 3px solid #ec4899;
+  background: rgba(236, 72, 153, 0.08);
+  font-weight: 700;
+}
+
+.milestone-row.upcoming {
+  border-left: 3px solid var(--card-border);
+  opacity: 0.85;
+}
+
+.milestone-name {
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.milestone-date-badge {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+/* Weight Gain Gauge & Status Pill */
+.pw-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.pw-status-pill.status-optimal {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.pw-status-pill.status-below {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.pw-status-pill.status-above {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+/* Fertile Calendar & Cycle Schedule Table */
+.cycle-forecast-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin-top: 0.75rem;
+}
+
+.cycle-forecast-table th {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-weight: 700;
+  padding: 0.55rem 0.7rem;
+  text-align: left;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.cycle-forecast-table td {
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--card-border);
+  color: var(--text-primary);
+}
+
+.cycle-forecast-table tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="light"] .cycle-forecast-table tr:hover td {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.fertile-highlight-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.76rem;
+}
+
+.fertile-highlight-badge.peak {
+  background: #fdf2f8;
+  color: #db2777;
+  border: 1px solid #fbcfe8;
+}
+
+.fertile-highlight-badge.high {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+/* Cycle Phase Progress Tracker */
+.cycle-phase-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin: 1.25rem 0;
+}
+
+.cycle-phase-pill {
+  padding: 0.65rem 0.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.cycle-phase-pill.active {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.12) 0%, rgba(168, 85, 247, 0.12) 100%);
+  border-color: #ec4899;
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.25);
+}
+
+.cycle-phase-pill .phase-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.cycle-phase-pill.active .phase-name {
+  color: #ec4899;
+}
+
+.cycle-phase-pill .phase-days {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   MOBILE & TOUCH-OPTIMIZED RESPONSIVE SUITE FOR CALCULATORS
+   Strictly scoped to mobile & tablet viewports so desktop is 100% untouched
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  /* 1. Scientific & Standard Keypad Scaling */
+  .calc-machine {
+    max-width: 100% !important;
+    border-radius: 14px !important;
+  }
+
+  .calc-screen {
+    padding: 0.75rem 1rem !important;
+    min-height: 115px !important;
+    height: 115px !important;
+  }
+
+  .calc-current-input {
+    font-size: 1.85rem !important;
+    height: 42px !important;
+    line-height: 42px !important;
+  }
+
+  .calc-controls-bar {
+    padding: 0.5rem 0.75rem !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+  }
+
+  .calc-keypad {
+    padding: 0.65rem 0.45rem !important;
+    gap: 0.35rem !important;
+  }
+
+  .calc-keypad.scientific-active {
+    gap: 0.28rem !important;
+  }
+
+  .key-btn {
+    height: 48px !important;
+    font-size: 1.15rem !important;
+    border-radius: 8px !important;
+  }
+
+  .key-btn.sci {
+    font-size: 0.8rem !important;
+  }
+
+  .key-btn.action {
+    font-size: 0.95rem !important;
+  }
+
+  .key-btn.operator {
+    font-size: 1.25rem !important;
+  }
+
+  .key-btn.equals {
+    font-size: 1.4rem !important;
+  }
+
+  /* 2. Tables & Schedule Horizontal Touch Scrolling */
+  .breakdown-table,
+  .orm-table,
+  .pace-splits-table,
+  .cycle-forecast-table,
+  .table-responsive {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    font-size: 0.78rem !important;
+  }
+
+  .breakdown-table th,
+  .breakdown-table td,
+  .orm-table th,
+  .orm-table td,
+  .pace-splits-table th,
+  .pace-splits-table td,
+  .cycle-forecast-table th,
+  .cycle-forecast-table td {
+    padding: 0.45rem 0.55rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* 3. Unit Converter & Comparisons */
+  .unit-converter-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.6rem !important;
+  }
+
+  .swap-btn-circular {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.15rem !important;
+    margin: 0.25rem auto !important;
+  }
+
+  .comparison-card-group {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cycle-phase-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.45rem !important;
+  }
+
+  /* 4. BMI Spectrum Bar & Gauges */
+  .bmi-labels-row {
+    font-size: 0.65rem !important;
+  }
+
+  .water-tracker-visual {
+    gap: 1rem !important;
+  }
+}
+
+
+
+
+
+/* ==========================================================================
+   CALCULATOR SUITE DARK MODE REFINEMENT
+   ========================================================================== */
+[data-theme="dark"] #standard-active-header {
+  background: #111e38 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .calc-circle-back-btn {
+  background: #1e293b !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  color: #f8fafc !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .calc-circle-back-btn:hover {
+  background: #334155 !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] #standard-active-header .calc-quick-switcher {
+  background: #0b1329 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] #standard-active-header .switcher-pill {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] #standard-active-header .switcher-pill:hover {
+  color: #f8fafc !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] #standard-active-header .switcher-pill.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Standard & Scientific Machine Keypad */
+[data-theme="dark"] .calc-machine {
+  background: #111e38 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .calc-keypad {
+  background: #111e38 !important;
+}
+
+[data-theme="dark"] .key-btn {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .key-btn:hover {
+  background: #334155 !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .key-btn.sci {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #7dd3fc !important;
+}
+
+[data-theme="dark"] .key-btn.sci:hover {
+  background: #334155 !important;
+  border-color: #38bdf8 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .key-btn.operator {
+  background: rgba(14, 165, 233, 0.22) !important;
+  border: 1.5px solid #0284c7 !important;
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .key-btn.operator:hover {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .key-btn.action-clear {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border: 1.5px solid #ef4444 !important;
+  color: #fca5a5 !important;
+}
+
+[data-theme="dark"] .key-btn.action-clear:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .key-btn.action-back {
+  background: rgba(245, 158, 11, 0.25) !important;
+  border: 1.5px solid #f59e0b !important;
+  color: #fde68a !important;
+}
+
+[data-theme="dark"] .key-btn.action-back:hover {
+  background: #f59e0b !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .key-btn.equals {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #3b82f6 !important;
+}
+
+[data-theme="dark"] .mem-btn {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .mem-btn:hover {
+  background: #334155 !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
