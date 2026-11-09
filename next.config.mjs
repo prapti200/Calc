@@ -1,16 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   reactStrictMode: false,
   poweredByHeader: false,
   trailingSlash: false,
-  async rewrites() {
-    return [
-      {
-        source: '/((?!api|_next|assets|css|js|favicon).*)',
-        destination: '/',
-      },
-    ];
-  },
 };
 
 export default nextConfig;
