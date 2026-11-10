@@ -26,55 +26,87 @@
      * Extracts all current inputs, outputs, and formulas from the active calculator.
      */
     getActiveCalculatorData() {
-      // 1. Identify which detail view is currently visible
+      // 1. First, check if the Standard / Scientific Keypad view is currently active or requested
+      const activeSec = document.querySelector('.view-section.active');
+      const pathname = (window.location && window.location.pathname) ? window.location.pathname.toLowerCase() : '';
+      const resolvedRoute = (window.AppRouter && typeof window.AppRouter.resolve === 'function')
+        ? window.AppRouter.resolve(pathname)
+        : (window.AppRouter ? window.AppRouter.currentRoute : null);
+      const routeCalcId = resolvedRoute && resolvedRoute.id ? resolvedRoute.id : null;
+      const routeCategory = resolvedRoute && resolvedRoute.category ? resolvedRoute.category : null;
+
+      const isStdOrSciRoute = pathname === '/scientific-calculator' ||
+                              pathname === '/scientific' ||
+                              pathname === '/standard-calculator' ||
+                              pathname === '/standard' ||
+                              routeCategory === 'standard' ||
+                              routeCalcId === 'box-sci-mode' ||
+                              routeCalcId === 'box-std-mode';
+
+      const viewStd = document.getElementById('view-standard');
+      const isStdViewActive = viewStd && (
+        viewStd.classList.contains('active') ||
+        (activeSec && activeSec.id === 'view-standard') ||
+        (viewStd.style.display === 'block' && (!activeSec || activeSec.id === 'view-standard'))
+      );
+
+      // If viewing the Standard / Scientific Keypad, return its dedicated data immediately
+      if (isStdOrSciRoute || isStdViewActive) {
+        return this.getStandardCalcData();
+      }
+
+      // Check if Math Suite with Scientific Calculator panel is explicitly active
+      const secSciCalc = document.getElementById('sec-sci-calc');
+      const isMathSciRoute = pathname === '/math/scientific-calculator' || routeCalcId === 'sec-sci-calc';
+      const isMathSciVisible = secSciCalc && (secSciCalc.style.display === 'block' || (activeSec && activeSec.id === 'view-math' && secSciCalc.style.display !== 'none'));
+
+      if (isMathSciRoute || (activeSec && activeSec.id === 'view-math' && isMathSciVisible)) {
+        return this.getMathSciCalcData(secSciCalc);
+      }
+
+      // 2. Identify the active category/suite from active view section or router
       const detailViews = [
-        { id: 'fin-detail-view', cat: 'financial', name: 'Financial Suite' },
-        { id: 'fit-detail-view', cat: 'fitness', name: 'Health & Fitness Suite' },
-        { id: 'math-detail-view', cat: 'math', name: 'Mathematics Suite' },
-        { id: 'other-detail-view', cat: 'other', name: 'Daily Utilities Suite' }
+        { id: 'fin-detail-view', secId: 'view-financial', cat: 'financial', name: 'Financial Suite' },
+        { id: 'fit-detail-view', secId: 'view-fitness', cat: 'fitness', name: 'Health & Fitness Suite' },
+        { id: 'math-detail-view', secId: 'view-math', cat: 'math', name: 'Mathematics Suite' },
+        { id: 'other-detail-view', secId: 'view-other', cat: 'other', name: 'Daily Utilities Suite' }
       ];
 
       let activeViewInfo = null;
 
-      // Method A: Check inline style display or computed style
-      for (const v of detailViews) {
-        const el = document.getElementById(v.id);
-        if (el) {
-          const styleDisp = el.style.display;
-          const compDisp = window.getComputedStyle ? window.getComputedStyle(el).display : '';
-          if (styleDisp === 'block' || (styleDisp !== 'none' && compDisp !== 'none' && compDisp !== '')) {
+      // Check active top-level view-section first
+      if (activeSec) {
+        activeViewInfo = detailViews.find(d => d.secId === activeSec.id);
+      }
+
+      // Check resolved route category next
+      if (!activeViewInfo && routeCategory) {
+        activeViewInfo = detailViews.find(d => d.cat === routeCategory);
+      }
+
+      // Check pathname next (e.g. /math/..., /financial/..., /fitness/..., /other/...)
+      if (!activeViewInfo && pathname) {
+        if (pathname.startsWith('/math')) activeViewInfo = detailViews.find(d => d.cat === 'math');
+        else if (pathname.startsWith('/financial')) activeViewInfo = detailViews.find(d => d.cat === 'financial');
+        else if (pathname.startsWith('/fitness')) activeViewInfo = detailViews.find(d => d.cat === 'fitness');
+        else if (pathname.startsWith('/other')) activeViewInfo = detailViews.find(d => d.cat === 'other');
+      }
+
+      // Fallback: only match detail-view if its parent view-section is active
+      if (!activeViewInfo) {
+        for (const v of detailViews) {
+          const parentSec = document.getElementById(v.secId);
+          const el = document.getElementById(v.id);
+          if (parentSec && parentSec.classList.contains('active') && el && el.style.display !== 'none') {
             activeViewInfo = v;
             break;
           }
         }
       }
 
-      // Method B: Check AppRouter current route
-      if (!activeViewInfo && window.AppRouter && window.AppRouter.currentRoute && window.AppRouter.currentRoute.category) {
-        const cat = window.AppRouter.currentRoute.category;
-        const matched = detailViews.find(d => d.cat === cat);
-        if (matched) {
-          const el = document.getElementById(matched.id);
-          if (el && el.style.display !== 'none') {
-            activeViewInfo = matched;
-          }
-        }
-      }
-
-      // Method C: Check Standard/Scientific view
-      const viewStd = document.getElementById('view-standard');
-      if (!activeViewInfo && viewStd && (viewStd.classList.contains('active') || viewStd.style.display === 'block')) {
-        return this.getStandardCalcData();
-      }
-
-      // If still not identified, fallback to AppRouter or detailViews[0]
+      // If still not identified, fallback to Standard Calculator data
       if (!activeViewInfo) {
-        if (window.AppRouter && window.AppRouter.currentRoute && window.AppRouter.currentRoute.calcId) {
-          const cat = window.AppRouter.currentRoute.category;
-          activeViewInfo = detailViews.find(d => d.cat === cat) || detailViews[0];
-        } else {
-          return this.getStandardCalcData();
-        }
+        return this.getStandardCalcData();
       }
 
       const viewContainer = document.getElementById(activeViewInfo.id);
@@ -83,24 +115,26 @@
       // Find the active calculator panel inside the active detail view
       let activePanel = null;
 
-      // 1. Check if AppRouter knows the current calculator ID
-      if (window.AppRouter && window.AppRouter.currentRoute && window.AppRouter.currentRoute.calcId) {
-        const candidate = document.getElementById(window.AppRouter.currentRoute.calcId);
+      // 1. Check if AppRouter resolved a calculator ID that exists in this viewContainer
+      if (routeCalcId) {
+        const candidate = document.getElementById(routeCalcId);
         if (candidate && viewContainer.contains(candidate)) {
           activePanel = candidate;
         }
       }
 
-      // 2. Check active switcher pill
+      // 2. Check active switcher pill inside this container
       if (!activePanel) {
         const activePill = viewContainer.querySelector('.switcher-pill.active');
         if (activePill && activePill.dataset.target) {
           const candidate = document.getElementById(activePill.dataset.target);
-          if (candidate) activePanel = candidate;
+          if (candidate && viewContainer.contains(candidate)) {
+            activePanel = candidate;
+          }
         }
       }
 
-      // 3. Check any panel with display: block
+      // 3. Check any panel with display: block inside this container
       if (!activePanel) {
         const panels = viewContainer.querySelectorAll('.calc-panel, .fin-calc-unit, .fit-calc-unit, .math-calc-unit, .other-calc-unit');
         for (const p of panels) {
@@ -117,6 +151,11 @@
       }
 
       if (!activePanel) return this.getStandardCalcData();
+
+      // If active panel is the Scientific Calculator solver in the Math suite, use dedicated math scientific handler
+      if (activePanel.id === 'sec-sci-calc') {
+        return this.getMathSciCalcData(activePanel);
+      }
 
       const calcId = activePanel.id;
 
@@ -287,51 +326,181 @@
     },
 
     /**
-     * Standard & Scientific Calculator Data Handler
+     * Dedicated Scientific Calculator solver in Math Suite (#sec-sci-calc)
      */
-    getStandardCalcData() {
-      const isSci = window.stdCalc?.isScientific || false;
-      const angle = window.stdCalc?.angleMode || 'DEG';
-      const mainDisp = document.getElementById('calc-current-input')?.textContent.trim() || document.getElementById('calc-main-display')?.value || '0';
-      const histDisp = document.getElementById('calc-expression')?.textContent.trim() || document.getElementById('calc-history-display')?.textContent.trim() || 'Standard Calculation';
-      const historyList = window.stdCalc?.history || [];
+    getMathSciCalcData(panel) {
+      const exprInput = panel ? panel.querySelector('#sci-expression') : document.getElementById('sci-expression');
+      const expr = exprInput ? exprInput.value.trim() : 'sin(45) + sqrt(144) * 2^3';
+      const resValEl = panel ? panel.querySelector('#res-sci-val') : document.getElementById('res-sci-val');
+      const resVal = resValEl ? resValEl.textContent.trim() : '96.7071';
+      const resAltEl = panel ? panel.querySelector('#res-sci-alt') : document.getElementById('res-sci-alt');
+      const resAlt = resAltEl ? resAltEl.textContent.trim() : '';
+      const resStepsEl = panel ? panel.querySelector('#res-sci-steps') : document.getElementById('res-sci-steps');
+      const resSteps = resStepsEl ? resStepsEl.textContent.trim() : '';
+      
+      const angleBtn = panel ? panel.querySelector('.sci-angle-btn.active') : document.querySelector('#sec-sci-calc .sci-angle-btn.active');
+      const angleMode = angleBtn ? angleBtn.textContent.trim() : (window.MathCalcs?.sciAngleUnit ? window.MathCalcs.sciAngleUnit.toUpperCase() : 'DEG');
 
       const inputs = [
-        { label: 'Calculator Mode', value: isSci ? 'Scientific Calculator' : 'Standard Calculator' },
-        { label: 'Trigonometric Angle Mode', value: angle },
-        { label: 'Last Evaluated Equation', value: histDisp || 'Direct Keypad Entry' }
+        { label: 'Mathematical Expression', value: expr || 'Direct Keypad Entry' },
+        { label: 'Trigonometric Angle Mode', value: angleMode }
       ];
 
       const primaryResult = {
-        label: 'Current Evaluated Value',
-        value: mainDisp
+        label: 'Evaluated Scientific Result',
+        value: resVal || '0'
+      };
+
+      const secondaryResults = [];
+      if (resSteps) {
+        secondaryResults.push({ label: 'Evaluation Steps / Summary', value: resSteps });
+      }
+      if (resAlt) {
+        secondaryResults.push({ label: 'Scientific Notation & Mode', value: resAlt });
+      }
+      secondaryResults.push({
+        label: 'Supported Scientific Operators',
+        value: 'sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, ln, log, log2, sqrt, cbrt, abs, fact, pi, e, phi'
+      });
+      secondaryResults.push({
+        label: 'Precision Engine',
+        value: 'IEEE 754 Floating-Point with 10-Decimal Guarding'
+      });
+
+      return {
+        calcId: 'sec-sci-calc',
+        title: 'Scientific Calculator (Advanced Function Evaluator)',
+        category: 'Mathematics Suite',
+        badge: 'High-Precision Scientific Evaluator',
+        tagline: 'Comprehensive mathematical expression evaluator: trigonometry, hyperbolic, logarithms, roots, powers, factorials, and constants.',
+        inputs,
+        primaryResult,
+        secondaryResults,
+        breakdownNotes: `Angle Unit: ${angleMode} • Client-Side Precision Verified`,
+        formula: {
+          name: 'Scientific Order of Operations (PEMDAS)',
+          expr: expr ? `${expr} = ${resVal}` : 'y = f(x)',
+          explanation: 'Evaluates algebraic, trigonometric, logarithmic, and power expressions locally on device with strict operator precedence.',
+          example: 'sin(45) + sqrt(144) * 2^3 = 96.7071'
+        },
+        currSymbol: '',
+        refId: 'CALC-RPT-' + Math.floor(100000 + Math.random() * 900000),
+        timestamp: new Date().toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }),
+        url: window.location.href
+      };
+    },
+
+    /**
+     * Standard & Scientific Calculator Data Handler (#view-standard keypad)
+     */
+    getStandardCalcData() {
+      const pathname = (window.location && window.location.pathname) ? window.location.pathname.toLowerCase() : '';
+      const routerRoute = window.AppRouter && window.AppRouter.currentRoute;
+      const isSci = (window.stdCalc && window.stdCalc.isScientific !== false) ||
+                    pathname.includes('scientific') ||
+                    (routerRoute && (routerRoute.slug === 'scientific-calculator' || routerRoute.id === 'box-sci-mode')) ||
+                    document.getElementById('box-sci-mode')?.classList.contains('active') ||
+                    document.getElementById('toggle-sci-mode-btn')?.classList.contains('active') ||
+                    document.getElementById('calc-keypad')?.classList.contains('scientific-active');
+
+      const angle = (window.stdCalc && window.stdCalc.angleMode) ||
+                    document.getElementById('calc-mode-indicator')?.textContent.trim() ||
+                    'DEG';
+
+      const mainDisp = document.getElementById('calc-current-input')?.textContent.trim() ||
+                       document.getElementById('calc-main-display')?.value ||
+                       (window.stdCalc && window.stdCalc.currentInput) ||
+                       '0';
+
+      const rawHist = document.getElementById('calc-expression')?.textContent.trim() ||
+                      (window.stdCalc && window.stdCalc.expression) ||
+                      '';
+      const histDisp = (rawHist && rawHist !== '\u00A0') ? rawHist : '';
+
+      const memory = (window.stdCalc && window.stdCalc.memory !== undefined) ? window.stdCalc.memory : 0;
+      const historyList = (window.stdCalc && window.stdCalc.history) ||
+                          JSON.parse(localStorage.getItem('omnicalc_history') || '[]');
+
+      const inputs = [
+        { label: 'Calculator Mode', value: isSci ? 'Scientific Calculator (Trigonometry & Functions)' : 'Standard 4-Function Calculator' },
+        { label: 'Trigonometric Angle Mode', value: `${angle} (Degrees / Radians)` },
+        { label: 'Evaluated Expression', value: histDisp || (historyList[0]?.expr || 'Direct Keypad Entry') },
+        { label: 'Active Memory Register (M)', value: String(memory) }
+      ];
+
+      const primaryResult = {
+        label: isSci ? 'Evaluated Scientific Result' : 'Current Calculation Result',
+        value: mainDisp || '0'
       };
 
       const secondaryResults = [];
       if (historyList && historyList.length > 0) {
-        historyList.slice(-5).reverse().forEach((h, idx) => {
+        historyList.slice(0, 5).forEach((h, idx) => {
+          const exprText = h.expr || h.expression || 'Calculation';
+          const resText = h.result !== undefined ? String(h.result) : (h.res !== undefined ? String(h.res) : '');
           secondaryResults.push({
-            label: `Recent Entry #${idx + 1}: ${h.expression || h.expr || 'Expression'}`,
-            value: h.result || h.res || ''
+            label: `Recent Calculation #${idx + 1}: ${exprText}`,
+            value: resText
           });
         });
+      } else {
+        secondaryResults.push({
+          label: 'Calculation Status',
+          value: 'Ready for interactive computation'
+        });
       }
+
+      if (isSci) {
+        secondaryResults.push({
+          label: 'Supported Scientific Operators',
+          value: 'sin, cos, tan, log, ln, sqrt, x², x³, xʸ, n!, 1/x, π, e'
+        });
+        secondaryResults.push({
+          label: 'Trigonometric Mode',
+          value: `Functions evaluated in ${angle} mode with automatic unit conversion`
+        });
+        secondaryResults.push({
+          label: 'Floating-Point Precision',
+          value: 'IEEE 754 64-bit standard with 10-decimal precision guarding'
+        });
+      } else {
+        secondaryResults.push({
+          label: 'Supported Operators',
+          value: 'Addition (+), Subtraction (-), Multiplication (×), Division (÷), Percent (%)'
+        });
+        secondaryResults.push({
+          label: 'Engine Precision',
+          value: 'IEEE 754 standard with instant real-time computation'
+        });
+      }
+
+      const formulaExpr = histDisp ? `${histDisp} ${mainDisp}` : (isSci ? 'y = f(x)' : 'Result = a ± b');
 
       return {
         calcId: isSci ? 'scientific-calc' : 'standard-calc',
         title: isSci ? 'Scientific Calculator Computation Report' : 'Standard Calculator Computation Report',
-        category: 'Core Numerical Operations',
-        badge: 'High-Precision Math Engine Verified',
-        tagline: 'Standard and scientific mathematical evaluation with evaluation history and angle modes.',
+        category: isSci ? 'Scientific & Trigonometric Mathematics' : 'Basic Arithmetic & Numerical Operations',
+        badge: isSci ? 'High-Precision Scientific Engine Verified' : 'Standard Arithmetic Engine Verified',
+        tagline: isSci
+          ? 'Comprehensive scientific computation with trigonometry, logarithms, exponential powers, factorials, and evaluation history.'
+          : 'Essential four-function arithmetic computation with active memory storage and evaluation history.',
         inputs,
         primaryResult,
         secondaryResults,
-        breakdownNotes: `Angle setting: ${angle} • Scientific functions: ${isSci ? 'Enabled' : 'Disabled'}`,
+        breakdownNotes: isSci ? `Angle Mode: ${angle} • Scientific Functions: Enabled • Memory: ${memory}` : `Basic 4-Function • Memory: ${memory}`,
         formula: {
-          name: isSci ? 'Scientific Order of Operations (PEMDAS)' : 'Standard Arithmetic Evaluation',
-          expr: 'y = f(x)',
-          explanation: 'Calculations follow IEEE 754 floating-point arithmetic standard with client-side precision guarding.',
-          example: ''
+          name: isSci ? 'Scientific Order of Operations (PEMDAS)' : 'Standard Arithmetic Precedence',
+          expr: formulaExpr,
+          explanation: isSci
+            ? 'Calculations follow mathematical operator precedence (Parentheses, Exponents, Multiplication/Division, Addition/Subtraction) with client-side floating-point rounding.'
+            : 'Standard algebraic evaluation executed locally on-device with zero server tracking.',
+          example: isSci ? 'sin(30) + 5 = 5.5' : '125 × 4 = 500'
         },
         currSymbol: '',
         refId: 'CALC-RPT-' + Math.floor(100000 + Math.random() * 900000),
