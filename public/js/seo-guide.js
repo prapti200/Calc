@@ -10,11 +10,11 @@
   // Curated knowledge base for popular calculators
   const SEO_DATABASE = {
     'sec-loan-calc': {
-      title: 'Loan & EMI Payment Calculator',
+      title: 'Loan & EMI Payment Calculator (Personal, Auto & Gold Loans)',
       category: 'Financial Planning & Banking',
       badge: 'Banking Standard Amortization',
-      tagline: 'Precision monthly loan installments, total interest liability, and dynamic principal-versus-interest ratio distribution.',
-      overview: 'The <strong>Loan & EMI Calculator</strong> is an advanced financial computation tool designed to evaluate personal loans, commercial bank debt, retail financing, and education loans. It accurately models reducing-balance interest compounding to reveal your exact monthly obligations, total debt liability over the entire tenure, and how each dollar paid breaks down between debt reduction and banking interest charges. Comparing loan offers with an accurate amortization model enables borrowers to negotiate better interest rates, avoid predatory hidden borrowing costs, and choose repayment horizons that fit their budget.',
+      tagline: 'Precision monthly loan installments, total interest liability, and gold loan calculated repayment schedules.',
+      overview: 'The <strong>Loan & EMI Calculator</strong> is an advanced financial computation tool designed to evaluate personal loans, commercial bank debt, retail financing, auto loans, and our dedicated <strong>gold loan calculator</strong> module. It accurately models reducing-balance interest compounding to reveal your exact monthly obligations, total debt liability over the entire tenure, and how each installment breaks down between debt reduction and banking interest charges. Whether calculating vehicle financing or getting your <strong>gold loan calculated</strong> against physical gold collateral, this tool helps borrowers compare lending offers, avoid hidden charges, and choose repayment horizons that fit their budget.',
       steps: [
         { title: 'Specify Principal Borrowing Amount', desc: 'Enter your target loan sum (e.g. $250,000) using the numeric field or drag the interactive slider to test various loan amounts.' },
         { title: 'Configure Annual Interest Rate (APR)', desc: 'Enter the annual percentage rate charged by your lender (e.g. 6.5%). Even a 0.5% rate reduction can save thousands in cumulative interest.' },
@@ -138,25 +138,46 @@
     },
 
     'sec-interest-calc': {
-      title: 'Simple & Compound Interest Calculator',
+      title: 'Interest Calculator From Date to Date | Simple & Compound Bank Interest Calculator India',
       category: 'Banking & Investments',
-      badge: 'Compound Compounding Standard',
-      tagline: 'Compare simple interest versus compound growth across daily, monthly, quarterly, semi-annual, and annual frequencies with APY computation.',
-      overview: 'Understanding the mathematical difference between <strong>Simple Interest</strong> (linear growth on initial principal only) and <strong>Compound Interest</strong> (exponential growth where interest accumulates on interest) is essential for evaluating savings accounts, fixed deposits, bonds, and high-yield instruments.',
+      badge: 'RBI & Banking Standard',
+      tagline: 'Calculate exact interest from date to date with our simple interest calculator from date to date, compound interest calculator, daily compound interest calculator, and bank interest calculator.',
+      overview: 'Our high-precision <strong>interest calculator from date to date</strong> empowers investors, lenders, and banking customers to evaluate earnings on deposits, bonds, and loans. Serving as an advanced <strong>compound interest calculator</strong>, a high-frequency <strong>daily compound interest calculator</strong>, a dedicated <strong>simple interest calculator from date to date</strong>, and an RBI-compliant <strong>compound interest calculator India</strong>, this platform computes exact days, interest accruals, APY yield, and final maturity balances with complete accuracy.',
       steps: [
-        { title: 'Input Initial Principal', desc: 'Specify starting capital deposited into the investment or savings instrument.' },
-        { title: 'Enter Nominal Annual Rate', desc: 'Set the stated annual interest rate (e.g. 5.25%).' },
-        { title: 'Select Compounding Frequency', desc: 'Choose compounding interval: Daily (365/yr), Monthly (12/yr), Quarterly (4/yr), or Annually (1/yr).' },
-        { title: 'Review Growth Comparison', desc: 'Compare simple vs compound returns, effective APY, and final accumulated wealth.' }
+        { title: 'Choose Period Mode', desc: 'Select "From Date to Date" for calendar dates or "Fixed Investment Term" for years.' },
+        { title: 'Input Starting Principal', desc: 'Specify capital deposited into the investment or loaned amount.' },
+        { title: 'Set Annual Interest Rate', desc: 'Enter the nominal annual interest rate percentage.' },
+        { title: 'Select Calculation Mode & Compounding', desc: 'Choose Simple Interest or Compound Interest with Daily (365/yr), Monthly, or Quarterly (Indian FD) frequency.' },
+        { title: 'Review Total Interest & Yield', desc: 'Inspect exact interest accrued, maturity balance, APY, and duration in days.' }
       ],
-      formulaName: 'Compound Interest Formula',
-      formulaExpr: 'A = P \\left(1 + \\frac{r}{n}\\right)^{nt}',
-      formulaExplanation: 'Where A is the future accrued amount, P is initial principal, r is decimal annual interest rate, n is compounding frequency per year, and t is time in years.',
-      example: '<strong>Compounding Example:</strong> A $10,000 deposit at 5% for 10 years yields $5,000 in simple interest ($15,000 total), whereas daily compounding yields <strong>$16,486.65</strong> ($6,486.65 in compound interest).',
+      formulaName: 'Simple & Compound Interest Formulas',
+      formulaExpr: 'I = P \\times r \\times \\frac{t}{365} \\quad \\text{and} \\quad A = P \\left(1 + \\frac{r}{n}\\right)^{nt}',
+      formulaExplanation: 'Where P is principal, r is annual rate in decimal, t is elapsed days, n is compounding frequency (365 for daily compound interest calculator, 4 for Indian bank quarterly compounding), and A is maturity balance.',
+      example: '<strong>Date to Date Example:</strong> A $20,000 principal at 6.5% interest across 180 calendar days yields $641.10 in simple interest, or $646.33 with quarterly compounding.',
       faqs: [
         {
-          q: 'What is the difference between APR and APY?',
-          a: 'APR (Annual Percentage Rate) is the nominal interest rate without accounting for intra-year compounding. APY (Annual Percentage Yield) reflects the true annual return factoring in compounding.'
+          q: 'What is a compound interest calculator and how does daily compounding work?',
+          a: 'A compound interest calculator computes growth where interest earns interest. In a daily compound interest calculator, your balance is recalculated every day (365 times per year), generating maximum yield compared to monthly or annual intervals.'
+        },
+        {
+          q: 'How does an interest calculator from date to date calculate elapsed time?',
+          a: 'An interest calculator from date to date takes your start date and end date, counts the exact calendar days, and converts them to annual fractions using the standard Actual/365 or Banker\'s 360-day rule.'
+        },
+        {
+          q: 'How do I use this tool as a simple interest calculator from date to date?',
+          a: 'Select "From Date to Date" mode, enter your loan dates, and choose "Simple Interest". The tool applies linear non-compounding interest across the exact calendar span.'
+        },
+        {
+          q: 'How does a compound interest calculator India calculate bank FD returns?',
+          a: 'In India, commercial banks (SBI, HDFC, ICICI) and post offices compound Fixed Deposits quarterly (4 times per year). Choose "Compound Interest" with Quarterly frequency for exact Indian banking calculations.'
+        },
+        {
+          q: 'Can this bank interest calculator compute savings account interest?',
+          a: 'Yes. Commercial banks calculate interest on daily closing balances. You can select Daily compounding (365/yr) or calculate exact simple interest for the number of days in the quarter.'
+        },
+        {
+          q: 'Is this simple interest calculator free to use online?',
+          a: 'Yes! It runs 100% in your browser without downloads or sign-ups, keeping your financial figures completely private.'
         }
       ]
     },
@@ -1128,24 +1149,44 @@
     },
 
     'sec-age-calc': {
-      title: 'Age & Date Difference Calculator',
+      title: 'Age Calculator by Date of Birth (Free Online)',
       category: 'Calendar & Chronometry',
       badge: 'Gregorian Calendar Astronomical Precision',
-      tagline: 'Calculate exact chronological age in years, months, days, hours, and minutes with upcoming birthday countdown.',
-      overview: 'The <strong>Age & Date Calculator</strong> computes exact chronological elapsed time between two dates. It accounts for leap years, variable calendar month lengths, and day boundaries to provide exact age breakdowns.',
+      tagline: 'Calculate exact chronological age in completed years, months, days, total days, and hours with our online age calculator by date of birth free online.',
+      overview: 'Our <strong>online age calculator by date of birth</strong> computes exact chronological elapsed lifespan from your date of birth to any reference date. Designed as an <strong>age calculator by date of birth free online</strong> without requiring an app installation, it functions as an essential <strong>marriage age calculator by date of birth</strong> for statutory civil eligibility verification and a <strong>retirement age calculator by date of birth</strong> for milestone pension forecasting. It flawlessly accounts for leap centuries, variable monthly horizons (28, 29, 30, and 31 days), and upcoming birthday countdowns. For clinical maternal metrics, users can also check our integrated <strong>gestational age calculator</strong> for fetal pregnancy development.',
       steps: [
-        { title: 'Input Date of Birth', desc: 'Select your birth year, month, and day.' },
-        { title: 'Select Reference Date', desc: 'Defaults to current date or choose any future/past target date.' },
+        { title: 'Input Date of Birth', desc: 'Select your birth year, month, and day into the age calculator by date of birth free field.' },
+        { title: 'Select Reference or Event Date', desc: 'Defaults to current date or select your upcoming wedding date for marriage age verification, or target retirement year.' },
         { title: 'View Exact Age & Milestones', desc: 'Inspect age in years/months/days, total days lived, and countdown to your next birthday.' }
       ],
       formulaName: 'Gregorian Chronometric Delta',
       formulaExpr: '\Delta T = T_{\text{target}} - T_{\text{birth}} \quad (\text{exact calendar alignment})',
       formulaExplanation: 'Accounts for leap centuries (divisible by 400) and varying month horizons (28, 29, 30, 31 days).',
-      example: '<strong>Example:</strong> A person born June 15, 1995 evaluated today displays exact completed years, elapsed months, remaining days, and total days lived.',
+      example: '<strong>Example:</strong> A person born June 15, 1995 evaluated on June 15, 2026 displays exactly 31 completed years, 0 months, and 0 days (11,323 total days lived).',
       faqs: [
         {
-          q: 'Does this calculator account for leap years?',
-          a: 'Yes, every 4-year leap cycle (including February 29th) is fully handled according to the Gregorian calendar rules.'
+          q: 'How does this online age calculator by date of birth calculate exact age?',
+          a: 'Our online age calculator by date of birth compares your birth day, month, and year against the target date using true Gregorian calendar intervals. It automatically accounts for leap centuries, differing monthly lengths (28, 29, 30, and 31 days), and exact midnight boundaries without any timezone distortion.'
+        },
+        {
+          q: 'How do I use this as a marriage age calculator by date of birth?',
+          a: 'To use this as a marriage age calculator by date of birth, input your birth date into the Date of Birth field, then select your intended wedding or civil registry date in the Calculate Age At Date field. The calculator instantly displays your completed years, months, and days on that date so you can verify legal marriage eligibility.'
+        },
+        {
+          q: 'Can I use this as a retirement age calculator by date of birth?',
+          a: 'Yes! As a versatile retirement age calculator by date of birth, you can calculate the exact date you reach state pension age, Social Security eligibility (such as age 62 for early retirement or age 67 for full benefits), or mandatory corporate retirement.'
+        },
+        {
+          q: 'Is this age calculator by date of birth free to use online?',
+          a: 'Yes, this age calculator by date of birth free online is 100% complimentary with no usage limits, no credit card requirements, and no mobile app installation needed. All calculations run client-side in your browser for absolute data confidentiality.'
+        },
+        {
+          q: 'What is the difference between an age calculator and a gestational age calculator?',
+          a: 'A standard age calculator by date of birth calculates elapsed chronological time since an individual\'s day of birth. In contrast, a gestational age calculator measures fetal growth in weeks and days from the first day of the mother\'s last menstrual period (LMP) to assess pregnancy progression.'
+        },
+        {
+          q: 'Does this calculator account for leap years and leap day birthdays?',
+          a: 'Yes, every 4-year leap cycle (including February 29th) is fully handled according to the Gregorian calendar rules, with automatic anniversary adjustment for leap day babies in non-leap years.'
         }
       ]
     },

@@ -11,9 +11,9 @@
   const CALC_REGISTRY = [
     // --- FINANCIAL CALCULATORS (73 Tools) ---
     { id: 'sec-mort-calc', cat: 'financial', slug: 'mortgage-calculator', aliases: ['mortgage', 'mort', 'mortgage-calc', 'home-mortgage'], title: 'Mortgage Calculator' },
-    { id: 'sec-loan-calc', cat: 'financial', slug: 'loan-calculator', aliases: ['loan', 'emi', 'loan-calc', 'emi-calculator'], title: 'Loan & EMI Calculator' },
+    { id: 'sec-loan-calc', cat: 'financial', slug: 'loan-calculator', aliases: ['loan', 'emi', 'loan-calc', 'emi-calculator', 'gold-loan', 'gold-loan-calculator', 'gold-loan-calc'], title: 'Loan & EMI Calculator' },
     { id: 'sec-auto-loan-calc', cat: 'financial', slug: 'auto-loan-calculator', aliases: ['auto-loan', 'car-loan', 'auto', 'vehicle-loan'], title: 'Auto Loan Calculator' },
-    { id: 'sec-interest-calc', cat: 'financial', slug: 'interest-calculator', aliases: ['interest', 'interest-calc', 'simple-compound-interest'], title: 'Interest Calculator' },
+    { id: 'sec-interest-calc', cat: 'financial', slug: 'interest-calculator', aliases: ['interest', 'interest-calc', 'simple-compound-interest', 'interest-calculator-from-date-to-date', 'simple-interest-calculator-from-date-to-date', 'compound-interest-calculator-india', 'bank-interest-calculator', 'simple-interest-calculator', 'compound-interest-calculator', 'daily-compound-interest-calculator', 'daily-compound-interest'], title: 'Interest Calculator From Date to Date | Simple Interest Calculator From Date to Date, Compound Interest Calculator India & Bank Interest Calculator' },
     { id: 'sec-payment-calc', cat: 'financial', slug: 'payment-calculator', aliases: ['payment', 'payment-calc', 'debt-payment'], title: 'Payment Calculator' },
     { id: 'sec-retirement-calc', cat: 'financial', slug: 'retirement-calculator', aliases: ['retirement', 'nest-egg', 'retirement-nest-egg'], title: 'Retirement Calculator' },
     { id: 'sec-amortization-calc', cat: 'financial', slug: 'amortization-calculator', aliases: ['amortization', 'amort', 'amortization-schedule'], title: 'Amortization Calculator' },
@@ -50,7 +50,7 @@
     { id: 'sec-paycheck-calc', cat: 'financial', slug: 'paycheck-calculator', aliases: ['paycheck', 'take-home-pay', 'net-pay-stub'], title: 'Take-Home-Paycheck Calculator' },
     { id: 'sec-auto-rebate-calc', cat: 'financial', slug: 'cash-back-or-low-interest-calculator', aliases: ['cash-back-or-low-interest', 'auto-rebate', 'car-rebate-vs-interest', 'rebate-vs-apr'], title: 'Cash Back vs Low Interest Calculator' },
     { id: 'sec-auto-lease-calc', cat: 'financial', slug: 'auto-lease-calculator', aliases: ['auto-lease', 'car-lease', 'lease-payment'], title: 'Auto Lease Calculator' },
-    { id: 'sec-ci-calc', cat: 'financial', slug: 'compound-interest-calculator', aliases: ['compound-interest', 'ci', 'compound-growth'], title: 'Compound Interest Calculator' },
+    { id: 'sec-ci-calc', cat: 'financial', slug: 'compound-interest-calculator', aliases: ['compound-interest', 'ci', 'compound-growth', 'daily-compound-interest-calculator', 'daily-compound-interest'], title: 'Compound Interest Calculator' },
     { id: 'sec-roi-calc', cat: 'financial', slug: 'roi-calculator', aliases: ['roi', 'return-on-investment', 'profit-margin-calc'], title: 'ROI & Profit Margin Calculator' },
     { id: 'sec-interest-rate-calc', cat: 'financial', slug: 'interest-rate-calculator', aliases: ['interest-rate', 'apy-apr', 'effective-interest'], title: 'Interest Rate (APR & APY) Calculator' },
     { id: 'sec-savings-goal-calc', cat: 'financial', slug: 'savings-goal-calculator', aliases: ['savings-goal', 'savings', 'savings-plan'], title: 'Savings Goal Calculator' },
@@ -156,7 +156,7 @@
 
     // --- DAILY UTILITIES & TOOLS (34 Tools) ---
     { id: 'sec-unit-calc', cat: 'other', slug: 'unit-converter-calculator', aliases: ['unit-converter', 'unit', 'converter', 'units'], title: 'Universal Unit Converter' },
-    { id: 'sec-age-calc', cat: 'other', slug: 'age-calculator', aliases: ['age', 'date-difference', 'chronological-age'], title: 'Age Calculator & Chronology' },
+    { id: 'sec-age-calc', cat: 'other', slug: 'age-calculator', aliases: ['age', 'date-difference', 'chronological-age', 'age-calculator-online', 'online-age-calculator', 'age-calculator-by-dob', 'my-age-calculator', 'age-calculator-app', 'marriage-age-calculator', 'marriage-age-calculator-by-date-of-birth', 'retirement-age-calculator', 'age-calculator-by-date-of-birth'], title: 'Age Calculator & Chronology' },
     { id: 'sec-gpa-calc', cat: 'utility', slug: 'gpa-calculator', aliases: ['gpa', 'college-gpa', 'grade-point-average', 'other/gpa-calculator', 'everyday/gpa-calculator'], title: 'College & School GPA Calculator' },
     { id: 'sec-work-calc', cat: 'other', slug: 'work-hours-calculator', aliases: ['work-hours', 'work', 'hours', 'timesheet', 'work-wages'], title: 'Work Hours & Wages Calculator' },
     // Date & Time Suite (9)
@@ -542,7 +542,11 @@
           if (typeof document !== 'undefined') {
             const metaDesc = document.querySelector('meta[name="description"]');
             if (metaDesc) {
-              metaDesc.setAttribute('content', `Use the free, interactive ${newTitle} on CALC• Modern Calculator - 100% client-side precision calculations, instantaneous results, and comprehensive benchmarks.`);
+              if (newTitle && newTitle.includes('Interest Calculator From Date to Date')) {
+                metaDesc.setAttribute('content', 'Calculate exact simple and compound returns with our interest calculator from date to date. Use this free simple interest calculator from date to date, bank interest calculator, and compound interest calculator India to compute exact interest, APY, and maturity value for loans, fixed deposits, and investments.');
+              } else {
+                metaDesc.setAttribute('content', `Use the free, interactive ${newTitle} on CALC• Modern Calculator - 100% client-side precision calculations, instantaneous results, and comprehensive benchmarks.`);
+              }
             }
             const ogTitle = document.querySelector('meta[property="og:title"]');
             if (ogTitle) {

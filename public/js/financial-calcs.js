@@ -206,14 +206,25 @@ const FinancialCalcs = {
     const annualRate = parseFloat(document.getElementById('loan-rate')?.value) || 0;
     const tenureYears = parseFloat(document.getElementById('loan-years')?.value) || 0;
 
-    if (principal <= 0 || annualRate <= 0 || tenureYears <= 0) {
+    if (principal <= 0 || tenureYears <= 0) {
       this.updateLoanOutputs(0, 0, 0, 100, 0);
       return;
     }
 
-    const monthlyRate = (annualRate / 12) / 100;
     const totalMonths = tenureYears * 12;
+    if (totalMonths <= 0) {
+      this.updateLoanOutputs(0, 0, 0, 100, 0);
+      return;
+    }
 
+    // Handle 0% interest rate without dividing by zero
+    if (annualRate <= 0) {
+      const emi = principal / totalMonths;
+      this.updateLoanOutputs(emi, 0, principal, 100, 0);
+      return;
+    }
+
+    const monthlyRate = (annualRate / 12) / 100;
     const factor = Math.pow(1 + monthlyRate, totalMonths);
     const emi = (principal * monthlyRate * factor) / (factor - 1);
     const totalPayment = emi * totalMonths;
@@ -1861,14 +1872,85 @@ const FinancialCalcs = {
   },
 
   // ------------------------------------------------------------------------
-  // 10. INTEREST CALCULATOR (Simple & Compound with APY)
+  // 10. INTEREST CALCULATOR (Simple & Compound with Date-to-Date & APY)
   // ------------------------------------------------------------------------
+  toggleInterestPeriodMode() {
+    const periodMode = document.getElementById('int-period-mode')?.value || 'dates';
+    const datesGroup = document.getElementById('int-dates-group');
+    const termGroup = document.getElementById('int-term-group');
+    const basisGroup = document.getElementById('int-day-basis-group');
+    const mode = document.getElementById('int-mode')?.value || 'compound';
+
+    if (datesGroup) datesGroup.style.display = periodMode === 'dates' ? 'grid' : 'none';
+    if (termGroup) termGroup.style.display = periodMode === 'term' ? 'block' : 'none';
+    if (basisGroup) basisGroup.style.display = (periodMode === 'dates' && mode === 'simple') ? 'block' : 'none';
+
+    this.calcInterest();
+  },
+
+  toggleInterestModeControls() {
+    const mode = document.getElementById('int-mode')?.value || 'compound';
+    const periodMode = document.getElementById('int-period-mode')?.value || 'dates';
+    const freqGroup = document.getElementById('int-freq-group');
+    const basisGroup = document.getElementById('int-day-basis-group');
+
+    if (freqGroup) freqGroup.style.display = mode === 'compound' ? 'block' : 'none';
+    if (basisGroup) basisGroup.style.display = (periodMode === 'dates' && mode === 'simple') ? 'block' : 'none';
+
+    this.calcInterest();
+  },
+
   calcInterest() {
     const principal = parseFloat(document.getElementById('int-principal')?.value) || 0;
     const rate = parseFloat(document.getElementById('int-rate')?.value) || 0;
-    const years = parseFloat(document.getElementById('int-time')?.value) || 1;
+    const periodMode = document.getElementById('int-period-mode')?.value || 'dates';
     const mode = document.getElementById('int-mode')?.value || 'compound';
     const freq = parseFloat(document.getElementById('int-freq')?.value) || 12;
+    const dayBasis = parseFloat(document.getElementById('int-day-basis')?.value) || 365;
+
+    let years = 1;
+    let daysCount = 365;
+    let durationText = '';
+
+    if (periodMode === 'dates') {
+      const startInput = document.getElementById('int-start-date');
+      const endInput = document.getElementById('int-end-date');
+      if (startInput && !startInput.value) {
+        const d = new Date();
+        d.setFullYear(d.getFullYear() - 1);
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        startInput.value = `${d.getFullYear()}-${m}-${day}`;
+      }
+      if (endInput && !endInput.value) {
+        const now = new Date();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        endInput.value = `${now.getFullYear()}-${m}-${day}`;
+      }
+
+      const sStr = startInput?.value;
+      const eStr = endInput?.value;
+      if (sStr && eStr) {
+        const [sy, sm, sd] = sStr.split('-').map(Number);
+        const [ey, em, ed] = eStr.split('-').map(Number);
+        const d1 = new Date(sy, sm - 1, sd);
+        const d2 = new Date(ey, em - 1, ed);
+        const diffMs = d2.getTime() - d1.getTime();
+        daysCount = Math.round(diffMs / (1000 * 60 * 60 * 24));
+        if (daysCount < 0) daysCount = 0;
+        years = daysCount / dayBasis;
+        durationText = `${daysCount.toLocaleString()} Day${daysCount !== 1 ? 's' : ''} (${years.toFixed(2)} Yrs)`;
+      } else {
+        years = 1;
+        daysCount = 365;
+        durationText = '365 Days (1.00 Year)';
+      }
+    } else {
+      years = parseFloat(document.getElementById('int-time')?.value) || 1;
+      daysCount = Math.round(years * 365);
+      durationText = `${years} Year${years !== 1 ? 's' : ''} (${daysCount.toLocaleString()} Days)`;
+    }
 
     let endBalance = principal;
     let totalInterest = 0;
@@ -1881,7 +1963,11 @@ const FinancialCalcs = {
         apy = rate;
       } else {
         const r = rate / 100;
-        endBalance = principal * Math.pow(1 + (r / freq), freq * years);
+        if (periodMode === 'dates' && freq === 365) {
+          endBalance = principal * Math.pow(1 + (r / 365), daysCount);
+        } else {
+          endBalance = principal * Math.pow(1 + (r / freq), freq * years);
+        }
         totalInterest = endBalance - principal;
         apy = (Math.pow(1 + (r / freq), freq) - 1) * 100;
       }
@@ -1890,10 +1976,12 @@ const FinancialCalcs = {
     const elEnd = document.getElementById('res-int-end-bal');
     const elEarned = document.getElementById('res-int-earned');
     const elApy = document.getElementById('res-int-apy');
+    const elDuration = document.getElementById('res-int-duration');
 
     if (elEnd) elEnd.textContent = this.formatCurrency(endBalance);
     if (elEarned) elEarned.textContent = this.formatCurrency(totalInterest);
     if (elApy) elApy.textContent = `${apy.toFixed(2)}% APY`;
+    if (elDuration) elDuration.textContent = durationText;
   },
 
   // ------------------------------------------------------------------------
@@ -5625,8 +5713,23 @@ const FinancialCalcs = {
       });
     });
 
-    // 10. Interest Inputs
-    ['int-principal', 'int-rate', 'int-time', 'int-mode', 'int-freq'].forEach(id => {
+    // 10. Interest Inputs (Date to Date & Term)
+    const intStart = document.getElementById('int-start-date');
+    const intEnd = document.getElementById('int-end-date');
+    if (intStart && !intStart.value) {
+      const d = new Date();
+      d.setFullYear(d.getFullYear() - 1);
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      intStart.value = `${d.getFullYear()}-${m}-${day}`;
+    }
+    if (intEnd && !intEnd.value) {
+      const now = new Date();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      intEnd.value = `${now.getFullYear()}-${m}-${day}`;
+    }
+    ['int-principal', 'int-rate', 'int-time', 'int-mode', 'int-freq', 'int-period-mode', 'int-start-date', 'int-end-date', 'int-day-basis'].forEach(id => {
       document.getElementById(id)?.addEventListener('input', () => this.calcInterest());
       document.getElementById(id)?.addEventListener('change', () => this.calcInterest());
     });

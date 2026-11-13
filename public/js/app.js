@@ -88,7 +88,7 @@
   const settingsOpenHistory = document.getElementById('settings-open-history');
   const settingsClearHistory = document.getElementById('settings-clear-history');
 
-  function toggleSettings(forceClose = false, popHistory = true) {
+  function toggleSettings(forceClose = false) {
     if (!settingsPopover) return;
     const wasOpen = settingsPopover.classList.contains('open');
     if (forceClose || wasOpen) {
@@ -97,20 +97,21 @@
         settingsToggleBtn.classList.remove('active');
         settingsToggleBtn.setAttribute('aria-expanded', 'false');
       }
-      if (wasOpen && popHistory && history.state && history.state.mobileOverlay === 'settings') {
-        history.back();
-      }
     } else {
+      if (typeof window.closeMobileNavMenu === 'function') {
+        window.closeMobileNavMenu(false);
+      }
       settingsPopover.classList.add('open');
       if (settingsToggleBtn) {
         settingsToggleBtn.classList.add('active');
         settingsToggleBtn.setAttribute('aria-expanded', 'true');
       }
-      try {
-        history.pushState({ mobileOverlay: 'settings' }, '', window.location.href);
-      } catch (_) {}
     }
   }
+  window.toggleSettings = function (e) {
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+    toggleSettings();
+  };
 
   if (settingsToggleBtn) {
     settingsToggleBtn.addEventListener('click', (e) => {
@@ -773,7 +774,7 @@
     let title = '';
     const panel = document.getElementById(calcId);
     if (panel) {
-      const heading = panel.querySelector('.panel-title-group h2, .section-heading, .panel-title, h2');
+      const heading = panel.querySelector('.panel-title-group h1, .panel-title-group h2, .section-heading, .panel-title, h1, h2');
       if (heading) {
         title = heading.textContent.trim();
       }
@@ -1064,6 +1065,8 @@
     const popover = document.getElementById('mobile-nav-popover');
     const btn = document.getElementById('mobile-menu-toggle-btn');
     if (!popover) return;
+
+    if (typeof toggleSettings === 'function') toggleSettings(true);
 
     popover.classList.add('open');
     btn?.classList.add('active');

@@ -6090,23 +6090,26 @@ input, select, textarea {
     font-size: 0.82rem !important;
   }
 
-  /* 9. Settings Popover on Mobile (Smooth Absolute Positioning Under Button) */
+  /* 9. Settings Popover on Mobile (Viewport Clamped, Fully Accessible) */
   .settings-popover {
-    position: absolute !important;
-    top: calc(100% + 8px) !important;
-    right: 0 !important;
+    position: fixed !important;
+    top: 56px !important;
+    right: 12px !important;
     left: auto !important;
     bottom: auto !important;
-    width: min(320px, calc(100vw - 1.5rem)) !important;
+    width: min(340px, calc(100vw - 24px)) !important;
     border-radius: 16px !important;
-    max-height: 80vh !important;
+    max-height: 85vh !important;
     overflow-y: auto !important;
     transform: translateY(-8px) scale(0.96) !important;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28) !important;
+    z-index: 100000 !important;
   }
 
   .settings-popover.open {
     transform: translateY(0) scale(1) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
   }
 
   /* 10. Legal Modal & Footer on Mobile */

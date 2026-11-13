@@ -1,17 +1,30 @@
 import { getAppHtml } from '@/lib/template';
-import { getAllCategories, getCalc, STANDALONE_PAGES, normalizeSuiteKey } from '@/lib/registry';
+import { getAllSingleSegmentParams, getCalc, STANDALONE_PAGES, normalizeSuiteKey } from '@/lib/registry';
 import OmniCalcClient from '@/components/OmniCalcClient';
 
 export async function generateStaticParams() {
-  const categories = getAllCategories();
-  const pages = Object.keys(STANDALONE_PAGES);
-  const extra = ['standard-calculator', 'scientific-calculator'];
-  const allParams = Array.from(new Set([...categories, ...pages, ...extra]));
+  const allParams = getAllSingleSegmentParams();
   return allParams.map(category => ({ category }));
 }
 
 export async function generateMetadata({ params }) {
   const { category } = params;
+  const lower = (category || '').toLowerCase();
+
+  if (lower === 'scientific' || lower === 'sci' || lower === 'scientific-calculator') {
+    return {
+      title: 'Scientific Calculator | CALC• Modern Calculator',
+      description: 'High-precision interactive scientific calculator with trigonometry, logarithms, powers, and full evaluation history.'
+    };
+  }
+
+  if (lower === 'standard' || lower === 'standard-calculator') {
+    return {
+      title: 'Standard Calculator | CALC• Modern Calculator',
+      description: 'Clean, responsive standard 4-function calculator with active memory registers.'
+    };
+  }
+
   if (STANDALONE_PAGES[category]) {
     return {
       title: `${STANDALONE_PAGES[category].title} | CALC• Modern Calculator`,

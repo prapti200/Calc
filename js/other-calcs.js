@@ -196,6 +196,31 @@ const OtherCalcs = {
     this.convertUnits('from');
   },
 
+  // Date parsing helper to prevent UTC midnight timezone shift bugs
+  parseLocalDate(dateStr) {
+    if (!dateStr) {
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+    const parts = String(dateStr).split('-');
+    if (parts.length === 3) {
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = parseInt(parts[2], 10);
+      return new Date(y, m, d);
+    }
+    const dt = new Date(dateStr);
+    return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+  },
+
+  getLocalDateString(date) {
+    const d = date || new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  },
+
   // 2. AGE & DATE DIFFERENCE CALCULATOR
   calcAge() {
     const dobInput = document.getElementById('age-dob')?.value;
@@ -203,8 +228,8 @@ const OtherCalcs = {
 
     if (!dobInput) return;
 
-    const birthDate = new Date(dobInput);
-    const targetDate = targetDateInput ? new Date(targetDateInput) : new Date();
+    const birthDate = this.parseLocalDate(dobInput);
+    const targetDate = targetDateInput ? this.parseLocalDate(targetDateInput) : this.parseLocalDate(null);
 
     if (isNaN(birthDate.getTime()) || isNaN(targetDate.getTime())) return;
     if (birthDate > targetDate) {
@@ -218,26 +243,46 @@ const OtherCalcs = {
 
     if (days < 0) {
       months--;
-      // Days in previous month
-      const prevMonth = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0);
-      days += prevMonth.getDate();
+      const daysInPrevMonth = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0).getDate();
+      if (birthDate.getDate() > daysInPrevMonth) {
+        days = targetDate.getDate();
+      } else {
+        days = daysInPrevMonth - birthDate.getDate() + targetDate.getDate();
+      }
     }
+
     if (months < 0) {
       years--;
       months += 12;
     }
 
-    // Total difference calculations
-    const diffMs = targetDate - birthDate;
-    const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    const totalHours = Math.floor(diffMs / (1000 * 60 * 60));
+    // Total difference calculations based on normalized local dates
+    const diffMs = targetDate.getTime() - birthDate.getTime();
+    const totalDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+    const totalHours = totalDays * 24;
 
-    // Next birthday countdown
-    const nextBday = new Date(targetDate.getFullYear(), birthDate.getMonth(), birthDate.getDate());
-    if (nextBday < targetDate) {
-      nextBday.setFullYear(targetDate.getFullYear() + 1);
+    // Next birthday countdown with leap day accommodation
+    let nextBdayYear = targetDate.getFullYear();
+    let nextBday = new Date(nextBdayYear, birthDate.getMonth(), birthDate.getDate());
+    if (birthDate.getMonth() === 1 && birthDate.getDate() === 29) {
+      const isLeap = (y) => (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
+      if (!isLeap(nextBdayYear)) {
+        nextBday = new Date(nextBdayYear, 1, 28);
+      }
     }
-    const daysToNextBday = Math.ceil((nextBday - targetDate) / (1000 * 60 * 60 * 24));
+
+    if (nextBday < targetDate) {
+      nextBdayYear++;
+      nextBday = new Date(nextBdayYear, birthDate.getMonth(), birthDate.getDate());
+      if (birthDate.getMonth() === 1 && birthDate.getDate() === 29) {
+        const isLeap = (y) => (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
+        if (!isLeap(nextBdayYear)) {
+          nextBday = new Date(nextBdayYear, 1, 28);
+        }
+      }
+    }
+
+    const diffDaysNext = Math.round((nextBday.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24));
     const dayOfWeek = nextBday.toLocaleDateString('en-US', { weekday: 'long' });
 
     // Update UI
@@ -248,12 +293,21 @@ const OtherCalcs = {
     const resTotalHours = document.getElementById('res-age-total-hours');
     const resNextBday = document.getElementById('res-age-next-bday');
 
-    if (resYears) resYears.textContent = `${years} Years`;
-    if (resMonths) resMonths.textContent = `${months} Months`;
-    if (resDays) resDays.textContent = `${days} Days`;
+    if (resYears) resYears.textContent = `${years} ${years === 1 ? 'Year' : 'Years'}`;
+    if (resMonths) resMonths.textContent = `${months} ${months === 1 ? 'Month' : 'Months'}`;
+    if (resDays) resDays.textContent = `${days} ${days === 1 ? 'Day' : 'Days'}`;
     if (resTotalDays) resTotalDays.textContent = `${totalDays.toLocaleString()} Days`;
     if (resTotalHours) resTotalHours.textContent = `${totalHours.toLocaleString()} Hours`;
-    if (resNextBday) resNextBday.textContent = `In ${daysToNextBday} days (${dayOfWeek})`;
+
+    if (resNextBday) {
+      if (diffDaysNext === 0) {
+        resNextBday.innerHTML = `<span style="color:var(--accent-green); font-weight:700;">🎉 Happy Birthday! (Today)</span>`;
+      } else if (diffDaysNext === 1) {
+        resNextBday.textContent = `Tomorrow (${dayOfWeek})`;
+      } else {
+        resNextBday.textContent = `In ${diffDaysNext} days (${dayOfWeek})`;
+      }
+    }
   },
 
   // 3. COLLEGE / SCHOOL GPA CALCULATOR
@@ -3428,7 +3482,7 @@ const OtherCalcs = {
     });
     const targetDateEl = document.getElementById('age-target-date');
     if (targetDateEl && !targetDateEl.value) {
-      targetDateEl.value = new Date().toISOString().split('T')[0];
+      targetDateEl.value = this.getLocalDateString();
     }
     this.calcAge();
 
