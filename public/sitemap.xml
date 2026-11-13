@@ -601,18 +601,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://calcmoderncalcultor.vercel.app/math/quadratic-equation-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://calcmoderncalcultor.vercel.app/math/fraction-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://calcmoderncalcultor.vercel.app/math/gcd-calculator</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
@@ -626,24 +614,6 @@
   </url>
   <url>
     <loc>https://calcmoderncalcultor.vercel.app/math/scientific-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://calcmoderncalcultor.vercel.app/math/random-number-generator-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://calcmoderncalcultor.vercel.app/math/percent-error-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://calcmoderncalcultor.vercel.app/math/exponent-calculator</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -703,25 +673,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://calcmoderncalcultor.vercel.app/math/rounding-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://calcmoderncalcultor.vercel.app/math/scientific-notation-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://calcmoderncalcultor.vercel.app/math/big-number-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://calcmoderncalcultor.vercel.app/math/triangle-calculator</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
