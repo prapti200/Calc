@@ -223,24 +223,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://calcmoderncalcultor.vercel.app/financial/marriage-tax-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://calcmoderncalcultor.vercel.app/financial/estate-tax-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://calcmoderncalcultor.vercel.app/financial/paycheck-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://calcmoderncalcultor.vercel.app/financial/cash-back-or-low-interest-calculator</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
@@ -326,12 +308,6 @@
   </url>
   <url>
     <loc>https://calcmoderncalcultor.vercel.app/financial/future-value-calculator</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://calcmoderncalcultor.vercel.app/financial/sales-tax-calculator</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
