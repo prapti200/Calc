@@ -119,7 +119,7 @@
     { id: 'sec-bac-calc', cat: 'fitness', slug: 'bac-calculator', aliases: ['bac', 'blood-alcohol', 'widmark', 'alcohol-calculator'], title: 'BAC Calculator' },
 
     // --- MATH & ALGEBRA (20 Tools) ---
-    { id: 'sec-pct-calc', cat: 'math', slug: 'percentage-calculator', aliases: ['percentage', 'pct', 'percent'], title: 'Percentage Calculator (3-in-1 Suite)' },
+    { id: 'sec-pct-calc', cat: 'math', slug: 'percentage-calculator', aliases: ['percentage', 'pct', 'percent', 'marks-percentage-calculator', 'percentage-calculator-of-marks', 'mark-percentage-calculator', 'hike-percentage-calculator', 'attendance-percentage-calculator'], title: 'Percentage Calculator: Marks, Attendance & Hike %' },
     { id: 'sec-quad-calc', cat: 'math', slug: 'quadratic-equation-calculator', aliases: ['quadratic', 'quad', 'quadratic-solver', 'quadratic-equation', 'quadratic-formula', 'quadratic-formula-calculator'], title: 'Quadratic Equation Solver' },
     { id: 'sec-frac-calc', cat: 'math', slug: 'fraction-calculator', aliases: ['fractions', 'fraction', 'frac', 'fraction-reducer', 'fractions-calculator'], title: 'Fraction Calculator & Reducer' },
     { id: 'sec-gcd-calc', cat: 'math', slug: 'gcd-calculator', aliases: ['gcd', 'gcd-lcm', 'greatest-common-divisor', 'gcd-lcm-calculator'], title: 'GCD & LCM Integer Solver' },
@@ -537,12 +537,18 @@
       }
 
       if (newTitle) {
-        document.title = `${newTitle} | ${BASE_APP_TITLE}`;
+        if (newTitle.includes('Percentage Calculator: Marks, Attendance & Hike %')) {
+          document.title = newTitle;
+        } else {
+          document.title = `${newTitle} | ${BASE_APP_TITLE}`;
+        }
         try {
           if (typeof document !== 'undefined') {
             const metaDesc = document.querySelector('meta[name="description"]');
             if (metaDesc) {
-              if (newTitle && newTitle.includes('Interest Calculator From Date to Date')) {
+              if (newTitle.includes('Percentage Calculator: Marks, Attendance & Hike %')) {
+                metaDesc.setAttribute('content', 'Calculate marks percentage, attendance, and salary hike in seconds with this free percentage calculator. Easy step-by-step formulas and quick answers.');
+              } else if (newTitle.includes('Interest Calculator From Date to Date')) {
                 metaDesc.setAttribute('content', 'Calculate exact simple and compound returns with our interest calculator from date to date. Use this free simple interest calculator from date to date, bank interest calculator, and compound interest calculator India to compute exact interest, APY, and maturity value for loans, fixed deposits, and investments.');
               } else {
                 metaDesc.setAttribute('content', `Use the free, interactive ${newTitle} on CALC• Modern Calculator - 100% client-side precision calculations, instantaneous results, and comprehensive benchmarks.`);
@@ -550,7 +556,16 @@
             }
             const ogTitle = document.querySelector('meta[property="og:title"]');
             if (ogTitle) {
-              ogTitle.setAttribute('content', `${newTitle} | CALC• Modern Calculator`);
+              ogTitle.setAttribute('content', newTitle.includes('Percentage Calculator: Marks, Attendance & Hike %') ? newTitle : `${newTitle} | CALC• Modern Calculator`);
+            }
+            if (newTitle.includes('Percentage Calculator: Marks, Attendance & Hike %')) {
+              let canonicalEl = document.querySelector('link[rel="canonical"]');
+              if (!canonicalEl) {
+                canonicalEl = document.createElement('link');
+                canonicalEl.setAttribute('rel', 'canonical');
+                document.head.appendChild(canonicalEl);
+              }
+              canonicalEl.setAttribute('href', 'https://calcmoderncalcultor.vercel.app/math/percentage-calculator');
             }
           }
         } catch (e) {}
