@@ -67,139 +67,9 @@ const MathCalcs = {
     }
   },
 
-  // 2. QUADRATIC EQUATION SOLVER
-  calcQuadratic() {
-    const a = parseFloat(document.getElementById('quad-a')?.value) || 0;
-    const b = parseFloat(document.getElementById('quad-b')?.value) || 0;
-    const c = parseFloat(document.getElementById('quad-c')?.value) || 0;
+  
 
-    const preview = document.getElementById('quad-equation-preview');
-    const resDisc = document.getElementById('res-quad-disc');
-    const resRoots = document.getElementById('res-quad-roots');
-    const resVertex = document.getElementById('res-quad-vertex');
-    const resAxis = document.getElementById('res-quad-axis');
-    const resNature = document.getElementById('res-quad-nature');
-
-    if (a === 0) {
-      if (preview) preview.textContent = 'Coefficient "a" cannot be 0 in a quadratic equation';
-      return;
-    }
-
-    // Format equation string
-    let eqStr = `${a}x²`;
-    eqStr += b >= 0 ? ` + ${b}x` : ` - ${Math.abs(b)}x`;
-    eqStr += c >= 0 ? ` + ${c} = 0` : ` - ${Math.abs(c)} = 0`;
-    if (preview) preview.textContent = eqStr;
-
-    // Discriminant Delta = b^2 - 4ac
-    const disc = b * b - 4 * a * c;
-    if (resDisc) resDisc.textContent = `Δ = ${disc}`;
-
-    // Vertex (h, k)
-    const h = -b / (2 * a);
-    const k = c - (b * b) / (4 * a);
-    if (resVertex) resVertex.textContent = `(${h.toFixed(3)}, ${k.toFixed(3)})`;
-    if (resAxis) resAxis.textContent = `x = ${h.toFixed(3)} (${a > 0 ? 'Opens Upward' : 'Opens Downward'})`;
-
-    if (disc > 0) {
-      const sqrtDisc = Math.sqrt(disc);
-      const x1 = (-b + sqrtDisc) / (2 * a);
-      const x2 = (-b - sqrtDisc) / (2 * a);
-      if (resRoots) resRoots.textContent = `x₁ = ${x1.toFixed(4)},  x₂ = ${x2.toFixed(4)}`;
-      if (resNature) resNature.textContent = 'Two Distinct Real Roots';
-    } else if (disc === 0) {
-      const x = -b / (2 * a);
-      if (resRoots) resRoots.textContent = `x₁ = x₂ = ${x.toFixed(4)}`;
-      if (resNature) resNature.textContent = 'One Repeated Real Root';
-    } else {
-      // Complex roots: u ± vi
-      const realPart = (-b / (2 * a)).toFixed(4);
-      const imagPart = (Math.sqrt(-disc) / (2 * a)).toFixed(4);
-      if (resRoots) resRoots.textContent = `x = ${realPart} ± ${Math.abs(imagPart)}i`;
-      if (resNature) resNature.textContent = 'Two Complex Conjugate Roots';
-    }
-  },
-
-  // 3. FRACTION CALCULATOR
-  calcFraction() {
-    const n1 = parseInt(document.getElementById('frac-n1')?.value) || 0;
-    const d1 = parseInt(document.getElementById('frac-d1')?.value) || 1;
-    const n2 = parseInt(document.getElementById('frac-n2')?.value) || 0;
-    const d2 = parseInt(document.getElementById('frac-d2')?.value) || 1;
-    const op = document.getElementById('frac-op')?.value || '+';
-
-    if (d1 === 0 || d2 === 0) {
-      window.showToast?.('Denominator cannot be 0');
-      return;
-    }
-
-    let numRes = 0;
-    let denRes = 1;
-
-    switch (op) {
-      case '+':
-        numRes = n1 * d2 + n2 * d1;
-        denRes = d1 * d2;
-        break;
-      case '-':
-        numRes = n1 * d2 - n2 * d1;
-        denRes = d1 * d2;
-        break;
-      case '×':
-        numRes = n1 * n2;
-        denRes = d1 * d2;
-        break;
-      case '÷':
-        if (n2 === 0) {
-          window.showToast?.('Cannot divide by zero fraction');
-          return;
-        }
-        numRes = n1 * d2;
-        denRes = d1 * n2;
-        break;
-    }
-
-    if (denRes < 0) {
-      numRes = -numRes;
-      denRes = -denRes;
-    }
-
-    const divisor = this.gcd(numRes, denRes);
-    const simNum = numRes / divisor;
-    const simDen = denRes / divisor;
-
-    const decimalVal = simNum / simDen;
-
-    // Mixed fraction conversion
-    let mixedStr = '';
-    if (Math.abs(simNum) >= simDen && simDen !== 1) {
-      const whole = Math.trunc(simNum / simDen);
-      const rem = Math.abs(simNum % simDen);
-      if (rem > 0) {
-        mixedStr = `Mixed: ${whole} ${rem}/${simDen}`;
-      }
-    }
-
-    const resFrac = document.getElementById('res-frac-simple');
-    const resMixed = document.getElementById('res-frac-mixed');
-    const resDec = document.getElementById('res-frac-decimal');
-
-    if (resFrac) {
-      if (simDen === 1) {
-        resFrac.textContent = `${simNum}`;
-      } else {
-        resFrac.innerHTML = `
-          <span class="math-fraction">
-            <span class="numerator">${simNum}</span>
-            <span class="denominator">${simDen}</span>
-          </span>
-        `;
-      }
-    }
-
-    if (resMixed) resMixed.textContent = mixedStr || 'None (Proper / Integer)';
-    if (resDec) resDec.textContent = `≈ ${decimalVal.toFixed(6)}`;
-  },
+  
 
   // 4. GCD & LCM SOLVER
   calcGcdLcm() {
@@ -408,64 +278,7 @@ const MathCalcs = {
 
   // ========================================================================
   // 7. RANDOM NUMBER GENERATOR (RNG & Dice Roller)
-  // ========================================================================
-  calcRandom() {
-    const min = parseFloat(document.getElementById('rnd-min')?.value) || 1;
-    const max = parseFloat(document.getElementById('rnd-max')?.value) || 100;
-    const count = Math.min(100, Math.max(1, parseInt(document.getElementById('rnd-count')?.value, 10) || 1));
-    const allowDuplicates = document.getElementById('rnd-duplicates')?.value !== 'no';
-    const isDecimal = document.getElementById('rnd-type')?.value === 'decimal';
-    const decPlaces = parseInt(document.getElementById('rnd-decimals')?.value, 10) || 2;
-    const sortMode = document.getElementById('rnd-sort')?.value || 'none';
-
-    if (min >= max) {
-      window.showToast?.('Minimum must be less than Maximum');
-      return;
-    }
-
-    const availableRange = max - min + 1;
-    if (!allowDuplicates && !isDecimal && count > availableRange) {
-      window.showToast?.('Cannot generate unique integers: count exceeds available range');
-      return;
-    }
-
-    const results = [];
-    const used = new Set();
-
-    let attempts = 0;
-    while (results.length < count && attempts < 10000) {
-      attempts++;
-      let val = 0;
-      if (isDecimal) {
-        val = min + Math.random() * (max - min);
-        val = parseFloat(val.toFixed(decPlaces));
-      } else {
-        val = Math.floor(min + Math.random() * (max - min + 1));
-      }
-
-      if (allowDuplicates || !used.has(val)) {
-        results.push(val);
-        used.add(val);
-      }
-    }
-
-    if (sortMode === 'asc') results.sort((a, b) => a - b);
-    else if (sortMode === 'desc') results.sort((a, b) => b - a);
-
-    const sum = results.reduce((a, b) => a + b, 0);
-    const avg = sum / results.length;
-    const minVal = Math.min(...results);
-    const maxVal = Math.max(...results);
-
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    setTxt('res-rnd-main', results.length === 1 ? results[0] : results.slice(0, 5).join(', ') + (results.length > 5 ? ` ... (+${results.length - 5} more)` : ''));
-    setTxt('res-rnd-all', results.join(', '));
-    setTxt('res-rnd-count', `${results.length} numbers generated`);
-    setTxt('res-rnd-sum', sum.toFixed(isDecimal ? decPlaces : 0));
-    setTxt('res-rnd-avg', avg.toFixed(3));
-    setTxt('res-rnd-minmax', `Min: ${minVal} | Max: ${maxVal}`);
-  },
+  
 
   rollDice(count, sides) {
     const minInput = document.getElementById('rnd-min');
@@ -478,69 +291,15 @@ const MathCalcs = {
     if (countInput) countInput.value = count;
     if (typeInput) typeInput.value = 'integer';
     if (dupInput) dupInput.value = 'yes';
-    this.calcRandom();
   },
 
   // ========================================================================
   // 8. PERCENT ERROR CALCULATOR (Experimental vs. Theoretical Accuracy)
-  // ========================================================================
-  calcPercentError() {
-    const exp = parseFloat(document.getElementById('pe-experimental')?.value);
-    const theo = parseFloat(document.getElementById('pe-theoretical')?.value);
-
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    if (isNaN(exp) || isNaN(theo)) {
-      setTxt('res-pe-val', '—');
-      return;
-    }
-    if (theo === 0) {
-      setTxt('res-pe-val', 'Undefined (Theo = 0)');
-      setTxt('res-pe-formula', 'Theoretical value cannot be zero because division by zero is undefined.');
-      return;
-    }
-
-    const absError = Math.abs(exp - theo);
-    const relError = absError / Math.abs(theo);
-    const pctError = relError * 100;
-    const isOver = exp > theo;
-
-    setTxt('res-pe-val', `${pctError.toFixed(3)}%`);
-    setTxt('res-pe-abs', absError.toFixed(4));
-    setTxt('res-pe-rel', relError.toFixed(6));
-    setTxt('res-pe-dir', isOver ? `+${(exp - theo).toFixed(4)} (Overestimation)` : `-${(theo - exp).toFixed(4)} (Underestimation)`);
-    setTxt('res-pe-formula', `| ${exp} - ${theo} | / | ${theo} | × 100% = ${absError.toFixed(4)} / ${Math.abs(theo)} × 100% = ${pctError.toFixed(3)}%`);
-  },
+  
 
   // ========================================================================
   // 9. EXPONENT CALCULATOR (Powers, Negative & Fractional Exponents)
-  // ========================================================================
-  calcExponent() {
-    const base = parseFloat(document.getElementById('exp-base')?.value) || 2;
-    const power = parseFloat(document.getElementById('exp-power')?.value) || 3;
-
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    const result = Math.pow(base, power);
-
-    setTxt('res-exp-val', !isNaN(result) ? (Number.isInteger(result) ? result.toLocaleString() : result.toFixed(6)) : 'Invalid (NaN)');
-    setTxt('res-exp-notation', `${base}^${power}`);
-
-    // Step expansion if small integer
-    let expansion = '';
-    if (Number.isInteger(power) && power >= 1 && power <= 12) {
-      expansion = Array(power).fill(base).join(' × ') + ` = ${result}`;
-    } else if (power === 0) {
-      expansion = 'Any non-zero base raised to the power of 0 equals 1.';
-    } else if (power < 0) {
-      expansion = `${base}^${power} = 1 / (${base}^${Math.abs(power)}) = 1 / ${Math.pow(base, Math.abs(power))} = ${result.toFixed(6)}`;
-    } else {
-      expansion = `${base}^${power} = ${result.toFixed(6)}`;
-    }
-    setTxt('res-exp-expansion', expansion);
-    setTxt('res-exp-sci', !isNaN(result) ? result.toExponential(4) : '—');
-    setTxt('res-exp-neg-base', `(-${base})^${power} = ${Math.pow(-base, power)}`);
-  },
+  
 
   // ========================================================================
   // 10. BINARY CALCULATOR (Base 2 Arithmetic & Bitwise Logic)
@@ -886,37 +645,7 @@ const MathCalcs = {
 
   // ========================================================================
   // 19. ROUNDING CALCULATOR (Place Values & Banker's Even Rounding)
-  // ========================================================================
-  calcRounding() {
-    const num = parseFloat(document.getElementById('round-num')?.value) || 1234.5678;
-    const decimals = parseInt(document.getElementById('round-decimals')?.value, 10) || 2;
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    const roundWithMode = (x, dec, mode) => {
-      const factor = Math.pow(10, dec);
-      switch (mode) {
-        case 'half_up': return (Math.round(x * factor) / factor).toFixed(Math.max(0, dec));
-        case 'floor': return (Math.floor(x * factor) / factor).toFixed(Math.max(0, dec));
-        case 'ceil': return (Math.ceil(x * factor) / factor).toFixed(Math.max(0, dec));
-        case 'trunc': return (Math.trunc(x * factor) / factor).toFixed(Math.max(0, dec));
-        case 'bankers': {
-          const scaled = x * factor;
-          const floor = Math.floor(scaled);
-          const diff = scaled - floor;
-          if (Math.abs(diff - 0.5) < 1e-9) {
-            return ((floor % 2 === 0 ? floor : floor + 1) / factor).toFixed(Math.max(0, dec));
-          }
-          return (Math.round(scaled) / factor).toFixed(Math.max(0, dec));
-        }
-      }
-    };
-
-    setTxt('res-round-halfup', roundWithMode(num, decimals, 'half_up'));
-    setTxt('res-round-bankers', roundWithMode(num, decimals, 'bankers'));
-    setTxt('res-round-floor', roundWithMode(num, decimals, 'floor'));
-    setTxt('res-round-ceil', roundWithMode(num, decimals, 'ceil'));
-    setTxt('res-round-trunc', roundWithMode(num, decimals, 'trunc'));
-  },
+  
 
   // ========================================================================
   // 20. SCIENTIFIC NOTATION CALCULATOR
@@ -948,48 +677,7 @@ const MathCalcs = {
 
   // ========================================================================
   // 21. BIG NUMBER CALCULATOR (Arbitrary Precision BigInt Engine)
-  // ========================================================================
-  calcBigNumber() {
-    const s1 = (document.getElementById('bignum-1')?.value || '123456789012345678901234567890').trim();
-    const s2 = (document.getElementById('bignum-2')?.value || '987654321098765432109876543210').trim();
-    const op = document.getElementById('bignum-op')?.value || '+';
-
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    try {
-      const b1 = BigInt(s1);
-      const b2 = BigInt(s2);
-      let res = 0n;
-      let extra = '';
-
-      switch (op) {
-        case '+': res = b1 + b2; break;
-        case '-': res = b1 - b2; break;
-        case '*': res = b1 * b2; break;
-        case '/':
-          if (b2 === 0n) throw new Error('Division by zero');
-          res = b1 / b2;
-          extra = `Remainder: ${(b1 % b2).toString()}`;
-          break;
-        case '%':
-          if (b2 === 0n) throw new Error('Modulo by zero');
-          res = b1 % b2;
-          break;
-        case '**':
-          if (b2 < 0n || b2 > 1000n) throw new Error('Exponent must be between 0 and 1000');
-          res = b1 ** b2;
-          break;
-      }
-
-      const resStr = res.toString();
-      setTxt('res-bignum-val', resStr.length > 50 ? resStr.slice(0, 50) + ` ... (${resStr.length} digits total)` : resStr);
-      setTxt('res-bignum-digits', `Digit Count: ${resStr.length} digits`);
-      setTxt('res-bignum-full', resStr);
-      setTxt('res-bignum-extra', extra || 'Arbitrary Precision Guaranteed (No Float Overflow)');
-    } catch (err) {
-      setTxt('res-bignum-val', `Error: ${err.message}`);
-    }
-  },
+  
 
     // Setup listeners
 
@@ -1019,132 +707,7 @@ const MathCalcs = {
     return { k: 1, m: num, str: Math.sqrt(num).toFixed(4) };
   },
 
-  // 21. Triangle Calculator
-  calcTriangle() {
-    const mode = document.getElementById('tri-mode')?.value || 'sss';
-    const sssWrap = document.getElementById('tri-sss-inputs');
-    const sasWrap = document.getElementById('tri-sas-inputs');
-    const bhWrap = document.getElementById('tri-bh-inputs');
-    if (sssWrap) sssWrap.style.display = mode === 'sss' ? 'grid' : 'none';
-    if (sasWrap) sasWrap.style.display = mode === 'sas' ? 'grid' : 'none';
-    if (bhWrap) bhWrap.style.display = mode === 'bh' ? 'grid' : 'none';
-
-    const banner = document.getElementById('tri-formula-banner');
-    const stepBox = document.getElementById('tri-step-box');
-    const elArea = document.getElementById('res-tri-area');
-    const elPerim = document.getElementById('res-tri-perim');
-    const elType = document.getElementById('res-tri-type');
-    const elAngles = document.getElementById('res-tri-angles');
-    const elInR = document.getElementById('res-tri-inradius');
-    const elCircR = document.getElementById('res-tri-circumradius');
-    const elAlt = document.getElementById('res-tri-altitudes');
-
-    const clearOutputs = (msg) => {
-      if (banner) {
-        banner.className = 'equation-preview-box error';
-        banner.textContent = msg;
-      }
-      if (elArea) elArea.textContent = '—';
-      if (elPerim) elPerim.textContent = '—';
-      if (elType) elType.textContent = 'Invalid Geometry';
-      if (elAngles) elAngles.textContent = '—';
-      if (elInR) elInR.textContent = '—';
-      if (elCircR) elCircR.textContent = '—';
-      if (elAlt) elAlt.textContent = '—';
-      if (stepBox) stepBox.textContent = msg;
-    };
-
-    if (mode === 'bh') {
-      const b = parseFloat(document.getElementById('tri-base')?.value) || 0;
-      const h = parseFloat(document.getElementById('tri-height')?.value) || 0;
-      if (b <= 0 || h <= 0) {
-        clearOutputs('⚠️ Base and height must both be positive numbers (> 0).');
-        return;
-      }
-      const area = 0.5 * b * h;
-      if (banner) {
-        banner.className = 'equation-preview-box';
-        banner.innerHTML = `Area = ½ × Base × Height = ½ × ${b} × ${h} = <strong>${area.toFixed(4)}</strong>`;
-      }
-      if (elArea) elArea.textContent = area.toLocaleString(undefined, { maximumFractionDigits: 4 });
-      if (elPerim) elPerim.textContent = 'N/A (Provide 3 sides for perimeter)';
-      if (elType) elType.textContent = 'Base & Height Mode';
-      if (elAngles) elAngles.textContent = 'N/A (Provide 3 sides for angles)';
-      if (elInR) elInR.textContent = 'N/A';
-      if (elCircR) elCircR.textContent = 'N/A';
-      if (elAlt) elAlt.textContent = `hb = ${h.toFixed(2)}`;
-      if (stepBox) stepBox.textContent = `Calculated planar area for base b = ${b} and perpendicular height h = ${h}.`;
-      return;
-    }
-
-    let a = 0, b = 0, c = 0, degA = 0, degB = 0, degC = 0;
-
-    if (mode === 'sas') {
-      a = parseFloat(document.getElementById('tri-sas-a')?.value) || 0;
-      b = parseFloat(document.getElementById('tri-sas-b')?.value) || 0;
-      degC = parseFloat(document.getElementById('tri-sas-c')?.value) || 0;
-      if (a <= 0 || b <= 0 || degC <= 0 || degC >= 180) {
-        clearOutputs('⚠️ Sides must be positive and included angle ∠C must be between 0° and 180°.');
-        return;
-      }
-      const radC = (degC * Math.PI) / 180;
-      c = Math.sqrt(Math.max(0.0001, a * a + b * b - 2 * a * b * Math.cos(radC)));
-    } else {
-      a = parseFloat(document.getElementById('tri-side-a')?.value) || 0;
-      b = parseFloat(document.getElementById('tri-side-b')?.value) || 0;
-      c = parseFloat(document.getElementById('tri-side-c')?.value) || 0;
-      if (a <= 0 || b <= 0 || c <= 0) {
-        clearOutputs('⚠️ All three side lengths must be positive numbers (> 0).');
-        return;
-      }
-      if (a + b <= c || a + c <= b || b + c <= a) {
-        clearOutputs(`⚠️ Triangle Inequality Violated: The sum of any two sides must exceed the third (${a} + ${b} ≤ ${c} or similar).`);
-        return;
-      }
-    }
-
-    const s = (a + b + c) / 2;
-    const area = Math.sqrt(Math.max(0, s * (s - a) * (s - b) * (s - c)));
-    const perimeter = a + b + c;
-
-    // Law of cosines for angles
-    const radA = Math.acos(Math.max(-1, Math.min(1, (b * b + c * c - a * a) / (2 * b * c))));
-    const radB = Math.acos(Math.max(-1, Math.min(1, (a * a + c * c - b * b) / (2 * a * c))));
-    degA = radA * (180 / Math.PI);
-    degB = radB * (180 / Math.PI);
-    degC = 180 - degA - degB;
-
-    const inradius = s > 0 ? area / s : 0;
-    const circumradius = area > 0 ? (a * b * c) / (4 * area) : 0;
-
-    const ha = a > 0 ? (2 * area) / a : 0;
-    const hb = b > 0 ? (2 * area) / b : 0;
-    const hc = c > 0 ? (2 * area) / c : 0;
-
-    // Classification
-    let sideType = 'Scalene';
-    if (Math.abs(a - b) < 1e-4 && Math.abs(b - c) < 1e-4) sideType = 'Equilateral';
-    else if (Math.abs(a - b) < 1e-4 || Math.abs(b - c) < 1e-4 || Math.abs(a - c) < 1e-4) sideType = 'Isosceles';
-
-    let angleType = 'Acute';
-    const maxDeg = Math.max(degA, degB, degC);
-    if (Math.abs(maxDeg - 90) < 0.05) angleType = 'Right';
-    else if (maxDeg > 90) angleType = 'Obtuse';
-
-    if (banner) {
-      banner.className = 'equation-preview-box';
-      banner.innerHTML = `<strong>Heron's Formula:</strong> s = ½(${a.toFixed(2)}+${b.toFixed(2)}+${c.toFixed(2)}) = ${s.toFixed(2)} &nbsp;|&nbsp; Area = <strong>${area.toFixed(4)}</strong>`;
-    }
-    if (elArea) elArea.textContent = area.toLocaleString(undefined, { maximumFractionDigits: 4 });
-    if (elPerim) elPerim.textContent = `${perimeter.toFixed(2)} (s = ${s.toFixed(2)})`;
-    if (elType) elType.textContent = `${sideType} & ${angleType} Triangle`;
-    if (elAngles) elAngles.textContent = `∠A = ${degA.toFixed(2)}°, ∠B = ${degB.toFixed(2)}°, ∠C = ${degC.toFixed(2)}°`;
-    if (elInR) elInR.textContent = `r = ${inradius.toFixed(3)}, R = ${circumradius.toFixed(3)}`;
-    if (elAlt) elAlt.textContent = `ha = ${ha.toFixed(2)}, hb = ${hb.toFixed(2)}, hc = ${hc.toFixed(2)}`;
-    if (stepBox) {
-      stepBox.innerHTML = `Solved with sides a = ${a.toFixed(2)}, b = ${b.toFixed(2)}, c = ${c.toFixed(2)}. Semi-perimeter s = ${s.toFixed(2)}. Altitudes: ha = ${ha.toFixed(2)}, hb = ${hb.toFixed(2)}, hc = ${hc.toFixed(2)}.`;
-    }
-  },
+  
 
   // 22. Volume Calculator
   updateVolumeFields() {
@@ -2275,16 +1838,11 @@ const MathCalcs = {
 
     // Initial calculations
     this.calcPercentages();
-    this.calcQuadratic();
-    this.calcFraction();
     this.calcGcdLcm();
     this.calcStats();
 
     // Initial calls for 15 new Math solvers
     this.calcSci();
-    this.calcRandom();
-    this.calcPercentError();
-    this.calcExponent();
     this.calcBinary();
     this.calcHex();
     this.calcHalfLife();
@@ -2294,12 +1852,9 @@ const MathCalcs = {
     this.calcLCM();
     this.calcGCF();
     this.calcFactor();
-    this.calcRounding();
     this.calcSciNotation();
-    this.calcBigNumber();
 
     // Initial calls for 9 Geometry tools
-    this.calcTriangle();
     this.updateVolumeFields();
     this.calcSlope();
     this.updateAreaFields();
