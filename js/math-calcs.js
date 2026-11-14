@@ -69,7 +69,6 @@ const MathCalcs = {
 
   // 2. QUADRATIC EQUATION SOLVER
   calcQuadratic() {
-    if (!document.getElementById('sec-quad-calc')) return;
     const a = parseFloat(document.getElementById('quad-a')?.value) || 0;
     const b = parseFloat(document.getElementById('quad-b')?.value) || 0;
     const c = parseFloat(document.getElementById('quad-c')?.value) || 0;
@@ -123,7 +122,6 @@ const MathCalcs = {
 
   // 3. FRACTION CALCULATOR
   calcFraction() {
-    if (!document.getElementById('sec-frac-calc')) return;
     const n1 = parseInt(document.getElementById('frac-n1')?.value) || 0;
     const d1 = parseInt(document.getElementById('frac-d1')?.value) || 1;
     const n2 = parseInt(document.getElementById('frac-n2')?.value) || 0;
@@ -412,7 +410,6 @@ const MathCalcs = {
   // 7. RANDOM NUMBER GENERATOR (RNG & Dice Roller)
   // ========================================================================
   calcRandom() {
-    if (!document.getElementById('sec-random-calc')) return;
     const min = parseFloat(document.getElementById('rnd-min')?.value) || 1;
     const max = parseFloat(document.getElementById('rnd-max')?.value) || 100;
     const count = Math.min(100, Math.max(1, parseInt(document.getElementById('rnd-count')?.value, 10) || 1));
@@ -481,13 +478,13 @@ const MathCalcs = {
     if (countInput) countInput.value = count;
     if (typeInput) typeInput.value = 'integer';
     if (dupInput) dupInput.value = 'yes';
+    this.calcRandom();
   },
 
   // ========================================================================
   // 8. PERCENT ERROR CALCULATOR (Experimental vs. Theoretical Accuracy)
   // ========================================================================
   calcPercentError() {
-    if (!document.getElementById('sec-pct-error-calc')) return;
     const exp = parseFloat(document.getElementById('pe-experimental')?.value);
     const theo = parseFloat(document.getElementById('pe-theoretical')?.value);
 
@@ -519,7 +516,6 @@ const MathCalcs = {
   // 9. EXPONENT CALCULATOR (Powers, Negative & Fractional Exponents)
   // ========================================================================
   calcExponent() {
-    if (!document.getElementById('sec-exponent-calc')) return;
     const base = parseFloat(document.getElementById('exp-base')?.value) || 2;
     const power = parseFloat(document.getElementById('exp-power')?.value) || 3;
 
@@ -892,7 +888,6 @@ const MathCalcs = {
   // 19. ROUNDING CALCULATOR (Place Values & Banker's Even Rounding)
   // ========================================================================
   calcRounding() {
-    if (!document.getElementById('sec-rounding-calc')) return;
     const num = parseFloat(document.getElementById('round-num')?.value) || 1234.5678;
     const decimals = parseInt(document.getElementById('round-decimals')?.value, 10) || 2;
     const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
@@ -955,7 +950,6 @@ const MathCalcs = {
   // 21. BIG NUMBER CALCULATOR (Arbitrary Precision BigInt Engine)
   // ========================================================================
   calcBigNumber() {
-    if (!document.getElementById('sec-big-number-calc')) return;
     const s1 = (document.getElementById('bignum-1')?.value || '123456789012345678901234567890').trim();
     const s2 = (document.getElementById('bignum-2')?.value || '987654321098765432109876543210').trim();
     const op = document.getElementById('bignum-op')?.value || '+';
@@ -1027,7 +1021,6 @@ const MathCalcs = {
 
   // 21. Triangle Calculator
   calcTriangle() {
-    if (!document.getElementById('sec-triangle-calc')) return;
     const mode = document.getElementById('tri-mode')?.value || 'sss';
     const sssWrap = document.getElementById('tri-sss-inputs');
     const sasWrap = document.getElementById('tri-sas-inputs');
@@ -2282,11 +2275,16 @@ const MathCalcs = {
 
     // Initial calculations
     this.calcPercentages();
+    this.calcQuadratic();
+    this.calcFraction();
     this.calcGcdLcm();
     this.calcStats();
 
     // Initial calls for 15 new Math solvers
     this.calcSci();
+    this.calcRandom();
+    this.calcPercentError();
+    this.calcExponent();
     this.calcBinary();
     this.calcHex();
     this.calcHalfLife();
@@ -2296,9 +2294,12 @@ const MathCalcs = {
     this.calcLCM();
     this.calcGCF();
     this.calcFactor();
+    this.calcRounding();
     this.calcSciNotation();
+    this.calcBigNumber();
 
     // Initial calls for 9 Geometry tools
+    this.calcTriangle();
     this.updateVolumeFields();
     this.calcSlope();
     this.updateAreaFields();

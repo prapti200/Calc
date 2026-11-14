@@ -1029,33 +1029,6 @@
       ]
     },
 
-    'sec-fraction-calc': {
-      title: 'Fraction Calculator & Simplifier',
-      category: 'Arithmetic & Number Theory',
-      badge: 'Rational Number Arithmetic Standard',
-      tagline: 'Add, subtract, multiply, and divide proper and improper fractions with mixed numbers and lowest-term reduction.',
-      overview: 'The <strong>Fraction Calculator</strong> performs exact rational arithmetic with fractions and mixed numbers. It finds the Least Common Denominator (LCD), converts between improper fractions and mixed numbers, and computes reduced lowest terms with decimal equivalents.',
-      steps: [
-        { title: 'Select Arithmetic Operation', desc: 'Choose Addition (+), Subtraction (-), Multiplication (×), or Division (÷).' },
-        { title: 'Enter Numerators and Denominators', desc: 'Provide whole numbers, numerators, and non-zero denominators for both fractions.' },
-        { title: 'Inspect Reduced Fractions', desc: 'Review the lowest-term simplified fraction, improper fraction form, and precise decimal value.' }
-      ],
-      formulaName: 'Rational Fraction Arithmetic',
-      formulaExpr: '\frac{a}{b} \pm \frac{c}{d} = \frac{ad \pm bc}{bd}, \quad \frac{a}{b} \times \frac{c}{d} = \frac{ac}{bd}, \quad \frac{a}{b} \div \frac{c}{d} = \frac{ad}{bc}',
-      formulaExplanation: 'Fractions are computed using common denominators and reduced using Euclidean Greatest Common Divisor (GCD) division.',
-      example: '<strong>Example:</strong> <code>1/2 + 1/3 = (3 + 2)/6 = 5/6</code> (decimal: <code>0.8333...</code>).',
-      faqs: [
-        {
-          q: 'How does the calculator reduce fractions to lowest terms?',
-          a: 'It computes the Greatest Common Divisor (GCD) of the numerator and denominator using the Euclidean algorithm and divides both by that factor.'
-        },
-        {
-          q: 'Does it support mixed numbers like 2 3/4?',
-          a: 'Yes, mixed numbers are automatically converted to improper fractions for exact calculation and converted back in the final result.'
-        }
-      ]
-    },
-
     'sec-percentage-calc': {
       title: 'Percentage Calculator & Delta Solver',
       category: 'Financial & Mathematical Analysis',
@@ -1075,52 +1048,6 @@
         {
           q: 'What is the difference between percentage change and percentage points?',
           a: 'Percentage change measures the relative proportional change of a value, while percentage points measure the arithmetic difference between two percentage rates.'
-        }
-      ]
-    },
-
-    'sec-random-calc': {
-      title: 'Random Number Generator & Picker',
-      category: 'Probability & Statistics',
-      badge: 'Cryptographic Browser Entropy Standard',
-      tagline: 'Generate true non-repeating or repeating random numbers, coin flips, dice rolls, and custom sample sets.',
-      overview: 'The <strong>Random Number Generator</strong> utilizes hardware-backed browser cryptographic entropy (window.crypto) to generate unbiased, uniform random numbers across any user-defined minimum and maximum range.',
-      steps: [
-        { title: 'Define Range (Min & Max)', desc: 'Enter lower and upper bounds (e.g. 1 to 100).' },
-        { title: 'Set Quantity & Duplicates', desc: 'Choose how many numbers to generate and toggle duplicate exclusion on or off.' },
-        { title: 'Generate & Copy Results', desc: 'Click Generate to produce results instantly; click any number to copy it to clipboard.' }
-      ],
-      formulaName: 'Uniform Discrete Distribution',
-      formulaExpr: 'R = \lfloor U \times (\text{Max} - \text{Min} + 1) \rfloor + \text{Min}',
-      formulaExplanation: 'Where U is a uniform random real number in [0, 1) derived from cryptographic entropy.',
-      example: '<strong>Example:</strong> Generating 5 non-repeating lottery numbers between 1 and 50 produces an evenly distributed, unbiased sample set.',
-      faqs: [
-        {
-          q: 'Are these numbers truly random?',
-          a: 'Yes, they use the Web Cryptography API (crypto.getRandomValues) which accesses high-entropy hardware noise sources in your operating system.'
-        }
-      ]
-    },
-
-    'sec-quadratic-calc': {
-      title: 'Quadratic Equation Solver',
-      category: 'Algebra & Polynomials',
-      badge: 'Algebraic Polynomial Standard',
-      tagline: 'Solve ax² + bx + c = 0 with real and complex imaginary roots, parabola vertex, and discriminant analysis.',
-      overview: 'The <strong>Quadratic Equation Solver</strong> finds exact roots (solutions) for second-degree polynomials ax² + bx + c = 0. It displays discriminant analysis (Δ = b² - 4ac), identifies whether roots are real or complex, and computes parabola vertex coordinates.',
-      steps: [
-        { title: 'Enter Coefficients a, b, and c', desc: 'Input real numbers for quadratic coefficient (a ≠ 0), linear coefficient (b), and constant (c).' },
-        { title: 'Inspect Roots & Discriminant', desc: 'Review the discriminant value (positive = 2 real roots, zero = 1 real root, negative = 2 complex roots).' },
-        { title: 'Examine Parabola Vertex', desc: 'Identify the vertex point (h, k) and axis of symmetry for curve graphing.' }
-      ],
-      formulaName: 'Quadratic Formula & Discriminant',
-      formulaExpr: 'x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}, \quad \Delta = b^2 - 4ac',
-      formulaExplanation: 'Where Δ determines root nature: Δ > 0 yields two distinct real roots, Δ = 0 yields one repeated root, and Δ < 0 yields complex conjugate roots.',
-      example: '<strong>Example:</strong> For <code>x² - 5x + 6 = 0</code>, <code>a=1, b=-5, c=6</code>: Discriminant Δ = 25 - 24 = 1. Roots: <code>x₁ = 3, x₂ = 2</code>.',
-      faqs: [
-        {
-          q: 'What does a negative discriminant mean?',
-          a: 'When Δ < 0, the equation has no real x-intercepts. The solutions exist as a pair of complex conjugate numbers involving the imaginary unit i (where i² = -1).'
         }
       ]
     },
@@ -1210,29 +1137,6 @@
         {
           q: 'What scale is used for letter grades?',
           a: 'Standard 4.0 scale: A=4.0, A-=3.7, B+=3.3, B=3.0, B-=2.7, C+=2.3, C=2.0, D=1.0, F=0.0.'
-        }
-      ]
-    },
-
-    'sec-sales-tax-calc': {
-      title: 'Sales Tax & VAT Calculator',
-      category: 'Commercial Taxation',
-      badge: 'Retail Commercial Tax Standard',
-      tagline: 'Calculate net price, sales tax amount, gross total, and reverse tax-inclusive deductions.',
-      overview: 'The <strong>Sales Tax Calculator</strong> calculates state/local sales tax, GST, or VAT for retail purchases, invoicing, and accounting. It supports both forward calculation (adding tax to net price) and reverse calculation (extracting net price from tax-inclusive total).',
-      steps: [
-        { title: 'Input Net or Total Price', desc: 'Enter purchase amount before tax or total receipt sum.' },
-        { title: 'Specify Sales Tax Rate (%)', desc: 'Enter your applicable state, municipal, or country VAT/GST rate.' },
-        { title: 'Review Exact Figures', desc: 'Inspect exact tax liability, pre-tax net sum, and final gross total.' }
-      ],
-      formulaName: 'Sales Tax & VAT Formulation',
-      formulaExpr: '\text{Tax} = P_{\text{net}} \times \frac{r}{100}, \quad P_{\text{net}} = \frac{P_{\text{gross}}}{1 + \frac{r}{100}}',
-      formulaExplanation: 'Where r is tax percentage rate, P_net is pre-tax price, and P_gross is final total price.',
-      example: '<strong>Example:</strong> A $250 purchase with an 8.25% tax rate yields $20.63 in tax for a total of $270.63.',
-      faqs: [
-        {
-          q: 'Can this calculate tax backwards from a receipt total?',
-          a: 'Yes, select reverse mode or tax-inclusive mode to find out how much of your total receipt was original price vs sales tax.'
         }
       ]
     },

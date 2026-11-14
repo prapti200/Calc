@@ -56,6 +56,9 @@ const FinancialCalcs = {
     this.calcRentVsBuy();
     this.calcIncomeTax();
     this.calcSalary();
+    this.calcMarriageTax();
+    this.calcEstateTax();
+    this.calcPaycheck();
     this.calcAutoRebate();
     this.calcAutoLease();
     this.calcInterestRate();
@@ -69,6 +72,7 @@ const FinancialCalcs = {
     this.calcPayback();
     this.calcPresentValue();
     this.calcFutureValue();
+    this.calcSalesTax();
     this.calcCreditCard();
     this.calcCCPayoff();
     this.calcDebtPayoff();
@@ -2616,7 +2620,6 @@ const FinancialCalcs = {
   // 36. MARRIAGE TAX CALCULATOR (PENALTY VS BONUS)
   // ------------------------------------------------------------------------
   calcMarriageTax() {
-    if (!document.getElementById('sec-marriage-tax-calc')) return;
     const sp1Gross = parseFloat(document.getElementById('mrg-sp1-income')?.value) || 0;
     const sp1Pretax = parseFloat(document.getElementById('mrg-sp1-pretax')?.value) || 0;
     const sp2Gross = parseFloat(document.getElementById('mrg-sp2-income')?.value) || 0;
@@ -2798,7 +2801,6 @@ const FinancialCalcs = {
   // 37. ESTATE TAX (DEATH TAX) CALCULATOR
   // ------------------------------------------------------------------------
   calcEstateTax() {
-    if (!document.getElementById('sec-estate-tax-calc')) return;
     const realEstate = parseFloat(document.getElementById('est-real-estate')?.value) || 0;
     const investments = parseFloat(document.getElementById('est-investments')?.value) || 0;
     const cash = parseFloat(document.getElementById('est-cash')?.value) || 0;
@@ -2947,7 +2949,6 @@ const FinancialCalcs = {
   // 38. TAKE-HOME PAYCHECK & NET PAY STUB CALCULATOR
   // ------------------------------------------------------------------------
   calcPaycheck() {
-    if (!document.getElementById('sec-paycheck-calc')) return;
     const grossPay = parseFloat(document.getElementById('chk-gross-pay')?.value) || 0;
     const freqPeriods = parseFloat(document.getElementById('chk-frequency')?.value) || 26;
     const status = document.getElementById('chk-filing-status')?.value || 'single';
@@ -4602,7 +4603,6 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   staxMode: 'add',
   calcSalesTax() {
-    if (!document.getElementById('sec-sales-tax-calc')) return;
     const el = id => document.getElementById(id);
     const amount = parseFloat(el('stax-amount')?.value) || 0;
     const stateRate = parseFloat(el('stax-state-rate')?.value) || 0;
@@ -6101,6 +6101,7 @@ const FinancialCalcs = {
         if (sp2Range) sp2Range.value = sp2;
         document.querySelectorAll('.mrg-preset-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        this.calcMarriageTax();
       });
     });
 
@@ -6124,6 +6125,7 @@ const FinancialCalcs = {
         }
         document.querySelectorAll('.est-preset-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        this.calcEstateTax();
       });
     });
 
@@ -6152,6 +6154,7 @@ const FinancialCalcs = {
         }
         document.querySelectorAll('.chk-preset-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        this.calcPaycheck();
       });
     });
 
@@ -6459,6 +6462,7 @@ const FinancialCalcs = {
         if (amtLabel) {
           amtLabel.textContent = this.staxMode === 'add' ? 'Base Purchase Price (Pre-Tax)' : 'Total Gross Amount (Tax-Inclusive)';
         }
+        this.calcSalesTax();
       });
     });
     this.syncInputSlider('stax-state-rate', 'stax-state-rate-range', () => this.calcSalesTax());
@@ -6805,6 +6809,9 @@ const FinancialCalcs = {
     this.calcRentVsBuy();
     this.calcIncomeTax();
     this.calcSalary();
+    this.calcMarriageTax();
+    this.calcEstateTax();
+    this.calcPaycheck();
     this.calcAutoRebate();
     this.calcAutoLease();
     this.calcInterestRate();
@@ -6818,6 +6825,7 @@ const FinancialCalcs = {
     this.calcPayback();
     this.calcPresentValue();
     this.calcFutureValue();
+    this.calcSalesTax();
     this.calcCreditCard();
     this.calcCCPayoff();
     this.calcDebtPayoff();
