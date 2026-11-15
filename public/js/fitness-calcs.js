@@ -111,80 +111,6 @@ const FitnessCalcs = {
     return 'Capricorn ♑';
   },
 
-
-  // 1. BMI CALCULATOR & GAUGE
-  calcBMI() {
-    let weightKg = 0;
-    let heightCm = 0;
-
-    if (this.bmiUnit === 'metric') {
-      weightKg = parseFloat(document.getElementById('bmi-weight')?.value) || 0;
-      heightCm = parseFloat(document.getElementById('bmi-height')?.value) || 0;
-    } else {
-      const weightLbs = parseFloat(document.getElementById('bmi-weight-lbs')?.value) || 0;
-      const heightFt = parseFloat(document.getElementById('bmi-height-ft')?.value) || 0;
-      const heightIn = parseFloat(document.getElementById('bmi-height-in')?.value) || 0;
-
-      weightKg = weightLbs * 0.45359237;
-      heightCm = (heightFt * 12 + heightIn) * 2.54;
-    }
-
-    if (weightKg <= 0 || heightCm <= 0) return;
-
-    const heightM = heightCm / 100;
-    const bmi = weightKg / (heightM * heightM);
-    const roundedBMI = Math.round(bmi * 10) / 10;
-
-    let category = '';
-    let categoryColor = '';
-    let pointerPercent = 0;
-
-    if (roundedBMI < 18.5) {
-      category = 'Underweight';
-      categoryColor = '#38bdf8';
-      pointerPercent = Math.max(5, (roundedBMI / 18.5) * 20);
-    } else if (roundedBMI < 25) {
-      category = 'Normal Weight';
-      categoryColor = '#10b981';
-      pointerPercent = 20 + ((roundedBMI - 18.5) / (24.9 - 18.5)) * 30;
-    } else if (roundedBMI < 30) {
-      category = 'Overweight';
-      categoryColor = '#f59e0b';
-      pointerPercent = 50 + ((roundedBMI - 25) / (29.9 - 25)) * 25;
-    } else {
-      category = 'Obese';
-      categoryColor = '#ef4444';
-      pointerPercent = Math.min(95, 75 + ((roundedBMI - 30) / 15) * 20);
-    }
-
-    // Healthy weight range (BMI 18.5 - 24.9)
-    const minHealthyKg = 18.5 * (heightM * heightM);
-    const maxHealthyKg = 24.9 * (heightM * heightM);
-
-    let healthyRangeStr = '';
-    if (this.bmiUnit === 'metric') {
-      healthyRangeStr = `${minHealthyKg.toFixed(1)} kg - ${maxHealthyKg.toFixed(1)} kg`;
-    } else {
-      healthyRangeStr = `${(minHealthyKg * 2.20462).toFixed(1)} lbs - ${(maxHealthyKg * 2.20462).toFixed(1)} lbs`;
-    }
-
-    // Update UI elements
-    const resBmiEl = document.getElementById('res-bmi-val');
-    const resCatEl = document.getElementById('res-bmi-category');
-    const resRangeEl = document.getElementById('res-bmi-range');
-    const pointer = document.getElementById('bmi-pointer');
-    const pointerTag = document.getElementById('bmi-pointer-tag');
-
-    if (resBmiEl) resBmiEl.textContent = roundedBMI.toFixed(1);
-    if (resCatEl) {
-      resCatEl.textContent = category;
-      resCatEl.style.color = categoryColor;
-    }
-    if (resRangeEl) resRangeEl.textContent = healthyRangeStr;
-    if (pointer) pointer.style.left = `${pointerPercent}%`;
-    if (pointerTag) pointerTag.textContent = roundedBMI.toFixed(1);
-  },
-
   // 2. DEDICATED CALORIE CALCULATOR & MACRO PLANNER
   calcCalorie() {
     const gender = this.calGender || 'male';
@@ -359,32 +285,6 @@ const FitnessCalcs = {
     setVal('res-muscle-gain', `${tdee + 350} kcal`);
   },
 
-  // 5. IDEAL BODY WEIGHT (IBW) CALCULATOR
-  calcIBW() {
-    const heightCm = parseFloat(document.getElementById('ibw-height')?.value) || 175;
-    const gender = document.getElementById('ibw-gender')?.value || 'male';
-
-    if (heightCm <= 0) return;
-
-    const heightInches = heightCm / 2.54;
-    const inchesOver60 = Math.max(0, heightInches - 60);
-
-    // Devine Formula (1974)
-    let devine = gender === 'male' ? 50 + 2.3 * inchesOver60 : 45.5 + 2.3 * inchesOver60;
-    // Robinson Formula (1983)
-    let robinson = gender === 'male' ? 52 + 1.9 * inchesOver60 : 49 + 1.7 * inchesOver60;
-    // Miller Formula (1983)
-    let miller = gender === 'male' ? 56.2 + 1.41 * inchesOver60 : 53.1 + 1.36 * inchesOver60;
-    // Hamwi Formula (1964)
-    let hamwi = gender === 'male' ? 48 + 2.7 * inchesOver60 : 45.5 + 2.2 * inchesOver60;
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    setVal('res-ibw-devine', `${devine.toFixed(1)} kg (${(devine * 2.20462).toFixed(1)} lbs)`);
-    setVal('res-ibw-robinson', `${robinson.toFixed(1)} kg`);
-    setVal('res-ibw-miller', `${miller.toFixed(1)} kg`);
-    setVal('res-ibw-hamwi', `${hamwi.toFixed(1)} kg`);
-  },
-
   // 6. PACE CALCULATOR (Running, Walking, Cycling & Finish Predictions)
   calcPace() {
     const mode = this.paceMode || 'pace';
@@ -455,215 +355,6 @@ const FitnessCalcs = {
       const calcMi = calcKm / 1.609344;
       setVal('res-pace-primary', `${calcKm.toFixed(2)} km`);
       setVal('res-pace-alt', `${calcMi.toFixed(2)} miles`);
-    }
-  },
-
-  // 7. ARMY BODY FAT CALCULATOR (AR 600-9 ABCP Tape Test)
-  calcArmyBodyFat() {
-    const gender = this.armyGender || 'male';
-    const ageGroup = document.getElementById('army-age-group')?.value || '21-27';
-    const unit = this.armyUnit || 'imperial';
-
-    let heightIn = 0;
-    let neckIn = 0;
-    let abdomenIn = 0;
-    let waistIn = 0;
-    let hipIn = 0;
-    let weightLbs = 0;
-
-    if (unit === 'imperial') {
-      heightIn = parseFloat(document.getElementById('army-height-in')?.value) || 70;
-      neckIn = parseFloat(document.getElementById('army-neck-in')?.value) || 16;
-      abdomenIn = parseFloat(document.getElementById('army-abdomen-in')?.value) || 34;
-      waistIn = parseFloat(document.getElementById('army-waist-in')?.value) || 28;
-      hipIn = parseFloat(document.getElementById('army-hip-in')?.value) || 38;
-      weightLbs = parseFloat(document.getElementById('army-weight-lbs')?.value) || 180;
-    } else {
-      const heightCm = parseFloat(document.getElementById('army-height-cm')?.value) || 178;
-      const neckCm = parseFloat(document.getElementById('army-neck-cm')?.value) || 40.5;
-      const abdomenCm = parseFloat(document.getElementById('army-abdomen-cm')?.value) || 86.5;
-      const waistCm = parseFloat(document.getElementById('army-waist-cm')?.value) || 71;
-      const hipCm = parseFloat(document.getElementById('army-hip-cm')?.value) || 96.5;
-      const weightKg = parseFloat(document.getElementById('army-weight-kg')?.value) || 81.6;
-
-      heightIn = heightCm / 2.54;
-      neckIn = neckCm / 2.54;
-      abdomenIn = abdomenCm / 2.54;
-      waistIn = waistCm / 2.54;
-      hipIn = hipCm / 2.54;
-      weightLbs = weightKg * 2.20462;
-    }
-
-    if (heightIn <= 0 || neckIn <= 0) return;
-
-    let bodyFatPct = 0;
-    if (gender === 'male') {
-      const diff = abdomenIn - neckIn;
-      if (diff <= 0) return;
-      bodyFatPct = 86.010 * Math.log10(diff) - 70.041 * Math.log10(heightIn) + 36.76;
-    } else {
-      const sumDiff = (waistIn + hipIn) - neckIn;
-      if (sumDiff <= 0) return;
-      bodyFatPct = 163.205 * Math.log10(sumDiff) - 97.684 * Math.log10(heightIn) - 78.387;
-    }
-
-    bodyFatPct = Math.round(bodyFatPct * 10) / 10;
-    bodyFatPct = Math.max(3, Math.min(60, bodyFatPct));
-
-    const maxLimits = {
-      male: { '17-20': 20, '21-27': 22, '28-39': 24, '40+': 26 },
-      female: { '17-20': 30, '21-27': 32, '28-39': 34, '40+': 36 }
-    };
-    const maxAllowed = maxLimits[gender][ageGroup] || 22;
-    const meetsStandard = bodyFatPct <= maxAllowed;
-
-    const fatLbs = Math.round(weightLbs * (bodyFatPct / 100) * 10) / 10;
-    const leanLbs = Math.round((weightLbs - fatLbs) * 10) / 10;
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    setVal('res-army-bf-pct', `${bodyFatPct.toFixed(1)}%`);
-    setVal('res-army-max-allowable', `${maxAllowed}% (Age ${ageGroup})`);
-    setVal('res-army-fat-mass', `${fatLbs} lbs (${(fatLbs * 0.453592).toFixed(1)} kg)`);
-    setVal('res-army-lean-mass', `${leanLbs} lbs (${(leanLbs * 0.453592).toFixed(1)} kg)`);
-
-    const resStatus = document.getElementById('res-army-status');
-    if (resStatus) {
-      if (meetsStandard) {
-        resStatus.className = 'army-compliance-banner army-pass';
-        resStatus.innerHTML = `✓ MEETS US ARMY AR 600-9 STANDARD (${(maxAllowed - bodyFatPct).toFixed(1)}% under maximum allowable)`;
-      } else {
-        const excess = (bodyFatPct - maxAllowed).toFixed(1);
-        const excessLbs = Math.round(weightLbs * (excess / 100));
-        resStatus.className = 'army-compliance-banner army-fail';
-        resStatus.innerHTML = `⚠️ EXCEEDS ARMY LIMIT BY ${excess}% (Needs ~${excessLbs} lbs fat reduction)`;
-      }
-    }
-  },
-
-  // 8. LEAN BODY MASS (LBM) CALCULATOR
-  calcLBM() {
-    const gender = this.lbmGender || 'male';
-    const unit = this.lbmUnit || 'metric';
-    let w = parseFloat(document.getElementById('lbm-weight')?.value) || 75;
-    let h = parseFloat(document.getElementById('lbm-height')?.value) || 178;
-
-    if (unit === 'imperial') {
-      const wLbs = parseFloat(document.getElementById('lbm-weight-lbs')?.value) || 165;
-      const hFt = parseFloat(document.getElementById('lbm-height-ft')?.value) || 5;
-      const hIn = parseFloat(document.getElementById('lbm-height-in')?.value) || 10;
-      w = wLbs * 0.45359237;
-      h = (hFt * 12 + hIn) * 2.54;
-    }
-
-    if (w <= 0 || h <= 0) return;
-
-    let boer = gender === 'male' ? (0.407 * w) + (0.267 * h) - 19.2 : (0.252 * w) + (0.473 * h) - 48.3;
-    let james = gender === 'male' ? (1.1 * w) - (128 * Math.pow(w / h, 2)) : (1.07 * w) - (148 * Math.pow(w / h, 2));
-    let hume = gender === 'male' ? (0.32810 * w) + (0.33929 * h) - 29.5336 : (0.29569 * w) + (0.41813 * h) - 43.2933;
-
-    const avgLBM = (boer + james + hume) / 3;
-    const fatMass = Math.max(0, w - avgLBM);
-    const leanPct = (avgLBM / w) * 100;
-    const fatPct = (fatMass / w) * 100;
-
-    const hM = h / 100;
-    const ffmi = avgLBM / (hM * hM);
-    const normFfmi = ffmi + 6.1 * (1.8 - hM);
-
-    let ffmiTier = 'Average Muscularity';
-    if (gender === 'male') {
-      if (normFfmi < 18) ffmiTier = 'Below Average';
-      else if (normFfmi < 20) ffmiTier = 'Average Muscularity';
-      else if (normFfmi < 22) ffmiTier = 'Above Average / Athletic';
-      else if (normFfmi < 24) ffmiTier = 'Excellent / Highly Muscular';
-      else ffmiTier = 'Superior / Elite (Natural Limit)';
-    } else {
-      if (normFfmi < 15) ffmiTier = 'Below Average';
-      else if (normFfmi < 17) ffmiTier = 'Average Muscularity';
-      else if (normFfmi < 19) ffmiTier = 'Athletic';
-      else ffmiTier = 'Elite Muscularity';
-    }
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    setVal('res-lbm-val', `${avgLBM.toFixed(1)} kg (${(avgLBM * 2.20462).toFixed(1)} lbs)`);
-    setVal('res-lbm-fat-mass', `${fatMass.toFixed(1)} kg (${(fatMass * 2.20462).toFixed(1)} lbs)`);
-    setVal('res-lbm-pct', `${leanPct.toFixed(1)}%`);
-    setVal('res-lbm-bf-pct', `${fatPct.toFixed(1)}%`);
-    setVal('res-lbm-ffmi', `${normFfmi.toFixed(1)} (${ffmiTier})`);
-
-    setVal('res-lbm-boer', `${boer.toFixed(1)} kg`);
-    setVal('res-lbm-james', `${james.toFixed(1)} kg`);
-    setVal('res-lbm-hume', `${hume.toFixed(1)} kg`);
-  },
-
-  // 9. HEALTHY WEIGHT CALCULATOR (WHO BMI & Hamwi Frame Adjustments)
-  calcHealthyWeight() {
-    const gender = this.hwGender || 'male';
-    const unit = this.hwUnit || 'metric';
-    const frame = document.getElementById('hw-frame')?.value || 'medium';
-
-    let hCm = parseFloat(document.getElementById('hw-height')?.value) || 175;
-    let currWKg = parseFloat(document.getElementById('hw-weight')?.value) || 75;
-
-    if (unit === 'imperial') {
-      const hFt = parseFloat(document.getElementById('hw-height-ft')?.value) || 5;
-      const hIn = parseFloat(document.getElementById('hw-height-in')?.value) || 9;
-      const wLbs = parseFloat(document.getElementById('hw-weight-lbs')?.value) || 165;
-      hCm = (hFt * 12 + hIn) * 2.54;
-      currWKg = wLbs * 0.45359237;
-    }
-
-    if (hCm <= 0 || currWKg <= 0) return;
-
-    const hM = hCm / 100;
-    const minKg = 18.5 * (hM * hM);
-    const maxKg = 24.9 * (hM * hM);
-
-    const inOver5ft = Math.max(0, (hCm - 152.4) / 2.54);
-    let hamwi = gender === 'male' ? (48.0 + 2.7 * inOver5ft) : (45.5 + 2.2 * inOver5ft);
-
-    if (frame === 'small') hamwi *= 0.90;
-    else if (frame === 'large') hamwi *= 1.10;
-
-    let deltaMsg = '';
-    let deltaColor = '#10b981';
-    let gaugePct = 50;
-
-    if (currWKg < minKg) {
-      const diffKg = (minKg - currWKg).toFixed(1);
-      const diffLbs = (diffKg * 2.20462).toFixed(1);
-      deltaMsg = `Under healthy range: Gain ${diffKg} kg (${diffLbs} lbs) to reach normal BMI 18.5`;
-      deltaColor = '#38bdf8';
-      gaugePct = Math.max(5, (currWKg / minKg) * 25);
-    } else if (currWKg > maxKg) {
-      const diffKg = (currWKg - maxKg).toFixed(1);
-      const diffLbs = (diffKg * 2.20462).toFixed(1);
-      deltaMsg = `Above healthy range: Lose ${diffKg} kg (${diffLbs} lbs) to reach normal BMI 24.9`;
-      deltaColor = '#ef4444';
-      gaugePct = Math.min(95, 75 + ((currWKg - maxKg) / maxKg) * 20);
-    } else {
-      deltaMsg = `✓ You are in the clinical healthy weight range (BMI ${(currWKg / (hM * hM)).toFixed(1)})`;
-      deltaColor = '#10b981';
-      gaugePct = 25 + ((currWKg - minKg) / (maxKg - minKg)) * 50;
-    }
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    const minLbs = (minKg * 2.20462).toFixed(1);
-    const maxLbs = (maxKg * 2.20462).toFixed(1);
-    const hamwiLbs = (hamwi * 2.20462).toFixed(1);
-
-    setVal('res-hw-range', `${minKg.toFixed(1)} – ${maxKg.toFixed(1)} kg (${minLbs} – ${maxLbs} lbs)`);
-    setVal('res-hw-hamwi', `${hamwi.toFixed(1)} kg (${hamwiLbs} lbs)`);
-
-    const deltaEl = document.getElementById('res-hw-delta');
-    if (deltaEl) {
-      deltaEl.textContent = deltaMsg;
-      deltaEl.style.color = deltaColor;
-    }
-
-    const pointer = document.getElementById('hw-gauge-pointer');
-    if (pointer) {
-      pointer.style.left = `${gaugePct}%`;
     }
   },
 
@@ -1765,76 +1456,6 @@ const FitnessCalcs = {
   },
 
   // ========================================================================
-  // 27. BODY TYPE CALCULATOR (Heath-Carter Somatotype & Frame Index)
-  // ========================================================================
-  calcBodyType() {
-    const isMale = this.btGender === 'male';
-    const isMetric = this.btUnit === 'metric';
-    let heightIn = 70;
-    if (isMetric) {
-      const cm = parseFloat(document.getElementById('bt-height')?.value) || 178;
-      heightIn = cm / 2.54;
-    } else {
-      heightIn = parseFloat(document.getElementById('bt-height-in')?.value) || 70;
-    }
-
-    let wristIn = 7.0;
-    if (isMetric) {
-      const cm = parseFloat(document.getElementById('bt-wrist')?.value) || 17.5;
-      wristIn = cm / 2.54;
-    } else {
-      wristIn = parseFloat(document.getElementById('bt-wrist-in')?.value) || 7.0;
-    }
-
-    const build = document.getElementById('bt-build')?.value || 'athletic';
-    const gain = document.getElementById('bt-gain')?.value || 'easy_muscle';
-
-    // Frame size ratio r = Height / Wrist
-    const r = heightIn / wristIn;
-    let frame = 'Medium Frame';
-    if (isMale) {
-      if (r > 10.4) frame = 'Small Frame (Ectomorphic Skeleton)';
-      else if (r < 9.6) frame = 'Large Frame (Endomorphic Skeleton)';
-      else frame = 'Medium Frame (Mesomorphic Skeleton)';
-    } else {
-      if (r > 10.9) frame = 'Small Frame (Ectomorphic Skeleton)';
-      else if (r < 9.9) frame = 'Large Frame (Endomorphic Skeleton)';
-      else frame = 'Medium Frame (Mesomorphic Skeleton)';
-    }
-
-    let somatotype = 'Mesomorph';
-    let desc = '';
-    let nutrition = '';
-    let training = '';
-
-    if (build === 'narrow' || (gain === 'hard_gain' && build !== 'stocky')) {
-      somatotype = 'Ectomorph';
-      desc = 'Lean, linear build with longer limbs and high metabolic rate. Fast thyroid and sympathetic dominance.';
-      nutrition = 'High Carbohydrates (50–55%), Moderate Protein (25–30%), Moderate Fat (20%). Caloric surplus recommended for weight gains.';
-      training = 'Heavy compound resistance training (3–4 days/wk), long rest periods (2–3 mins), limit excessive endurance cardio to conserve mass.';
-    } else if (build === 'stocky' || gain === 'easy_fat') {
-      somatotype = 'Endomorph';
-      desc = 'Solid, broad frame with natural tendency to store energy and build strong lower-body power. Slower carbohydrate tolerance.';
-      nutrition = 'Moderate-to-Low Carbs (25–30%), High Protein (35%), Healthy Fats (35–40%). Strict adherence to whole unrefined foods.';
-      training = 'High-density strength circuits, HIIT conditioning (2–3x/wk), daily step goal (10k+ steps), shorter rest periods (45–60s).';
-    } else {
-      somatotype = 'Mesomorph';
-      desc = 'Naturally muscular V-taper build with optimal testosterone-to-cortisol balance. Rapid recovery and athletic efficiency.';
-      nutrition = 'Balanced Macronutrients (40% Carb, 30% Protein, 30% Fat). Clean fuels around workouts for lean mass maintenance.';
-      training = 'Periodized strength and hypertrophy training (4–5 days/wk) combined with moderate cardiovascular intervals.';
-    }
-
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    setTxt('res-bt-type', somatotype);
-    setTxt('res-bt-frame', frame);
-    setTxt('res-bt-ratio', `Height-to-Wrist Ratio: ${r.toFixed(2)}`);
-    setTxt('res-bt-desc', desc);
-    setTxt('res-bt-nutrition', nutrition);
-    setTxt('res-bt-training', training);
-  },
-
-  // ========================================================================
   // 28. BODY SURFACE AREA (BSA) CALCULATOR (Mosteller, Du Bois, Haycock)
   // ========================================================================
   calcBSA() {
@@ -1983,25 +1604,7 @@ const FitnessCalcs = {
     // Setup all event listeners
   init() {
     // 1. BMI Unit Toggle & Inputs
-    document.querySelectorAll('.bmi-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.bmi-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.bmiUnit = btn.dataset.unit;
-        
-        const metricInputs = document.getElementById('bmi-metric-inputs');
-        const imperialInputs = document.getElementById('bmi-imperial-inputs');
-        if (metricInputs && imperialInputs) {
-          metricInputs.style.display = this.bmiUnit === 'metric' ? 'flex' : 'none';
-          imperialInputs.style.display = this.bmiUnit === 'imperial' ? 'flex' : 'none';
-        }
-        this.calcBMI();
-      });
-    });
-
-    ['bmi-weight', 'bmi-height', 'bmi-weight-lbs', 'bmi-height-ft', 'bmi-height-in'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcBMI());
-    });
+    
 
     // 2. Calorie Calculator Unit & Inputs
     document.querySelectorAll('.cal-gender-btn').forEach(btn => {
@@ -2066,11 +1669,7 @@ const FitnessCalcs = {
       document.getElementById(id)?.addEventListener('change', () => this.calcBMR());
     });
 
-    // 5. IBW Inputs
-    ['ibw-height', 'ibw-gender'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcIBW());
-      document.getElementById(id)?.addEventListener('change', () => this.calcIBW());
-    });
+    
 
     // 6. Pace Calculator Controls
     document.querySelectorAll('.pace-mode-btn').forEach(btn => {
@@ -2118,102 +1717,7 @@ const FitnessCalcs = {
     });
 
     // 7. Army Body Fat Controls
-    document.querySelectorAll('.army-gender-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.army-gender-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.armyGender = btn.dataset.gender;
-
-        const maleFields = document.getElementById('army-male-fields');
-        const femaleFields = document.getElementById('army-female-fields');
-        if (maleFields && femaleFields) {
-          maleFields.style.display = this.armyGender === 'male' ? 'block' : 'none';
-          femaleFields.style.display = this.armyGender === 'female' ? 'block' : 'none';
-        }
-        this.calcArmyBodyFat();
-      });
-    });
-
-    document.querySelectorAll('.army-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.army-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.armyUnit = btn.dataset.unit;
-
-        const imp = document.getElementById('army-imperial-inputs');
-        const met = document.getElementById('army-metric-inputs');
-        if (imp && met) {
-          imp.style.display = this.armyUnit === 'imperial' ? 'block' : 'none';
-          met.style.display = this.armyUnit === 'metric' ? 'block' : 'none';
-        }
-        this.calcArmyBodyFat();
-      });
-    });
-
-    ['army-age-group', 'army-height-in', 'army-neck-in', 'army-abdomen-in', 'army-waist-in', 'army-hip-in', 'army-weight-lbs',
-     'army-height-cm', 'army-neck-cm', 'army-abdomen-cm', 'army-waist-cm', 'army-hip-cm', 'army-weight-kg'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcArmyBodyFat());
-      document.getElementById(id)?.addEventListener('change', () => this.calcArmyBodyFat());
-    });
-
-    // 8. Lean Body Mass Controls
-    document.querySelectorAll('.lbm-gender-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.lbm-gender-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.lbmGender = btn.dataset.gender;
-        this.calcLBM();
-      });
-    });
-
-    document.querySelectorAll('.lbm-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.lbm-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.lbmUnit = btn.dataset.unit;
-        const met = document.getElementById('lbm-metric-inputs');
-        const imp = document.getElementById('lbm-imperial-inputs');
-        if (met && imp) {
-          met.style.display = this.lbmUnit === 'metric' ? 'flex' : 'none';
-          imp.style.display = this.lbmUnit === 'imperial' ? 'flex' : 'none';
-        }
-        this.calcLBM();
-      });
-    });
-
-    ['lbm-weight', 'lbm-height', 'lbm-weight-lbs', 'lbm-height-ft', 'lbm-height-in'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcLBM());
-    });
-
-    // 9. Healthy Weight Controls
-    document.querySelectorAll('.hw-gender-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.hw-gender-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.hwGender = btn.dataset.gender;
-        this.calcHealthyWeight();
-      });
-    });
-
-    document.querySelectorAll('.hw-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.hw-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.hwUnit = btn.dataset.unit;
-        const met = document.getElementById('hw-metric-inputs');
-        const imp = document.getElementById('hw-imperial-inputs');
-        if (met && imp) {
-          met.style.display = this.hwUnit === 'metric' ? 'flex' : 'none';
-          imp.style.display = this.hwUnit === 'imperial' ? 'flex' : 'none';
-        }
-        this.calcHealthyWeight();
-      });
-    });
-
-    ['hw-height', 'hw-weight', 'hw-height-ft', 'hw-height-in', 'hw-weight-lbs', 'hw-frame'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcHealthyWeight());
-      document.getElementById(id)?.addEventListener('change', () => this.calcHealthyWeight());
-    });
+    
 
     // 10. Calories Burned Controls
     document.querySelectorAll('.cb-unit-btn').forEach(btn => {
@@ -2638,38 +2142,7 @@ const FitnessCalcs = {
     });
 
     // 27. Body Type Calculator Event Listeners
-    document.querySelectorAll('.bt-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.bt-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.btUnit = btn.dataset.unit;
-        const met = document.getElementById('bt-inputs-metric');
-        const imp = document.getElementById('bt-inputs-imperial');
-        if (met && imp) {
-          met.style.display = this.btUnit === 'metric' ? 'block' : 'none';
-          imp.style.display = this.btUnit === 'imperial' ? 'block' : 'none';
-        }
-        this.calcBodyType();
-      });
-    });
-
-    document.querySelectorAll('.bt-gender-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.bt-gender-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.btGender = btn.dataset.gender;
-        this.calcBodyType();
-      });
-    });
-
-    syncSlider('bt-height-range', 'bt-height', 'bt-height-val', 'cm', () => this.calcBodyType());
-    syncSlider('bt-wrist-range', 'bt-wrist', 'bt-wrist-val', 'cm', () => this.calcBodyType());
-    syncSlider('bt-height-in-range', 'bt-height-in', 'bt-height-in-val', 'in', () => this.calcBodyType());
-    syncSlider('bt-wrist-in-range', 'bt-wrist-in', 'bt-wrist-in-val', 'in', () => this.calcBodyType());
-
-    ['bt-build', 'bt-gain'].forEach(id => {
-      document.getElementById(id)?.addEventListener('change', () => this.calcBodyType());
-    });
+    
 
     // 28. Body Surface Area (BSA) Event Listeners
     document.querySelectorAll('.bsa-unit-btn').forEach(btn => {
@@ -2739,15 +2212,10 @@ const FitnessCalcs = {
     });
 
     // Initial calculations across all tools
-    this.calcBMI();
     this.calcCalorie();
     this.calcBodyFat();
     this.calcBMR();
-    this.calcIBW();
     this.calcPace();
-    this.calcArmyBodyFat();
-    this.calcLBM();
-    this.calcHealthyWeight();
     this.calcCaloriesBurned();
     this.calcOneRepMax();
     this.calcTargetHeartRate();
@@ -2769,7 +2237,6 @@ const FitnessCalcs = {
     this.calcFat();
     this.calcTDEE();
     this.calcGFR();
-    this.calcBodyType();
     this.calcBSA();
     this.calcBAC();
   },
@@ -2840,7 +2307,7 @@ const FitnessCalcs = {
       } else if (filterKey === 'body') {
         badge.textContent = `${visibleCount} Body & Frame Calculators`;
       } else if (filterKey === 'all') {
-        badge.textContent = '29 Clinical, Maternal & Fitness Tools';
+        badge.textContent = '23 Clinical, Maternal & Fitness Tools';
       } else {
         badge.textContent = `${visibleCount} Calculators`;
       }

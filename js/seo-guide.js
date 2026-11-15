@@ -76,16 +76,6 @@
         }
       ]
     },
-        {
-          q: 'When does Private Mortgage Insurance (PMI) stop?',
-          a: 'Under the federal Homeowners Protection Act, conventional lenders are required to automatically cancel PMI once your remaining loan balance drops to 78% of the original home purchase value.'
-        },
-        {
-          q: 'Are home calculation details private?',
-          a: 'Yes. 100% of calculations occur in your web browser. No property address, salary, or loan numbers are sent to any server.'
-        }
-      ]
-    },
 
     'sec-401k-calc': {
       title: '401(k) Retirement Savings Planner',
@@ -114,58 +104,8 @@
         }
       ]
     },
-        {
-          q: 'How does an interest calculator from date to date calculate elapsed time?',
-          a: 'An interest calculator from date to date takes your start date and end date, counts the exact calendar days, and converts them to annual fractions using the standard Actual/365 or Banker\'s 360-day rule.'
-        },
-        {
-          q: 'How do I use this tool as a simple interest calculator from date to date?',
-          a: 'Select "From Date to Date" mode, enter your loan dates, and choose "Simple Interest". The tool applies linear non-compounding interest across the exact calendar span.'
-        },
-        {
-          q: 'How does a compound interest calculator India calculate bank FD returns?',
-          a: 'In India, commercial banks (SBI, HDFC, ICICI) and post offices compound Fixed Deposits quarterly (4 times per year). Choose "Compound Interest" with Quarterly frequency for exact Indian banking calculations.'
-        },
-        {
-          q: 'Can this bank interest calculator compute savings account interest?',
-          a: 'Yes. Commercial banks calculate interest on daily closing balances. You can select Daily compounding (365/yr) or calculate exact simple interest for the number of days in the quarter.'
-        },
-        {
-          q: 'Is this simple interest calculator free to use online?',
-          a: 'Yes! It runs 100% in your browser without downloads or sign-ups, keeping your financial figures completely private.'
-        }
-      ]
-    },
 
-    'sec-bmi-calc': {
-      title: 'Body Mass Index (BMI) & Needle Gauge',
-      category: 'Health, Clinical & Anthropometry',
-      badge: 'WHO Clinical Standard',
-      tagline: 'Evaluate clinical BMI classifications across Underweight, Normal, Overweight, and Obese tiers with interactive needle gauge and healthy weight ranges.',
-      overview: '<strong>Body Mass Index (BMI)</strong> is an internationally recognized anthropometric metric adopted by the World Health Organization (WHO) and the Centers for Disease Control and Prevention (CDC) to screen body weight categories against height.',
-      steps: [
-        { title: 'Select Metric or Imperial Units', desc: 'Toggle between kilograms/centimeters and pounds/inches.' },
-        { title: 'Enter Weight & Height', desc: 'Input your precise height and current body weight.' },
-        { title: 'Read Needle Gauge Tier', desc: 'Inspect your exact clinical category: Underweight (<18.5), Normal (18.5–24.9), Overweight (25–29.9), or Obese (≥30).' },
-        { title: 'Review Healthy Target Weight Range', desc: 'Identify your target weight boundary corresponding to a normal BMI range of 18.5 to 24.9.' }
-      ],
-      formulaName: 'WHO Body Mass Index Equation',
-      formulaExpr: '\\text{BMI} = \\frac{\\text{Weight (kg)}}{\\left[\\text{Height (m)}\\right]^2} = \\frac{703 \\times \\text{Weight (lbs)}}{\\left[\\text{Height (inches)}\\right]^2}',
-      formulaExplanation: 'BMI divides total body weight by height squared.',
-      example: '<strong>Clinical Example:</strong> An adult weighing 72 kg at a height of 175 cm has a BMI of <strong>23.51</strong>, placed comfortably in the WHO Normal healthy tier.',
-      faqs: [
-        {
-          q: 'Does BMI distinguish between fat and muscle?',
-          a: 'No. BMI is an epidemiological screening metric. Very muscular athletes may have high BMIs without excess body fat. For body composition analysis, use our Body Fat % (US Navy) or Lean Body Mass calculators.'
-        },
-        {
-          q: 'What are the official WHO BMI classification ranges?',
-          a: 'Underweight: &lt; 18.5; Normal: 18.5–24.9; Overweight: 25.0–29.9; Obese Class I: 30.0–34.9; Obese Class II: 35.0–39.9; Severe Class III: &ge; 40.0.'
-        }
-      ]
-    },
-
-    'sec-calorie-calc': {
+'sec-calorie-calc': {
       title: 'Calorie Calculator & Deficit Targets',
       category: 'Metabolism & Nutritional Energetics',
       badge: 'Mifflin-St Jeor & Katch-McArdle Consensus',
@@ -253,35 +193,7 @@
       ]
     },
 
-    'sec-ibw-calc': {
-      title: 'Ideal Body Weight (IBW) Calculator',
-      category: 'Clinical Pharmacology & Nutrition',
-      badge: 'Devine, Robinson & Miller Pharmacopeia Standards',
-      tagline: 'Identify healthy physiological weight baselines using recognized clinical pharmacology formulas.',
-      overview: 'The <strong>Ideal Body Weight (IBW) Calculator</strong> calculates optimal clinical weight targets using the Devine (1974), Robinson (1983), and Miller (1983) equations. Adopted universally by clinical pharmacologists and hospital dietitians, these formulas establish standard baselines for narrow-therapeutic-index medication dosing (such as aminoglycosides and anesthetics) and nutritional support.',
-      steps: [
-        { title: 'Select Biological Sex', desc: 'Choose male or female, as formulas use distinct baseline values for skeletal sexual dimorphism.' },
-        { title: 'Enter Height in cm or Feet/Inches', desc: 'Input your height; clinical formulas scale upward from a baseline height of 5 feet (60 inches).' },
-        { title: 'Compare Pharmacopeia Standards', desc: 'Review calculated targets across Devine, Robinson, and Miller equations.' },
-        { title: 'Cross-Reference WHO Normal BMI', desc: 'Compare clinical IBW against the WHO 18.5–24.9 kg/m² healthy weight boundary.' }
-      ],
-      formulaName: 'Devine Clinical IBW Equation',
-      formulaExpr: '\\text{IBW}_{\\text{male}} = 50.0 + 2.3(H - 60), \\quad \\text{IBW}_{\\text{female}} = 45.5 + 2.3(H - 60)',
-      formulaExplanation: 'Where H is height in inches above 5 feet (60 inches). For metric units, height is converted from centimeters.',
-      example: '<strong>Pharmacology Example:</strong> A male patient measuring 5 ft 10 in (70 inches) has a Devine IBW of <strong>73.0 kg (160.9 lbs)</strong>, a Robinson IBW of 71.3 kg, and a Miller IBW of 70.1 kg.',
-      faqs: [
-        {
-          q: 'Why are there multiple different IBW formulas?',
-          a: 'Dr. Devine originally developed his equation in 1974 for theophylline clearance. Robinson (1983) and Miller (1983) later revised the coefficients using updated metropolitan height-weight tables to improve population fit.'
-        },
-        {
-          q: 'What is Adjusted Body Weight (ABW)?',
-          a: 'In clinical medicine, when an individual\'s actual weight exceeds 120% of IBW, clinicians use Adjusted Body Weight: ABW = IBW + 0.4 × (Actual Weight - IBW) for therapeutic medication dosing.'
-        }
-      ]
-    },
-
-    'sec-pace-calc': {
+'sec-pace-calc': {
       title: 'Pace Calculator (Running, Race & Splits)',
       category: 'Cardiorespiratory & Athletic Endurance',
       badge: 'World Athletics Endurance Standard',
@@ -309,91 +221,7 @@
       ]
     },
 
-    'sec-army-bf-calc': {
-      title: 'Army Body Fat Calculator (AR 600-9)',
-      category: 'Military Readiness & Anthropometry',
-      badge: 'US Army Regulation AR 600-9 Standard',
-      tagline: 'Official military tape test compliance: screening maximum body fat percentages and PASS/FAIL Army Body Composition Program standards.',
-      overview: 'The <strong>Army Body Fat Calculator</strong> strictly implements the official Department of the Army Regulation AR 600-9 (Army Body Composition Program). Soldiers who exceed screening table weight-for-height standards must undergo circumferential tape testing at the neck and abdomen (and hips for female soldiers) to determine compliance with active-duty body fat thresholds.',
-      steps: [
-        { title: 'Select Soldier Gender & Age Bracket', desc: 'Choose male or female and select your age tier (17–20, 21–27, 28–39, or 40+) for applicable maximum fat allowances.' },
-        { title: 'Measure Standing Height', desc: 'Measure height without footwear to the nearest 0.5 inch.' },
-        { title: 'Take Neck Circumference', desc: 'Measure around the neck immediately below the thyroid cartilage (Adam\'s apple).' },
-        { title: 'Take Abdomen / Hip Circumference', desc: 'For males, measure at the navel level at the end of normal expiration. For females, measure at the natural waist and widest hip point.' }
-      ],
-      formulaName: 'AR 600-9 Military Body Fat Equations',
-      formulaExpr: '\\%\\text{Fat (Male)} = 86.010 \\log_{10}(\\text{Abdomen} - \\text{Neck}) - 70.041 \\log_{10}(\\text{Height}) + 36.76',
-      formulaExplanation: 'Female soldiers: %Fat = 163.205 × log10(Waist + Hip - Neck) - 97.684 × log10(Height) - 78.387. All measurements in inches.',
-      example: '<strong>Military Example:</strong> A 24-year-old male soldier, 71 in tall, neck 15.5 in, abdomen 35.0 in, has a calculated body fat of <strong>18.2%</strong>. This passes well below the maximum allowable standard of 22% for the 21–27 age bracket.',
-      faqs: [
-        {
-          q: 'What are the maximum allowable body fat percentages under AR 600-9?',
-          a: 'Male soldiers: Age 17–20: 20%; Age 21–27: 22%; Age 28–39: 24%; Age 40+: 26%. Female soldiers: Age 17–20: 30%; Age 21–27: 32%; Age 28–39: 34%; Age 40+: 36%.'
-        },
-        {
-          q: 'What happens if a soldier exceeds body fat standards?',
-          a: 'Soldiers who exceed body fat limits are enrolled in the Army Body Composition Program (ABCP), receive dietary counseling, undergo monthly tape monitoring, and are temporarily flagged from promotion.'
-        }
-      ]
-    },
-
-    'sec-lbm-calc': {
-      title: 'Lean Body Mass (LBM) & FFMI Calculator',
-      category: 'Body Composition & Hypertrophy',
-      badge: 'Boer, James & Hume Consensus Standard',
-      tagline: 'Calculate non-adipose muscle, organ, and bone mass with Fat-Free Mass Index (FFMI) natural muscularity grading.',
-      overview: '<strong>Lean Body Mass (LBM)</strong> represents the total mass of your physiological body weight minus all adipose fat tissue, comprising skeletal muscle, skeletal bone, vital organs, and blood volume. This calculator computes LBM using the Boer, James, and Hume clinical formulas and assesses your <strong>Fat-Free Mass Index (FFMI)</strong> to evaluate natural genetic muscular potential.',
-      steps: [
-        { title: 'Input Height and Weight', desc: 'Enter current body weight and standing height in metric or imperial units.' },
-        { title: 'Enter Body Fat % (Optional)', desc: 'Input known body fat percentage for precise direct DEXA-standard LBM and normalized FFMI calculations.' },
-        { title: 'Review Boer, James, and Hume Outputs', desc: 'Examine clinical formula estimations of lean muscle mass.' },
-        { title: 'Interpret FFMI Muscularity Tier', desc: 'Evaluate your FFMI: Below 18 (low muscle), 19–21 (average), 22–24 (athletic), 25+ (upper natural ceiling).' }
-      ],
-      formulaName: 'Boer Lean Body Mass & Normalized FFMI Equations',
-      formulaExpr: '\\text{LBM}_{\\text{Boer (M)}} = 0.407W + 0.267H - 19.2, \\quad \\text{FFMI} = \\frac{\\text{LBM (kg)}}{[\\text{Height (m)}]^2}',
-      formulaExplanation: 'Where W is weight in kg and H is height in cm. Normalized FFMI adjusts for taller athletes: FFMI_norm = FFMI + 6.1 × (1.8 - Height_m).',
-      example: '<strong>Athletic Example:</strong> An 82 kg male at 180 cm with 15% body fat has an LBM of <strong>69.7 kg</strong> and an FFMI of <strong>21.5 kg/m²</strong>, placing him in the solid athletic naturally-trained category.',
-      faqs: [
-        {
-          q: 'What is the natural limit for FFMI in drug-free athletes?',
-          a: 'Landmark physiological studies by Kouri et al. established that natural, drug-free bodybuilders rarely exceed an FFMI of 25.0 kg/m², making 25 the benchmark ceiling for natural genetic potential.'
-        },
-        {
-          q: 'Why is Lean Body Mass important for metabolism?',
-          a: 'Skeletal muscle and organ mass drive the majority of resting metabolic expenditure. Tracking LBM during fat loss ensures your caloric deficit burns fat rather than metabolically valuable muscle.'
-        }
-      ]
-    },
-
-    'sec-healthy-weight-calc': {
-      title: 'Healthy Weight Range Calculator',
-      category: 'Clinical Weight Management',
-      badge: 'WHO & Hamwi Skeletal Frame Standard',
-      tagline: 'Identify ideal weight boundaries based on WHO BMI ranges (18.5–24.9) and clinical Hamwi equations adjusted for wrist skeletal frame.',
-      overview: 'The <strong>Healthy Weight Calculator</strong> provides a personalized healthy weight boundary rather than an arbitrary single target. By integrating World Health Organization (WHO) epidemiological BMI ranges (18.5 to 24.9 kg/m²) with the Hamwi clinical method and wrist skeletal frame measurements, it identifies an achievable, biologically appropriate target weight envelope.',
-      steps: [
-        { title: 'Input Standing Height', desc: 'Enter your height accurately in centimeters or feet and inches.' },
-        { title: 'Select Skeletal Frame Size', desc: 'Choose Small, Medium, or Large frame based on wrist circumference (under 6.5 in for small, 6.5–7.5 in for medium, over 7.5 in for large in men).' },
-        { title: 'Review Normal Weight Boundary Range', desc: 'Inspect minimum and maximum weights corresponding to WHO BMI 18.5 and 24.9.' },
-        { title: 'Examine Weight Delta', desc: 'Compare your current body weight against the healthy envelope to see the exact pounds or kilograms needed to reach normal range.' }
-      ],
-      formulaName: 'WHO Normal Range & Hamwi Frame Model',
-      formulaExpr: 'W_{\\min} = 18.5 \\times H_m^2, \\quad W_{\\max} = 24.9 \\times H_m^2, \\quad W_{\\text{Hamwi}} = \\text{Base} \\pm 10\\%_{\\text{frame}}',
-      formulaExplanation: 'Hamwi base: Men = 106 lbs for first 5 ft + 6 lbs per additional inch; Women = 100 lbs for first 5 ft + 5 lbs per inch. Frame adjustments add or subtract 10%.',
-      example: '<strong>Clinical Example:</strong> For an adult at 5 ft 8 in (172.7 cm), the WHO healthy weight range spans <strong>121.7 lbs to 163.8 lbs (55.2 kg to 74.3 kg)</strong>, with a Hamwi medium-frame baseline of 154 lbs (69.9 kg).',
-      faqs: [
-        {
-          q: 'Why does skeletal frame size influence ideal weight?',
-          a: 'Bone density and skeletal width account for up to 15% of fat-free mass variation among individuals of identical height. Large-framed individuals naturally possess greater bone mass and lean baseline weight.'
-        },
-        {
-          q: 'How do I accurately measure my wrist circumference for frame size?',
-          a: 'Wrap a flexible tape measure around your non-dominant wrist just above the styloid process (wrist bone). Compare against standard clinical gender tables.'
-        }
-      ]
-    },
-
-    'sec-calories-burned-calc': {
+'sec-calories-burned-calc': {
       title: 'Calories Burned (2024 MET Standard)',
       category: 'Exercise Physiology & Energy Expenditure',
       badge: 'Compendium of Physical Activities (Ainsworth MET)',
@@ -869,35 +697,7 @@
       ]
     },
 
-    'sec-body-type-calc': {
-      title: 'Body Type Calculator (Heath-Carter Somatotype)',
-      category: 'Anthropometry & Somatotyping',
-      badge: 'Heath-Carter Somatotype Standard',
-      tagline: 'Identify your Heath-Carter somatotype (Ectomorph, Mesomorph, Endomorph) with tailored nutritional and resistance training strategies.',
-      overview: 'The <strong>Body Type Calculator</strong> identifies your physical somatotype classification based on the scientific Heath-Carter anthropometric model. Categorizing your predisposition across <strong>Ectomorph (linear, lean, fast metabolism)</strong>, <strong>Mesomorph (muscular, athletic, responsive)</strong>, and <strong>Endomorph (broad, higher storage capacity)</strong> provides actionable insights for optimizing training volume and macronutrient ratios.',
-      steps: [
-        { title: 'Select Skeletal Shoulder & Hip Structure', desc: 'Identify whether your clavicles are narrow, medium, or broad relative to your pelvic width.' },
-        { title: 'Measure Wrist & Ankle Frame Circumference', desc: 'Evaluate joint circumference to assess bone density and skeletal structure.' },
-        { title: 'Assess Weight Change Tendency', desc: 'Indicate whether you struggle to gain weight, gain muscle/lose fat easily, or store fat readily.' },
-        { title: 'Review Personalized Nutrition & Workout Protocols', desc: 'Inspect tailored macronutrient splits and training volume frequencies aligned with your somatotype.' }
-      ],
-      formulaName: 'Heath-Carter Tri-Component Somatotype Assessment',
-      formulaExpr: '\\text{Somatotype} = (\\text{Endomorphy}, \\text{Mesomorphy}, \\text{Ectomorphy}) \\in [1, 7]^3',
-      formulaExplanation: 'Scores from 1 to 7 represent relative adiposity (endomorphy), musculoskeletal development (mesomorphy), and linearity/thinness (ectomorphy).',
-      example: '<strong>Somatotype Example:</strong> An individual with broad shoulders, narrow waist, fast muscular response to lifting, and moderate frame scores a <strong>2-6-2 (Mesomorph)</strong>, performing best on a 40% Carb / 30% Protein / 30% Fat athletic protocol.',
-      faqs: [
-        {
-          q: 'Can an individual be a hybrid combination of body types?',
-          a: 'Yes! Pure single-somatotype individuals are rare. Most people are hybrids, such as Ecto-Mesomorphs (lean and athletic) or Meso-Endomorphs (strong and broad-framed).'
-        },
-        {
-          q: 'Can diet and exercise change your somatotype?',
-          a: 'While your skeletal bone structure and genetic muscle insertion points cannot be changed, targeted resistance training and structured nutrition significantly alter your muscularity (mesomorphy) and body fat (endomorphy).'
-        }
-      ]
-    },
-
-    'sec-bsa-calc': {
+'sec-bsa-calc': {
       title: 'Body Surface Area (BSA) Calculator',
       category: 'Clinical Pharmacology & Oncology',
       badge: 'Mosteller & Du Bois Clinical Standards',
@@ -1118,7 +918,19 @@
           a: 'Minimum payments are often set at just 1% to 2% of principal plus monthly accrued interest, meaning almost your entire payment goes to bank interest.'
         }
       ]
-    },
+    }
+  };
+
+  function ensureEightFaqs(faqs, title, category) {
+    const existingQuestions = new Set((faqs || []).map(f => (f.q || '').toLowerCase().trim()));
+    const isFin = category === 'financial' || category === 'finance';
+    const isFit = category === 'fitness' || category === 'health';
+    const isMath = category === 'math';
+    const isOther = !isFin && !isFit && !isMath;
+    const domainPool = [];
+
+    if (isFin) {
+      domainPool.push(
         {
           q: `What is the difference between APR and interest rate in the ${title}?`,
           a: `The nominal interest rate reflects purely the cost of borrowing principal. The Annual Percentage Rate (APR) incorporates mandatory lender origination fees, closing points, and administrative charges, providing a true comparison metric of overall borrowing expense.`
@@ -1528,7 +1340,7 @@
     // Check initial financial calculator
     updateGuide('sec-loan-calc', 'financial');
     // Check initial fitness calculator
-    updateGuide('sec-bmi-calc', 'fitness');
+    updateGuide('sec-calorie-calc', 'fitness');
     // Check initial math calculator
     updateGuide('sec-sci-calc', 'math');
     // Check initial other calculator

@@ -3,7 +3,7 @@ import OmniCalcClient from '@/components/OmniCalcClient';
 
 export const metadata = {
   title: 'CALC• Modern Calculator - Professional All-In-One Calculation Suite',
-  description: '100% Client-Side Calculation Suite for Finance, Health, Math, and Daily Utilities. Over 173 interactive calculators.',
+  description: '100% Client-Side Calculation Suite for Finance, Health, Math, and Daily Utilities. Over 167 interactive calculators.',
 };
 
 export default function HomePage() {
