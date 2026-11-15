@@ -128,36 +128,21 @@
     { id: 'sec-right-triangle-calc', cat: 'math', slug: 'right-triangle-calculator', aliases: ['right-triangle', 'right-angle-triangle', 'hypotenuse-calculator'], title: 'Right Triangle Calculator' },
 
     // --- DAILY UTILITIES & TOOLS (34 Tools) ---
-    { id: 'sec-unit-calc', cat: 'other', slug: 'unit-converter-calculator', aliases: ['unit-converter', 'unit', 'converter', 'units'], title: 'Universal Unit Converter' },
     { id: 'sec-gpa-calc', cat: 'utility', slug: 'gpa-calculator', aliases: ['gpa', 'college-gpa', 'grade-point-average', 'other/gpa-calculator', 'everyday/gpa-calculator'], title: 'College & School GPA Calculator' },
     // Date & Time Suite (9)
     { id: 'sec-date-calc', cat: 'other', slug: 'date-calculator', aliases: ['date', 'date-difference-calculator', 'add-days', 'calendar-calculator'], title: 'Date Calculator' },
     { id: 'sec-time-calc', cat: 'other', slug: 'time-calculator', aliases: ['time', 'time-addition-calculator', 'time-subtraction-calculator', 'clock-calculator'], title: 'Time Calculator' },
     // Housing / Building Suite (8)
-    { id: 'sec-concrete-calc', cat: 'other', slug: 'concrete-calculator', aliases: ['concrete', 'cement-calculator', 'slab-calculator', 'concrete-volume-calculator'], title: 'Concrete Calculator' },
-    { id: 'sec-btu-calc', cat: 'other', slug: 'btu-calculator', aliases: ['btu', 'air-conditioner-calculator', 'ac-btu-calculator', 'heating-cooling-calculator'], title: 'BTU Calculator' },
-    { id: 'sec-sqft-calc', cat: 'other', slug: 'square-footage-calculator', aliases: ['square-footage', 'sqft-calculator', 'flooring-calculator', 'room-area-calculator'], title: 'Square Footage Calculator' },
     { id: 'sec-stair-calc', cat: 'other', slug: 'stair-calculator', aliases: ['stair', 'stairs-calculator', 'staircase-calculator', 'riser-tread-calculator'], title: 'Stair Calculator' },
-    { id: 'sec-roofing-calc', cat: 'other', slug: 'roofing-calculator', aliases: ['roofing', 'roof-calculator', 'shingle-calculator', 'roof-pitch-calculator'], title: 'Roofing Calculator' },
-    { id: 'sec-tile-calc', cat: 'other', slug: 'tile-calculator', aliases: ['tile', 'tiles-calculator', 'tile-box-calculator', 'flooring-tile-calculator'], title: 'Tile Calculator' },
     { id: 'sec-mulch-calc', cat: 'other', slug: 'mulch-calculator', aliases: ['mulch', 'landscaping-mulch-calculator', 'yard-mulch-calculator', 'garden-bed-calculator'], title: 'Mulch Calculator' },
     { id: 'sec-gravel-calc', cat: 'other', slug: 'gravel-calculator', aliases: ['gravel', 'aggregate-calculator', 'crushed-stone-calculator', 'driveway-gravel-calculator'], title: 'Gravel Calculator' },
     // Measurements & Science Suite (10)
     { id: 'sec-height-calc', cat: 'other', slug: 'height-calculator', aliases: ['height', 'stature', 'child-height-calculator', 'height-converter'], title: 'Height Calculator' },
-    { id: 'sec-conversion-calc', cat: 'other', slug: 'conversion-calculator', aliases: ['conversion', 'multi-unit-converter', 'measurement-conversion'], title: 'Conversion Calculator' },
-    { id: 'sec-gdp-calc', cat: 'other', slug: 'gdp-calculator', aliases: ['gdp', 'gross-domestic-product', 'gdp-per-capita', 'macroeconomics-calculator'], title: 'GDP Calculator' },
     { id: 'sec-density-calc', cat: 'other', slug: 'density-calculator', aliases: ['density', 'mass-volume-density', 'specific-gravity-calculator'], title: 'Density Calculator' },
-    { id: 'sec-mass-calc', cat: 'other', slug: 'mass-calculator', aliases: ['mass', 'mass-from-density', 'weight-to-mass', 'physics-mass-calculator'], title: 'Mass Calculator' },
-    { id: 'sec-weight-calc', cat: 'other', slug: 'weight-calculator', aliases: ['weight', 'planet-weight-calculator', 'gravitational-weight', 'weight-force'], title: 'Weight Calculator' },
     { id: 'sec-speed-calc', cat: 'other', slug: 'speed-calculator', aliases: ['speed', 'pace-calculator', 'velocity-calculator', 'distance-speed-time'], title: 'Speed Calculator' },
-    { id: 'sec-molarity-calc', cat: 'other', slug: 'molarity-calculator', aliases: ['molarity', 'solution-concentration', 'chemistry-molarity', 'dilution-calculator'], title: 'Molarity Calculator' },
-    { id: 'sec-molecular-weight-calc', cat: 'other', slug: 'molecular-weight-calculator', aliases: ['molecular-weight', 'molar-mass-calculator', 'formula-weight', 'chemical-molar-mass'], title: 'Molecular Weight Calculator' },
     { id: 'sec-roman-numeral-calc', cat: 'other', slug: 'roman-numeral-calculator', aliases: ['roman-numeral', 'roman-numeral-converter', 'roman-numerals-converter', 'arabic-to-roman'], title: 'Roman Numeral Converter' },
     // Electronics & Circuits Suite (4)
     { id: 'sec-voltage-drop-calc', cat: 'other', slug: 'voltage-drop-calculator', aliases: ['voltage-drop', 'wire-size-calculator', 'wire-voltage-drop', 'nec-voltage-drop'], title: 'Voltage Drop Calculator' },
-    { id: 'sec-resistor-calc', cat: 'other', slug: 'resistor-calculator', aliases: ['resistor', 'resistor-color-code', 'resistor-bands', 'series-parallel-resistor'], title: 'Resistor Calculator' },
-    { id: 'sec-ohms-law-calc', cat: 'other', slug: 'ohms-law-calculator', aliases: ['ohms-law', 'ohm-calculator', 'voltage-current-resistance', 'electrical-power-calculator'], title: "Ohm's Law Calculator" },
-    { id: 'sec-electricity-calc', cat: 'other', slug: 'electricity-calculator', aliases: ['electricity', 'appliance-electricity-cost', 'kwh-cost-calculator', 'electric-bill-calculator'], title: 'Electricity Calculator' },
 
     
     // --- INTERNET & NETWORKING SUITE (5 Tools) ---
@@ -166,25 +151,14 @@
     // --- EVERYDAY UTILITY SUITE (5 New Tools) ---
     { id: 'sec-grade-calc', cat: 'utility', slug: 'grade-calculator', aliases: ['grade', 'final-grade-calculator', 'class-grade-calculator', 'exam-grade-calculator', 'other/grade-calculator', 'everyday/grade-calculator'], title: 'Grade Calculator' },
     { id: 'sec-bra-size-calc', cat: 'utility', slug: 'bra-size-calculator', aliases: ['bra-size', 'bra-calculator', 'cup-size-calculator', 'bra-fitting', 'other/bra-size-calculator', 'everyday/bra-size-calculator'], title: 'Bra Size Calculator' },
-    { id: 'sec-shoe-size-calc', cat: 'utility', slug: 'shoe-size-calculator', aliases: ['shoe-size', 'shoe-size-conversion', 'shoe-converter', 'foot-size-calculator', 'shoe-size-conversion-calculator', 'other/shoe-size-calculator', 'everyday/shoe-size-calculator'], title: 'Shoe Size Conversion' },
-    { id: 'sec-golf-handicap-calc', cat: 'utility', slug: 'golf-handicap-calculator', aliases: ['golf-handicap', 'handicap-calculator', 'whs-handicap', 'golf-score-differential', 'usga-handicap', 'other/golf-handicap-calculator', 'everyday/golf-handicap-calculator'], title: 'Golf Handicap Calculator' },
-    { id: 'sec-sleep-calc', cat: 'utility', slug: 'sleep-calculator', aliases: ['sleep', 'bedtime-calculator', 'wake-up-calculator', 'circadian-calculator', 'sleep-cycle-calculator', 'other/sleep-calculator', 'everyday/sleep-calculator'], title: 'Sleep Calculator' },
 
     // --- WEATHER & CLIMATE SUITE (3 Tools) ---
-    { id: 'sec-wind-chill-calc', cat: 'other', slug: 'wind-chill-calculator', aliases: ['wind-chill', 'wind-chill-calc', 'windchill', 'frostbite-calculator', 'weather/wind-chill-calculator', 'other/wind-chill-calculator', 'weather/wind-chill'], title: 'Wind Chill & Frostbite Calculator' },
-    { id: 'sec-heat-index-calc', cat: 'other', slug: 'heat-index-calculator', aliases: ['heat-index', 'heat-index-calc', 'humidex', 'feels-like-calculator', 'noaa-heat-index', 'weather/heat-index-calculator', 'other/heat-index-calculator', 'weather/heat-index'], title: 'Heat Index & NOAA Danger Calculator' },
-    { id: 'sec-dew-point-calc', cat: 'other', slug: 'dew-point-calculator', aliases: ['dew-point', 'dew-point-calc', 'dewpoint', 'humidity-comfort-calculator', 'weather/dew-point-calculator', 'other/dew-point-calculator', 'weather/dew-point'], title: 'Dew Point & Comfort Index Calculator' },
 
     // --- TRANSPORTATION & VEHICLE SUITE (6 Tools) ---
     { id: 'sec-fuel-cost-calc', cat: 'other', slug: 'fuel-cost-calculator', aliases: ['fuel-cost', 'fuel-cost-calc', 'trip-fuel-calculator', 'gas-cost-calculator', 'road-trip-cost', 'transportation/fuel-cost-calculator', 'other/fuel-cost-calculator', 'transportation/fuel-cost'], title: 'Fuel Cost & Trip Expense Calculator' },
-    { id: 'sec-gas-mileage-calc', cat: 'other', slug: 'gas-mileage-calculator', aliases: ['gas-mileage', 'gas-mileage-calc', 'mpg-calculator', 'fuel-economy-calculator', 'transportation/gas-mileage-calculator', 'other/gas-mileage-calculator', 'transportation/gas-mileage'], title: 'Gas Mileage & Fuel Economy Calculator' },
-    { id: 'sec-horsepower-calc', cat: 'other', slug: 'horsepower-calculator', aliases: ['horsepower', 'horsepower-calc', 'hp-calculator', 'torque-to-hp', 'quarter-mile-hp', 'transportation/horsepower-calculator', 'other/horsepower-calculator', 'transportation/horsepower'], title: 'Horsepower Calculator (Torque & ET)' },
-    { id: 'sec-engine-horsepower-calc', cat: 'other', slug: 'engine-horsepower-calculator', aliases: ['engine-horsepower', 'engine-hp', 'whp-to-bhp', 'crank-horsepower-calculator', 'displacement-hp', 'transportation/engine-horsepower-calculator', 'other/engine-horsepower-calculator', 'transportation/engine-horsepower'], title: 'Engine Horsepower (WHP to BHP) Calculator' },
     { id: 'sec-mileage-calc', cat: 'other', slug: 'mileage-calculator', aliases: ['mileage', 'mileage-calc', 'business-mileage-calculator', 'irs-mileage-calculator', 'commute-mileage-calculator', 'transportation/mileage-calculator', 'other/mileage-calculator', 'transportation/mileage'], title: 'Mileage Reimbursement Calculator' },
-    { id: 'sec-tire-size-calc', cat: 'other', slug: 'tire-size-calculator', aliases: ['tire-size', 'tire-size-calc', 'tire-comparison-calculator', 'speedometer-error-calculator', 'tire-diameter', 'transportation/tire-size-calculator', 'other/tire-size-calculator', 'transportation/tire-size'], title: 'Tire Size Comparison Calculator' },
 
     // --- ENTERTAINMENT & ANECDOTES SUITE (2 Tools) ---
-    { id: 'sec-dice-roller-calc', cat: 'other', slug: 'dice-roller-calculator', aliases: ['dice-roller', 'dice-roller-calc', 'dice', 'rpg-dice-calculator', 'dnd-dice-roller', 'dice-probability-calculator', 'entertainment/dice-roller-calculator', 'other/dice-roller-calculator', 'entertainment/dice-roller'], title: 'Dice Roller & RPG Probability Calculator' },
     { id: 'sec-love-calc', cat: 'other', slug: 'love-calculator', aliases: ['love', 'love-calc', 'love-compatibility-calculator', 'relationship-calculator', 'flames-calculator', 'entertainment/love-calculator', 'other/love-calculator', 'entertainment/love'], title: 'Love Calculator & Compatibility Meter' },
 
     // --- STANDARD & SCIENTIFIC KEYPAD (2 Modes) ---

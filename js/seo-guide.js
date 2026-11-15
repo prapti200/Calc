@@ -807,29 +807,6 @@
       ]
     },
 
-    'sec-unit-calc': {
-      title: 'Universal Unit Converter',
-      category: 'Measurements & Physical Sciences',
-      badge: 'NIST & ISO 80000 International Standard',
-      tagline: 'Instant conversions for Length, Weight, Volume, Temperature, Area, Speed, Pressure, and Energy.',
-      overview: 'The <strong>Universal Unit Converter</strong> delivers precision bidirectional conversions across Metric, Imperial, and US Customary systems. Built with verified international scientific conversion factors, it enables instantaneous calculations without rounding degradation.',
-      steps: [
-        { title: 'Select Physical Quantity', desc: 'Choose Length, Mass/Weight, Temperature, Volume, Area, Speed, or Pressure.' },
-        { title: 'Choose From & To Units', desc: 'Select source and target units from the interactive dropdown selectors.' },
-        { title: 'Enter Quantity', desc: 'Type any quantity into the input field to see instantaneous results in the converted unit.' }
-      ],
-      formulaName: 'Linear Unit Transformation',
-      formulaExpr: 'V_{\text{target}} = (V_{\text{source}} \times k) + \text{offset}',
-      formulaExplanation: 'Where k is the exact physical ratio coefficient and offset handles affine scales such as Celsius, Fahrenheit, and Kelvin.',
-      example: '<strong>Example:</strong> Converting <code>100 Kilograms</code> yields <code>220.462 Pounds (lbs)</code>; converting <code>100°C</code> yields <code>212°F</code>.',
-      faqs: [
-        {
-          q: 'Are the conversion coefficients verified?',
-          a: 'Yes, all coefficients are calibrated against NIST Special Publication 811 and ISO 80000 physical quantities standards.'
-        }
-      ]
-    },
-
     'sec-gpa-calc': {
       title: 'College & High School GPA Calculator',
       category: 'Academic Evaluation',
@@ -1301,7 +1278,7 @@
     // Check initial math calculator
     updateGuide('sec-sci-calc', 'math');
     // Check initial other calculator
-    updateGuide('sec-unit-calc', 'other');
+    updateGuide('sec-gpa-calc', 'other');
     // Check scientific calculator
     updateGuide('sec-sci-calc', 'standard');
   });

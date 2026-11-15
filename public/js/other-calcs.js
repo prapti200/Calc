@@ -3296,20 +3296,9 @@ const OtherCalcs = {
     try {
       if (calcId === 'sec-password-generator-calc') this.generatePassword();
       else if (calcId === 'sec-grade-calc') { if (this.gradeMode === 'weighted') { this.renderGradeCategories(); this.calcWeightedGrade(); } else { this.calcFinalGrade(); } }
-      else if (calcId === 'sec-bra-size-calc') this.calcBraSize();
-      else if (calcId === 'sec-shoe-size-calc') { this.populateShoeOptions(); this.convertShoeSize(); }
-      else if (calcId === 'sec-golf-handicap-calc') { this.renderGolfRounds(); this.calcGolfHandicap(); }
-      else if (calcId === 'sec-sleep-calc') this.calcSleepCycles();
-      else if (calcId === 'sec-wind-chill-calc') this.calcWindChill();
-      else if (calcId === 'sec-heat-index-calc') this.calcHeatIndex();
-      else if (calcId === 'sec-dew-point-calc') this.calcDewPoint();
+      else if (calcId === 'sec-bra-size-calc') this.calcBraSize(); this.convertShoeSize(); } this.calcGolfHandicap(); }
       else if (calcId === 'sec-fuel-cost-calc') this.calcFuelCost();
-      else if (calcId === 'sec-gas-mileage-calc') this.calcGasMileage();
-      else if (calcId === 'sec-horsepower-calc') this.calcHorsepower();
-      else if (calcId === 'sec-engine-horsepower-calc') this.calcEngineHorsepower();
       else if (calcId === 'sec-mileage-calc') this.calcMileage();
-      else if (calcId === 'sec-tire-size-calc') this.calcTireSize();
-      else if (calcId === 'sec-dice-roller-calc') this.rollDice();
       else if (calcId === 'sec-love-calc') this.calcLoveCompatibility();
       else if (calcId === 'sec-gpa-calc') { this.renderCourses(); }
     } catch (e) {
