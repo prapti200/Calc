@@ -10,17 +10,9 @@
   // Master definition of all 104+ calculators with canonical slugs, aliases, and titles
   const CALC_REGISTRY = [
     // --- FINANCIAL CALCULATORS (73 Tools) ---
-    { id: 'sec-mort-calc', cat: 'financial', slug: 'mortgage-calculator', aliases: ['mortgage', 'mort', 'mortgage-calc', 'home-mortgage'], title: 'Mortgage Calculator' },
     { id: 'sec-loan-calc', cat: 'financial', slug: 'loan-calculator', aliases: ['loan', 'emi', 'loan-calc', 'emi-calculator', 'gold-loan', 'gold-loan-calculator', 'gold-loan-calc'], title: 'Loan & EMI Calculator' },
     { id: 'sec-auto-loan-calc', cat: 'financial', slug: 'auto-loan-calculator', aliases: ['auto-loan', 'car-loan', 'auto', 'vehicle-loan'], title: 'Auto Loan Calculator' },
-    { id: 'sec-interest-calc', cat: 'financial', slug: 'interest-calculator', aliases: ['interest', 'interest-calc', 'simple-compound-interest', 'interest-calculator-from-date-to-date', 'simple-interest-calculator-from-date-to-date', 'compound-interest-calculator-india', 'bank-interest-calculator', 'simple-interest-calculator', 'compound-interest-calculator', 'daily-compound-interest-calculator', 'daily-compound-interest'], title: 'Interest Calculator From Date to Date | Simple Interest Calculator From Date to Date, Compound Interest Calculator India & Bank Interest Calculator' },
-    { id: 'sec-payment-calc', cat: 'financial', slug: 'payment-calculator', aliases: ['payment', 'payment-calc', 'debt-payment'], title: 'Payment Calculator' },
-    { id: 'sec-retirement-calc', cat: 'financial', slug: 'retirement-calculator', aliases: ['retirement', 'nest-egg', 'retirement-nest-egg'], title: 'Retirement Calculator' },
-    { id: 'sec-amortization-calc', cat: 'financial', slug: 'amortization-calculator', aliases: ['amortization', 'amort', 'amortization-schedule'], title: 'Amortization Calculator' },
-    { id: 'sec-investment-calc', cat: 'financial', slug: 'investment-calculator', aliases: ['investment', 'invest', 'wealth-accumulator'], title: 'Investment Calculator' },
-    { id: 'sec-currency-calc', cat: 'financial', slug: 'currency-converter-calculator', aliases: ['currency', 'currency-calculator', 'forex', 'currency-converter', 'exchange-rate'], title: 'Currency Converter' },
     { id: 'sec-inflation-calc', cat: 'financial', slug: 'inflation-calculator', aliases: ['inflation', 'cpi', 'purchasing-power'], title: 'Inflation Calculator' },
-    { id: 'sec-finance-tvm-calc', cat: 'financial', slug: 'tvm-calculator', aliases: ['tvm', 'time-value-of-money', 'tvm-solver', 'finance-tvm-calculator'], title: 'Finance TVM Calculator' },
     { id: 'sec-mortgage-payoff-calc', cat: 'financial', slug: 'mortgage-payoff-calculator', aliases: ['mortgage-payoff', 'early-payoff', 'extra-mortgage-payment'], title: 'Mortgage Payoff Calculator' },
     { id: 'sec-401k-calc', cat: 'financial', slug: '401k-calculator', aliases: ['401k', '401-k', '401k-retirement'], title: '401(k) Calculator' },
     { id: 'sec-pension-calc', cat: 'financial', slug: 'pension-calculator', aliases: ['pension', 'pension-plan', 'defined-benefit'], title: 'Pension Calculator' },
@@ -51,7 +43,6 @@
     { id: 'sec-roi-calc', cat: 'financial', slug: 'roi-calculator', aliases: ['roi', 'return-on-investment', 'profit-margin-calc'], title: 'ROI & Profit Margin Calculator' },
     { id: 'sec-interest-rate-calc', cat: 'financial', slug: 'interest-rate-calculator', aliases: ['interest-rate', 'apy-apr', 'effective-interest'], title: 'Interest Rate (APR & APY) Calculator' },
     { id: 'sec-savings-goal-calc', cat: 'financial', slug: 'savings-goal-calculator', aliases: ['savings-goal', 'savings', 'savings-plan'], title: 'Savings Goal Calculator' },
-    { id: 'sec-simple-interest-calc', cat: 'financial', slug: 'simple-interest-calculator', aliases: ['simple-interest', 'simple-int', 'ordinary-interest'], title: 'Simple Interest Calculator' },
     { id: 'sec-cd-calc', cat: 'financial', slug: 'cd-calculator', aliases: ['cd', 'certificate-of-deposit', 'cd-yield'], title: 'CD (Certificate of Deposit) Calculator' },
     { id: 'sec-bond-calc', cat: 'financial', slug: 'bond-calculator', aliases: ['bond', 'bond-valuation', 'bond-ytm'], title: 'Bond Valuation Calculator' },
     { id: 'sec-mutual-fund-calc', cat: 'financial', slug: 'mutual-fund-calculator', aliases: ['mutual-fund', 'etf-wealth', 'mutual-fund-fee'], title: 'Mutual Fund & ETF Wealth Calculator' },

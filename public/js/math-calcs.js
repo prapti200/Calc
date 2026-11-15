@@ -1662,17 +1662,6 @@ const MathCalcs = {
       document.getElementById(id)?.addEventListener('input', () => this.calcPercentages());
     });
 
-    // 2. Quadratic
-    ['quad-a', 'quad-b', 'quad-c'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcQuadratic());
-    });
-
-    // 3. Fraction
-    ['frac-n1', 'frac-d1', 'frac-n2', 'frac-d2', 'frac-op'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', () => this.calcFraction());
-    });
-
     // 4. GCD & LCM
     document.getElementById('gcd-input')?.addEventListener('input', () => this.calcGcdLcm());
 
@@ -1690,24 +1679,6 @@ const MathCalcs = {
       });
     });
     document.getElementById('sci-expression')?.addEventListener('input', () => this.calcSci());
-
-    // 7. Random
-    ['rnd-min', 'rnd-max', 'rnd-count', 'rnd-decimals'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcRandom());
-    });
-    ['rnd-type', 'rnd-duplicates', 'rnd-sort'].forEach(id => {
-      document.getElementById(id)?.addEventListener('change', () => this.calcRandom());
-    });
-
-    // 8. Percent Error
-    ['pe-experimental', 'pe-theoretical'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcPercentError());
-    });
-
-    // 9. Exponent
-    ['exp-base', 'exp-power'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcExponent());
-    });
 
     // 10. Binary
     ['bin-val1', 'bin-val2'].forEach(id => {
@@ -1758,25 +1729,8 @@ const MathCalcs = {
     // 18. Factor
     document.getElementById('factor-n')?.addEventListener('input', () => this.calcFactor());
 
-    // 19. Rounding
-    ['round-num', 'round-decimals'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcRounding());
-    });
-
     // 20. Scientific Notation
     document.getElementById('scin-val')?.addEventListener('input', () => this.calcSciNotation());
-
-    // 21. Big Number
-    ['bignum-1', 'bignum-2'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcBigNumber());
-    });
-    document.getElementById('bignum-op')?.addEventListener('change', () => this.calcBigNumber());
-
-// 22. Triangle
-    ['tri-side-a', 'tri-side-b', 'tri-side-c', 'tri-sas-a', 'tri-sas-b', 'tri-sas-c', 'tri-base', 'tri-height'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcTriangle());
-    });
-    document.getElementById('tri-mode')?.addEventListener('change', () => this.calcTriangle());
 
     // 23. Volume
     ['vol-p1', 'vol-p2', 'vol-p3'].forEach(id => {

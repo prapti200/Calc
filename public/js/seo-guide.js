@@ -76,28 +76,6 @@
         }
       ]
     },
-
-    'sec-mort-calc': {
-      title: 'Mortgage & Home Financing Calculator',
-      category: 'Real Estate & Home Ownership',
-      badge: 'Fannie Mae / Freddie Mac Standard',
-      tagline: 'Fixed-rate monthly principal & interest payments, property taxes, homeowners insurance, and private mortgage insurance (PMI).',
-      overview: 'The <strong>Mortgage Calculator</strong> evaluates residential real estate purchase costs across 15-year, 20-year, and 30-year fixed home loans. Beyond basic principal and interest, this suite factors in annual property tax rates, homeowners hazard insurance premiums, private mortgage insurance (PMI for down payments under 20%), and HOA fees to calculate your complete, realistic PITI (Principal, Interest, Taxes, Insurance) housing payment.',
-      steps: [
-        { title: 'Set Home Value & Down Payment', desc: 'Input the property purchase price and your cash down payment percentage (e.g. 10%, 20%).' },
-        { title: 'Configure Mortgage APR & Loan Term', desc: 'Enter the locked loan interest rate and select your repayment term (15-year for lower total interest or 30-year for lower monthly payments).' },
-        { title: 'Include Real Estate Taxes & Insurance', desc: 'Input estimated property tax rates and insurance costs to evaluate true monthly PITI housing expenditure.' },
-        { title: 'Examine 5-Year Amortization Schedule', desc: 'Review the detailed schedule table showing exact principal equity accumulation and remaining balance year by year.' }
-      ],
-      formulaName: 'Monthly PITI Housing Cost Formula',
-      formulaExpr: 'PITI = P \\left[ \\frac{r(1+r)^n}{(1+r)^n - 1} \\right] + \\text{Monthly Tax} + \\text{Monthly Insurance} + \\text{PMI}',
-      formulaExplanation: 'Where P is the loan principal (home purchase price minus down payment), r is the monthly interest rate, and n is the total number of monthly payments.',
-      example: '<strong>Real Estate Example:</strong> A $400,000 home with 20% down ($80,000) and a $320,000 loan at 6.75% for 30 years yields a monthly Principal & Interest payment of <strong>$2,075.60</strong>. Adding $300/mo property tax and $100/mo insurance yields a total monthly PITI payment of <strong>$2,475.60</strong>.',
-      faqs: [
-        {
-          q: 'What is PITI in mortgage terminology?',
-          a: 'PITI stands for Principal, Interest, Taxes, and Insurance. It represents the total monthly cost of homeownership that mortgage lenders evaluate against your Debt-to-Income (DTI) ratio.'
-        },
         {
           q: 'When does Private Mortgage Insurance (PMI) stop?',
           a: 'Under the federal Homeowners Protection Act, conventional lenders are required to automatically cancel PMI once your remaining loan balance drops to 78% of the original home purchase value.'
@@ -136,29 +114,6 @@
         }
       ]
     },
-
-    'sec-interest-calc': {
-      title: 'Interest Calculator From Date to Date | Simple & Compound Bank Interest Calculator India',
-      category: 'Banking & Investments',
-      badge: 'RBI & Banking Standard',
-      tagline: 'Calculate exact interest from date to date with our simple interest calculator from date to date, compound interest calculator, daily compound interest calculator, and bank interest calculator.',
-      overview: 'Our high-precision <strong>interest calculator from date to date</strong> empowers investors, lenders, and banking customers to evaluate earnings on deposits, bonds, and loans. Serving as an advanced <strong>compound interest calculator</strong>, a high-frequency <strong>daily compound interest calculator</strong>, a dedicated <strong>simple interest calculator from date to date</strong>, and an RBI-compliant <strong>compound interest calculator India</strong>, this platform computes exact days, interest accruals, APY yield, and final maturity balances with complete accuracy.',
-      steps: [
-        { title: 'Choose Period Mode', desc: 'Select "From Date to Date" for calendar dates or "Fixed Investment Term" for years.' },
-        { title: 'Input Starting Principal', desc: 'Specify capital deposited into the investment or loaned amount.' },
-        { title: 'Set Annual Interest Rate', desc: 'Enter the nominal annual interest rate percentage.' },
-        { title: 'Select Calculation Mode & Compounding', desc: 'Choose Simple Interest or Compound Interest with Daily (365/yr), Monthly, or Quarterly (Indian FD) frequency.' },
-        { title: 'Review Total Interest & Yield', desc: 'Inspect exact interest accrued, maturity balance, APY, and duration in days.' }
-      ],
-      formulaName: 'Simple & Compound Interest Formulas',
-      formulaExpr: 'I = P \\times r \\times \\frac{t}{365} \\quad \\text{and} \\quad A = P \\left(1 + \\frac{r}{n}\\right)^{nt}',
-      formulaExplanation: 'Where P is principal, r is annual rate in decimal, t is elapsed days, n is compounding frequency (365 for daily compound interest calculator, 4 for Indian bank quarterly compounding), and A is maturity balance.',
-      example: '<strong>Date to Date Example:</strong> A $20,000 principal at 6.5% interest across 180 calendar days yields $641.10 in simple interest, or $646.33 with quarterly compounding.',
-      faqs: [
-        {
-          q: 'What is a compound interest calculator and how does daily compounding work?',
-          a: 'A compound interest calculator computes growth where interest earns interest. In a daily compound interest calculator, your balance is recalculated every day (365 times per year), generating maximum yield compared to monthly or annual intervals.'
-        },
         {
           q: 'How does an interest calculator from date to date calculate elapsed time?',
           a: 'An interest calculator from date to date takes your start date and end date, counts the exact calendar days, and converts them to annual fractions using the standard Actual/365 or Banker\'s 360-day rule.'
@@ -1164,53 +1119,6 @@
         }
       ]
     },
-
-    'sec-retirement-calc': {
-      title: 'Retirement Savings & 4% Safe Withdrawal Planner',
-      category: 'Wealth Accumulation',
-      badge: 'Trinity Study 4% Safe Withdrawal Benchmark',
-      tagline: 'Forecast investment growth, annual compounding returns, retirement nest egg, and safe annual income.',
-      overview: 'The <strong>Retirement Calculator</strong> projects your retirement nest egg based on current savings, monthly contributions, annual investment yield, and retirement age horizon. It models portfolio depletion longevity using the Trinity 4% safe withdrawal rule.',
-      steps: [
-        { title: 'Input Current Age & Target Retirement Age', desc: 'Define your investment runway horizon (e.g. current age 30, retiring at 65).' },
-        { title: 'Enter Current Savings & Monthly Deposit', desc: 'Specify starting principal and monthly automated investments.' },
-        { title: 'Set Expected Return & Inflation', desc: 'Configure annual compound rate of return (e.g. 7% to 9% historical index benchmark).' },
-        { title: 'Inspect Nest Egg & Annual Income', desc: 'Review projected portfolio balance at retirement and estimated sustainable monthly income.' }
-      ],
-      formulaName: 'Future Value of Annuity Compounding',
-      formulaExpr: 'FV = PV(1 + r)^n + PMT \left[ \frac{(1 + r)^n - 1}{r} \right]',
-      formulaExplanation: 'Where PV is starting balance, PMT is periodic contribution, r is monthly return, and n is total months.',
-      example: '<strong>Example:</strong> Saving $500/month starting at age 30 with 8% average return yields over <strong>$1,146,000</strong> by age 65.',
-      faqs: [
-        {
-          q: 'What is the 4% safe withdrawal rule?',
-          a: 'Derived from the landmark Trinity Study, withdrawing 4% of your portfolio value in year one (adjusted for inflation thereafter) historically provided a 95%+ probability of lasting 30+ years.'
-        }
-      ]
-    }
-  };
-
-  /**
-   * Generates a high-quality fallback SEO guide for any calculator not explicitly in the curated database
-   */
-  function ensureEightFaqs(existingFaqs, title, category) {
-    const faqs = (existingFaqs || []).map(f => ({ q: f.q, a: f.a }));
-    const existingQuestions = new Set(faqs.map(f => (f.q || '').toLowerCase().trim()));
-
-    const cat = (category || '').toLowerCase();
-    const isFin = cat.includes('fin') || cat.includes('bank') || cat.includes('loan') || cat.includes('invest');
-    const isFit = cat.includes('fit') || cat.includes('health') || cat.includes('calor') || cat.includes('pregn');
-    const isMath = cat.includes('math') || cat.includes('algeb') || cat.includes('geom') || cat.includes('sci');
-
-    // Domain-tailored question bank
-    const domainPool = [];
-
-    if (isFin) {
-      domainPool.push(
-        {
-          q: `How does interest compounding affect my ${title} calculations?`,
-          a: `Compounding frequency (monthly, daily, or annual) dictates how accrued interest compounds on the principal balance. Standard banking models compound monthly on reducing balances, meaning earlier principal prepayments yield compounding exponential interest savings over time.`
-        },
         {
           q: `What is the difference between APR and interest rate in the ${title}?`,
           a: `The nominal interest rate reflects purely the cost of borrowing principal. The Annual Percentage Rate (APR) incorporates mandatory lender origination fees, closing points, and administrative charges, providing a true comparison metric of overall borrowing expense.`
@@ -1618,7 +1526,7 @@
   // Auto-init on DOMContentLoaded for the initial default calculators
   document.addEventListener('DOMContentLoaded', () => {
     // Check initial financial calculator
-    updateGuide('sec-mort-calc', 'financial');
+    updateGuide('sec-loan-calc', 'financial');
     // Check initial fitness calculator
     updateGuide('sec-bmi-calc', 'fitness');
     // Check initial math calculator
