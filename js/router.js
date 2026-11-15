@@ -129,18 +129,10 @@
 
     // --- DAILY UTILITIES & TOOLS (34 Tools) ---
     { id: 'sec-unit-calc', cat: 'other', slug: 'unit-converter-calculator', aliases: ['unit-converter', 'unit', 'converter', 'units'], title: 'Universal Unit Converter' },
-    { id: 'sec-age-calc', cat: 'other', slug: 'age-calculator', aliases: ['age', 'date-difference', 'chronological-age', 'age-calculator-online', 'online-age-calculator', 'age-calculator-by-dob', 'my-age-calculator', 'age-calculator-app', 'marriage-age-calculator', 'marriage-age-calculator-by-date-of-birth', 'retirement-age-calculator', 'age-calculator-by-date-of-birth'], title: 'Age Calculator & Chronology' },
     { id: 'sec-gpa-calc', cat: 'utility', slug: 'gpa-calculator', aliases: ['gpa', 'college-gpa', 'grade-point-average', 'other/gpa-calculator', 'everyday/gpa-calculator'], title: 'College & School GPA Calculator' },
-    { id: 'sec-work-calc', cat: 'other', slug: 'work-hours-calculator', aliases: ['work-hours', 'work', 'hours', 'timesheet', 'work-wages'], title: 'Work Hours & Wages Calculator' },
     // Date & Time Suite (9)
     { id: 'sec-date-calc', cat: 'other', slug: 'date-calculator', aliases: ['date', 'date-difference-calculator', 'add-days', 'calendar-calculator'], title: 'Date Calculator' },
     { id: 'sec-time-calc', cat: 'other', slug: 'time-calculator', aliases: ['time', 'time-addition-calculator', 'time-subtraction-calculator', 'clock-calculator'], title: 'Time Calculator' },
-    { id: 'sec-hours-calc', cat: 'other', slug: 'hours-calculator', aliases: ['hours', 'hours-worked-calculator', 'shift-hours-calculator', 'decimal-hours-calculator'], title: 'Hours Calculator' },
-    { id: 'sec-time-card-calc', cat: 'other', slug: 'time-card-calculator', aliases: ['time-card', 'timesheet-calculator', 'weekly-time-card-calculator', 'timecard-calculator'], title: 'Time Card Calculator' },
-    { id: 'sec-time-zone-calc', cat: 'other', slug: 'time-zone-calculator', aliases: ['time-zone', 'timezone-calculator', 'world-clock-calculator', 'tz-converter-calculator'], title: 'Time Zone Calculator' },
-    { id: 'sec-time-duration-calc', cat: 'other', slug: 'time-duration-calculator', aliases: ['time-duration', 'duration-calculator', 'elapsed-time-calculator', 'timestamp-calculator'], title: 'Time Duration Calculator' },
-    { id: 'sec-day-counter-calc', cat: 'other', slug: 'day-counter-calculator', aliases: ['day-counter', 'business-days-calculator', 'working-days-calculator', 'day-count-calculator'], title: 'Day Counter Calculator' },
-    { id: 'sec-day-of-week-calc', cat: 'other', slug: 'day-of-the-week-calculator', aliases: ['day-of-the-week', 'day-of-week-calculator', 'day-finder-calculator', 'what-day-was-it-calculator'], title: 'Day of the Week Calculator' },
     // Housing / Building Suite (8)
     { id: 'sec-concrete-calc', cat: 'other', slug: 'concrete-calculator', aliases: ['concrete', 'cement-calculator', 'slab-calculator', 'concrete-volume-calculator'], title: 'Concrete Calculator' },
     { id: 'sec-btu-calc', cat: 'other', slug: 'btu-calculator', aliases: ['btu', 'air-conditioner-calculator', 'ac-btu-calculator', 'heating-cooling-calculator'], title: 'BTU Calculator' },
@@ -169,11 +161,7 @@
 
     
     // --- INTERNET & NETWORKING SUITE (5 Tools) ---
-    { id: 'sec-ip-subnet-calc', cat: 'internet', slug: 'ip-subnet-calculator', aliases: ['ip-subnet', 'subnet-calculator', 'cidr-calculator', 'subnet-mask', 'ip-calculator', 'cidr', 'other/ip-subnet-calculator'], title: 'IP Subnet Calculator' },
     { id: 'sec-password-generator-calc', cat: 'internet', slug: 'password-generator', aliases: ['password-generator-calculator', 'password', 'pass-gen', 'random-password', 'secure-password', 'other/password-generator'], title: 'Password Generator' },
-    { id: 'sec-bandwidth-calc', cat: 'internet', slug: 'bandwidth-calculator', aliases: ['bandwidth', 'download-time-calculator', 'network-speed-calculator', 'data-transfer-calculator', 'download-calculator', 'other/bandwidth-calculator'], title: 'Bandwidth Calculator' },
-    { id: 'sec-base64-calc', cat: 'internet', slug: 'base64-encode-decode', aliases: ['base64', 'base64-calculator', 'base64-encoder', 'base64-decoder', 'base64-encode-decode-calculator', 'other/base64-encode-decode'], title: 'Base64 Encode / Decode' },
-    { id: 'sec-url-encode-calc', cat: 'internet', slug: 'url-encode-decode', aliases: ['url-encode', 'url-decoder', 'url-encoder', 'url-encode-decode-calculator', 'percent-encoding', 'other/url-encode-decode'], title: 'URL Encode / Decode' },
 
     // --- EVERYDAY UTILITY SUITE (5 New Tools) ---
     { id: 'sec-grade-calc', cat: 'utility', slug: 'grade-calculator', aliases: ['grade', 'final-grade-calculator', 'class-grade-calculator', 'exam-grade-calculator', 'other/grade-calculator', 'everyday/grade-calculator'], title: 'Grade Calculator' },

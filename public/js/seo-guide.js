@@ -830,49 +830,6 @@
       ]
     },
 
-    'sec-age-calc': {
-      title: 'Age Calculator by Date of Birth (Free Online)',
-      category: 'Calendar & Chronometry',
-      badge: 'Gregorian Calendar Astronomical Precision',
-      tagline: 'Calculate exact chronological age in completed years, months, days, total days, and hours with our online age calculator by date of birth free online.',
-      overview: 'Our <strong>online age calculator by date of birth</strong> computes exact chronological elapsed lifespan from your date of birth to any reference date. Designed as an <strong>age calculator by date of birth free online</strong> without requiring an app installation, it functions as an essential <strong>marriage age calculator by date of birth</strong> for statutory civil eligibility verification and a <strong>retirement age calculator by date of birth</strong> for milestone pension forecasting. It flawlessly accounts for leap centuries, variable monthly horizons (28, 29, 30, and 31 days), and upcoming birthday countdowns. For clinical maternal metrics, users can also check our integrated <strong>gestational age calculator</strong> for fetal pregnancy development.',
-      steps: [
-        { title: 'Input Date of Birth', desc: 'Select your birth year, month, and day into the age calculator by date of birth free field.' },
-        { title: 'Select Reference or Event Date', desc: 'Defaults to current date or select your upcoming wedding date for marriage age verification, or target retirement year.' },
-        { title: 'View Exact Age & Milestones', desc: 'Inspect age in years/months/days, total days lived, and countdown to your next birthday.' }
-      ],
-      formulaName: 'Gregorian Chronometric Delta',
-      formulaExpr: '\Delta T = T_{\text{target}} - T_{\text{birth}} \quad (\text{exact calendar alignment})',
-      formulaExplanation: 'Accounts for leap centuries (divisible by 400) and varying month horizons (28, 29, 30, 31 days).',
-      example: '<strong>Example:</strong> A person born June 15, 1995 evaluated on June 15, 2026 displays exactly 31 completed years, 0 months, and 0 days (11,323 total days lived).',
-      faqs: [
-        {
-          q: 'How does this online age calculator by date of birth calculate exact age?',
-          a: 'Our online age calculator by date of birth compares your birth day, month, and year against the target date using true Gregorian calendar intervals. It automatically accounts for leap centuries, differing monthly lengths (28, 29, 30, and 31 days), and exact midnight boundaries without any timezone distortion.'
-        },
-        {
-          q: 'How do I use this as a marriage age calculator by date of birth?',
-          a: 'To use this as a marriage age calculator by date of birth, input your birth date into the Date of Birth field, then select your intended wedding or civil registry date in the Calculate Age At Date field. The calculator instantly displays your completed years, months, and days on that date so you can verify legal marriage eligibility.'
-        },
-        {
-          q: 'Can I use this as a retirement age calculator by date of birth?',
-          a: 'Yes! As a versatile retirement age calculator by date of birth, you can calculate the exact date you reach state pension age, Social Security eligibility (such as age 62 for early retirement or age 67 for full benefits), or mandatory corporate retirement.'
-        },
-        {
-          q: 'Is this age calculator by date of birth free to use online?',
-          a: 'Yes, this age calculator by date of birth free online is 100% complimentary with no usage limits, no credit card requirements, and no mobile app installation needed. All calculations run client-side in your browser for absolute data confidentiality.'
-        },
-        {
-          q: 'What is the difference between an age calculator and a gestational age calculator?',
-          a: 'A standard age calculator by date of birth calculates elapsed chronological time since an individual\'s day of birth. In contrast, a gestational age calculator measures fetal growth in weeks and days from the first day of the mother\'s last menstrual period (LMP) to assess pregnancy progression.'
-        },
-        {
-          q: 'Does this calculator account for leap years and leap day birthdays?',
-          a: 'Yes, every 4-year leap cycle (including February 29th) is fully handled according to the Gregorian calendar rules, with automatic anniversary adjustment for leap day babies in non-leap years.'
-        }
-      ]
-    },
-
     'sec-gpa-calc': {
       title: 'College & High School GPA Calculator',
       category: 'Academic Evaluation',
