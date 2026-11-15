@@ -408,7 +408,7 @@
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
-  // Master Calculator Registry for instant search across all 185+ calculators
+  // Master Calculator Registry for instant search across all 173+ calculators
   window.getAllCalculatorsRegistry = function () {
     if (window._allCalculatorsMasterCache) {
       return window._allCalculatorsMasterCache;
@@ -468,7 +468,7 @@
     return text.replace(regex, '<mark>$1</mark>');
   }
 
-  // --- 185+ ALL CALCULATORS DOWNWARD AUTO-SUGGESTIONS & SWITCHER ENGINE ---
+  // --- 173+ ALL CALCULATORS DOWNWARD AUTO-SUGGESTIONS & SWITCHER ENGINE ---
   window.filterDetailSwitcher = function (suitePrefix, rawQuery) {
     const query = normalizeSearchText(rawQuery);
     const clearBtn = document.getElementById(`${suitePrefix}-detail-search-clear`);
@@ -507,7 +507,7 @@
       return;
     }
 
-    // High-precision priority scoring across all 185+ calculators
+    // High-precision priority scoring across all 173+ calculators
     const scoredList = [];
     allCalculators.forEach(calc => {
       const title = normalizeSearchText(calc.title || '');
@@ -1511,9 +1511,9 @@
             el.style.display = '';
           });
           const badge = document.getElementById('zenith-count-badge');
-          if (badge) badge.textContent = '189 Calculators (70 Financial, 29 Health & Fitness, 29 Math, 55 Daily Utilities, Weather & Transport, 6 Keypads)';
+          if (badge) badge.textContent = '173 Calculators (66 Financial, 29 Health & Fitness, 22 Math, 55 Daily Utilities, Weather & Transport, 1 Scientific)';
           const hint = document.querySelector('.view-mode-hint');
-          if (hint) hint.textContent = 'Organized by suite • 185 calculators';
+          if (hint) hint.textContent = 'Organized by suite • 173 calculators';
         }
 
         return;
