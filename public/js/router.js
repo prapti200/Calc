@@ -69,7 +69,6 @@
     { id: 'sec-commission-calc', cat: 'financial', slug: 'commission-calculator', aliases: ['commission', 'sales-commission', 'tiered-commission'], title: 'Sales Commission Calculator' },
     { id: 'sec-sip-calc', cat: 'financial', slug: 'sip-calculator', aliases: ['sip', 'systematic-investment', 'mutual-fund-sip'], title: 'SIP Investment Calculator' },
     { id: 'sec-disc-calc', cat: 'financial', slug: 'price-discount-calculator', aliases: ['price-discount', 'sale-price', 'percent-off'], title: 'Sale Price Discount Calculator' },
-    { id: 'sec-tip-calc', cat: 'financial', slug: 'tip-calculator', aliases: ['tip', 'bill-split', 'utility/tip-calculator', 'utility/tip', 'other/tip-calculator', 'everyday/tip-calculator'], title: 'Tip & Bill Split Calculator' },
 
     // --- HEALTH, FITNESS & MATERNAL CALCULATORS (20 Tools) ---
     { id: 'sec-bmr-calc', cat: 'fitness', slug: 'bmr-calculator', aliases: ['bmr', 'bmr-tdee', 'basal-metabolic-rate', 'metabolism'], title: 'BMR & TDEE Calorie Target Calculator' },
@@ -130,23 +129,15 @@
     // --- DAILY UTILITIES & TOOLS (34 Tools) ---
     { id: 'sec-gpa-calc', cat: 'utility', slug: 'gpa-calculator', aliases: ['gpa', 'college-gpa', 'grade-point-average', 'other/gpa-calculator', 'everyday/gpa-calculator'], title: 'College & School GPA Calculator' },
     // Date & Time Suite (9)
-    { id: 'sec-date-calc', cat: 'other', slug: 'date-calculator', aliases: ['date', 'date-difference-calculator', 'add-days', 'calendar-calculator'], title: 'Date Calculator' },
-    { id: 'sec-time-calc', cat: 'other', slug: 'time-calculator', aliases: ['time', 'time-addition-calculator', 'time-subtraction-calculator', 'clock-calculator'], title: 'Time Calculator' },
     // Housing / Building Suite (8)
     { id: 'sec-stair-calc', cat: 'other', slug: 'stair-calculator', aliases: ['stair', 'stairs-calculator', 'staircase-calculator', 'riser-tread-calculator'], title: 'Stair Calculator' },
-    { id: 'sec-mulch-calc', cat: 'other', slug: 'mulch-calculator', aliases: ['mulch', 'landscaping-mulch-calculator', 'yard-mulch-calculator', 'garden-bed-calculator'], title: 'Mulch Calculator' },
     { id: 'sec-gravel-calc', cat: 'other', slug: 'gravel-calculator', aliases: ['gravel', 'aggregate-calculator', 'crushed-stone-calculator', 'driveway-gravel-calculator'], title: 'Gravel Calculator' },
     // Measurements & Science Suite (10)
-    { id: 'sec-height-calc', cat: 'other', slug: 'height-calculator', aliases: ['height', 'stature', 'child-height-calculator', 'height-converter'], title: 'Height Calculator' },
     { id: 'sec-density-calc', cat: 'other', slug: 'density-calculator', aliases: ['density', 'mass-volume-density', 'specific-gravity-calculator'], title: 'Density Calculator' },
-    { id: 'sec-speed-calc', cat: 'other', slug: 'speed-calculator', aliases: ['speed', 'pace-calculator', 'velocity-calculator', 'distance-speed-time'], title: 'Speed Calculator' },
-    { id: 'sec-roman-numeral-calc', cat: 'other', slug: 'roman-numeral-calculator', aliases: ['roman-numeral', 'roman-numeral-converter', 'roman-numerals-converter', 'arabic-to-roman'], title: 'Roman Numeral Converter' },
     // Electronics & Circuits Suite (4)
-    { id: 'sec-voltage-drop-calc', cat: 'other', slug: 'voltage-drop-calculator', aliases: ['voltage-drop', 'wire-size-calculator', 'wire-voltage-drop', 'nec-voltage-drop'], title: 'Voltage Drop Calculator' },
 
     
     // --- INTERNET & NETWORKING SUITE (5 Tools) ---
-    { id: 'sec-password-generator-calc', cat: 'internet', slug: 'password-generator', aliases: ['password-generator-calculator', 'password', 'pass-gen', 'random-password', 'secure-password', 'other/password-generator'], title: 'Password Generator' },
 
     // --- EVERYDAY UTILITY SUITE (5 New Tools) ---
     { id: 'sec-grade-calc', cat: 'utility', slug: 'grade-calculator', aliases: ['grade', 'final-grade-calculator', 'class-grade-calculator', 'exam-grade-calculator', 'other/grade-calculator', 'everyday/grade-calculator'], title: 'Grade Calculator' },
@@ -159,7 +150,6 @@
     { id: 'sec-mileage-calc', cat: 'other', slug: 'mileage-calculator', aliases: ['mileage', 'mileage-calc', 'business-mileage-calculator', 'irs-mileage-calculator', 'commute-mileage-calculator', 'transportation/mileage-calculator', 'other/mileage-calculator', 'transportation/mileage'], title: 'Mileage Reimbursement Calculator' },
 
     // --- ENTERTAINMENT & ANECDOTES SUITE (2 Tools) ---
-    { id: 'sec-love-calc', cat: 'other', slug: 'love-calculator', aliases: ['love', 'love-calc', 'love-compatibility-calculator', 'relationship-calculator', 'flames-calculator', 'entertainment/love-calculator', 'other/love-calculator', 'entertainment/love'], title: 'Love Calculator & Compatibility Meter' },
 
     // --- STANDARD & SCIENTIFIC KEYPAD (2 Modes) ---
     { id: 'box-std-mode', cat: 'standard', slug: 'standard-calculator', aliases: ['standard', 'standard-keypad', 'keypad', 'calc'], title: 'Standard Calculator' },

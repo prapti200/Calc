@@ -3294,12 +3294,10 @@ const OtherCalcs = {
 
     // Automatically trigger initial calculation when opening tool
     try {
-      if (calcId === 'sec-password-generator-calc') this.generatePassword();
-      else if (calcId === 'sec-grade-calc') { if (this.gradeMode === 'weighted') { this.renderGradeCategories(); this.calcWeightedGrade(); } else { this.calcFinalGrade(); } }
-      else if (calcId === 'sec-bra-size-calc') this.calcBraSize(); this.convertShoeSize(); } this.calcGolfHandicap(); }
+      if (calcId === 'sec-grade-calc') { if (this.gradeMode === 'weighted') { this.renderGradeCategories(); this.calcWeightedGrade(); } else { this.calcFinalGrade(); } }
+      else if (calcId === 'sec-bra-size-calc') this.calcBraSize();
       else if (calcId === 'sec-fuel-cost-calc') this.calcFuelCost();
       else if (calcId === 'sec-mileage-calc') this.calcMileage();
-      else if (calcId === 'sec-love-calc') this.calcLoveCompatibility();
       else if (calcId === 'sec-gpa-calc') { this.renderCourses(); }
     } catch (e) {
       console.warn('Initial calculation error for ' + calcId, e);
