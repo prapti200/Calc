@@ -351,29 +351,6 @@
       ]
     },
 
-    'sec-credit-card-calc': {
-      title: 'Credit Card Minimum & Payoff Calculator',
-      category: 'Debt Amortization',
-      badge: 'Revolving Credit APR Benchmark',
-      tagline: 'Calculate how long minimum payments take to eliminate card debt and interest saved with accelerated payments.',
-      overview: 'The <strong>Credit Card Payoff Calculator</strong> simulates revolving card balance amortization under monthly compounding APR. It highlights the true cost of paying only minimum amounts vs fixed accelerated payments to become debt-free faster.',
-      steps: [
-        { title: 'Enter Card Balance', desc: 'Input your current credit card statement balance (e.g. $5,000).' },
-        { title: 'Enter Card APR (%)', desc: 'Specify your card interest rate (e.g. 24.99% APR).' },
-        { title: 'Configure Payment Strategy', desc: 'Compare minimum payments vs a fixed monthly payment amount.' },
-        { title: 'Review Interest & Timeline', desc: 'Inspect months to debt freedom and total cumulative interest charges.' }
-      ],
-      formulaName: 'Daily Periodic Rate Compounding',
-      formulaExpr: 'I_{\text{month}} = B \times \left(\frac{\text{APR}}{365}\right) \times 30, \quad B_{\text{new}} = B + I_{\text{month}} - P_{\text{monthly}}',
-      formulaExplanation: 'Interest accrues daily on remaining balance. Extra payments go directly toward principal reduction.',
-      example: '<strong>Example:</strong> A $5,000 balance at 22% APR paying only minimums takes over 14 years and costs $5,800+ in interest; paying $200/mo clears it in 33 months and saves $4,300+.',
-      faqs: [
-        {
-          q: 'Why does paying only the minimum take so long?',
-          a: 'Minimum payments are often set at just 1% to 2% of principal plus monthly accrued interest, meaning almost your entire payment goes to bank interest.'
-        }
-      ]
-    }
   };
 
   function ensureEightFaqs(faqs, title, category) {

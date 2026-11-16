@@ -27,41 +27,23 @@ const FinancialCalcs = {
     this.calcCurrency();
     this.calcInflation();
     this.calcFinanceTVM('fv');
-    this.calcMortgagePayoff();
     this.calc401k();
-    this.calcCompoundInterest();
     this.calcSIP();
     this.calcDiscountTax();
     this.calcTipSplit();
     this.calcROI();
     this.calcPension();
-    this.calcHouseAffordability();
     this.calcSocialSecurity();
-    this.calcRent();
     this.calcAnnuity();
-    this.calcDTI();
     this.calcAnnuityPayout();
-    this.calcRealEstate();
     this.calcRothIRA();
-    this.calcRefinance();
     this.calcIRA();
-    this.calcRentalProperty();
     this.calcRMD();
-    this.calcAPR();
-    this.calcFHALoan();
-    this.calcVAMortgage();
-    this.calcHomeEquityLoan();
     this.calcHELOC();
-    this.calcDownPayment();
-    this.calcRentVsBuy();
-    this.calcIncomeTax();
     this.calcSalary();
     this.calcAutoRebate();
     this.calcAutoLease();
-    this.calcInterestRate();
-    this.calcSavingsGoal();
     this.calcSimpleInterest();
-    this.calcCD();
     this.calcBond();
     this.calcMutualFund();
     this.calcAverageReturn();
@@ -69,19 +51,10 @@ const FinancialCalcs = {
     this.calcPayback();
     this.calcPresentValue();
     this.calcFutureValue();
-    this.calcCreditCard();
-    this.calcCCPayoff();
-    this.calcDebtPayoff();
-    this.calcDebtConsolidation();
-    this.calcRepayment();
-    this.calcStudentLoan();
     this.calcCollegeCost();
     this.calcDepreciation();
     this.calcMargin();
     this.calcDiscount();
-    this.calcBusinessLoan();
-    this.calcPersonalLoan();
-    this.calcBoatLoan();
     this.calcGenLease();
     this.calcBudget();
     this.calcCommission();
@@ -382,89 +355,6 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // NEW: HOUSE AFFORDABILITY CALCULATOR (US 28/36 Underwriting Rule)
   // ------------------------------------------------------------------------
-  calcHouseAffordability() {
-    const annualIncome = parseFloat(document.getElementById('afford-income')?.value) || 0;
-    const monthlyDebt = parseFloat(document.getElementById('afford-debt')?.value) || 0;
-    const downPayment = parseFloat(document.getElementById('afford-down')?.value) || 0;
-    const rate = parseFloat(document.getElementById('afford-rate')?.value) || 6.5;
-    const termYears = parseFloat(document.getElementById('afford-term')?.value) || 30;
-    const taxRate = parseFloat(document.getElementById('afford-tax-rate')?.value) || 1.2;
-    const insAnnual = parseFloat(document.getElementById('afford-ins-annual')?.value) || 1200;
-    const monthlyHOA = parseFloat(document.getElementById('afford-hoa')?.value) || 0;
-
-    if (annualIncome <= 0 || rate <= 0 || termYears <= 0) return;
-
-    const monthlyGross = annualIncome / 12;
-    // 28/36 Rule Standard
-    const frontEndBudget = monthlyGross * 0.28;
-    const backEndBudget = Math.max(0, (monthlyGross * 0.36) - monthlyDebt);
-    const maxRecPayment = Math.min(frontEndBudget, backEndBudget);
-
-    // Conservative (25/33) and Aggressive (33/43)
-    const maxConsPayment = Math.min(monthlyGross * 0.25, Math.max(0, (monthlyGross * 0.33) - monthlyDebt));
-    const maxAggrPayment = Math.min(monthlyGross * 0.33, Math.max(0, (monthlyGross * 0.43) - monthlyDebt));
-
-    const solvePrice = (maxPmt) => {
-      const r = (rate / 100) / 12;
-      const n = termYears * 12;
-      const k = (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-      const fixedMonthly = (insAnnual / 12) + monthlyHOA;
-      const tMo = (taxRate / 100) / 12;
-
-      // First solve assuming PMI is required (< 20% down)
-      const pmiMo = 0.0075 / 12;
-      let price = (maxPmt - fixedMonthly + (downPayment * (k + pmiMo))) / (k + pmiMo + tMo);
-
-      // If down payment >= 20% of purchase price, re-solve without PMI
-      if (price > 0 && (downPayment / price) >= 0.20) {
-        price = (maxPmt - fixedMonthly + (downPayment * k)) / (k + tMo);
-      }
-      return Math.max(downPayment, price);
-    };
-
-    const recPrice = solvePrice(maxRecPayment);
-    const consPrice = solvePrice(maxConsPayment);
-    const aggrPrice = solvePrice(maxAggrPayment);
-
-    const recLoan = Math.max(0, recPrice - downPayment);
-    const r = (rate / 100) / 12;
-    const n = termYears * 12;
-    const factor = Math.pow(1 + r, n);
-    const monthlyPI = recLoan > 0 ? (recLoan * r * factor) / (factor - 1) : 0;
-    const monthlyTax = (recPrice * (taxRate / 100)) / 12;
-    const monthlyIns = insAnnual / 12;
-    const isUnder20Down = (downPayment / recPrice) < 0.20;
-    const monthlyPMI = (isUnder20Down && recLoan > 0) ? (recLoan * 0.0075) / 12 : 0;
-    const totalMonthly = monthlyPI + monthlyTax + monthlyIns + monthlyPMI + monthlyHOA;
-
-    const resPrice = document.getElementById('res-afford-max-price');
-    const resLoan = document.getElementById('res-afford-max-loan');
-    const resTotalMo = document.getElementById('res-afford-monthly-total');
-    const resPI = document.getElementById('res-afford-pi');
-    const resTax = document.getElementById('res-afford-tax');
-    const resIns = document.getElementById('res-afford-ins');
-    const resPMI = document.getElementById('res-afford-pmi');
-    const resHOA = document.getElementById('res-afford-hoa');
-    const resCons = document.getElementById('res-afford-cons-price');
-    const resAggr = document.getElementById('res-afford-aggr-price');
-    const resDTI = document.getElementById('res-afford-dti');
-
-    if (resPrice) resPrice.textContent = this.formatCurrency(recPrice);
-    if (resLoan) resLoan.textContent = this.formatCurrency(recLoan);
-    if (resTotalMo) resTotalMo.textContent = this.formatCurrency(totalMonthly);
-    if (resPI) resPI.textContent = this.formatCurrency(monthlyPI);
-    if (resTax) resTax.textContent = this.formatCurrency(monthlyTax);
-    if (resIns) resIns.textContent = this.formatCurrency(monthlyIns);
-    if (resPMI) resPMI.textContent = isUnder20Down ? this.formatCurrency(monthlyPMI) : '$0.00 (≥20% Down)';
-    if (resHOA) resHOA.textContent = this.formatCurrency(monthlyHOA);
-    if (resCons) resCons.textContent = this.formatCurrency(consPrice);
-    if (resAggr) resAggr.textContent = this.formatCurrency(aggrPrice);
-    if (resDTI) {
-      const dtiPct = ((totalMonthly + monthlyDebt) / monthlyGross) * 100;
-      resDTI.textContent = `${dtiPct.toFixed(1)}% Back-End DTI`;
-    }
-  },
-
   // ------------------------------------------------------------------------
   // NEW: SOCIAL SECURITY CALCULATOR (US SSA Full Retirement & Early/Delayed)
   // ------------------------------------------------------------------------
@@ -568,47 +458,6 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // NEW: RENT CALCULATOR (30% Rule, 40x Rule & 50/30/20 Framework)
   // ------------------------------------------------------------------------
-  calcRent() {
-    const annualIncome = parseFloat(document.getElementById('rent-income')?.value) || 0;
-    const monthlyDebt = parseFloat(document.getElementById('rent-debt')?.value) || 0;
-    const utilities = parseFloat(document.getElementById('rent-utilities')?.value) || 0;
-    const savingsGoal = parseFloat(document.getElementById('rent-savings-goal')?.value) || 0;
-
-    if (annualIncome <= 0) return;
-
-    const monthlyGross = annualIncome / 12;
-    const recRent = monthlyGross * 0.30;
-    const consRent = monthlyGross * 0.25;
-    const stretchRent = monthlyGross * 0.35;
-    const landlordMax = annualIncome / 40;
-
-    // 50/30/20 Budget Breakdown
-    const needs50 = monthlyGross * 0.50;
-    const wants30 = monthlyGross * 0.30;
-    const savings20 = monthlyGross * 0.20;
-
-    // Free discretionary income after rent + debt + utilities + savings
-    const discretionary = Math.max(0, monthlyGross - recRent - monthlyDebt - utilities - savingsGoal);
-
-    const resRec = document.getElementById('res-rent-recommended');
-    const resCons = document.getElementById('res-rent-conservative');
-    const resStretch = document.getElementById('res-rent-stretched');
-    const res40x = document.getElementById('res-rent-landlord-rule');
-    const resDisc = document.getElementById('res-rent-discretionary');
-    const resNeeds = document.getElementById('res-rent-needs');
-    const resWants = document.getElementById('res-rent-wants');
-    const resSav = document.getElementById('res-rent-savings');
-
-    if (resRec) resRec.textContent = this.formatCurrency(recRent);
-    if (resCons) resCons.textContent = this.formatCurrency(consRent);
-    if (resStretch) resStretch.textContent = this.formatCurrency(stretchRent);
-    if (res40x) res40x.textContent = this.formatCurrency(landlordMax);
-    if (resDisc) resDisc.textContent = this.formatCurrency(discretionary);
-    if (resNeeds) resNeeds.textContent = this.formatCurrency(needs50);
-    if (resWants) resWants.textContent = this.formatCurrency(wants30);
-    if (resSav) resSav.textContent = this.formatCurrency(savings20);
-  },
-
   // ------------------------------------------------------------------------
   // NEW: ANNUITY CALCULATOR (Deferred Annuity & Compound Wealth Growth)
   // ------------------------------------------------------------------------
@@ -672,78 +521,6 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // NEW: DEBT-TO-INCOME (DTI) RATIO CALCULATOR (Front & Back-End Ratios)
   // ------------------------------------------------------------------------
-  calcDTI() {
-    const grossIncome = parseFloat(document.getElementById('dti-income')?.value) || 0;
-    const housing = parseFloat(document.getElementById('dti-housing')?.value) || 0;
-    const auto = parseFloat(document.getElementById('dti-auto')?.value) || 0;
-    const student = parseFloat(document.getElementById('dti-student')?.value) || 0;
-    const cc = parseFloat(document.getElementById('dti-cc')?.value) || 0;
-    const other = parseFloat(document.getElementById('dti-other')?.value) || 0;
-
-    if (grossIncome <= 0) return;
-
-    const nonHousingDebt = auto + student + cc + other;
-    const totalDebt = housing + nonHousingDebt;
-
-    const frontEndDTI = (housing / grossIncome) * 100;
-    const backEndDTI = (totalDebt / grossIncome) * 100;
-
-    // Lender headroom
-    const cap36 = Math.max(0, (grossIncome * 0.36) - totalDebt);
-    const cap43 = Math.max(0, (grossIncome * 0.43) - totalDebt);
-    const freeCash = Math.max(0, grossIncome - totalDebt);
-
-    // Status evaluation
-    let statusText = 'Excellent (Prime Loan Rates)';
-    let statusColor = '#10b981';
-    if (backEndDTI <= 36) {
-      statusText = '✓ Excellent — Easily qualifies for prime conventional mortgages (≤36%)';
-      statusColor = '#10b981';
-    } else if (backEndDTI <= 43) {
-      statusText = '✓ Good — Qualifies for standard FHA & conventional loans (36%–43%)';
-      statusColor = '#3b82f6';
-    } else if (backEndDTI <= 50) {
-      statusText = '⚠ Stretched — High risk; may require compensating factors/assets (44%–50%)';
-      statusColor = '#f59e0b';
-    } else {
-      statusText = '✕ Overburdened — Exceeds lending threshold; debt reduction advised (>50%)';
-      statusColor = '#e11d48';
-    }
-
-    const resBack = document.getElementById('res-dti-backend');
-    const resFront = document.getElementById('res-dti-frontend');
-    const resStatus = document.getElementById('res-dti-status');
-    const resCap36 = document.getElementById('res-dti-cap-36');
-    const resCap43 = document.getElementById('res-dti-cap-43');
-    const resFree = document.getElementById('res-dti-free-cash');
-
-    if (resBack) {
-      resBack.textContent = `${backEndDTI.toFixed(1)}%`;
-      resBack.style.color = statusColor;
-    }
-    if (resFront) resFront.textContent = `${frontEndDTI.toFixed(1)}%`;
-    if (resStatus) {
-      resStatus.textContent = statusText;
-      resStatus.style.color = statusColor;
-    }
-    if (resCap36) resCap36.textContent = this.formatCurrency(cap36);
-    if (resCap43) resCap43.textContent = this.formatCurrency(cap43);
-    if (resFree) resFree.textContent = this.formatCurrency(freeCash);
-
-    // Dynamic bar
-    const barH = document.getElementById('dti-bar-housing');
-    const barO = document.getElementById('dti-bar-other');
-    const barF = document.getElementById('dti-bar-free');
-    if (barH && barO && barF) {
-      const pH = Math.min(100, (housing / grossIncome) * 100);
-      const pO = Math.min(100 - pH, (nonHousingDebt / grossIncome) * 100);
-      const pF = Math.max(0, 100 - pH - pO);
-      barH.style.width = `${pH.toFixed(1)}%`;
-      barO.style.width = `${pO.toFixed(1)}%`;
-      barF.style.width = `${pF.toFixed(1)}%`;
-    }
-  },
-
   // ------------------------------------------------------------------------
   // NEW: ANNUITY PAYOUT CALCULATOR (Immediate SPIA & Term-Certain Payouts)
   // ------------------------------------------------------------------------
@@ -795,80 +572,6 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // NEW: REAL ESTATE CALCULATOR (Rental Property ROI & Cap Rate Analyzer)
   // ------------------------------------------------------------------------
-  calcRealEstate() {
-    const price = parseFloat(document.getElementById('re-price')?.value) || 0;
-    const downPct = parseFloat(document.getElementById('re-down-pct')?.value) || 20;
-    const rate = parseFloat(document.getElementById('re-rate')?.value) || 6.75;
-    const termYears = parseFloat(document.getElementById('re-term')?.value) || 30;
-    const monthlyRent = parseFloat(document.getElementById('re-rent')?.value) || 0;
-    const vacancyPct = parseFloat(document.getElementById('re-vacancy')?.value) || 5;
-    const taxYr = parseFloat(document.getElementById('re-tax-yr')?.value) || 0;
-    const insYr = parseFloat(document.getElementById('re-ins-yr')?.value) || 0;
-    const hoa = parseFloat(document.getElementById('re-hoa')?.value) || 0;
-    const mgmtPct = parseFloat(document.getElementById('re-mgmt-pct')?.value) || 8;
-    const maintPct = parseFloat(document.getElementById('re-maint-pct')?.value) || 5;
-    const closingPct = parseFloat(document.getElementById('re-closing-pct')?.value) || 3;
-
-    if (price <= 0 || monthlyRent <= 0) return;
-
-    const downPayment = price * (downPct / 100);
-    const loanAmount = Math.max(0, price - downPayment);
-    const initialCash = downPayment + (price * (closingPct / 100));
-
-    // Mortgage P&I
-    let monthlyPI = 0;
-    if (loanAmount > 0 && rate > 0) {
-      const r = (rate / 100) / 12;
-      const n = termYears * 12;
-      const factor = Math.pow(1 + r, n);
-      monthlyPI = (loanAmount * r * factor) / (factor - 1);
-    }
-
-    const grossAnnualRent = monthlyRent * 12;
-    const egi = grossAnnualRent * (1 - (vacancyPct / 100));
-
-    // Operating expenses
-    const moTax = taxYr / 12;
-    const moIns = insYr / 12;
-    const moMgmt = monthlyRent * (mgmtPct / 100);
-    const moMaint = monthlyRent * (maintPct / 100);
-    const totalMoExpenses = moTax + moIns + hoa + moMgmt + moMaint;
-    const annualExpenses = totalMoExpenses * 12;
-
-    const noi = egi - annualExpenses;
-    const annualDebtService = monthlyPI * 12;
-    const annualCashFlow = noi - annualDebtService;
-    const monthlyCashFlow = annualCashFlow / 12;
-
-    const capRate = price > 0 ? (noi / price) * 100 : 0;
-    const cocReturn = initialCash > 0 ? (annualCashFlow / initialCash) * 100 : 0;
-    const grm = grossAnnualRent > 0 ? price / grossAnnualRent : 0;
-    const dscr = annualDebtService > 0 ? noi / annualDebtService : 0;
-
-    const resMoCF = document.getElementById('res-re-monthly-cf');
-    const resAnnCF = document.getElementById('res-re-annual-cf');
-    const resCap = document.getElementById('res-re-cap-rate');
-    const resCoC = document.getElementById('res-re-coc');
-    const resNOI = document.getElementById('res-re-noi');
-    const resCash = document.getElementById('res-re-cash-required');
-    const resPI = document.getElementById('res-re-mortgage-pi');
-    const resGRM = document.getElementById('res-re-grm');
-    const resDSCR = document.getElementById('res-re-dscr');
-
-    if (resMoCF) {
-      resMoCF.textContent = this.formatCurrency(monthlyCashFlow);
-      resMoCF.style.color = monthlyCashFlow >= 0 ? 'var(--accent-green)' : 'var(--accent-rose)';
-    }
-    if (resAnnCF) resAnnCF.textContent = this.formatCurrency(annualCashFlow);
-    if (resCap) resCap.textContent = `${capRate.toFixed(2)}%`;
-    if (resCoC) resCoC.textContent = `${cocReturn.toFixed(2)}%`;
-    if (resNOI) resNOI.textContent = this.formatCurrency(noi);
-    if (resCash) resCash.textContent = this.formatCurrency(initialCash);
-    if (resPI) resPI.textContent = this.formatCurrency(monthlyPI);
-    if (resGRM) resGRM.textContent = `${grm.toFixed(2)}x`;
-    if (resDSCR) resDSCR.textContent = dscr.toFixed(2);
-  },
-
   // ------------------------------------------------------------------------
   // NEW: ROTH IRA CALCULATOR (Tax-Free Wealth & Compounding)
   // ------------------------------------------------------------------------
@@ -921,68 +624,6 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // 23. REFINANCE CALCULATOR (Break-Even & Lifetime Interest Savings)
   // ------------------------------------------------------------------------
-  calcRefinance() {
-    const curBalance = parseFloat(document.getElementById('refi-cur-balance')?.value) || 0;
-    const curRate = parseFloat(document.getElementById('refi-cur-rate')?.value) || 0;
-    const curTermRem = parseFloat(document.getElementById('refi-cur-term-rem')?.value) || 25;
-    const newRate = parseFloat(document.getElementById('refi-new-rate')?.value) || 0;
-    const newTerm = parseFloat(document.getElementById('refi-new-term')?.value) || 30;
-    const closingCosts = parseFloat(document.getElementById('refi-closing-costs')?.value) || 0;
-    const cashOut = parseFloat(document.getElementById('refi-cash-out')?.value) || 0;
-
-    if (curBalance <= 0 || curRate <= 0 || curTermRem <= 0 || newRate <= 0 || newTerm <= 0) return;
-
-    // Current loan monthly P&I and remaining interest
-    const rCur = (curRate / 100) / 12;
-    const nCur = curTermRem * 12;
-    const factorCur = Math.pow(1 + rCur, nCur);
-    const pmtCur = (curBalance * rCur * factorCur) / (factorCur - 1);
-    const totalIntCur = (pmtCur * nCur) - curBalance;
-
-    // New loan calculation
-    const newLoanAmt = curBalance + cashOut;
-    const rNew = (newRate / 100) / 12;
-    const nNew = newTerm * 12;
-    const factorNew = Math.pow(1 + rNew, nNew);
-    const pmtNew = (newLoanAmt * rNew * factorNew) / (factorNew - 1);
-    const totalIntNew = (pmtNew * nNew) - newLoanAmt;
-
-    const monthlySavings = pmtCur - pmtNew;
-    const lifetimeSavings = totalIntCur - (totalIntNew + closingCosts);
-    const breakEvenMonths = monthlySavings > 0 ? Math.ceil(closingCosts / monthlySavings) : 0;
-
-    const elSavings = document.getElementById('res-refi-monthly-savings');
-    const elNewPmt = document.getElementById('res-refi-new-payment');
-    const elCurPmt = document.getElementById('res-refi-cur-payment');
-    const elBreakEven = document.getElementById('res-refi-breakeven');
-    const elLifetime = document.getElementById('res-refi-lifetime-savings');
-
-    if (elSavings) {
-      if (monthlySavings >= 0) {
-        elSavings.textContent = `Save ${this.formatCurrency(monthlySavings)} / mo`;
-        elSavings.style.color = 'var(--accent-green)';
-      } else {
-        elSavings.textContent = `+${this.formatCurrency(Math.abs(monthlySavings))} / mo higher`;
-        elSavings.style.color = 'var(--accent-rose)';
-      }
-    }
-    if (elNewPmt) elNewPmt.textContent = this.formatCurrency(pmtNew);
-    if (elCurPmt) elCurPmt.textContent = this.formatCurrency(pmtCur);
-    if (elBreakEven) {
-      if (monthlySavings > 0 && closingCosts > 0) {
-        elBreakEven.textContent = `${breakEvenMonths} Months (${(breakEvenMonths / 12).toFixed(1)} Yrs)`;
-      } else if (closingCosts === 0) {
-        elBreakEven.textContent = 'Instant (No closing costs)';
-      } else {
-        elBreakEven.textContent = 'No break-even (Higher payment)';
-      }
-    }
-    if (elLifetime) {
-      elLifetime.textContent = this.formatCurrency(lifetimeSavings);
-      elLifetime.style.color = lifetimeSavings >= 0 ? 'var(--accent-green)' : 'var(--accent-rose)';
-    }
-  },
-
   // ------------------------------------------------------------------------
   // 24. TRADITIONAL IRA CALCULATOR (Upfront Deductions & Growth)
   // ------------------------------------------------------------------------
@@ -1046,77 +687,6 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // 25. RENTAL PROPERTY CALCULATOR (Multi-unit, OpEx, NOI & Returns)
   // ------------------------------------------------------------------------
-  calcRentalProperty() {
-    const price = parseFloat(document.getElementById('rental-price')?.value) || 0;
-    const downPct = parseFloat(document.getElementById('rental-down-pct')?.value) || 20;
-    const rate = parseFloat(document.getElementById('rental-rate')?.value) || 6.75;
-    const term = parseFloat(document.getElementById('rental-term')?.value) || 30;
-    const grossRent = parseFloat(document.getElementById('rental-gross-rent')?.value) || 0;
-    const otherInc = parseFloat(document.getElementById('rental-other-inc')?.value) || 0;
-    const vacancyPct = parseFloat(document.getElementById('rental-vacancy')?.value) || 5;
-    const taxYr = parseFloat(document.getElementById('rental-tax-yr')?.value) || 0;
-    const insYr = parseFloat(document.getElementById('rental-ins-yr')?.value) || 0;
-    const hoa = parseFloat(document.getElementById('rental-hoa')?.value) || 0;
-    const mgmtPct = parseFloat(document.getElementById('rental-mgmt')?.value) || 8;
-    const maintPct = parseFloat(document.getElementById('rental-maint')?.value) || 5;
-    const capexPct = parseFloat(document.getElementById('rental-capex')?.value) || 5;
-    const closingPct = parseFloat(document.getElementById('rental-closing-costs')?.value) || 3;
-
-    if (price <= 0 || grossRent <= 0) return;
-
-    const downPayment = price * (downPct / 100);
-    const loanAmount = Math.max(0, price - downPayment);
-    const initialCash = downPayment + (price * (closingPct / 100));
-
-    // Mortgage P&I
-    let monthlyPI = 0;
-    if (loanAmount > 0 && rate > 0) {
-      const r = (rate / 100) / 12;
-      const n = term * 12;
-      const factor = Math.pow(1 + r, n);
-      monthlyPI = (loanAmount * r * factor) / (factor - 1);
-    }
-
-    const totalMonthlyRent = grossRent + otherInc;
-    const effectiveMonthlyRevenue = totalMonthlyRent * (1 - (vacancyPct / 100));
-
-    // Operating expenses
-    const moTax = taxYr / 12;
-    const moIns = insYr / 12;
-    const moMgmt = grossRent * (mgmtPct / 100);
-    const moMaint = grossRent * (maintPct / 100);
-    const moCapEx = grossRent * (capexPct / 100);
-    const totalMonthlyOpEx = moTax + moIns + hoa + moMgmt + moMaint + moCapEx;
-
-    const monthlyNOI = effectiveMonthlyRevenue - totalMonthlyOpEx;
-    const annualNOI = monthlyNOI * 12;
-    const monthlyCashFlow = monthlyNOI - monthlyPI;
-    const annualCashFlow = monthlyCashFlow * 12;
-
-    const capRate = price > 0 ? (annualNOI / price) * 100 : 0;
-    const cocReturn = initialCash > 0 ? (annualCashFlow / initialCash) * 100 : 0;
-    const oer = effectiveMonthlyRevenue > 0 ? (totalMonthlyOpEx / effectiveMonthlyRevenue) * 100 : 0;
-
-    const elMoCF = document.getElementById('res-rental-monthly-cf');
-    const elCap = document.getElementById('res-rental-cap-rate');
-    const elCoC = document.getElementById('res-rental-coc');
-    const elNOI = document.getElementById('res-rental-noi');
-    const elCash = document.getElementById('res-rental-total-cash');
-    const elOER = document.getElementById('res-rental-oer');
-    const elPI = document.getElementById('res-rental-mortgage-pi');
-
-    if (elMoCF) {
-      elMoCF.textContent = this.formatCurrency(monthlyCashFlow);
-      elMoCF.style.color = monthlyCashFlow >= 0 ? 'var(--accent-green)' : 'var(--accent-rose)';
-    }
-    if (elCap) elCap.textContent = `${capRate.toFixed(2)}%`;
-    if (elCoC) elCoC.textContent = `${cocReturn.toFixed(2)}%`;
-    if (elNOI) elNOI.textContent = this.formatCurrency(annualNOI);
-    if (elCash) elCash.textContent = this.formatCurrency(initialCash);
-    if (elOER) elOER.textContent = `${oer.toFixed(1)}% OER`;
-    if (elPI) elPI.textContent = this.formatCurrency(monthlyPI);
-  },
-
   // ------------------------------------------------------------------------
   // 26. RMD CALCULATOR (IRS SECURE 2.0 Uniform Lifetime Table)
   // ------------------------------------------------------------------------
@@ -1175,204 +745,15 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // 27. APR CALCULATOR (True Annual Percentage Rate Solver)
   // ------------------------------------------------------------------------
-  calcAPR() {
-    const loanAmt = parseFloat(document.getElementById('apr-loan-amt')?.value) || 0;
-    const nominalRate = parseFloat(document.getElementById('apr-rate')?.value) || 0;
-    const termYears = parseFloat(document.getElementById('apr-term')?.value) || 30;
-    const pointsPct = parseFloat(document.getElementById('apr-points')?.value) || 0;
-    const origFee = parseFloat(document.getElementById('apr-origination')?.value) || 0;
-    const otherFees = parseFloat(document.getElementById('apr-other-fees')?.value) || 0;
-
-    if (loanAmt <= 0 || nominalRate <= 0 || termYears <= 0) return;
-
-    const pointsCost = loanAmt * (pointsPct / 100);
-    const totalFees = pointsCost + origFee + otherFees;
-    const netProceeds = loanAmt - totalFees;
-
-    const n = termYears * 12;
-    const rNom = (nominalRate / 100) / 12;
-    const factorNom = Math.pow(1 + rNom, n);
-    const monthlyPMT = (loanAmt * rNom * factorNom) / (factorNom - 1);
-
-    // Solve for APR using binary search for effective periodic rate
-    let low = 0;
-    let high = 0.5;
-    let rEff = rNom;
-
-    for (let iter = 0; iter < 40; iter++) {
-      rEff = (low + high) / 2;
-      const factorEff = Math.pow(1 + rEff, n);
-      const pv = monthlyPMT * ((factorEff - 1) / (rEff * factorEff));
-      if (pv > netProceeds) {
-        low = rEff;
-      } else {
-        high = rEff;
-      }
-    }
-
-    const apr = rEff * 12 * 100;
-    const spread = apr - nominalRate;
-    const totalFinanceCharges = (monthlyPMT * n) - netProceeds;
-
-    const elAPR = document.getElementById('res-apr-rate');
-    const elNom = document.getElementById('res-apr-nominal');
-    const elSpread = document.getElementById('res-apr-spread');
-    const elPMT = document.getElementById('res-apr-monthly-pmt');
-    const elCharges = document.getElementById('res-apr-finance-charges');
-
-    if (elAPR) elAPR.textContent = `${apr.toFixed(3)}% APR`;
-    if (elNom) elNom.textContent = `${nominalRate.toFixed(3)}%`;
-    if (elSpread) elSpread.textContent = `+${spread.toFixed(3)}% Rate Spread`;
-    if (elPMT) elPMT.textContent = this.formatCurrency(monthlyPMT);
-    if (elCharges) elCharges.textContent = this.formatCurrency(totalFinanceCharges);
-  },
-
   // ------------------------------------------------------------------------
   // 28. FHA LOAN CALCULATOR (Upfront & Monthly MIP Breakdown)
   // ------------------------------------------------------------------------
-  calcFHALoan() {
-    const price = parseFloat(document.getElementById('fha-price')?.value) || 0;
-    const downPct = parseFloat(document.getElementById('fha-down-pct')?.value) || 3.5;
-    const rate = parseFloat(document.getElementById('fha-rate')?.value) || 6.25;
-    const termYears = parseFloat(document.getElementById('fha-term')?.value) || 30;
-    const taxYr = parseFloat(document.getElementById('fha-tax-yr')?.value) || 0;
-    const insYr = parseFloat(document.getElementById('fha-ins-yr')?.value) || 0;
-    const hoa = parseFloat(document.getElementById('fha-hoa')?.value) || 0;
-
-    if (price <= 0 || rate <= 0 || termYears <= 0) return;
-
-    const downPayment = price * (downPct / 100);
-    const baseLoan = Math.max(0, price - downPayment);
-    // FHA Upfront Mortgage Insurance Premium (UFMIP = 1.75%)
-    const ufmip = baseLoan * 0.0175;
-    const totalLoan = baseLoan + ufmip;
-
-    const r = (rate / 100) / 12;
-    const n = termYears * 12;
-    const factor = Math.pow(1 + r, n);
-    const monthlyPI = (totalLoan * r * factor) / (factor - 1);
-
-    // Annual FHA MIP rate: typically 0.55% for down payment < 5% on 30yr
-    const annualMIPRate = downPct >= 5 ? 0.0050 : 0.0055;
-    const monthlyMIP = (baseLoan * annualMIPRate) / 12;
-    const monthlyTax = taxYr / 12;
-    const monthlyIns = insYr / 12;
-    const totalMonthly = monthlyPI + monthlyMIP + monthlyTax + monthlyIns + hoa;
-
-    const elTotal = document.getElementById('res-fha-total-monthly');
-    const elPI = document.getElementById('res-fha-pi');
-    const elMIP = document.getElementById('res-fha-mip-monthly');
-    const elUFMIP = document.getElementById('res-fha-ufmip');
-    const elTotalLoan = document.getElementById('res-fha-total-loan');
-    const elDown = document.getElementById('res-fha-min-down');
-
-    if (elTotal) elTotal.textContent = this.formatCurrency(totalMonthly);
-    if (elPI) elPI.textContent = this.formatCurrency(monthlyPI);
-    if (elMIP) elMIP.textContent = this.formatCurrency(monthlyMIP);
-    if (elUFMIP) elUFMIP.textContent = this.formatCurrency(ufmip);
-    if (elTotalLoan) elTotalLoan.textContent = this.formatCurrency(totalLoan);
-    if (elDown) elDown.textContent = this.formatCurrency(downPayment);
-  },
-
   // ------------------------------------------------------------------------
   // 29. VA MORTGAGE CALCULATOR (0% Down, $0 PMI & Tiered Funding Fee)
   // ------------------------------------------------------------------------
-  calcVAMortgage() {
-    const price = parseFloat(document.getElementById('va-price')?.value) || 0;
-    const downPct = parseFloat(document.getElementById('va-down-pct')?.value) || 0;
-    const rate = parseFloat(document.getElementById('va-rate')?.value) || 6.125;
-    const termYears = parseFloat(document.getElementById('va-term')?.value) || 30;
-    const usage = document.getElementById('va-usage')?.value || 'first';
-    const isExempt = document.getElementById('va-disability')?.value === 'yes';
-    const taxYr = parseFloat(document.getElementById('va-tax-yr')?.value) || 0;
-    const insYr = parseFloat(document.getElementById('va-ins-yr')?.value) || 0;
-
-    if (price <= 0 || rate <= 0 || termYears <= 0) return;
-
-    const downPayment = price * (downPct / 100);
-    const baseLoan = Math.max(0, price - downPayment);
-
-    // VA Funding Fee Tier
-    let feePct = 0;
-    if (!isExempt) {
-      if (usage === 'first') {
-        if (downPct < 5) feePct = 2.15;
-        else if (downPct < 10) feePct = 1.50;
-        else feePct = 1.25;
-      } else {
-        if (downPct < 5) feePct = 3.30;
-        else if (downPct < 10) feePct = 1.50;
-        else feePct = 1.25;
-      }
-    }
-
-    const fundingFee = baseLoan * (feePct / 100);
-    const totalLoan = baseLoan + fundingFee;
-
-    const r = (rate / 100) / 12;
-    const n = termYears * 12;
-    const factor = Math.pow(1 + r, n);
-    const monthlyPI = (totalLoan * r * factor) / (factor - 1);
-    const monthlyTax = taxYr / 12;
-    const monthlyIns = insYr / 12;
-    const totalMonthly = monthlyPI + monthlyTax + monthlyIns;
-
-    // Conventional comparison PMI savings (~0.75% / yr for 8 years until 20% equity)
-    const pmiSavings = baseLoan * 0.0075 * 8;
-
-    const elTotal = document.getElementById('res-va-monthly');
-    const elPI = document.getElementById('res-va-pi');
-    const elFee = document.getElementById('res-va-funding-fee');
-    const elPMISavings = document.getElementById('res-va-pmi-savings');
-    const elLoan = document.getElementById('res-va-total-loan');
-
-    if (elTotal) elTotal.textContent = this.formatCurrency(totalMonthly);
-    if (elPI) elPI.textContent = this.formatCurrency(monthlyPI);
-    if (elFee) elFee.textContent = isExempt ? '$0 (Exempt)' : `${this.formatCurrency(fundingFee)} (${feePct.toFixed(2)}%)`;
-    if (elPMISavings) elPMISavings.textContent = `${this.formatCurrency(pmiSavings)} ($0 Monthly PMI!)`;
-    if (elLoan) elLoan.textContent = this.formatCurrency(totalLoan);
-  },
-
   // ------------------------------------------------------------------------
   // 30. HOME EQUITY LOAN CALCULATOR (Second Mortgage & CLTV)
   // ------------------------------------------------------------------------
-  calcHomeEquityLoan() {
-    const homeValue = parseFloat(document.getElementById('he-home-value')?.value) || 0;
-    const firstMortgage = parseFloat(document.getElementById('he-first-balance')?.value) || 0;
-    const loanAmt = parseFloat(document.getElementById('he-loan-amount')?.value) || 0;
-    const rate = parseFloat(document.getElementById('he-rate')?.value) || 7.75;
-    const termYears = parseFloat(document.getElementById('he-term')?.value) || 15;
-    const maxCLTV = parseFloat(document.getElementById('he-max-cltv')?.value) || 85;
-
-    if (homeValue <= 0 || loanAmt <= 0 || rate <= 0 || termYears <= 0) return;
-
-    const maxBorrowLimit = Math.max(0, (homeValue * (maxCLTV / 100)) - firstMortgage);
-    const totalDebt = firstMortgage + loanAmt;
-    const cltv = (totalDebt / homeValue) * 100;
-    const remainingEquity = Math.max(0, homeValue - totalDebt);
-
-    const r = (rate / 100) / 12;
-    const n = termYears * 12;
-    const factor = Math.pow(1 + r, n);
-    const monthlyPayment = (loanAmt * r * factor) / (factor - 1);
-    const totalInterest = (monthlyPayment * n) - loanAmt;
-
-    const elPmt = document.getElementById('res-he-monthly');
-    const elCLTV = document.getElementById('res-he-cltv');
-    const elMaxBorrow = document.getElementById('res-he-max-borrow');
-    const elInt = document.getElementById('res-he-total-interest');
-    const elEquity = document.getElementById('res-he-equity-remaining');
-
-    if (elPmt) elPmt.textContent = this.formatCurrency(monthlyPayment);
-    if (elCLTV) {
-      elCLTV.textContent = `${cltv.toFixed(1)}% CLTV`;
-      elCLTV.style.color = cltv <= maxCLTV ? 'var(--accent-green)' : 'var(--accent-rose)';
-    }
-    if (elMaxBorrow) elMaxBorrow.textContent = this.formatCurrency(maxBorrowLimit);
-    if (elInt) elInt.textContent = this.formatCurrency(totalInterest);
-    if (elEquity) elEquity.textContent = this.formatCurrency(remainingEquity);
-  },
-
   // ------------------------------------------------------------------------
   // 31. HELOC CALCULATOR (Draw Period vs Repayment Phase Shock)
   // ------------------------------------------------------------------------
@@ -1419,209 +800,12 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // 32. DOWN PAYMENT CALCULATOR (Savings Timeline & HYSA Growth)
   // ------------------------------------------------------------------------
-  calcDownPayment() {
-    const targetPrice = parseFloat(document.getElementById('down-target-price')?.value) || 0;
-    const targetPct = parseFloat(document.getElementById('down-target-pct')?.value) || 20;
-    const closingPct = parseFloat(document.getElementById('down-closing-pct')?.value) || 3.0;
-    const curSaved = parseFloat(document.getElementById('down-cur-saved')?.value) || 0;
-    const monthlySave = parseFloat(document.getElementById('down-monthly-save')?.value) || 0;
-    const hysaRate = parseFloat(document.getElementById('down-hysa-rate')?.value) || 4.5;
-
-    if (targetPrice <= 0) return;
-
-    const downPaymentGoal = targetPrice * (targetPct / 100);
-    const closingCostsGoal = targetPrice * (closingPct / 100);
-    const totalCashNeeded = downPaymentGoal + closingCostsGoal;
-    const deficit = Math.max(0, totalCashNeeded - curSaved);
-
-    let months = 0;
-    let balance = curSaved;
-    let totalDeposited = curSaved;
-    const rMo = (hysaRate / 100) / 12;
-
-    if (balance < totalCashNeeded && monthlySave > 0) {
-      while (balance < totalCashNeeded && months < 360) {
-        months++;
-        balance = (balance + monthlySave) * (1 + rMo);
-        totalDeposited += monthlySave;
-      }
-    }
-
-    const interestEarned = Math.max(0, balance - totalDeposited);
-    const yrs = Math.floor(months / 12);
-    const remMo = months % 12;
-
-    const elTotal = document.getElementById('res-down-total-cash');
-    const elDown = document.getElementById('res-down-target-amt');
-    const elClosing = document.getElementById('res-down-closing-amt');
-    const elTimeline = document.getElementById('res-down-timeline');
-    const elEarned = document.getElementById('res-down-interest-earned');
-
-    if (elTotal) elTotal.textContent = this.formatCurrency(totalCashNeeded);
-    if (elDown) elDown.textContent = this.formatCurrency(downPaymentGoal);
-    if (elClosing) elClosing.textContent = this.formatCurrency(closingCostsGoal);
-    if (elTimeline) {
-      if (curSaved >= totalCashNeeded) {
-        elTimeline.textContent = 'Goal Achieved! Ready to buy.';
-      } else if (monthlySave <= 0) {
-        elTimeline.textContent = 'Need monthly savings';
-      } else {
-        elTimeline.textContent = `${yrs > 0 ? yrs + ' Yrs ' : ''}${remMo} Months`;
-      }
-    }
-    if (elEarned) elEarned.textContent = this.formatCurrency(interestEarned);
-  },
-
   // ------------------------------------------------------------------------
   // 33. RENT VS. BUY CALCULATOR (Wealth Comparison & Break-Even Year)
   // ------------------------------------------------------------------------
-  calcRentVsBuy() {
-    const homePrice = parseFloat(document.getElementById('rvb-home-price')?.value) || 0;
-    const downPct = parseFloat(document.getElementById('rvb-down-pct')?.value) || 20;
-    const rate = parseFloat(document.getElementById('rvb-mort-rate')?.value) || 6.75;
-    const termYears = parseFloat(document.getElementById('rvb-mort-term')?.value) || 30;
-    const homeGrowth = parseFloat(document.getElementById('rvb-home-growth')?.value) || 4.0;
-    const taxRate = parseFloat(document.getElementById('rvb-tax-rate')?.value) || 1.25;
-    const maintIns = parseFloat(document.getElementById('rvb-maint-ins')?.value) || 1.5;
-    const curRent = parseFloat(document.getElementById('rvb-cur-rent')?.value) || 0;
-    const rentGrowth = parseFloat(document.getElementById('rvb-rent-growth')?.value) || 3.5;
-    const investRate = parseFloat(document.getElementById('rvb-invest-rate')?.value) || 7.5;
-    const yearsStay = parseInt(document.getElementById('rvb-years-stay')?.value) || 7;
-
-    if (homePrice <= 0 || curRent <= 0 || rate <= 0) return;
-
-    const downPayment = homePrice * (downPct / 100);
-    const loanAmt = homePrice - downPayment;
-    const buyClosingCosts = homePrice * 0.03; // ~3% buying fees
-    const initialCash = downPayment + buyClosingCosts;
-
-    const r = (rate / 100) / 12;
-    const n = termYears * 12;
-    const factor = Math.pow(1 + r, n);
-    const monthlyPI = (loanAmt * r * factor) / (factor - 1);
-
-    const rInvestMo = (investRate / 100) / 12;
-    let rentPortfolio = initialCash;
-    let homeValue = homePrice;
-    let mortgageBalance = loanAmt;
-    let breakEvenYear = null;
-
-    let cumulativeBuyCost = initialCash;
-    let cumulativeRentCost = 0;
-    let monthlyRentNow = curRent;
-
-    for (let y = 1; y <= 30; y++) {
-      let annualBuyCash = 0;
-      let annualRentCash = 0;
-
-      for (let m = 1; m <= 12; m++) {
-        // Mortgage month
-        const intMo = mortgageBalance * r;
-        const prinMo = monthlyPI - intMo;
-        mortgageBalance = Math.max(0, mortgageBalance - prinMo);
-
-        // Taxes + insurance/maintenance
-        const propCostMo = (homeValue * ((taxRate + maintIns) / 100)) / 12;
-        const totalBuyMo = monthlyPI + propCostMo;
-        annualBuyCash += totalBuyMo;
-
-        // Rent month
-        const totalRentMo = monthlyRentNow + 30; // $30 renters insurance
-        annualRentCash += totalRentMo;
-
-        // Opportunity cost: difference invested or withdrawn
-        const cashDiff = totalBuyMo - totalRentMo;
-        rentPortfolio = (rentPortfolio * (1 + rInvestMo)) + cashDiff;
-      }
-
-      cumulativeBuyCost += annualBuyCash;
-      cumulativeRentCost += annualRentCash;
-
-      // Appreciation
-      homeValue *= (1 + (homeGrowth / 100));
-      monthlyRentNow *= (1 + (rentGrowth / 100));
-
-      // Net Wealth Comparison at year y
-      const netHomeEquity = (homeValue * 0.94) - mortgageBalance; // 6% selling costs
-
-      if (netHomeEquity > rentPortfolio && breakEvenYear === null) {
-        breakEvenYear = y;
-      }
-
-      if (y === yearsStay) {
-        const diff = Math.abs(netHomeEquity - rentPortfolio);
-
-        const elVerdict = document.getElementById('res-rvb-verdict');
-        const elBreakEven = document.getElementById('res-rvb-breakeven');
-        const elEquity = document.getElementById('res-rvb-buy-equity');
-        const elPort = document.getElementById('res-rvb-rent-portfolio');
-        const elBuyCost = document.getElementById('res-rvb-buy-net-cost');
-        const elRentCost = document.getElementById('res-rvb-rent-net-cost');
-
-        if (elVerdict) {
-          if (netHomeEquity >= rentPortfolio) {
-            elVerdict.textContent = `🏡 Buying is Cheaper by ${this.formatCurrency(diff)} over ${yearsStay} Years`;
-            elVerdict.style.color = 'var(--accent-green)';
-          } else {
-            elVerdict.textContent = `🏢 Renting is Cheaper by ${this.formatCurrency(diff)} over ${yearsStay} Years`;
-            elVerdict.style.color = 'var(--accent-primary, #2563eb)';
-          }
-        }
-        if (elBreakEven) {
-          elBreakEven.textContent = breakEvenYear ? `Year ${breakEvenYear}` : '30+ Years';
-        }
-        if (elEquity) elEquity.textContent = this.formatCurrency(netHomeEquity);
-        if (elPort) elPort.textContent = this.formatCurrency(rentPortfolio);
-        if (elBuyCost) elBuyCost.textContent = this.formatCurrency(cumulativeBuyCost);
-        if (elRentCost) elRentCost.textContent = this.formatCurrency(cumulativeRentCost);
-      }
-    }
-  },
-
   // ------------------------------------------------------------------------
   // 4. COMPOUND INTEREST CALCULATOR
   // ------------------------------------------------------------------------
-  calcCompoundInterest() {
-    const principal = parseFloat(document.getElementById('ci-principal')?.value) || 0;
-    const monthlyDeposit = parseFloat(document.getElementById('ci-monthly')?.value) || 0;
-    const rate = parseFloat(document.getElementById('ci-rate')?.value) || 0;
-    const years = parseFloat(document.getElementById('ci-years')?.value) || 0;
-    const freq = parseInt(document.getElementById('ci-freq')?.value) || 12;
-
-    if (principal < 0 || rate < 0 || years <= 0) return;
-
-    const r = rate / 100;
-    const n = freq;
-    const t = years;
-
-    const principalFuture = principal * Math.pow(1 + r / n, n * t);
-
-    let depositsFuture = 0;
-    let totalDeposited = principal;
-
-    if (monthlyDeposit > 0) {
-      const totalMonths = t * 12;
-      const effectiveMonthlyRate = Math.pow(1 + r / n, n / 12) - 1;
-      if (effectiveMonthlyRate > 0) {
-        depositsFuture = monthlyDeposit * ((Math.pow(1 + effectiveMonthlyRate, totalMonths) - 1) / effectiveMonthlyRate);
-      } else {
-        depositsFuture = monthlyDeposit * totalMonths;
-      }
-      totalDeposited += monthlyDeposit * totalMonths;
-    }
-
-    const totalFutureValue = principalFuture + depositsFuture;
-    const totalInterestEarned = totalFutureValue - totalDeposited;
-
-    const resFutureEl = document.getElementById('res-ci-future');
-    const resInvestedEl = document.getElementById('res-ci-invested');
-    const resInterestEl = document.getElementById('res-ci-interest');
-
-    if (resFutureEl) resFutureEl.textContent = this.formatCurrency(totalFutureValue);
-    if (resInvestedEl) resInvestedEl.textContent = this.formatCurrency(totalDeposited);
-    if (resInterestEl) resInterestEl.textContent = this.formatCurrency(totalInterestEarned);
-  },
-
   // ------------------------------------------------------------------------
   // 5. SIP (SYSTEMATIC INVESTMENT PLAN)
   // ------------------------------------------------------------------------
@@ -2317,221 +1501,9 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // 18. MORTGAGE PAYOFF CALCULATOR (Early Payoff & Interest Saved)
   // ------------------------------------------------------------------------
-  calcMortgagePayoff() {
-    const balance = parseFloat(document.getElementById('payoff-balance')?.value) || 0;
-    const rate = parseFloat(document.getElementById('payoff-rate')?.value) || 0;
-    const termYears = parseFloat(document.getElementById('payoff-term')?.value) || 30;
-    const extraMo = parseFloat(document.getElementById('payoff-extra-mo')?.value) || 0;
-    const extraYr = parseFloat(document.getElementById('payoff-extra-yr')?.value) || 0;
-
-    if (balance <= 0 || rate <= 0 || termYears <= 0) return;
-
-    const i = (rate / 100) / 12;
-    const totalPayments = termYears * 12;
-    const factor = Math.pow(1 + i, totalPayments);
-    const standardMonthly = (balance * i * factor) / (factor - 1);
-    const standardTotalInt = (standardMonthly * totalPayments) - balance;
-
-    let balAcc = balance;
-    let accMonths = 0;
-    let accTotalInt = 0;
-    const maxMonths = 600;
-
-    while (balAcc > 0 && accMonths < maxMonths) {
-      accMonths++;
-      const intMonth = balAcc * i;
-      accTotalInt += intMonth;
-      let pmt = standardMonthly + extraMo;
-      if (accMonths % 12 === 0) pmt += extraYr;
-      const prinPaid = Math.min(balAcc, pmt - intMonth);
-      balAcc -= prinPaid;
-    }
-
-    const intSaved = Math.max(0, standardTotalInt - accTotalInt);
-    const monthsSaved = Math.max(0, totalPayments - accMonths);
-    const yrsSaved = Math.floor(monthsSaved / 12);
-    const remMoSaved = monthsSaved % 12;
-
-    const elSaved = document.getElementById('res-payoff-saved');
-    const elTimeSaved = document.getElementById('res-payoff-time-saved');
-    const elAccMonths = document.getElementById('res-payoff-new-time');
-    const elStdInt = document.getElementById('res-payoff-std-int');
-
-    if (elSaved) elSaved.textContent = this.formatCurrency(intSaved);
-    if (elTimeSaved) elTimeSaved.textContent = `${yrsSaved > 0 ? yrsSaved + ' Yrs ' : ''}${remMoSaved} Months Earlier!`;
-    if (elAccMonths) elAccMonths.textContent = `${Math.floor(accMonths / 12)} Yrs ${accMonths % 12} Mo (vs ${termYears} Yrs)`;
-    if (elStdInt) elStdInt.textContent = this.formatCurrency(standardTotalInt);
-  },
-
   // ------------------------------------------------------------------------
   // 34. US FEDERAL & STATE INCOME TAX CALCULATOR
   // ------------------------------------------------------------------------
-  calcIncomeTax() {
-    const gross = parseFloat(document.getElementById('tax-gross-income')?.value) || 0;
-    const status = document.getElementById('tax-filing-status')?.value || 'single';
-    const dedType = document.getElementById('tax-ded-type')?.value || 'standard';
-    const itemizedAmt = parseFloat(document.getElementById('tax-itemized-amt')?.value) || 0;
-    const preTax = parseFloat(document.getElementById('tax-pretax')?.value) || 0;
-    const stateChoice = document.getElementById('tax-state')?.value || '0';
-    const customStateRate = parseFloat(document.getElementById('tax-state-custom')?.value) || 0;
-
-    // Toggle itemized deduction input
-    const itemizedWrap = document.getElementById('tax-itemized-wrap');
-    if (itemizedWrap) itemizedWrap.style.display = dedType === 'itemized' ? 'block' : 'none';
-
-    // Toggle custom state rate input
-    const customStateWrap = document.getElementById('tax-custom-state-wrap');
-    if (customStateWrap) customStateWrap.style.display = stateChoice === 'custom' ? 'block' : 'none';
-
-    // Standard deductions (2024 / current IRS standard)
-    const stdDeductions = {
-      'single': 14600,
-      'married-joint': 29200,
-      'married-sep': 14600,
-      'head-of-household': 21900
-    };
-    const stdDed = stdDeductions[status] || 14600;
-    const deductionApplied = dedType === 'itemized' ? Math.max(0, itemizedAmt) : stdDed;
-
-    // Adjusted Gross Income (AGI)
-    const agi = Math.max(0, gross - preTax);
-    const taxableIncome = Math.max(0, agi - deductionApplied);
-
-    // Progressive Federal Tax Brackets (2024 / 2025)
-    let brackets = [];
-    if (status === 'married-joint') {
-      brackets = [
-        { rate: 0.10, min: 0, max: 23200 },
-        { rate: 0.12, min: 23200, max: 94300 },
-        { rate: 0.22, min: 94300, max: 201050 },
-        { rate: 0.24, min: 201050, max: 383900 },
-        { rate: 0.32, min: 383900, max: 487450 },
-        { rate: 0.35, min: 487450, max: 731200 },
-        { rate: 0.37, min: 731200, max: Infinity }
-      ];
-    } else if (status === 'head-of-household') {
-      brackets = [
-        { rate: 0.10, min: 0, max: 16550 },
-        { rate: 0.12, min: 16550, max: 63100 },
-        { rate: 0.22, min: 63100, max: 100500 },
-        { rate: 0.24, min: 100500, max: 191950 },
-        { rate: 0.32, min: 191950, max: 243700 },
-        { rate: 0.35, min: 243700, max: 609350 },
-        { rate: 0.37, min: 609350, max: Infinity }
-      ];
-    } else if (status === 'married-sep') {
-      brackets = [
-        { rate: 0.10, min: 0, max: 11600 },
-        { rate: 0.12, min: 11600, max: 47150 },
-        { rate: 0.22, min: 47150, max: 100525 },
-        { rate: 0.24, min: 100525, max: 191950 },
-        { rate: 0.32, min: 191950, max: 243725 },
-        { rate: 0.35, min: 243725, max: 365600 },
-        { rate: 0.37, min: 365600, max: Infinity }
-      ];
-    } else {
-      // Single
-      brackets = [
-        { rate: 0.10, min: 0, max: 11600 },
-        { rate: 0.12, min: 11600, max: 47150 },
-        { rate: 0.22, min: 47150, max: 100525 },
-        { rate: 0.24, min: 100525, max: 191950 },
-        { rate: 0.32, min: 191950, max: 243725 },
-        { rate: 0.35, min: 243725, max: 609350 },
-        { rate: 0.37, min: 609350, max: Infinity }
-      ];
-    }
-
-    let fedTax = 0;
-    let marginalRate = 0;
-    const bracketRows = [];
-
-    for (const b of brackets) {
-      if (taxableIncome > b.min) {
-        const taxableInBracket = Math.min(taxableIncome - b.min, b.max - b.min);
-        const taxInBracket = taxableInBracket * b.rate;
-        fedTax += taxInBracket;
-        marginalRate = b.rate * 100;
-
-        const maxLabel = b.max === Infinity ? '+' : ` - ${this.formatCurrency(b.max)}`;
-        bracketRows.push(`
-          <tr>
-            <td><span class="tax-bracket-badge">${(b.rate * 100).toFixed(0)}%</span> ${this.formatCurrency(b.min)}${maxLabel}</td>
-            <td>${(b.rate * 100).toFixed(0)}%</td>
-            <td>${this.formatCurrency(taxableInBracket)}</td>
-            <td style="color:var(--accent-secondary); font-weight:700;">${this.formatCurrency(taxInBracket)}</td>
-          </tr>
-        `);
-      } else {
-        const maxLabel = b.max === Infinity ? '+' : ` - ${this.formatCurrency(b.max)}`;
-        bracketRows.push(`
-          <tr style="opacity:0.45;">
-            <td><span class="tax-bracket-badge">${(b.rate * 100).toFixed(0)}%</span> ${this.formatCurrency(b.min)}${maxLabel}</td>
-            <td>${(b.rate * 100).toFixed(0)}%</td>
-            <td>${this.formatCurrency(0)}</td>
-            <td>${this.formatCurrency(0)}</td>
-          </tr>
-        `);
-      }
-    }
-
-    // Social Security (OASDI): 6.2% on gross wages up to wage base cap ($168,600)
-    const ssWageCap = 168600;
-    const ssTax = Math.min(gross, ssWageCap) * 0.062;
-
-    // Medicare: 1.45% + 0.9% Additional Medicare tax over threshold ($200k single, $250k married)
-    const medThreshold = status === 'married-joint' ? 250000 : (status === 'married-sep' ? 125000 : 200000);
-    let medicareTax = gross * 0.0145;
-    if (gross > medThreshold) {
-      medicareTax += (gross - medThreshold) * 0.009;
-    }
-
-    // State Tax
-    let stateRate = 0;
-    if (stateChoice === 'ca') stateRate = 0.075;
-    else if (stateChoice === 'ny') stateRate = 0.058;
-    else if (stateChoice === 'il') stateRate = 0.0495;
-    else if (stateChoice === 'pa') stateRate = 0.0307;
-    else if (stateChoice === 'ma') stateRate = 0.050;
-    else if (stateChoice === 'nj') stateRate = 0.055;
-    else if (stateChoice === 'custom') stateRate = customStateRate / 100;
-    else stateRate = 0;
-
-    const stateTax = Math.max(0, taxableIncome * stateRate);
-
-    const totalTax = fedTax + ssTax + medicareTax + stateTax;
-    const netAnnual = Math.max(0, gross - totalTax - preTax);
-    const netMonthly = netAnnual / 12;
-    const effRate = gross > 0 ? (totalTax / gross) * 100 : 0;
-
-    // Progress Bar Widths
-    const netPct = gross > 0 ? (netAnnual / gross) * 100 : 100;
-    const fedPct = gross > 0 ? (fedTax / gross) * 100 : 0;
-    const ficaPct = gross > 0 ? ((ssTax + medicareTax) / gross) * 100 : 0;
-    const statePct = gross > 0 ? (stateTax / gross) * 100 : 0;
-
-    // Render elements
-    const el = (id) => document.getElementById(id);
-    if (el('res-tax-total')) el('res-tax-total').textContent = this.formatCurrency(totalTax);
-    if (el('res-tax-effective-rate')) el('res-tax-effective-rate').textContent = `${effRate.toFixed(1)}%`;
-    if (el('res-tax-net-annual')) el('res-tax-net-annual').textContent = this.formatCurrency(netAnnual);
-    if (el('res-tax-net-monthly')) el('res-tax-net-monthly').textContent = this.formatCurrency(netMonthly);
-    if (el('res-tax-fed')) el('res-tax-fed').textContent = this.formatCurrency(fedTax);
-    if (el('res-tax-ss')) el('res-tax-ss').textContent = this.formatCurrency(ssTax);
-    if (el('res-tax-medicare')) el('res-tax-medicare').textContent = this.formatCurrency(medicareTax);
-    if (el('res-tax-state')) el('res-tax-state').textContent = this.formatCurrency(stateTax);
-    if (el('res-tax-marginal')) el('res-tax-marginal').textContent = `${marginalRate.toFixed(1)}%`;
-    if (el('res-tax-taxable')) el('res-tax-taxable').textContent = this.formatCurrency(taxableIncome);
-
-    if (el('tax-bar-net')) el('tax-bar-net').style.width = `${Math.max(0, netPct)}%`;
-    if (el('tax-bar-fed')) el('tax-bar-fed').style.width = `${Math.max(0, fedPct)}%`;
-    if (el('tax-bar-fica')) el('tax-bar-fica').style.width = `${Math.max(0, ficaPct)}%`;
-    if (el('tax-bar-state')) el('tax-bar-state').style.width = `${Math.max(0, statePct)}%`;
-
-    if (el('tax-bracket-body')) el('tax-bracket-body').innerHTML = bracketRows.join('');
-    if (el('tax-bracket-status-tag')) el('tax-bracket-status-tag').textContent = `Filing: ${status.replace('-', ' ').toUpperCase()}`;
-  },
-
   // ------------------------------------------------------------------------
   // 35. SALARY & WAGE CONVERSION CALCULATOR
   // ------------------------------------------------------------------------
@@ -2976,241 +1948,10 @@ const FinancialCalcs = {
   // 41. INTEREST RATE CALCULATOR (APR & APY SOLVER)
   // ------------------------------------------------------------------------
   irMode: 'loan',
-  calcInterestRate() {
-    const el = id => document.getElementById(id);
-    const mode = this.irMode || 'loan';
-    const principal = parseFloat(el('ir-principal')?.value) || 0;
-    const years = parseFloat(el('ir-years')?.value) || 0;
-    const months = parseFloat(el('ir-months')?.value) || 0;
-    const totalYears = years + months / 12;
-    const freq = parseInt(el('ir-freq')?.value) || 12;
-
-    if (principal <= 0 || totalYears <= 0) return;
-
-    let solvedApr = 0;
-    let solvedApy = 0;
-    let totalPaid = 0;
-    let totalInterest = 0;
-    let monthlyRatePct = 0;
-    let formulaDesc = '';
-
-    if (mode === 'loan') {
-      const pmt = parseFloat(el('ir-payment')?.value) || 0;
-      const nMonths = Math.round(totalYears * 12);
-      if (pmt <= 0 || nMonths <= 0) return;
-
-      totalPaid = pmt * nMonths;
-      totalInterest = Math.max(0, totalPaid - principal);
-
-      // Solve for monthly interest rate r using bisection
-      if (totalPaid <= principal) {
-        solvedApr = 0;
-        solvedApy = 0;
-        monthlyRatePct = 0;
-      } else {
-        let low = 0.0000001;
-        let high = 5.0; // 500% monthly
-        for (let iter = 0; iter < 60; iter++) {
-          const mid = (low + high) / 2;
-          const factor = Math.pow(1 + mid, -nMonths);
-          const computedPmt = principal * (mid / (1 - factor));
-          if (computedPmt > pmt) {
-            high = mid;
-          } else {
-            low = mid;
-          }
-        }
-        const rMonthly = (low + high) / 2;
-        solvedApr = rMonthly * 12 * 100;
-        solvedApy = (Math.pow(1 + rMonthly, 12) - 1) * 100;
-        monthlyRatePct = rMonthly * 100;
-      }
-      formulaDesc = `Fixed loan amortized: Solved from P=$${principal.toLocaleString()}, PMT=$${pmt.toLocaleString()}, n=${nMonths} months via numerical root bisection`;
-    } else {
-      const targetFv = parseFloat(el('ir-target-fv')?.value) || 0;
-      if (targetFv <= 0) return;
-
-      totalPaid = targetFv;
-      totalInterest = Math.max(0, targetFv - principal);
-
-      // Compound growth: FV = PV * (1 + r/m)^(m*t) => r = m * [ (FV/PV)^(1/(m*t)) - 1 ]
-      const mt = freq * totalYears;
-      if (principal > 0 && targetFv > principal && mt > 0) {
-        const nominalR = freq * (Math.pow(targetFv / principal, 1 / mt) - 1);
-        solvedApr = nominalR * 100;
-        solvedApy = (Math.pow(1 + nominalR / freq, freq) - 1) * 100;
-        monthlyRatePct = (Math.pow(1 + solvedApy / 100, 1 / 12) - 1) * 100;
-      }
-      formulaDesc = `Compound CAGR: r = m · [(FV/PV)^(1/(m·t)) - 1] with m=${freq} compounding periods/year`;
-    }
-
-    const interestRatio = principal > 0 ? (totalInterest / principal) * 100 : 0;
-
-    const resApr = el('res-ir-apr');
-    const resApy = el('res-ir-apy');
-    const resPaid = el('res-ir-total-paid');
-    const resInterest = el('res-ir-total-interest');
-    const resRatio = el('res-ir-interest-ratio');
-    const resMonthly = el('res-ir-monthly-rate');
-
-    if (resApr) resApr.textContent = `${solvedApr.toFixed(2)}%`;
-    if (resApy) resApy.textContent = `${solvedApy.toFixed(2)}%`;
-    if (resPaid) resPaid.textContent = this.formatCurrency(totalPaid);
-    if (resInterest) resInterest.textContent = this.formatCurrency(totalInterest);
-    if (resRatio) resRatio.textContent = `${interestRatio.toFixed(1)}%`;
-    if (resMonthly) resMonthly.textContent = `${monthlyRatePct.toFixed(3)}%`;
-
-    const summaryBody = el('ir-summary-body');
-    if (summaryBody) {
-      summaryBody.innerHTML = `
-        <tr>
-          <td><strong>Nominal APR</strong></td>
-          <td>${formulaDesc}</td>
-          <td style="text-align:right; font-weight:700; color:var(--accent-primary); font-size:1.05rem;">${solvedApr.toFixed(2)}% APR</td>
-        </tr>
-        <tr>
-          <td><strong>Effective Annual Rate (APY / EAR)</strong></td>
-          <td>APY = (1 + APR / ${freq})^${freq} - 1 (true annual compounding yield)</td>
-          <td style="text-align:right; font-weight:700; color:var(--accent-green);">${solvedApy.toFixed(2)}% APY</td>
-        </tr>
-        <tr>
-          <td><strong>Total Financing Cost / Interest</strong></td>
-          <td>Total Outlay (${this.formatCurrency(totalPaid)}) - Principal (${this.formatCurrency(principal)})</td>
-          <td style="text-align:right; color:var(--accent-rose); font-weight:700;">${this.formatCurrency(totalInterest)}</td>
-        </tr>
-        <tr>
-          <td><strong>Periodic Monthly Interest Rate</strong></td>
-          <td>Compounded effective monthly interest rate (per month accrual)</td>
-          <td style="text-align:right; font-family:var(--font-mono);">${monthlyRatePct.toFixed(3)}% / mo</td>
-        </tr>
-      `;
-    }
-  },
-
   // ------------------------------------------------------------------------
   // 42. SAVINGS CALCULATOR (GOAL & BALANCE)
   // ------------------------------------------------------------------------
   svgMode: 'goal',
-  calcSavingsGoal() {
-    const el = id => document.getElementById(id);
-    const mode = this.svgMode || 'goal';
-    const initial = parseFloat(el('svg-initial')?.value) || 0;
-    const years = parseFloat(el('svg-years')?.value) || 5;
-    const rate = parseFloat(el('svg-rate')?.value) || 0;
-    const freq = parseInt(el('svg-freq')?.value) || 12;
-
-    const r = rate / 100;
-    const totalMonths = Math.max(1, Math.round(years * 12));
-    const effectiveMonthly = r > 0 ? (Math.pow(1 + r / freq, freq / 12) - 1) : 0;
-
-    let mainVal = 0;
-    let totalDeposited = initial;
-    let totalInterest = 0;
-    let finalBalance = 0;
-
-    if (mode === 'goal') {
-      const target = parseFloat(el('svg-target')?.value) || 0;
-      // Future value of initial balance:
-      const initialFv = initial * Math.pow(1 + effectiveMonthly, totalMonths);
-      const neededFromDeposits = Math.max(0, target - initialFv);
-
-      let pmt = 0;
-      if (neededFromDeposits > 0) {
-        if (effectiveMonthly > 0) {
-          pmt = neededFromDeposits * (effectiveMonthly / (Math.pow(1 + effectiveMonthly, totalMonths) - 1));
-        } else {
-          pmt = neededFromDeposits / totalMonths;
-        }
-      }
-      mainVal = pmt;
-      finalBalance = target;
-      totalDeposited = initial + (pmt * totalMonths);
-      totalInterest = Math.max(0, finalBalance - totalDeposited);
-
-      const labelEl = el('res-svg-main-label');
-      if (labelEl) labelEl.textContent = 'Required Monthly Savings Deposit';
-      const mainEl = el('res-svg-main-val');
-      if (mainEl) mainEl.textContent = `${this.formatCurrency(pmt)} / mo`;
-    } else {
-      const monthlyDeposit = parseFloat(el('svg-deposit')?.value) || 0;
-      const initialFv = initial * Math.pow(1 + effectiveMonthly, totalMonths);
-      let depositsFv = 0;
-      if (effectiveMonthly > 0) {
-        depositsFv = monthlyDeposit * ((Math.pow(1 + effectiveMonthly, totalMonths) - 1) / effectiveMonthly);
-      } else {
-        depositsFv = monthlyDeposit * totalMonths;
-      }
-      finalBalance = initialFv + depositsFv;
-      totalDeposited = initial + (monthlyDeposit * totalMonths);
-      totalInterest = Math.max(0, finalBalance - totalDeposited);
-
-      const labelEl = el('res-svg-main-label');
-      if (labelEl) labelEl.textContent = 'Projected Total Savings Balance';
-      const mainEl = el('res-svg-main-val');
-      if (mainEl) mainEl.textContent = this.formatCurrency(finalBalance);
-    }
-
-    const multiplier = totalDeposited > 0 ? (finalBalance / totalDeposited) : 1;
-    const statusEl = el('res-svg-status');
-    if (statusEl) {
-      statusEl.textContent = finalBalance >= 1000 ? 'Target Achievable' : 'Planning Stage';
-      statusEl.style.color = 'var(--accent-green)';
-    }
-
-    const resTotDep = el('res-svg-total-deposit');
-    const resTotInt = el('res-svg-total-interest');
-    const resInit = el('res-svg-initial-val');
-    const resMult = el('res-svg-multiplier');
-
-    if (resTotDep) resTotDep.textContent = this.formatCurrency(totalDeposited);
-    if (resTotInt) resTotInt.textContent = `+${this.formatCurrency(totalInterest)}`;
-    if (resInit) resInit.textContent = this.formatCurrency(initial);
-    if (resMult) resMult.textContent = `${multiplier.toFixed(2)}x`;
-
-    // Composition bar
-    const barPrincipal = el('svg-bar-principal');
-    const barInterest = el('svg-bar-interest');
-    if (barPrincipal && barInterest && finalBalance > 0) {
-      const pPct = Math.min(100, Math.max(5, (totalDeposited / finalBalance) * 100));
-      barPrincipal.style.width = `${pPct}%`;
-      barInterest.style.width = `${100 - pPct}%`;
-    }
-
-    // Schedule Milestones
-    const scheduleBody = el('svg-schedule-body');
-    if (scheduleBody) {
-      let rows = '';
-      const milestoneYears = [];
-      for (let y = 1; y <= years; y++) {
-        if (y === 1 || y === 2 || y === 3 || y === 5 || y === 10 || y === 15 || y === 20 || y === 30 || y === years) {
-          if (!milestoneYears.includes(y)) milestoneYears.push(y);
-        }
-      }
-      const monthlyContribution = mode === 'goal' ? mainVal : (parseFloat(el('svg-deposit')?.value) || 0);
-
-      milestoneYears.forEach(y => {
-        const mCount = y * 12;
-        const curInitFv = initial * Math.pow(1 + effectiveMonthly, mCount);
-        const curDepFv = effectiveMonthly > 0 
-          ? monthlyContribution * ((Math.pow(1 + effectiveMonthly, mCount) - 1) / effectiveMonthly)
-          : monthlyContribution * mCount;
-        const bal = curInitFv + curDepFv;
-        const depTotal = initial + (monthlyContribution * mCount);
-        const intEarned = Math.max(0, bal - depTotal);
-
-        rows += `
-          <tr>
-            <td><strong>Year ${y}</strong></td>
-            <td>${this.formatCurrency(depTotal)}</td>
-            <td style="color:var(--accent-green); font-weight:600;">+${this.formatCurrency(intEarned)}</td>
-            <td style="text-align:right; font-weight:700; color:var(--text-primary);">${this.formatCurrency(bal)}</td>
-          </tr>
-        `;
-      });
-      scheduleBody.innerHTML = rows;
-    }
-  },
-
   // ------------------------------------------------------------------------
   // 43. SIMPLE INTEREST CALCULATOR (I = P · r · t)
   // ------------------------------------------------------------------------
@@ -3282,71 +2023,6 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // 44. CD CALCULATOR (CERTIFICATE OF DEPOSIT)
   // ------------------------------------------------------------------------
-  calcCD() {
-    const el = id => document.getElementById(id);
-    const principal = parseFloat(el('cd-deposit')?.value) || 0;
-    const apr = (parseFloat(el('cd-rate')?.value) || 0) / 100;
-    const termVal = parseFloat(el('cd-term-val')?.value) || 12;
-    const termUnit = el('cd-term-unit')?.value || 'months';
-    const freq = parseInt(el('cd-freq')?.value) || 365;
-    const penaltyDays = parseInt(el('cd-penalty-tier')?.value) || 0;
-    const taxRate = (parseFloat(el('cd-tax-rate')?.value) || 0) / 100;
-
-    if (principal <= 0 || termVal <= 0) return;
-
-    const tYears = termUnit === 'years' ? termVal : termVal / 12;
-    const maturity = principal * Math.pow(1 + apr / freq, freq * tYears);
-    const totalInterest = Math.max(0, maturity - principal);
-    const apy = (Math.pow(1 + apr / freq, freq) - 1) * 100;
-
-    // Early withdrawal penalty: daily simple interest rate * penaltyDays
-    const dailyRate = apr / 365;
-    const rawPenalty = principal * dailyRate * penaltyDays;
-    const penaltyAmt = Math.min(totalInterest, rawPenalty);
-    const netEarlyCash = Math.max(principal, maturity - penaltyAmt);
-    const afterTaxInterest = totalInterest * (1 - taxRate);
-
-    const resMat = el('res-cd-maturity');
-    const resApy = el('res-cd-apy');
-    const resTotInt = el('res-cd-total-interest');
-    const resPen = el('res-cd-penalty-amt');
-    const resNetEarly = el('res-cd-net-early');
-    const resAfterTax = el('res-cd-after-tax');
-
-    if (resMat) resMat.textContent = this.formatCurrency(maturity);
-    if (resApy) resApy.textContent = `${apy.toFixed(3)}%`;
-    if (resTotInt) resTotInt.textContent = `+${this.formatCurrency(totalInterest)}`;
-    if (resPen) resPen.textContent = penaltyAmt > 0 ? `-${this.formatCurrency(penaltyAmt)}` : '$0.00';
-    if (resNetEarly) resNetEarly.textContent = this.formatCurrency(netEarlyCash);
-    if (resAfterTax) resAfterTax.textContent = this.formatCurrency(afterTaxInterest);
-
-    const auditBody = el('cd-audit-body');
-    if (auditBody) {
-      auditBody.innerHTML = `
-        <tr>
-          <td><strong>Initial Principal Deposit</strong></td>
-          <td>Guaranteed FDIC / NCUA insured deposit base</td>
-          <td style="text-align:right;">${this.formatCurrency(principal)}</td>
-        </tr>
-        <tr>
-          <td><strong>Full Maturity Value</strong></td>
-          <td>P · (1 + r / ${freq})^(${freq} · ${tYears.toFixed(2)})</td>
-          <td style="text-align:right; font-weight:700; color:var(--accent-green);">${this.formatCurrency(maturity)}</td>
-        </tr>
-        <tr>
-          <td><strong>Early Redemption Penalty (${penaltyDays} Days)</strong></td>
-          <td>P · (${(apr*100).toFixed(2)}% / 365) · ${penaltyDays} days</td>
-          <td style="text-align:right; color:var(--accent-rose); font-weight:600;">-${this.formatCurrency(penaltyAmt)}</td>
-        </tr>
-        <tr>
-          <td><strong>Net Cash if Redeemed Prematurely</strong></td>
-          <td>Maturity Accrual minus Penalty Tier Deduction</td>
-          <td style="text-align:right; font-weight:700; color:var(--accent-primary);">${this.formatCurrency(netEarlyCash)}</td>
-        </tr>
-      `;
-    }
-  },
-
   // ------------------------------------------------------------------------
   // 45. BOND CALCULATOR (VALUATION & YTM)
   // ------------------------------------------------------------------------
@@ -4113,367 +2789,24 @@ const FinancialCalcs = {
   // 55. CREDIT CARD CALCULATOR
   // ------------------------------------------------------------------------
   ccPayType: 'fixed',
-  calcCreditCard() {
-    const el = id => document.getElementById(id);
-    const balance = parseFloat(el('cc-balance')?.value) || 0;
-    const apr = parseFloat(el('cc-apr')?.value) || 0;
-    const fixedPmt = parseFloat(el('cc-fixed-payment')?.value) || 0;
-    const minPct = parseFloat(el('cc-min-pct')?.value) || 2.0;
-    const minFloor = parseFloat(el('cc-min-floor')?.value) || 25;
-
-    const monthlyRate = (apr / 100) / 12;
-    let curBal = balance;
-    let totalInterest = 0;
-    let totalPaid = 0;
-    let months = 0;
-    const maxMonths = 600; // 50 years cap
-
-    while (curBal > 0.01 && months < maxMonths) {
-      months++;
-      const interest = curBal * monthlyRate;
-      let pmt = 0;
-      if (this.ccPayType === 'fixed') {
-        pmt = Math.min(curBal + interest, fixedPmt);
-        if (pmt <= interest && curBal > 0) {
-          // Negative amortization
-          months = 999;
-          break;
-        }
-      } else {
-        const minAmt = Math.max(curBal * (minPct / 100), minFloor);
-        pmt = Math.min(curBal + interest, minAmt);
-        if (pmt <= interest && curBal > 0) {
-          months = 999;
-          break;
-        }
-      }
-      totalInterest += interest;
-      totalPaid += pmt;
-      curBal = Math.max(0, curBal + interest - pmt);
-    }
-
-    const years = Math.floor(months / 12);
-    const remMonths = months % 12;
-    const ratio = balance > 0 ? (totalInterest / balance) * 100 : 0;
-
-    if (el('res-cc-months')) el('res-cc-months').textContent = months >= maxMonths ? 'Never (Trap)' : `${months} Months`;
-    if (el('res-cc-years-str')) el('res-cc-years-str').textContent = months >= maxMonths ? 'Interest exceeds payment' : `${years} Yrs ${remMonths} Mos`;
-    if (el('res-cc-interest')) el('res-cc-interest').textContent = this.formatCurrency(totalInterest);
-    if (el('res-cc-total')) el('res-cc-total').textContent = this.formatCurrency(totalPaid);
-    if (el('res-cc-ratio')) el('res-cc-ratio').textContent = `${ratio.toFixed(1)}%`;
-    if (el('res-cc-savings')) el('res-cc-savings').textContent = this.ccPayType === 'fixed' ? 'Accelerated Plan' : 'Min Payment Schedule';
-  },
-
   // ------------------------------------------------------------------------
   // 56. CREDIT CARDS PAYOFF CALCULATOR
   // ------------------------------------------------------------------------
-  calcCCPayoff() {
-    const el = id => document.getElementById(id);
-    const balance = parseFloat(el('ccp-balance')?.value) || 0;
-    const apr = parseFloat(el('ccp-apr')?.value) || 0;
-    const mode = el('ccp-mode')?.value || 'target';
-    const targetMonths = parseFloat(el('ccp-target-months')?.value) || 24;
-    const fixedPmt = parseFloat(el('ccp-fixed-pmt')?.value) || 0;
-
-    const r = (apr / 100) / 12;
-    let monthlyPmt = 0;
-    let months = 0;
-    let totalInterest = 0;
-    let totalCost = 0;
-
-    if (mode === 'target') {
-      months = Math.max(1, targetMonths);
-      if (r > 0) {
-        monthlyPmt = balance * (r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
-      } else {
-        monthlyPmt = balance / months;
-      }
-      totalCost = monthlyPmt * months;
-      totalInterest = Math.max(0, totalCost - balance);
-    } else {
-      monthlyPmt = fixedPmt;
-      if (monthlyPmt <= balance * r) {
-        months = 999;
-      } else {
-        if (r > 0) {
-          months = Math.ceil(-Math.log(1 - (balance * r / monthlyPmt)) / Math.log(1 + r));
-        } else {
-          months = Math.ceil(balance / monthlyPmt);
-        }
-        totalCost = monthlyPmt * months;
-        totalInterest = Math.max(0, totalCost - balance);
-      }
-    }
-
-    const baselineInterest = balance * 0.85; // approximate minimum payment interest burden
-    const interestSaved = Math.max(0, baselineInterest - totalInterest);
-
-    if (el('res-ccp-primary-label')) el('res-ccp-primary-label').textContent = mode === 'target' ? 'Required Monthly Payment' : 'Payoff Duration (Months)';
-    if (el('res-ccp-primary-val')) el('res-ccp-primary-val').textContent = mode === 'target' ? this.formatCurrency(monthlyPmt) : `${months} Months`;
-    if (el('res-ccp-timeline-str')) el('res-ccp-timeline-str').textContent = `${months} Months (${(months / 12).toFixed(1)} Yrs)`;
-    if (el('res-ccp-interest')) el('res-ccp-interest').textContent = this.formatCurrency(totalInterest);
-    if (el('res-ccp-total')) el('res-ccp-total').textContent = this.formatCurrency(totalCost);
-    if (el('res-ccp-interest-saved')) el('res-ccp-interest-saved').textContent = this.formatCurrency(interestSaved);
-    if (el('res-ccp-time-saved')) el('res-ccp-time-saved').textContent = `${Math.max(1, Math.round(18 - (months / 12)))} Years Saved`;
-  },
-
   // ------------------------------------------------------------------------
   // 57. DEBT PAYOFF CALCULATOR (SNOWBALL VS AVALANCHE)
   // ------------------------------------------------------------------------
   dpoStrategy: 'avalanche',
-  calcDebtPayoff() {
-    const el = id => document.getElementById(id);
-    const extra = parseFloat(el('dpo-extra')?.value) || 0;
-
-    const debts = [
-      { name: el('dpo-n1')?.value || 'Debt 1', bal: parseFloat(el('dpo-b1')?.value) || 0, apr: parseFloat(el('dpo-r1')?.value) || 0, min: parseFloat(el('dpo-m1')?.value) || 0 },
-      { name: el('dpo-n2')?.value || 'Debt 2', bal: parseFloat(el('dpo-b2')?.value) || 0, apr: parseFloat(el('dpo-r2')?.value) || 0, min: parseFloat(el('dpo-m2')?.value) || 0 },
-      { name: el('dpo-n3')?.value || 'Debt 3', bal: parseFloat(el('dpo-b3')?.value) || 0, apr: parseFloat(el('dpo-r3')?.value) || 0, min: parseFloat(el('dpo-m3')?.value) || 0 },
-      { name: el('dpo-n4')?.value || 'Debt 4', bal: parseFloat(el('dpo-b4')?.value) || 0, apr: parseFloat(el('dpo-r4')?.value) || 0, min: parseFloat(el('dpo-m4')?.value) || 0 }
-    ].filter(d => d.bal > 0);
-
-    const totalStartDebt = debts.reduce((s, d) => s + d.bal, 0);
-    const totalMinPmt = debts.reduce((s, d) => s + d.min, 0);
-    const totalMonthlyBudget = totalMinPmt + extra;
-
-    const simulateStrategy = (isAvalanche) => {
-      const debtList = debts.map(d => ({ ...d }));
-      let m = 0;
-      let interestTotal = 0;
-      while (debtList.some(d => d.bal > 0.01) && m < 600) {
-        m++;
-        // Accrue monthly interest
-        debtList.forEach(d => {
-          if (d.bal > 0) {
-            const int = d.bal * ((d.apr / 100) / 12);
-            interestTotal += int;
-            d.bal += int;
-          }
-        });
-
-        // Pay minimums
-        let availableBudget = totalMonthlyBudget;
-        debtList.forEach(d => {
-          if (d.bal > 0) {
-            const p = Math.min(d.bal, d.min);
-            d.bal -= p;
-            availableBudget -= p;
-          }
-        });
-
-        // Sort active debts for priority
-        const active = debtList.filter(d => d.bal > 0.01);
-        if (active.length > 0) {
-          if (isAvalanche) {
-            active.sort((a, b) => b.apr - a.apr);
-          } else {
-            active.sort((a, b) => a.bal - b.bal);
-          }
-          let extraCash = Math.max(0, availableBudget);
-          for (let d of active) {
-            if (extraCash <= 0) break;
-            const p = Math.min(d.bal, extraCash);
-            d.bal -= p;
-            extraCash -= p;
-          }
-        }
-      }
-      return { months: m, totalInterest: interestTotal };
-    };
-
-    const avaRes = simulateStrategy(true);
-    const snoRes = simulateStrategy(false);
-    const activeRes = this.dpoStrategy === 'avalanche' ? avaRes : snoRes;
-    const diff = Math.max(0, snoRes.totalInterest - avaRes.totalInterest);
-
-    if (el('res-dpo-label')) el('res-dpo-label').textContent = `${this.dpoStrategy === 'avalanche' ? 'Avalanche' : 'Snowball'} Debt-Free Horizon`;
-    if (el('res-dpo-months')) el('res-dpo-months').textContent = `${activeRes.months} Months (${(activeRes.months / 12).toFixed(1)} Yrs)`;
-    if (el('res-dpo-total-debt')) el('res-dpo-total-debt').textContent = this.formatCurrency(totalStartDebt);
-    if (el('res-dpo-ava-interest')) el('res-dpo-ava-interest').textContent = this.formatCurrency(avaRes.totalInterest);
-    if (el('res-dpo-sno-interest')) el('res-dpo-sno-interest').textContent = this.formatCurrency(snoRes.totalInterest);
-    if (el('res-dpo-diff')) el('res-dpo-diff').textContent = `+${this.formatCurrency(diff)} Saved`;
-    if (el('res-dpo-monthly-total')) el('res-dpo-monthly-total').textContent = `${this.formatCurrency(totalMonthlyBudget)}/mo`;
-    if (el('res-dpo-recommendation')) {
-      el('res-dpo-recommendation').textContent = diff > 50
-        ? `🎯 Avalanche saves ${this.formatCurrency(diff)} in total interest compared to Snowball and finishes high-APR cards first.`
-        : `👍 Both methods perform very closely for your balances. Snowball provides faster early wins!`;
-    }
-  },
-
   // ------------------------------------------------------------------------
   // 58. DEBT CONSOLIDATION CALCULATOR
   // ------------------------------------------------------------------------
-  calcDebtConsolidation() {
-    const el = id => document.getElementById(id);
-    const b1 = parseFloat(el('dc-b1')?.value) || 0;
-    const r1 = parseFloat(el('dc-r1')?.value) || 0;
-    const p1 = parseFloat(el('dc-p1')?.value) || 0;
-
-    const b2 = parseFloat(el('dc-b2')?.value) || 0;
-    const r2 = parseFloat(el('dc-r2')?.value) || 0;
-    const p2 = parseFloat(el('dc-p2')?.value) || 0;
-
-    const b3 = parseFloat(el('dc-b3')?.value) || 0;
-    const r3 = parseFloat(el('dc-r3')?.value) || 0;
-    const p3 = parseFloat(el('dc-p3')?.value) || 0;
-
-    const newApr = parseFloat(el('dc-new-apr')?.value) || 0;
-    const newTerm = parseFloat(el('dc-new-term')?.value) || 36;
-    const newFeePct = parseFloat(el('dc-new-fee')?.value) || 0;
-
-    const totalBal = b1 + b2 + b3;
-    const currentPmt = p1 + p2 + p3;
-
-    // Upfront fee
-    const feeAmt = totalBal * (newFeePct / 100);
-    const loanBal = totalBal + feeAmt;
-    const monthlyRate = (newApr / 100) / 12;
-
-    let newMonthlyPmt = 0;
-    if (monthlyRate > 0 && newTerm > 0) {
-      newMonthlyPmt = loanBal * (monthlyRate * Math.pow(1 + monthlyRate, newTerm)) / (Math.pow(1 + monthlyRate, newTerm) - 1);
-    } else if (newTerm > 0) {
-      newMonthlyPmt = loanBal / newTerm;
-    }
-
-    const newTotalRepay = newMonthlyPmt * newTerm;
-    const newTotalInterest = Math.max(0, newTotalRepay - totalBal);
-
-    // Approximate remaining interest on existing debts
-    const avgOldApr = totalBal > 0 ? ((b1 * r1) + (b2 * r2) + (b3 * r3)) / totalBal : 18;
-    const oldEstInterest = totalBal * (avgOldApr / 100) * (newTerm / 24); // benchmark
-    const lifetimeSavings = Math.max(0, oldEstInterest - newTotalInterest);
-    const monthlySavings = currentPmt - newMonthlyPmt;
-
-    if (el('res-dc-savings-pmt')) {
-      el('res-dc-savings-pmt').textContent = monthlySavings >= 0 ? `-$${monthlySavings.toFixed(2)} /mo` : `+$${Math.abs(monthlySavings).toFixed(2)} /mo`;
-    }
-    if (el('res-dc-new-pmt')) el('res-dc-new-pmt').textContent = `${this.formatCurrency(newMonthlyPmt)} /mo`;
-    if (el('res-dc-curr-pmt')) el('res-dc-curr-pmt').textContent = `${this.formatCurrency(currentPmt)} /mo`;
-    if (el('res-dc-lifetime-saved')) el('res-dc-lifetime-saved').textContent = `${this.formatCurrency(lifetimeSavings)} Saved`;
-    if (el('res-dc-fee-amt')) el('res-dc-fee-amt').textContent = this.formatCurrency(feeAmt);
-    if (el('res-dc-total-bal')) el('res-dc-total-bal').textContent = this.formatCurrency(totalBal);
-  },
-
   // ------------------------------------------------------------------------
   // 59. REPAYMENT CALCULATOR
   // ------------------------------------------------------------------------
   repFreq: 'monthly',
-  calcRepayment() {
-    const el = id => document.getElementById(id);
-    const principal = parseFloat(el('rep-principal')?.value) || 0;
-    const rate = parseFloat(el('rep-rate')?.value) || 0;
-    const years = parseFloat(el('rep-term-years')?.value) || 5;
-    const extra = parseFloat(el('rep-extra')?.value) || 0;
-
-    const totalMonths = years * 12;
-    const monthlyRate = (rate / 100) / 12;
-
-    let baseMonthlyPmt = 0;
-    if (monthlyRate > 0) {
-      baseMonthlyPmt = principal * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
-    } else {
-      baseMonthlyPmt = principal / totalMonths;
-    }
-
-    const baselineTotalInterest = (baseMonthlyPmt * totalMonths) - principal;
-
-    // Accelerated Bi-Weekly = half of base monthly payment paid 26 times a year
-    const isBiweekly = this.repFreq === 'biweekly';
-    const periodPmt = isBiweekly ? (baseMonthlyPmt / 2) + (extra / 2) : baseMonthlyPmt + extra;
-    const periodRate = isBiweekly ? (rate / 100) / 26 : monthlyRate;
-
-    let bal = principal;
-    let periods = 0;
-    let totalInterestPaid = 0;
-    const maxPeriods = isBiweekly ? 26 * 50 : 12 * 50;
-
-    while (bal > 0.01 && periods < maxPeriods) {
-      periods++;
-      const int = bal * periodRate;
-      totalInterestPaid += int;
-      const pmt = Math.min(bal + int, periodPmt);
-      bal = Math.max(0, bal + int - pmt);
-    }
-
-    const actualYears = isBiweekly ? periods / 26 : periods / 12;
-    const timeSavedYears = Math.max(0, years - actualYears);
-    const interestSaved = Math.max(0, baselineTotalInterest - totalInterestPaid);
-
-    if (el('res-rep-pay-label')) el('res-rep-pay-label').textContent = isBiweekly ? 'Accelerated Bi-Weekly Payment' : 'Monthly Payment';
-    if (el('res-rep-payment')) el('res-rep-payment').textContent = this.formatCurrency(periodPmt);
-    if (el('res-rep-time-saved')) el('res-rep-time-saved').textContent = `${Math.round(timeSavedYears * 12)} Months Saved`;
-    if (el('res-rep-total-interest')) el('res-rep-total-interest').textContent = this.formatCurrency(totalInterestPaid);
-    if (el('res-rep-interest-saved')) el('res-rep-interest-saved').textContent = this.formatCurrency(interestSaved);
-    if (el('res-rep-total-sum')) el('res-rep-total-sum').textContent = this.formatCurrency(principal + totalInterestPaid);
-    if (el('res-rep-payoff-time')) el('res-rep-payoff-time').textContent = `${actualYears.toFixed(1)} Years`;
-  },
-
   // ------------------------------------------------------------------------
   // 60. STUDENT LOAN CALCULATOR
   // ------------------------------------------------------------------------
   slPlan: 'standard',
-  calcStudentLoan() {
-    const el = id => document.getElementById(id);
-    const balance = parseFloat(el('sl-balance')?.value) || 0;
-    const rate = parseFloat(el('sl-rate')?.value) || 0;
-    const capInt = parseFloat(el('sl-cap-int')?.value) || 0;
-    const agi = parseFloat(el('sl-agi')?.value) || 0;
-    const familySize = parseFloat(el('sl-family')?.value) || 1;
-
-    const P = balance + capInt;
-    const r = (rate / 100) / 12;
-
-    let pmt = 0;
-    let months = 120;
-    let totalPaid = 0;
-    let totalInterest = 0;
-    let forgiveness = 0;
-
-    if (this.slPlan === 'standard') {
-      months = 120;
-      if (r > 0) {
-        pmt = P * (r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
-      } else {
-        pmt = P / months;
-      }
-      totalPaid = pmt * months;
-      totalInterest = Math.max(0, totalPaid - P);
-    } else if (this.slPlan === 'extended') {
-      months = 300;
-      if (r > 0) {
-        pmt = P * (r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
-      } else {
-        pmt = P / months;
-      }
-      totalPaid = pmt * months;
-      totalInterest = Math.max(0, totalPaid - P);
-    } else {
-      // SAVE / IDR Plan
-      months = 240; // 20 years
-      const povertyLine = 15060 + (familySize - 1) * 5380;
-      const threshold = povertyLine * 2.25;
-      const discretionary = Math.max(0, agi - threshold);
-      pmt = (discretionary * 0.05) / 12;
-      totalPaid = pmt * months;
-      const totalRequiredPmt = P + (P * r * months * 0.5);
-      forgiveness = Math.max(0, P - (totalPaid * 0.7));
-      totalInterest = Math.max(0, totalPaid - (P - forgiveness));
-    }
-
-    const ratio = P > 0 ? (totalInterest / P) * 100 : 0;
-
-    if (el('res-sl-pay-label')) {
-      el('res-sl-pay-label').textContent = this.slPlan === 'idr' ? 'SAVE / IDR Monthly Payment' : (this.slPlan === 'extended' ? 'Extended Monthly Payment' : 'Standard Monthly Payment');
-    }
-    if (el('res-sl-payment')) el('res-sl-payment').textContent = this.formatCurrency(pmt);
-    if (el('res-sl-term-str')) el('res-sl-term-str').textContent = `${months / 12} Years (${months} Mos)`;
-    if (el('res-sl-interest')) el('res-sl-interest').textContent = this.formatCurrency(totalInterest);
-    if (el('res-sl-total')) el('res-sl-total').textContent = this.formatCurrency(totalPaid);
-    if (el('res-sl-forgiveness')) el('res-sl-forgiveness').textContent = this.formatCurrency(forgiveness);
-    if (el('res-sl-ratio')) el('res-sl-ratio').textContent = `${ratio.toFixed(1)}%`;
-  },
-
   // ------------------------------------------------------------------------
   // 61. COLLEGE COST CALCULATOR
   // ------------------------------------------------------------------------
@@ -4679,122 +3012,12 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // 66. BUSINESS LOAN CALCULATOR
   // ------------------------------------------------------------------------
-  calcBusinessLoan() {
-    const el = id => document.getElementById(id);
-    const amount = parseFloat(el('bl-amount')?.value) || 0;
-    const rate = parseFloat(el('bl-rate')?.value) || 0;
-    const years = parseFloat(el('bl-term-years')?.value) || 7;
-    const feePct = parseFloat(el('bl-fee')?.value) || 0;
-    const ebitda = parseFloat(el('bl-ebitda')?.value) || 0;
-
-    const n = years * 12;
-    const r = (rate / 100) / 12;
-    let monthlyPmt = 0;
-    if (r > 0) {
-      monthlyPmt = amount * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-    } else {
-      monthlyPmt = amount / n;
-    }
-
-    const annualDebt = monthlyPmt * 12;
-    const feeAmt = amount * (feePct / 100);
-    const netProceeds = amount - feeAmt;
-    const totalInterest = (monthlyPmt * n) - amount;
-    const dscr = annualDebt > 0 ? ebitda / annualDebt : 0;
-
-    if (el('res-bl-payment')) el('res-bl-payment').textContent = this.formatCurrency(monthlyPmt);
-    if (el('res-bl-dscr-val')) el('res-bl-dscr-val').textContent = `${dscr.toFixed(2)}x`;
-    if (el('res-bl-net-proceeds')) el('res-bl-net-proceeds').textContent = this.formatCurrency(netProceeds);
-    if (el('res-bl-interest')) el('res-bl-interest').textContent = this.formatCurrency(totalInterest);
-    if (el('res-bl-annual-debt')) el('res-bl-annual-debt').textContent = this.formatCurrency(annualDebt);
-
-    const badge = el('res-bl-dscr-badge');
-    if (badge) {
-      badge.className = 'dscr-badge';
-      if (dscr >= 1.25) {
-        badge.classList.add('dscr-badge-approved');
-        badge.textContent = `DSCR ${dscr.toFixed(2)}x (Approved)`;
-      } else if (dscr >= 1.0) {
-        badge.classList.add('dscr-badge-tight');
-        badge.textContent = `DSCR ${dscr.toFixed(2)}x (Tight / Borderline)`;
-      } else {
-        badge.classList.add('dscr-badge-risk');
-        badge.textContent = `DSCR ${dscr.toFixed(2)}x (High Risk / Denied)`;
-      }
-    }
-  },
-
   // ------------------------------------------------------------------------
   // 67. PERSONAL LOAN CALCULATOR
   // ------------------------------------------------------------------------
-  calcPersonalLoan() {
-    const el = id => document.getElementById(id);
-    const amount = parseFloat(el('pl-amount')?.value) || 0;
-    const apr = parseFloat(el('pl-apr')?.value) || 0;
-    const term = parseFloat(el('pl-term')?.value) || 36;
-    const feePct = parseFloat(el('pl-fee')?.value) || 0;
-
-    const r = (apr / 100) / 12;
-    let monthlyPmt = 0;
-    if (r > 0) {
-      monthlyPmt = amount * (r * Math.pow(1 + r, term)) / (Math.pow(1 + r, term) - 1);
-    } else {
-      monthlyPmt = amount / term;
-    }
-
-    const feeAmt = amount * (feePct / 100);
-    const netCash = amount - feeAmt;
-    const totalInterest = (monthlyPmt * term) - amount;
-    const totalCost = (monthlyPmt * term) + feeAmt;
-    const effApr = apr + (feePct / (term / 12));
-
-    if (el('res-pl-payment')) el('res-pl-payment').textContent = this.formatCurrency(monthlyPmt);
-    if (el('res-pl-net-cash')) el('res-pl-net-cash').textContent = this.formatCurrency(netCash);
-    if (el('res-pl-interest')) el('res-pl-interest').textContent = this.formatCurrency(totalInterest);
-    if (el('res-pl-fee-amt')) el('res-pl-fee-amt').textContent = this.formatCurrency(feeAmt);
-    if (el('res-pl-total-cost')) el('res-pl-total-cost').textContent = this.formatCurrency(totalCost);
-    if (el('res-pl-eff-apr')) el('res-pl-eff-apr').textContent = `${effApr.toFixed(2)}%`;
-  },
-
   // ------------------------------------------------------------------------
   // 68. BOAT LOAN CALCULATOR
   // ------------------------------------------------------------------------
-  calcBoatLoan() {
-    const el = id => document.getElementById(id);
-    const price = parseFloat(el('bt-price')?.value) || 0;
-    const downPct = parseFloat(el('bt-down-pct')?.value) || 0;
-    const rate = parseFloat(el('bt-rate')?.value) || 0;
-    const years = parseFloat(el('bt-term-years')?.value) || 10;
-    const slip = parseFloat(el('bt-slip')?.value) || 0;
-    const ins = parseFloat(el('bt-ins')?.value) || 0;
-    const maint = parseFloat(el('bt-maint')?.value) || 0;
-
-    const downPayment = price * (downPct / 100);
-    const loanBal = Math.max(0, price - downPayment);
-    const n = years * 12;
-    const r = (rate / 100) / 12;
-
-    let loanPmt = 0;
-    if (r > 0 && n > 0) {
-      loanPmt = loanBal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-    } else if (n > 0) {
-      loanPmt = loanBal / n;
-    }
-
-    const annualOps = slip + ins + maint;
-    const monthlyOps = annualOps / 12;
-    const trueMonthly = loanPmt + monthlyOps;
-    const totalInterest = (loanPmt * n) - loanBal;
-    const totalLifecycle = downPayment + (loanPmt * n) + (annualOps * years);
-
-    if (el('res-bt-true-pmt')) el('res-bt-true-pmt').textContent = `${this.formatCurrency(trueMonthly)} /mo`;
-    if (el('res-bt-loan-pmt')) el('res-bt-loan-pmt').textContent = `${this.formatCurrency(loanPmt)} /mo`;
-    if (el('res-bt-down-val')) el('res-bt-down-val').textContent = this.formatCurrency(downPayment);
-    if (el('res-bt-interest')) el('res-bt-interest').textContent = this.formatCurrency(totalInterest);
-    if (el('res-bt-monthly-ops')) el('res-bt-monthly-ops').textContent = `${this.formatCurrency(monthlyOps)} /mo`;
-    if (el('res-bt-total-cost')) el('res-bt-total-cost').textContent = this.formatCurrency(totalLifecycle);
-  },
-
   // ------------------------------------------------------------------------
   // 69. GENERAL LEASE CALCULATOR
   // ------------------------------------------------------------------------
@@ -5120,7 +3343,6 @@ const FinancialCalcs = {
 
     // 4. Compound Interest Inputs
     ['ci-principal', 'ci-monthly', 'ci-rate', 'ci-years', 'ci-freq'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcCompoundInterest());
     });
 
     // 5. SIP Inputs
@@ -5265,11 +3487,7 @@ const FinancialCalcs = {
     });
 
     // 20. House Affordability Inputs & Sliders
-    this.syncInputSlider('afford-income', 'afford-income-range', () => this.calcHouseAffordability());
-    this.syncInputSlider('afford-down', 'afford-down-range', () => this.calcHouseAffordability());
-    this.syncInputSlider('afford-rate', 'afford-rate-range', () => this.calcHouseAffordability());
     ['afford-debt', 'afford-term', 'afford-tax-rate', 'afford-ins-annual', 'afford-hoa'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcHouseAffordability());
     });
     document.querySelectorAll('.afford-term-preset').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -5279,7 +3497,6 @@ const FinancialCalcs = {
           termInput.value = term;
           document.querySelectorAll('.afford-term-preset').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          this.calcHouseAffordability();
         }
       });
     });
@@ -5303,9 +3520,7 @@ const FinancialCalcs = {
     });
 
     // 22. Rent Inputs & Sliders
-    this.syncInputSlider('rent-income', 'rent-income-range', () => this.calcRent());
     ['rent-debt', 'rent-utilities', 'rent-savings-goal'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcRent());
     });
 
     // 23. Annuity Accumulation Inputs
@@ -5315,10 +3530,7 @@ const FinancialCalcs = {
     });
 
     // 24. Debt-to-Income (DTI) Inputs & Sliders
-    this.syncInputSlider('dti-income', 'dti-income-range', () => this.calcDTI());
-    this.syncInputSlider('dti-housing', 'dti-housing-range', () => this.calcDTI());
     ['dti-auto', 'dti-student', 'dti-cc', 'dti-other'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcDTI());
     });
 
     // 25. Annuity Payout Inputs
@@ -5328,10 +3540,7 @@ const FinancialCalcs = {
     });
 
     // 26. Real Estate Inputs & Sliders
-    this.syncInputSlider('re-price', 're-price-range', () => this.calcRealEstate());
-    this.syncInputSlider('re-rent', 're-rent-range', () => this.calcRealEstate());
     ['re-down-pct', 're-rate', 're-term', 're-vacancy', 're-tax-yr', 're-ins-yr', 're-hoa', 're-mgmt-pct', 're-maint-pct', 're-closing-pct'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcRealEstate());
     });
 
     // 27. Roth IRA Inputs
@@ -5352,10 +3561,7 @@ const FinancialCalcs = {
     });
 
     // 28. Refinance Calculator
-    this.syncInputSlider('refi-cur-balance', 'refi-cur-balance-range', () => this.calcRefinance());
-    this.syncInputSlider('refi-new-rate', 'refi-new-rate-range', () => this.calcRefinance());
     ['refi-cur-balance', 'refi-cur-rate', 'refi-cur-term-rem', 'refi-new-rate', 'refi-new-term', 'refi-closing-costs', 'refi-cash-out'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcRefinance());
     });
     document.querySelectorAll('.refi-term-preset').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -5365,7 +3571,6 @@ const FinancialCalcs = {
           termInput.value = term;
           document.querySelectorAll('.refi-term-preset').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          this.calcRefinance();
         }
       });
     });
@@ -5388,10 +3593,7 @@ const FinancialCalcs = {
     });
 
     // 30. Rental Property Calculator
-    this.syncInputSlider('rental-price', 'rental-price-range', () => this.calcRentalProperty());
-    this.syncInputSlider('rental-gross-rent', 'rental-gross-rent-range', () => this.calcRentalProperty());
     ['rental-price', 'rental-down-pct', 'rental-rate', 'rental-term', 'rental-gross-rent', 'rental-other-inc', 'rental-vacancy', 'rental-tax-yr', 'rental-ins-yr', 'rental-hoa', 'rental-mgmt', 'rental-maint', 'rental-capex', 'rental-closing-costs'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcRentalProperty());
     });
 
     // 31. RMD Calculator
@@ -5414,17 +3616,11 @@ const FinancialCalcs = {
     });
 
     // 32. APR Calculator
-    this.syncInputSlider('apr-loan-amt', 'apr-loan-amt-range', () => this.calcAPR());
-    this.syncInputSlider('apr-rate', 'apr-rate-range', () => this.calcAPR());
     ['apr-loan-amt', 'apr-rate', 'apr-term', 'apr-points', 'apr-origination', 'apr-other-fees'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcAPR());
     });
 
     // 33. FHA Loan Calculator
-    this.syncInputSlider('fha-price', 'fha-price-range', () => this.calcFHALoan());
-    this.syncInputSlider('fha-rate', 'fha-rate-range', () => this.calcFHALoan());
     ['fha-price', 'fha-down-pct', 'fha-rate', 'fha-term', 'fha-tax-yr', 'fha-ins-yr', 'fha-hoa'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcFHALoan());
     });
     document.querySelectorAll('.fha-down-preset').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -5434,26 +3630,18 @@ const FinancialCalcs = {
           downInput.value = down;
           document.querySelectorAll('.fha-down-preset').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          this.calcFHALoan();
         }
       });
     });
 
     // 34. VA Mortgage Calculator
-    this.syncInputSlider('va-price', 'va-price-range', () => this.calcVAMortgage());
-    this.syncInputSlider('va-rate', 'va-rate-range', () => this.calcVAMortgage());
     ['va-price', 'va-down-pct', 'va-rate', 'va-term', 'va-tax-yr', 'va-ins-yr'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcVAMortgage());
     });
     ['va-usage', 'va-disability'].forEach(id => {
-      document.getElementById(id)?.addEventListener('change', () => this.calcVAMortgage());
     });
 
     // 35. Home Equity Loan Calculator
-    this.syncInputSlider('he-home-value', 'he-home-value-range', () => this.calcHomeEquityLoan());
-    this.syncInputSlider('he-loan-amount', 'he-loan-amount-range', () => this.calcHomeEquityLoan());
     ['he-home-value', 'he-first-balance', 'he-loan-amount', 'he-rate', 'he-term', 'he-max-cltv'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcHomeEquityLoan());
     });
 
     // 36. HELOC Calculator
@@ -5464,10 +3652,7 @@ const FinancialCalcs = {
     });
 
     // 37. Down Payment Calculator
-    this.syncInputSlider('down-target-price', 'down-target-price-range', () => this.calcDownPayment());
-    this.syncInputSlider('down-monthly-save', 'down-monthly-save-range', () => this.calcDownPayment());
     ['down-target-price', 'down-target-pct', 'down-closing-pct', 'down-cur-saved', 'down-monthly-save', 'down-hysa-rate'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcDownPayment());
     });
     document.querySelectorAll('.down-pct-preset').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -5477,16 +3662,12 @@ const FinancialCalcs = {
           pctInput.value = pct;
           document.querySelectorAll('.down-pct-preset').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          this.calcDownPayment();
         }
       });
     });
 
     // 38. Rent vs Buy Calculator
-    this.syncInputSlider('rvb-home-price', 'rvb-home-price-range', () => this.calcRentVsBuy());
-    this.syncInputSlider('rvb-cur-rent', 'rvb-cur-rent-range', () => this.calcRentVsBuy());
     ['rvb-home-price', 'rvb-down-pct', 'rvb-mort-rate', 'rvb-mort-term', 'rvb-home-growth', 'rvb-tax-rate', 'rvb-maint-ins', 'rvb-cur-rent', 'rvb-rent-growth', 'rvb-invest-rate', 'rvb-years-stay'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcRentVsBuy());
     });
     document.querySelectorAll('.rvb-stay-preset').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -5496,18 +3677,14 @@ const FinancialCalcs = {
           stayInput.value = stay;
           document.querySelectorAll('.rvb-stay-preset').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          this.calcRentVsBuy();
         }
       });
     });
 
     // 34. US Federal & State Income Tax Calculator
-    this.syncInputSlider('tax-gross-income', 'tax-gross-income-range', () => this.calcIncomeTax());
     ['tax-gross-income', 'tax-itemized-amt', 'tax-pretax', 'tax-state-custom'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcIncomeTax());
     });
     ['tax-filing-status', 'tax-ded-type', 'tax-state'].forEach(id => {
-      document.getElementById(id)?.addEventListener('change', () => this.calcIncomeTax());
     });
     document.querySelectorAll('.tax-preset-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -5521,7 +3698,6 @@ const FinancialCalcs = {
         if (statusSelect) statusSelect.value = status;
         document.querySelectorAll('.tax-preset-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        this.calcIncomeTax();
       });
     });
 
@@ -5610,13 +3786,10 @@ const FinancialCalcs = {
         const fvGroup = document.getElementById('ir-group-target-fv');
         if (pmtGroup) pmtGroup.style.display = this.irMode === 'loan' ? 'block' : 'none';
         if (fvGroup) fvGroup.style.display = this.irMode === 'investment' ? 'block' : 'none';
-        this.calcInterestRate();
       });
     });
     ['ir-principal', 'ir-payment', 'ir-target-fv', 'ir-years', 'ir-months'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcInterestRate());
     });
-    document.getElementById('ir-freq')?.addEventListener('change', () => this.calcInterestRate());
 
     // 42. Savings Goal Calculator Listeners
     document.querySelectorAll('.svg-mode-preset').forEach(btn => {
@@ -5628,15 +3801,10 @@ const FinancialCalcs = {
         const depositGrp = document.getElementById('svg-deposit-group');
         if (targetGrp) targetGrp.style.display = this.svgMode === 'goal' ? 'block' : 'none';
         if (depositGrp) depositGrp.style.display = this.svgMode === 'balance' ? 'block' : 'none';
-        this.calcSavingsGoal();
       });
     });
-    this.syncInputSlider('svg-years', 'svg-years-range', () => this.calcSavingsGoal());
-    this.syncInputSlider('svg-rate', 'svg-rate-range', () => this.calcSavingsGoal());
     ['svg-initial', 'svg-target', 'svg-deposit'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcSavingsGoal());
     });
-    document.getElementById('svg-freq')?.addEventListener('change', () => this.calcSavingsGoal());
 
     // 43. Simple Interest Calculator Listeners
     document.querySelectorAll('.si-term-preset').forEach(btn => {
@@ -5667,16 +3835,11 @@ const FinancialCalcs = {
         if (unitSelect) unitSelect.value = 'months';
         document.querySelectorAll('.cd-term-preset').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        this.calcCD();
       });
     });
-    this.syncInputSlider('cd-deposit', 'cd-deposit-range', () => this.calcCD());
-    this.syncInputSlider('cd-rate', 'cd-rate-range', () => this.calcCD());
     ['cd-term-val', 'cd-tax-rate'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcCD());
     });
     ['cd-term-unit', 'cd-freq', 'cd-penalty-tier'].forEach(id => {
-      document.getElementById(id)?.addEventListener('change', () => this.calcCD());
     });
 
     // 45. Bond Calculator Listeners
@@ -5869,13 +4032,9 @@ const FinancialCalcs = {
         const minGrp = document.getElementById('cc-group-min');
         if (fixedGrp) fixedGrp.style.display = this.ccPayType === 'fixed' ? 'block' : 'none';
         if (minGrp) minGrp.style.display = this.ccPayType === 'minimum' ? 'grid' : 'none';
-        this.calcCreditCard();
       });
     });
-    this.syncInputSlider('cc-balance', 'cc-balance-range', () => this.calcCreditCard());
-    this.syncInputSlider('cc-apr', 'cc-apr-range', () => this.calcCreditCard());
     ['cc-fixed-payment', 'cc-min-pct', 'cc-min-floor'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcCreditCard());
     });
 
     // 56. Credit Cards Payoff Calculator Listeners
@@ -5892,7 +4051,6 @@ const FinancialCalcs = {
         const pmtGrp = document.getElementById('ccp-group-pmt');
         if (targetGrp) targetGrp.style.display = 'block';
         if (pmtGrp) pmtGrp.style.display = 'none';
-        this.calcCCPayoff();
       });
     });
     document.getElementById('ccp-mode')?.addEventListener('change', (e) => {
@@ -5901,12 +4059,8 @@ const FinancialCalcs = {
       const pmtGrp = document.getElementById('ccp-group-pmt');
       if (targetGrp) targetGrp.style.display = mode === 'target' ? 'block' : 'none';
       if (pmtGrp) pmtGrp.style.display = mode === 'fixed' ? 'block' : 'none';
-      this.calcCCPayoff();
     });
-    this.syncInputSlider('ccp-balance', 'ccp-balance-range', () => this.calcCCPayoff());
-    this.syncInputSlider('ccp-apr', 'ccp-apr-range', () => this.calcCCPayoff());
     ['ccp-target-months', 'ccp-fixed-pmt'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcCCPayoff());
     });
 
     // 57. Debt Payoff Calculator Listeners
@@ -5915,13 +4069,10 @@ const FinancialCalcs = {
         this.dpoStrategy = btn.dataset.strat;
         document.querySelectorAll('.dpo-strategy-preset').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        this.calcDebtPayoff();
       });
     });
-    this.syncInputSlider('dpo-extra', 'dpo-extra-range', () => this.calcDebtPayoff());
     for (let i = 1; i <= 4; i++) {
       ['dpo-n' + i, 'dpo-b' + i, 'dpo-r' + i, 'dpo-m' + i].forEach(id => {
-        document.getElementById(id)?.addEventListener('input', () => this.calcDebtPayoff());
       });
     }
 
@@ -5935,17 +4086,12 @@ const FinancialCalcs = {
         if (termRange) termRange.value = y;
         document.querySelectorAll('.dc-term-preset').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        this.calcDebtConsolidation();
       });
     });
-    this.syncInputSlider('dc-new-apr', 'dc-new-apr-range', () => this.calcDebtConsolidation());
-    this.syncInputSlider('dc-new-term', 'dc-new-term-range', () => this.calcDebtConsolidation());
     for (let i = 1; i <= 3; i++) {
       ['dc-b' + i, 'dc-r' + i, 'dc-p' + i].forEach(id => {
-        document.getElementById(id)?.addEventListener('input', () => this.calcDebtConsolidation());
       });
     }
-    document.getElementById('dc-new-fee')?.addEventListener('input', () => this.calcDebtConsolidation());
 
     // 59. Repayment Calculator Listeners
     document.querySelectorAll('.rep-freq-preset').forEach(btn => {
@@ -5953,13 +4099,8 @@ const FinancialCalcs = {
         this.repFreq = btn.dataset.freq;
         document.querySelectorAll('.rep-freq-preset').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        this.calcRepayment();
       });
     });
-    this.syncInputSlider('rep-principal', 'rep-principal-range', () => this.calcRepayment());
-    this.syncInputSlider('rep-rate', 'rep-rate-range', () => this.calcRepayment());
-    this.syncInputSlider('rep-term-years', 'rep-term-years-range', () => this.calcRepayment());
-    document.getElementById('rep-extra')?.addEventListener('input', () => this.calcRepayment());
 
     // 60. Student Loan Calculator Listeners
     document.querySelectorAll('.sl-plan-preset').forEach(btn => {
@@ -5969,13 +4110,9 @@ const FinancialCalcs = {
         btn.classList.add('active');
         const idrGrp = document.getElementById('sl-group-idr');
         if (idrGrp) idrGrp.style.display = this.slPlan === 'idr' ? 'block' : 'none';
-        this.calcStudentLoan();
       });
     });
-    this.syncInputSlider('sl-balance', 'sl-balance-range', () => this.calcStudentLoan());
-    this.syncInputSlider('sl-rate', 'sl-rate-range', () => this.calcStudentLoan());
     ['sl-term', 'sl-agi', 'sl-family', 'sl-growth'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcStudentLoan());
     });
 
     // 61. College Cost Calculator Listeners
@@ -6057,13 +4194,9 @@ const FinancialCalcs = {
         if (termInput) termInput.value = t;
         document.querySelectorAll('.bl-term-preset').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        this.calcBusinessLoan();
       });
     });
-    this.syncInputSlider('bl-amount', 'bl-amount-range', () => this.calcBusinessLoan());
-    this.syncInputSlider('bl-rate', 'bl-rate-range', () => this.calcBusinessLoan());
     ['bl-term-years', 'bl-fee', 'bl-ebitda'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcBusinessLoan());
     });
 
     // 67. Personal Loan Calculator Listeners
@@ -6076,14 +4209,9 @@ const FinancialCalcs = {
         if (aprRange) aprRange.value = apr;
         document.querySelectorAll('.pl-tier-preset').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        this.calcPersonalLoan();
       });
     });
-    this.syncInputSlider('pl-amount', 'pl-amount-range', () => this.calcPersonalLoan());
-    this.syncInputSlider('pl-apr', 'pl-apr-range', () => this.calcPersonalLoan());
     ['pl-term', 'pl-fee'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcPersonalLoan());
-      document.getElementById(id)?.addEventListener('change', () => this.calcPersonalLoan());
     });
 
     // 68. Boat Loan Calculator Listeners
@@ -6094,12 +4222,9 @@ const FinancialCalcs = {
         if (termInput) termInput.value = t;
         document.querySelectorAll('.bt-term-preset').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        this.calcBoatLoan();
       });
     });
-    this.syncInputSlider('bt-price', 'bt-price-range', () => this.calcBoatLoan());
     ['bt-down-pct', 'bt-rate', 'bt-term-years', 'bt-slip', 'bt-ins', 'bt-maint'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcBoatLoan());
     });
 
     // 69. Equipment Lease Calculator Listeners
@@ -6170,41 +4295,23 @@ const FinancialCalcs = {
     this.calcCurrency();
     this.calcInflation();
     this.calcFinanceTVM('fv');
-    this.calcMortgagePayoff();
     this.calc401k();
-    this.calcCompoundInterest();
     this.calcSIP();
     this.calcDiscountTax();
     this.calcTipSplit();
     this.calcROI();
     this.calcPension();
-    this.calcHouseAffordability();
     this.calcSocialSecurity();
-    this.calcRent();
     this.calcAnnuity();
-    this.calcDTI();
     this.calcAnnuityPayout();
-    this.calcRealEstate();
     this.calcRothIRA();
-    this.calcRefinance();
     this.calcIRA();
-    this.calcRentalProperty();
     this.calcRMD();
-    this.calcAPR();
-    this.calcFHALoan();
-    this.calcVAMortgage();
-    this.calcHomeEquityLoan();
     this.calcHELOC();
-    this.calcDownPayment();
-    this.calcRentVsBuy();
-    this.calcIncomeTax();
     this.calcSalary();
     this.calcAutoRebate();
     this.calcAutoLease();
-    this.calcInterestRate();
-    this.calcSavingsGoal();
     this.calcSimpleInterest();
-    this.calcCD();
     this.calcBond();
     this.calcMutualFund();
     this.calcAverageReturn();
@@ -6212,19 +4319,10 @@ const FinancialCalcs = {
     this.calcPayback();
     this.calcPresentValue();
     this.calcFutureValue();
-    this.calcCreditCard();
-    this.calcCCPayoff();
-    this.calcDebtPayoff();
-    this.calcDebtConsolidation();
-    this.calcRepayment();
-    this.calcStudentLoan();
     this.calcCollegeCost();
     this.calcDepreciation();
     this.calcMargin();
     this.calcDiscount();
-    this.calcBusinessLoan();
-    this.calcPersonalLoan();
-    this.calcBoatLoan();
     this.calcGenLease();
     this.calcBudget();
     this.calcCommission();

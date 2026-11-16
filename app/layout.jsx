@@ -192,24 +192,24 @@ export default function RootLayout({ children }) {
         <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta httpEquiv="Pragma" content="no-cache" />
         <meta httpEquiv="Expires" content="0" />
-        <link rel="stylesheet" href="/css/style.css?v=20261116_v71" />
-        <link rel="stylesheet" href="/css/calculators.css?v=20261116_v71" />
+        <link rel="stylesheet" href="/css/style.css?v=20261116_v72" />
+        <link rel="stylesheet" href="/css/calculators.css?v=20261116_v72" />
         <script dangerouslySetInnerHTML={{ __html: earlyBootstrapScript }} />
       </head>
       <body>
         {children}
 
         {/* Calculation Engines & App Logic */}
-        <script src="/js/router.js?v=20261116_v71" />
-        <script src="/js/standard-calc.js?v=20261116_v71" />
-        <script src="/js/financial-calcs.js?v=20261116_v71" />
-        <script src="/js/fitness-calcs.js?v=20261116_v71" />
-        <script src="/js/math-calcs.js?v=20261116_v71" />
-        <script src="/js/other-calcs.js?v=20261116_v71" />
-        <script src="/js/seo-guide.js?v=20261116_v71" />
+        <script src="/js/router.js?v=20261116_v72" />
+        <script src="/js/standard-calc.js?v=20261116_v72" />
+        <script src="/js/financial-calcs.js?v=20261116_v72" />
+        <script src="/js/fitness-calcs.js?v=20261116_v72" />
+        <script src="/js/math-calcs.js?v=20261116_v72" />
+        <script src="/js/other-calcs.js?v=20261116_v72" />
+        <script src="/js/seo-guide.js?v=20261116_v72" />
         <script src="/js/html2pdf.bundle.min.js" />
         <script src="/js/pdf-report.js" />
-        <script src="/js/app.js?v=20261116_v71" />
+        <script src="/js/app.js?v=20261116_v72" />
       </body>
     </html>
   );
