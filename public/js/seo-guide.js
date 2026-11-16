@@ -105,38 +105,6 @@
       ]
     },
 
-'sec-calorie-calc': {
-      title: 'Calorie Calculator & Deficit Targets',
-      category: 'Metabolism & Nutritional Energetics',
-      badge: 'Mifflin-St Jeor & Katch-McArdle Consensus',
-      tagline: 'Precision daily caloric intake targets for weight maintenance, progressive fat loss deficit, and lean muscle mass gain.',
-      overview: 'The <strong>Calorie Calculator</strong> models human energy thermodynamics to compute your exact daily caloric requirements based on age, gender, height, weight, and physical activity levels. By accurately determining your Basal Metabolic Rate (BMR) and Total Daily Energy Expenditure (TDEE), it delivers tailored caloric milestones for steady weight maintenance, mild or aggressive fat loss deficits, and lean muscle bulking surpluses without metabolic slowdown.',
-      steps: [
-        { title: 'Input Baseline Biometrics', desc: 'Provide your accurate age, biological sex, current weight, and height to determine your baseline metabolic rate.' },
-        { title: 'Select Physical Activity Level', desc: 'Choose your weekly exercise frequency from Sedentary (office work) to Extremely Active (endurance training or manual labor).' },
-        { title: 'Choose Caloric Target Strategy', desc: 'Select Maintenance, Mild Fat Loss (-250 kcal/day), Moderate Fat Loss (-500 kcal/day), or Muscle Gain (+300 to +500 kcal/day).' },
-        { title: 'Review Personalized Macronutrient Split', desc: 'Inspect your target daily protein, carbohydrate, and dietary fat allocations designed to preserve lean muscle tissue.' }
-      ],
-      formulaName: 'Total Daily Energy Expenditure (TDEE) Model',
-      formulaExpr: '\\text{TDEE} = \\text{BMR} \\times \\text{PAL}, \\quad \\text{Target} = \\text{TDEE} \\pm \\Delta_{\\text{cal}}',
-      formulaExplanation: 'Where BMR is derived using the clinical Mifflin-St Jeor equation and PAL is the Physical Activity Level multiplier (1.2 to 1.9). Caloric deficit or surplus is applied to TDEE to establish weight change velocity.',
-      example: '<strong>Nutrition Example:</strong> A 30-year-old male weighing 80 kg at 180 cm who exercises 4 days per week has a BMR of 1,775 kcal and a TDEE of <strong>2,751 kcal/day</strong>. A standard 500 kcal/day deficit establishes a target of <strong>2,251 kcal/day</strong>, projecting ~0.45 kg (1 lb) of fat loss per week.',
-      faqs: [
-        {
-          q: 'How many calories are in one pound of body fat?',
-          a: 'One pound of human adipose tissue stores approximately 3,500 kilocalories of metabolic energy. A daily caloric deficit of 500 kcal results in an expenditure deficit of 3,500 kcal per week, translating to roughly one pound of fat loss.'
-        },
-        {
-          q: 'What is a safe and sustainable caloric deficit rate?',
-          a: 'Clinical nutrition guidelines recommend a deficit of 300 to 500 kcal per day (15% to 20% below maintenance TDEE). Deficits exceeding 25% often trigger muscle catabolism, micronutrient deficiencies, and hormonal downregulation.'
-        },
-        {
-          q: 'Can eating too few calories stall weight loss?',
-          a: 'Yes. Severe chronic calorie restriction triggers adaptive thermogenesis, wherein non-exercise activity thermogenesis (NEAT) plunges, thyroid hormone T3 drops, and resting metabolic rate slows down.'
-        }
-      ]
-    },
-
     'sec-bf-calc': {
       title: 'Body Fat % (US Navy Method)',
       category: 'Body Composition & Anthropometry',
@@ -161,202 +129,6 @@
         {
           q: 'What are healthy body fat percentage ranges for men and women?',
           a: 'For men: Essential fat 2–5%, Athletes 6–13%, Fitness 14–17%, Acceptable 18–24%, Obese ≥25%. For women: Essential fat 10–13%, Athletes 14–20%, Fitness 21–24%, Acceptable 25–31%, Obese ≥32%.'
-        }
-      ]
-    },
-
-    'sec-bmr-calc': {
-      title: 'BMR & TDEE Calorie Target Calculator',
-      category: 'Metabolism & Clinical Energetics',
-      badge: 'Clinical BMR Standard',
-      tagline: 'Calculate baseline resting energy expenditure via Mifflin-St Jeor, Revised Harris-Benedict, and Katch-McArdle equations.',
-      overview: '<strong>Basal Metabolic Rate (BMR)</strong> defines the exact quantity of energy (calories) expended while at rest in a neutrally temperate environment. It accounts for 60% to 75% of your total daily caloric burn, powering involuntary life-sustaining physiological functions including cardiopulmonary circulation, cellular protein synthesis, renal filtration, and neurological signaling.',
-      steps: [
-        { title: 'Input Biological Variables', desc: 'Enter your age, sex, current body weight, and standing height.' },
-        { title: 'Provide Body Fat % (Optional)', desc: 'Enter known body fat to calculate via the Katch-McArdle formula, which accounts for lean tissue mass.' },
-        { title: 'Compare Clinical Equations', desc: 'Review side-by-side comparative outputs for Mifflin-St Jeor, Harris-Benedict, and Katch-McArdle.' },
-        { title: 'Multiply by Activity Factor', desc: 'Determine your Total Daily Energy Expenditure (TDEE) to guide nutritional planning.' }
-      ],
-      formulaName: 'Mifflin-St Jeor Equation (Clinical Standard)',
-      formulaExpr: '\\text{BMR} = 10W + 6.25H - 5A + s \\quad (s = +5 \\text{ for male}, -161 \\text{ for female})',
-      formulaExplanation: 'Where W is weight in kilograms, H is height in centimeters, A is chronological age in years, and s is sex adjustment factor.',
-      example: '<strong>Clinical Example:</strong> A 28-year-old female weighing 62 kg at 165 cm has a BMR of <strong>1,351 kcal/day</strong>. This represents her baseline energy expenditure if remaining at complete bedrest for 24 hours.',
-      faqs: [
-        {
-          q: 'What is the difference between BMR and RMR?',
-          a: 'BMR requires strict laboratory fasting and sleep monitoring under neutral temperature conditions. Resting Metabolic Rate (RMR) is measured under less restrictive resting conditions and is typically about 10% higher than BMR.'
-        },
-        {
-          q: 'Can resistance training increase resting BMR?',
-          a: 'Yes. Muscle tissue is metabolically active, consuming roughly 13 kcal/kg per day at rest compared to 4.5 kcal/kg for adipose tissue. Adding lean muscle mass elevates your baseline metabolic rate.'
-        }
-      ]
-    },
-
-'sec-pace-calc': {
-      title: 'Pace Calculator (Running, Race & Splits)',
-      category: 'Cardiorespiratory & Athletic Endurance',
-      badge: 'World Athletics Endurance Standard',
-      tagline: 'Solve for running pace, split times, or race completion across 5K, 10K, Half Marathon, and Full Marathon distances.',
-      overview: 'The <strong>Pace Calculator</strong> is an indispensable training tool for runners, marathoners, and triathletes. By interconnecting Distance, Elapsed Time, and Pace (min/km or min/mile), it allows athletes to plan race pacing strategies, establish target split intervals, prevent premature glycogen depletion, and analyze aerobic velocity.',
-      steps: [
-        { title: 'Select Two Target Variables', desc: 'Choose to calculate Pace (from time & distance), Finish Time (from distance & pace), or Distance.' },
-        { title: 'Pick Preset Event Distance', desc: 'Click 5K, 10K, Half Marathon (21.0975 km), or Marathon (42.195 km), or enter a custom distance.' },
-        { title: 'Choose Metric or Imperial Units', desc: 'Toggle between minutes per kilometer (min/km) and minutes per mile (min/mi).' },
-        { title: 'Inspect Split Mile/Kilometer Table', desc: 'Review the cumulative elapsed time milestones at every marker to maintain consistent race pacing.' }
-      ],
-      formulaName: 'Athletic Pace & Velocity Relationships',
-      formulaExpr: '\\text{Pace} = \\frac{\\text{Elapsed Time}}{\\text{Distance}}, \\quad \\text{Velocity} = \\frac{\\text{Distance}}{\\text{Elapsed Time}}',
-      formulaExplanation: 'Pace represents time per unit distance. Total race time equals pace multiplied by total race distance.',
-      example: '<strong>Race Example:</strong> To complete a 10K (6.214 miles) in under 50 minutes (00:49:30), an athlete must sustain an average pace of <strong>4:57 min/km (7:58 min/mile)</strong> at an average velocity of 12.12 km/h.',
-      faqs: [
-        {
-          q: 'What is a "negative split" pacing strategy in distance running?',
-          a: 'A negative split occurs when you run the second half of a race faster than the first half. Endurance physiology demonstrates that conservative early pacing conserves muscle glycogen and prevents late-race lactate crash.'
-        },
-        {
-          q: 'How does running pace convert between min/km and min/mile?',
-          a: 'Multiply min/km by 1.60934 to get min/mile. Conversely, divide min/mile by 1.60934 to determine min/km.'
-        }
-      ]
-    },
-
-'sec-calories-burned-calc': {
-      title: 'Calories Burned (2024 MET Standard)',
-      category: 'Exercise Physiology & Energy Expenditure',
-      badge: 'Compendium of Physical Activities (Ainsworth MET)',
-      tagline: 'Accurate caloric energy expenditure across 20+ sports, cardio, and resistance exercises using Metabolic Equivalent of Task (MET).',
-      overview: 'The <strong>Calories Burned Calculator</strong> calculates active exercise energy expenditure using the updated Compendium of Physical Activities. It utilizes standardized <strong>Metabolic Equivalent of Task (MET)</strong> ratings, where 1.0 MET represents resting oxygen consumption (3.5 mL O₂/kg/min). By factoring your exact body mass and exercise duration, it eliminates gym machine overestimation.',
-      steps: [
-        { title: 'Select Physical Activity or Sport', desc: 'Choose from running, cycling, swimming, weight lifting, HIIT, walking, rowing, or team sports.' },
-        { title: 'Enter Exercise Duration', desc: 'Input the exact duration of active exertion in minutes.' },
-        { title: 'Enter Body Weight', desc: 'Input current weight, as heavier bodies require proportionally greater metabolic energy to move.' },
-        { title: 'Review Burned Calories & Fat Equivalent', desc: 'Inspect gross calories expended and equivalent grams of body fat oxidized.' }
-      ],
-      formulaName: 'Metabolic Equivalent of Task (MET) Energy Formula',
-      formulaExpr: '\\text{Calories Burned} = \\text{Duration (hours)} \\times \\text{MET} \\times \\text{Body Weight (kg)}',
-      formulaExplanation: 'Where MET is the energy cost multiplier of the activity. 1 MET = 1.0 kcal/kg/hour.',
-      example: '<strong>Workout Example:</strong> A 75 kg individual running at 6.0 mph / 10-min mile (MET 9.8) for 45 minutes (0.75 hours) expends: 0.75 × 9.8 × 75 = <strong>551 kcal</strong> (equivalent to ~71 grams of body fat).',
-      faqs: [
-        {
-          q: 'Why do wearable fitness trackers often overestimate calories burned?',
-          a: 'Many consumer fitness trackers conflate gross calories (which include baseline resting BMR during the workout) with net exercise calories, leading to overestimations of 20% to 40%.'
-        },
-        {
-          q: 'Does weight lifting burn calories after the workout ends?',
-          a: 'Yes. High-intensity resistance training creates Excess Post-Exercise Oxygen Consumption (EPOC), elevating resting oxygen consumption and metabolic rate for 12 to 24 hours post-exercise.'
-        }
-      ]
-    },
-
-    'sec-orm-calc': {
-      title: 'One Rep Max (1RM) Strength Calculator',
-      category: 'Strength & Resistance Training',
-      badge: 'Epley & Brzycki Consensus Model',
-      tagline: 'Predict maximal single-repetition lift capacity with 100% to 50% training load percentage tables for powerlifting and hypertrophy.',
-      overview: 'The <strong>One Rep Max (1RM) Calculator</strong> predicts your theoretical maximum lifting capacity for a single repetition on compound barbell lifts (Squat, Bench Press, Deadlift, Overhead Press). By utilizing validated submaximal repetition models (Epley, Brzycki, and Lombardi), lifters can safely test strength milestones without the elevated injury risk of attempting a true 100% failure load.',
-      steps: [
-        { title: 'Enter Weight Lifted', desc: 'Input the barbell or dumbbell weight used during your working set in kg or lbs.' },
-        { title: 'Enter Repetitions to Technical Failure', desc: 'Input repetitions completed with strict form (accuracy is highest between 2 and 8 reps).' },
-        { title: 'Compare Consensus Equations', desc: 'Review 1RM projections across Epley, Brzycki, and Lombardi formulas.' },
-        { title: 'Consult Working Load Percentage Chart', desc: 'Inspect exact weight loads corresponding to 95%, 85%, 75%, and 65% of 1RM to plan your training blocks.' }
-      ],
-      formulaName: 'Epley and Brzycki Submaximal 1RM Equations',
-      formulaExpr: '\\text{1RM}_{\\text{Epley}} = w \\left(1 + \\frac{r}{30}\\right), \\quad \\text{1RM}_{\\text{Brzycki}} = w \\times \\frac{36}{37 - r}',
-      formulaExplanation: 'Where w is weight lifted and r is repetitions performed to momentary muscular failure.',
-      example: '<strong>Lifting Example:</strong> Performing 100 kg on the bench press for 5 clean repetitions yields an estimated 1RM of <strong>116.7 kg</strong> (Epley) and <strong>112.5 kg</strong> (Brzycki). Working sets at 80% 1RM correspond to ~92 kg.',
-      faqs: [
-        {
-          q: 'Why is submaximal 1RM testing safer than attempting a true 1RM?',
-          a: 'Attempting a true maximal single repetition places extreme mechanical strain on tendons, ligaments, and stabilizing muscles. Calculating 1RM from a 3-to-5 rep set provides accurate programming numbers while preserving joint health.'
-        },
-        {
-          q: 'What training percentages are optimal for hypertrophy versus strength?',
-          a: 'Maximum strength development is optimized at 85%–100% 1RM (1–5 reps), while muscular hypertrophy is optimized across 65%–85% 1RM (6–12 reps) taken close to muscular failure.'
-        }
-      ]
-    },
-
-    'sec-thr-calc': {
-      title: 'Target Heart Rate (THR) & Training Zones',
-      category: 'Cardiovascular Health & Exercise Prescription',
-      badge: 'American Heart Association & Karvonen Standards',
-      tagline: 'Calculate maximum heart rate and 5 aerobic/anaerobic intensity training zones using Tanaka formula and Heart Rate Reserve.',
-      overview: 'The <strong>Target Heart Rate Calculator</strong> establishes physiological cardiovascular intensity boundaries using both the traditional Tanaka maximum heart rate formula and the clinical <strong>Karvonen Heart Rate Reserve (HRR)</strong> method. By mapping your Resting Heart Rate against maximum capacity, it delineates 5 distinct training zones from Zone 1 Active Recovery to Zone 5 VO2 Max.',
-      steps: [
-        { title: 'Input Chronological Age', desc: 'Enter age to establish age-predicted maximum heart rate (HRmax).' },
-        { title: 'Input Resting Heart Rate (RHR)', desc: 'Enter resting pulse taken immediately upon waking to calculate Heart Rate Reserve (HRR).' },
-        { title: 'Review 5 Cardiovascular Zones', desc: 'Inspect exact beats-per-minute (BPM) ranges for Zone 1 (Recovery), Zone 2 (Aerobic Base), Zone 3 (Tempo), Zone 4 (Threshold), and Zone 5 (VO2 Max).' },
-        { title: 'Calibrate Cardio Workouts', desc: 'Configure your heart rate monitor or smartwatch to target the specific zone aligned with your endurance goal.' }
-      ],
-      formulaName: 'Tanaka HRmax & Karvonen Heart Rate Reserve (HRR)',
-      formulaExpr: 'HR_{\\max} = 208 - 0.7(\\text{Age}), \\quad \\text{Target BPM} = [(\\text{HR}_{\\max} - \\text{RHR}) \\times \\text{Zone}\\%] + \\text{RHR}',
-      formulaExplanation: 'Where HRmax - RHR is Heart Rate Reserve (HRR), representing your usable cardiovascular range.',
-      example: '<strong>Cardio Example:</strong> A 35-year-old with a resting heart rate of 60 bpm has an HRmax of <strong>183.5 bpm</strong> and an HRR of 123.5 bpm. Their Zone 2 Aerobic Base (60%–70% HRR) target spans <strong>134 to 146 BPM</strong>.',
-      faqs: [
-        {
-          q: 'Why is Zone 2 training prioritized in modern endurance protocols?',
-          a: 'Zone 2 training (60–70% HRR) stimulates mitochondrial biogenesis, improves fat oxidation efficiency, and strengthens the stroke volume of the left ventricle without accumulating excessive neuromuscular fatigue.'
-        },
-        {
-          q: 'Why is the Tanaka formula preferred over the older "220 - Age" equation?',
-          a: 'Clinical studies by Dr. Hirofumi Tanaka showed that the traditional "220 - Age" formula severely underestimates maximum heart rate in older adults and overestimates it in young adults. Tanaka\'s equation (208 - 0.7 × Age) has significantly lower standard deviation.'
-        }
-      ]
-    },
-
-    'sec-water-calc': {
-      title: 'Daily Water Intake Target',
-      category: 'Hydration & Renal Physiology',
-      badge: 'NASEM Clinical Hydration Guidelines',
-      tagline: 'Scientific daily fluid recommendations in liters, ounces, and 250ml glasses factoring in body mass, exercise volume, and climate.',
-      overview: 'Water constitutes 55% to 65% of adult human body mass and is essential for cellular enzymatic reactions, thermoregulatory sweating, joint lubrication, waste filtration, and blood volume maintenance. The <strong>Daily Water Intake Calculator</strong> tailors baseline hydration recommendations from the National Academies of Sciences, Engineering, and Medicine (NASEM), adjusting for physical activity sweat loss and environmental heat.',
-      steps: [
-        { title: 'Input Body Weight', desc: 'Enter current weight in kilograms or pounds to determine basal cellular fluid requirements.' },
-        { title: 'Input Daily Exercise Duration', desc: 'Enter average daily sweat-inducing workout duration in minutes.' },
-        { title: 'Select Climate Condition', desc: 'Select temperate, hot/humid, or dry/arid climate to account for evaporative loss.' },
-        { title: 'Inspect Total Daily Volume', desc: 'View recommendations in liters, fluid ounces, and standard 250 mL (8 oz) glasses.' }
-      ],
-      formulaName: 'Physiological Fluid Replacement Equation',
-      formulaExpr: '\\text{Water (mL)} = [\\text{Weight (kg)} \\times 35] + [\\text{Exercise Min} \\times 12] + \\text{Climate Allowance}',
-      formulaExplanation: 'Baseline hydration requires ~35 mL per kg of body mass, plus ~12 mL per minute of physical exercise to replenish sweat loss.',
-      example: '<strong>Hydration Example:</strong> A 70 kg individual who exercises 45 minutes daily in a warm climate requires: (70 × 35) + (45 × 12) + 350 = <strong>3,340 mL (3.34 Liters / 113 fl oz / 13.4 glasses)</strong> daily.',
-      faqs: [
-        {
-          q: 'Do coffee, tea, and fruits count toward daily fluid intake?',
-          a: 'Yes. Contrary to popular myth, moderate caffeinated beverages contribute to daily hydration without significant diuretic deficit. Additionally, moisture-rich foods (fruits and vegetables) provide ~20% of total dietary water intake.'
-        },
-        {
-          q: 'What is the most reliable self-assessment of hydration status?',
-          a: 'Urine color is the simplest clinical indicator. Pale straw or light lemonade color indicates optimal hydration, while dark amber indicates dehydration and the need for immediate fluid intake.'
-        }
-      ]
-    },
-
-    'sec-pregnancy-calc': {
-      title: 'Pregnancy Calculator & Fetal Milestones',
-      category: 'Obstetrics, Maternal Health & Embryology',
-      badge: 'ACOG Gestational Dating Standard',
-      tagline: 'Accurate gestational age in weeks & days, trimester countdown, fetal size fruit comparison, and clinical prenatal milestone schedule.',
-      overview: 'The <strong>Pregnancy Calculator</strong> provides comprehensive gestational tracking aligned with American College of Obstetricians and Gynecologists (ACOG) clinical standards. It computes exact gestational age, baby developmental progress, trimester transitions, and key clinical milestones (first heartbeat, anatomy ultrasound, glucose challenge screening, and full-term status).',
-      steps: [
-        { title: 'Select Dating Method', desc: 'Choose calculation by Last Menstrual Period (LMP), Conception Date, First Trimester Ultrasound, or Known Due Date.' },
-        { title: 'Input Reference Date & Cycle Length', desc: 'Enter the anchor date and your average menstrual cycle length for precise ovulation calibration.' },
-        { title: 'Track Gestational Age (Weeks & Days)', desc: 'Inspect current developmental age (e.g. 14 weeks 3 days) and trimester classification.' },
-        { title: 'Review Clinical Testing Schedule', desc: 'Consult upcoming prenatal screening windows including NIPT, anatomy scans, and GDM screening.' }
-      ],
-      formulaName: 'Naegele\'s Modified Gestational Age Rule',
-      formulaExpr: '\\text{EDD} = \\text{LMP} + 280 \\text{ days} + (\\text{Cycle Length} - 28 \\text{ days})',
-      formulaExplanation: 'Clinical pregnancy duration is standardized at 280 days (40 weeks) from the first day of the Last Menstrual Period for a 28-day cycle.',
-      example: '<strong>Prenatal Example:</strong> An LMP of January 15th with a 28-day cycle establishes an Estimated Date of Delivery (EDD) of <strong>October 22nd</strong>. At 20 weeks (June 4th), the fetus is ~10.5 inches long, comparable to a banana, coinciding with the detailed anatomy ultrasound window.',
-      faqs: [
-        {
-          q: 'Why is gestational age counted from before conception occurred?',
-          a: 'Universally in obstetrics, gestational age is measured from the first day of the Last Menstrual Period (LMP) because the exact timing of ovulation and fertilization cannot be known with absolute certainty in most pregnancies.'
-        },
-        {
-          q: 'What weeks define the three trimesters of pregnancy?',
-          a: 'First Trimester: Week 1 through 13w6d; Second Trimester: Week 14 through 27w6d; Third Trimester: Week 28 through delivery. Early term begins at 37w0d, and full term spans 39w0d to 40w6d.'
         }
       ]
     },
@@ -389,62 +161,6 @@
       ]
     },
 
-    'sec-pregnancy-conception-calc': {
-      title: 'Pregnancy Conception Timing Calculator',
-      category: 'Reproductive Biology & Conception Timing',
-      badge: 'Clinical Retrospective Ovulation Dating',
-      tagline: 'Determine the exact probable date of fertilization, 6-day fertile intercourse window, and embryonic age based on Due Date or LMP.',
-      overview: 'Determining the exact timing of conception can be critical for parental milestones and medical history. Because human sperm can survive up to 5 days within cervical crypts and the ovum remains viable for 12 to 24 hours post-ovulation, the <strong>Pregnancy Conception Calculator</strong> reverse-calculates the precise 6-day intercourse window and fertilization date from your clinical Due Date or ultrasound scan.',
-      steps: [
-        { title: 'Select Known Anchor Date', desc: 'Choose Estimated Due Date (EDD), Last Menstrual Period (LMP), or First Trimester Ultrasound date.' },
-        { title: 'Enter Date', desc: 'Input the exact anchor calendar date.' },
-        { title: 'View Most Likely Conception Date', desc: 'Inspect the calculated biological fertilization day.' },
-        { title: 'Review 6-Day Fertile Intercourse Window', desc: 'Identify the exact calendar dates when sexual intercourse could have resulted in pregnancy.' }
-      ],
-      formulaName: 'Retrospective Fertilization Dating Formula',
-      formulaExpr: '\\text{Conception Date} = \\text{Estimated Due Date (EDD)} - 266 \\text{ days}',
-      formulaExplanation: 'Biological gestation from fertilization to birth spans exactly 266 days (38 weeks). Fertile intercourse window spans Conception Date minus 5 days through Conception Date.',
-      example: '<strong>Dating Example:</strong> An Estimated Due Date of November 15th corresponds to a biological conception date of <strong>February 24th</strong>, with the fertile intercourse window spanning <strong>February 19th through February 24th</strong>.',
-      faqs: [
-        {
-          q: 'Can conception occur days after sexual intercourse?',
-          a: 'Yes. If intercourse takes place 3 to 5 days before ovulation, sperm cells remain motile in the fallopian tubes awaiting follicle rupture. Fertilization occurs within hours of egg release.'
-        },
-        {
-          q: 'Why are fetal age and clinical gestational age two weeks apart?',
-          a: 'Gestational age is calculated from the start of your last period (2 weeks before ovulation in a 28-day cycle). True fetal/embryonic age begins at fertilization, making the embryo always 2 weeks younger than clinical gestational age.'
-        }
-      ]
-    },
-
-    'sec-due-date-calc': {
-      title: 'Due Date Calculator (4 Clinical Methods)',
-      category: 'Obstetrics & Clinical Perinatology',
-      badge: 'Naegele\'s Rule & Ultrasound CRL Standard',
-      tagline: 'Accurate Estimated Date of Delivery (EDD) calculated via LMP cycle adjustment, conception date, 1st trimester Crown-Rump Length, or IVF transfer.',
-      overview: 'Only 4% to 5% of babies arrive on their exact predicted delivery date, but establishing an accurate <strong>Estimated Date of Delivery (EDD)</strong> is crucial for scheduling fetal growth scans, evaluating preterm labor risk, and timing post-dates induction. This calculator offers 4 recognized clinical methods: Last Menstrual Period with cycle length correction, known conception date, ultrasound Crown-Rump Length (CRL), and IVF embryo transfer dating.',
-      steps: [
-        { title: 'Select Dating Methodology', desc: 'Choose Last Menstrual Period (LMP), Conception Date, Ultrasound Scan, or IVF Transfer Date (Day 3 or Day 5 blastocyst).' },
-        { title: 'Input Relevant Clinical Dates', desc: 'Provide cycle length (if using LMP) to calibrate for delayed or early ovulation.' },
-        { title: 'Inspect Estimated Date of Delivery', desc: 'Review your official EDD and trimester transition dates.' },
-        { title: 'Review Delivery Probability Distribution', desc: 'See statistical delivery probabilities across 37 to 42 weeks.' }
-      ],
-      formulaName: 'Naegele\'s Rule with Cycle Adjustment',
-      formulaExpr: '\\text{EDD} = \\text{LMP} + 7 \\text{ days} - 3 \\text{ months} + 1 \\text{ year} + (\\text{Cycle} - 28 \\text{ days})',
-      formulaExplanation: 'Standard Naegele\'s rule assumes a 28-day cycle with ovulation on day 14. Adjusting for longer or shorter cycles shifts EDD by the exact cycle delta.',
-      example: '<strong>Clinical Example:</strong> An LMP of May 10th with a 32-day cycle establishes an EDD of <strong>February 18th</strong> of the following year (adjusted 4 days later than the standard 28-day calculation).',
-      faqs: [
-        {
-          q: 'Which due date method is considered the most clinically accurate?',
-          a: 'First-trimester ultrasound measurement of fetal Crown-Rump Length (CRL) between 8 and 13 weeks has an accuracy within ±5 to 7 days, superseding LMP dating if discrepancies exceed clinical thresholds.'
-        },
-        {
-          q: 'How does IVF embryo transfer dating work?',
-          a: 'For a Day 5 blastocyst transfer: EDD = Transfer Date + 261 days (equivalent to LMP = Transfer Date - 19 days). For a Day 3 transfer: EDD = Transfer Date + 263 days.'
-        }
-      ]
-    },
-
     'sec-ovulation-calc': {
       title: 'Ovulation & Fertile Window Calculator',
       category: 'Reproductive Endocrinology & Family Planning',
@@ -469,34 +185,6 @@
         {
           q: 'How frequently should couples have intercourse during the fertile window?',
           a: 'Reproductive endocrinologists recommend intercourse every 1 to 2 days during the fertile window to ensure continuous presence of viable sperm while maintaining healthy sperm concentration.'
-        }
-      ]
-    },
-
-    'sec-conception-calc': {
-      title: 'Conception Calculator & Birth Planner',
-      category: 'Family Planning & Fertility Strategy',
-      badge: 'Chronological Gestational Planning Standard',
-      tagline: 'Plan intercourse for maximum conception chances or reverse-target a specific due date, baby birth month, and zodiac sign.',
-      overview: 'Whether planning around career leave, school enrollment cutoff dates, or seasonal climate preferences, the <strong>Conception Calculator</strong> allows prospective parents to either forward-project their delivery date from a planned conception date or reverse-engineer the required conception window to target a specific birth month.',
-      steps: [
-        { title: 'Select Planning Mode', desc: 'Choose "Target a Specific Due Date" or "Calculate from Planned Conception Date".' },
-        { title: 'Input Target Calendar Date', desc: 'Provide your desired delivery date or planned conception cycle date.' },
-        { title: 'Review Required Intercourse Window', desc: 'Identify the exact days to attempt conception to achieve your target delivery timeframe.' },
-        { title: 'Inspect Astrological & Seasonal Milestone', desc: 'View baby birth month, zodiac sign, and seasonal milestones.' }
-      ],
-      formulaName: 'Reverse Gestational Delivery Model',
-      formulaExpr: '\\text{Required Conception Window} = \\text{Target Due Date} - 266 \\text{ days} \\pm 5 \\text{ days}',
-      formulaExplanation: 'Biological gestation from fertilization averages 266 days (38 weeks), with peak delivery clustered within ±7 days of the target date.',
-      example: '<strong>Planning Example:</strong> To deliver a baby in early September (e.g. September 5th), conception should occur between <strong>December 10th and December 15th</strong> of the preceding year.',
-      faqs: [
-        {
-          q: 'What is the natural statistical probability of conceiving in any given cycle?',
-          a: 'For healthy couples under age 35 with well-timed intercourse during the fertile window, the monthly probability of conception (fecundability) is approximately 20% to 25% per cycle.'
-        },
-        {
-          q: 'How does maternal age affect conception planning?',
-          a: 'Natural fecundability gradually declines after age 32 and accelerates after age 37 due to diminished ovarian reserve and egg chromosomal quality, often requiring 6 to 12 months of planning.'
         }
       ]
     },
@@ -529,62 +217,6 @@
       ]
     },
 
-    'sec-macro-calc': {
-      title: 'Macro Calculator (Protein, Carbs, Fats)',
-      category: 'Sports Nutrition & Dietetics',
-      badge: 'ISSN Sports Nutrition Standard',
-      tagline: 'Calculate exact daily gram and calorie targets for Protein, Carbohydrates, and Fats with custom diet presets and per-meal splits.',
-      overview: 'Macronutrients provide the chemical energy that powers human metabolism. The <strong>Macro Calculator</strong> converts your total daily caloric budget into specific gram targets for <strong>Protein (4 kcal/g)</strong>, <strong>Carbohydrates (4 kcal/g)</strong>, and <strong>Dietary Fats (9 kcal/g)</strong> based on proven athletic presets (Balanced, High Protein, Low Carb, or Ketogenic).',
-      steps: [
-        { title: 'Input Daily Calorie Target', desc: 'Enter your maintenance, deficit, or surplus daily caloric target (derived from our Calorie/TDEE calculator).' },
-        { title: 'Select Macronutrient Ratio Preset', desc: 'Choose Balanced (40/30/30), High-Protein Hypertrophy (40/40/20), Endurance (55/25/20), or Ketogenic (5/25/70).' },
-        { title: 'Select Meals Per Day', desc: 'Choose 3, 4, 5, or 6 daily meals to view per-meal protein, carbohydrate, and fat allocations.' },
-        { title: 'Track Gram Targets with Food Scales', desc: 'Use daily gram targets to track your nutrition with standard digital kitchen scales and food databases.' }
-      ],
-      formulaName: 'Macronutrient Energy Density Conversions',
-      formulaExpr: '\\text{Grams} = \\frac{\\text{Total Calories} \\times \\text{Ratio \\%}}{\\text{Energy Density (kcal/g)}}',
-      formulaExplanation: 'Protein = 4 kcal/g, Carbohydrate = 4 kcal/g, Fat = 9 kcal/g. Grams are rounded to the nearest integer.',
-      example: '<strong>Diet Example:</strong> A 2,200 kcal daily intake on a 40% Carb / 30% Protein / 30% Fat split equals: <strong>220g Carbohydrates (880 kcal)</strong>, <strong>165g Protein (660 kcal)</strong>, and <strong>73g Fat (660 kcal)</strong>.',
-      faqs: [
-        {
-          q: 'Why is dietary protein prioritized during a caloric deficit?',
-          a: 'Higher protein intakes (1.6 to 2.4 g/kg) maximize muscle protein synthesis, preserve lean muscle tissue from being oxidized for fuel, and provide the highest Thermic Effect of Food (TEF ~20–30%) among all macronutrients.'
-        },
-        {
-          q: 'Can dietary fat intake be dropped too low to accelerate fat loss?',
-          a: 'No. Dropping dietary fat below 15% to 20% of total daily calories impairs steroid hormone synthesis (including testosterone and estrogen), impairs fat-soluble vitamin absorption (A, D, E, K), and degrades cell membrane integrity.'
-        }
-      ]
-    },
-
-    'sec-carb-calc': {
-      title: 'Carbohydrate Calculator (Training Load & Glycogen)',
-      category: 'Athletic Performance & Glycogen Metabolism',
-      badge: 'ACSM / ISSN Endurance Guidelines',
-      tagline: 'Determine daily carbohydrate targets based on training load, glycogen replenishment, and pre/post-workout timing.',
-      overview: 'Carbohydrates are the primary substrate for high-intensity muscular contractions and central nervous system cognition. The <strong>Carbohydrate Calculator</strong> implements official American College of Sports Medicine (ACSM) guidelines, scaling daily carbohydrate targets to your body mass and specific training volume (from light recovery days to multi-hour endurance sessions).',
-      steps: [
-        { title: 'Input Body Weight', desc: 'Enter body weight in kilograms or pounds for mass-scaled carbohydrate dosing.' },
-        { title: 'Select Daily Training Intensity & Volume', desc: 'Choose Light (low intensity), Moderate (~1 hr/day), High (1–3 hrs/day), or Very High (4–5 hrs endurance/day).' },
-        { title: 'Review Total Daily Carbohydrate Grams', desc: 'Inspect daily gram targets and associated caloric contribution (4 kcal/g).' },
-        { title: 'Examine Pre- and Post-Workout Nutrient Timing', desc: 'Allocate carbohydrates around your training window for optimal intra-workout performance and rapid glycogen resynthesis.' }
-      ],
-      formulaName: 'ACSM Exercise-Volume Scaling Model',
-      formulaExpr: '\\text{Carb Target (g)} = \\text{Weight (kg)} \\times \\text{Factor (g/kg)}',
-      formulaExplanation: 'Factors: Light = 3–5 g/kg; Moderate = 5–7 g/kg; High/Endurance = 6–10 g/kg; Extreme/Ultra = 8–12 g/kg.',
-      example: '<strong>Athletic Example:</strong> A 70 kg endurance athlete training 90 minutes daily requires ~7.0 g/kg = <strong>490 grams of carbohydrates (1,960 kcal)</strong> daily to maintain full glycogen stores.',
-      faqs: [
-        {
-          q: 'What happens to athletic performance when glycogen is depleted?',
-          a: 'When muscle and liver glycogen stores are exhausted (commonly termed "hitting the wall" or "bonking"), the body must oxidize fatty acids at a much slower ATP turnover rate, forcing an immediate 40% to 50% drop in exercise intensity.'
-        },
-        {
-          q: 'What is the optimal carbohydrate window post-exercise?',
-          a: 'Consuming 1.0 to 1.2 grams of carbohydrate per kg of body mass within 30 to 60 minutes post-exercise maximizes glycogen synthase activity, accelerating glycogen replenishment.'
-        }
-      ]
-    },
-
     'sec-protein-calc': {
       title: 'Protein Calculator (Hypertrophy & Retention)',
       category: 'Hypertrophy & Clinical Nutrition',
@@ -609,90 +241,6 @@
         {
           q: 'What is the "leucine trigger" hypothesis?',
           a: 'Muscle Protein Synthesis is triggered by the intracellular concentration of the essential amino acid leucine. Achieving ~2.5 to 3.5 grams of leucine per meal (present in ~30–40g of complete animal protein or ~45g of plant protein) fully initiates mTORC1 signaling.'
-        }
-      ]
-    },
-
-    'sec-fat-calc': {
-      title: 'Fat Intake Calculator (AHA Lipid Guidelines)',
-      category: 'Clinical Lipidology & Cardiovascular Health',
-      badge: 'American Heart Association (AHA) Guidelines',
-      tagline: 'AHA clinical lipid distribution: daily fat grams, saturated fat upper limits, and MUFA, PUFA, and Omega-3 targets.',
-      overview: 'Dietary fats are vital for life, forming phospholipid cellular membranes, synthesizing steroid hormones (including testosterone and progesterone), and absorbing fat-soluble vitamins (A, D, E, and K). The <strong>Fat Intake Calculator</strong> implements American Heart Association (AHA) guidelines, balancing healthy Monounsaturated (MUFA) and Polyunsaturated (PUFA) fats while enforcing strict upper boundaries on atherogenic saturated fats.',
-      steps: [
-        { title: 'Input Daily Caloric Budget', desc: 'Enter total daily caloric target.' },
-        { title: 'Select Dietary Approach', desc: 'Choose Standard Healthy (25%–30% fat), Mediterranean (35% fat, high MUFA), or Low-Fat Therapeutic (20% fat).' },
-        { title: 'Review Total Daily Fat Grams', desc: 'Inspect total daily fat grams and caloric contribution (9 kcal/g).' },
-        { title: 'Inspect Saturated Fat Upper Limit', desc: 'Ensure saturated fat stays below the AHA recommended ceiling of 6% to 10% of total daily calories to protect cardiovascular health.' }
-      ],
-      formulaName: 'AHA Cardiovascular Lipid Distribution Model',
-      formulaExpr: '\\text{Fat (g)} = \\frac{\\text{Calories} \\times \\text{Fat Ratio}}{9}, \\quad \\text{Sat Fat Max (g)} = \\frac{\\text{Calories} \\times 0.07}{9}',
-      formulaExplanation: 'Fat contains 9 kcal per gram. AHA recommends limiting saturated fat to under 7% of total energy for cardiovascular disease prevention.',
-      example: '<strong>Cardiovascular Example:</strong> On a 2,000 kcal diet with 30% fat, total fat is <strong>67 grams (600 kcal)</strong>. Saturated fat is strictly limited to <strong>under 15.5 grams (140 kcal, 7%)</strong>, with the remainder composed of heart-healthy olive oil, nuts, seeds, and fish.',
-      faqs: [
-        {
-          q: 'Why does excessive saturated fat raise LDL cholesterol?',
-          a: 'Saturated fatty acids downregulate hepatic LDL receptor expression, impairing the clearance of circulating low-density lipoprotein particles from the bloodstream and promoting arterial plaque formation.'
-        },
-        {
-          q: 'What are the best dietary sources of Monounsaturated (MUFA) and Omega-3 fats?',
-          a: 'Extra virgin olive oil, avocados, almonds, and macadamias are rich in MUFA (oleic acid). Wild salmon, sardines, mackerel, chia seeds, and walnuts supply anti-inflammatory Omega-3 fatty acids (EPA and DHA).'
-        }
-      ]
-    },
-
-    'sec-tdee-calc': {
-      title: 'TDEE Calculator (Total Daily Energy Expenditure)',
-      category: 'Metabolic Rate & Energy Balance',
-      badge: 'Compendium Physical Activity Level (PAL) Standard',
-      tagline: 'Total Daily Energy Expenditure: Basal Metabolic Rate, TEF, NEAT, and EAT energy breakdowns with deficit and surplus milestones.',
-      overview: 'Your <strong>Total Daily Energy Expenditure (TDEE)</strong> represents the aggregate number of calories your body burns across a 24-hour period. It is composed of four distinct components: Basal Metabolic Rate (BMR, ~60–75%), Non-Exercise Activity Thermogenesis (NEAT, ~15–20%), Thermic Effect of Food (TEF, ~10%), and Exercise Activity Thermogenesis (EAT, ~5–10%).',
-      steps: [
-        { title: 'Input Personal Biometrics', desc: 'Enter age, biological sex, weight, and height to calculate basal metabolic rate.' },
-        { title: 'Select Physical Activity Multiplier (PAL)', desc: 'Choose Sedentary (1.2), Lightly Active (1.375), Moderately Active (1.55), Very Active (1.725), or Athlete (1.9).' },
-        { title: 'Inspect Metabolic Component Breakdown', desc: 'Review the visual pie chart showing BMR, NEAT, TEF, and exercise burn.' },
-        { title: 'Select Strategy Caloric Target', desc: 'Choose Maintenance, Weight Loss (cutting), or Muscle Hypertrophy (bulking).' }
-      ],
-      formulaName: 'Physical Activity Level (PAL) Factor Model',
-      formulaExpr: '\\text{TDEE} = \\text{BMR}_{\\text{Mifflin}} \\times \\text{PAL}, \\quad \\text{TEF} = 0.10 \\times \\text{TDEE}',
-      formulaExplanation: 'Where PAL is the standardized activity multiplier established by the FAO/WHO/UNU Expert Consultation.',
-      example: '<strong>Metabolism Example:</strong> A 25-year-old female weighing 65 kg at 170 cm has a BMR of 1,440 kcal. With moderate exercise 4 times/week (PAL 1.55), her TDEE is <strong>2,232 kcal/day</strong>. A 20% fat loss deficit sets her target at <strong>1,786 kcal/day</strong>.',
-      faqs: [
-        {
-          q: 'What is NEAT and why is it crucial for fat loss?',
-          a: 'Non-Exercise Activity Thermogenesis (NEAT) accounts for energy expended during daily movements like walking, fidgeting, posture maintenance, and household tasks. It can vary by over 800 kcal per day between active and sedentary individuals.'
-        },
-        {
-          q: 'Why does TDEE decrease as you lose weight?',
-          a: 'A smaller body mass burns fewer calories at rest and during movement. In addition, metabolic adaptation slightly depresses thyroid and sympathetic output, requiring periodic recalibration of caloric targets.'
-        }
-      ]
-    },
-
-    'sec-gfr-calc': {
-      title: 'GFR Calculator (eGFR - 2021 CKD-EPI Refit)',
-      category: 'Nephrology & Renal Function',
-      badge: '2021 CKD-EPI Refit Consensus Standard',
-      tagline: 'Official 2021 CKD-EPI Refit & MDRD clinical renal calculators: estimate Glomerular Filtration Rate and Chronic Kidney Disease (CKD) stages.',
-      overview: 'The <strong>Estimated Glomerular Filtration Rate (eGFR)</strong> is the clinical gold standard for evaluating kidney filtration function and staging Chronic Kidney Disease (CKD). This tool implements the landmark <strong>2021 CKD-EPI Creatinine equation</strong> developed by the National Kidney Foundation (NKF) and the American Society of Nephrology (ASN) Task Force, which entirely eliminated race-based modifiers to ensure standardized, equitable renal diagnostics.',
-      steps: [
-        { title: 'Select Creatinine Units', desc: 'Choose mg/dL (US standard) or µmol/L (international SI units).' },
-        { title: 'Input Serum Creatinine Level', desc: 'Enter creatinine concentration from your standard comprehensive metabolic blood panel.' },
-        { title: 'Input Age and Biological Sex', desc: 'Age and sex calibrate baseline muscle mass creatinine production.' },
-        { title: 'Evaluate Clinical CKD Stage', desc: 'Check your eGFR against Stage 1 (≥90 Normal), Stage 2 (60–89 Mild), Stage 3a/b (30–59 Moderate), Stage 4 (15–29 Severe), or Stage 5 (<15 Kidney Failure).' }
-      ],
-      formulaName: '2021 CKD-EPI Creatinine Refit Equation (Race-Free)',
-      formulaExpr: '\\text{eGFR} = 142 \\times \\min\\left(\\frac{S_{cr}}{\\kappa}, 1\\right)^\\alpha \\times \\max\\left(\\frac{S_{cr}}{\\kappa}, 1\\right)^{-1.200} \\times 0.9938^{\\text{Age}} \\times [1.012 \\text{ if female}]',
-      formulaExplanation: 'Where Scr is serum creatinine in mg/dL, κ is 0.7 for females and 0.9 for males, and α is -0.241 for females and -0.302 for males.',
-      example: '<strong>Clinical Example:</strong> A 50-year-old male with a serum creatinine of 1.0 mg/dL has an eGFR of <strong>94 mL/min/1.73m²</strong>, indicating normal Stage 1 renal filtration function.',
-      faqs: [
-        {
-          q: 'Why did the 2021 NKF-ASN Task Force remove race from the eGFR formula?',
-          a: 'The historic inclusion of a race coefficient led to overestimation of kidney function in Black patients, delaying nephrology referrals, clinical trials access, and kidney transplant list qualification. The 2021 race-free equation provides accurate, unbiased diagnostic parity.'
-        },
-        {
-          q: 'Can high dietary protein or intense lifting artificially raise creatinine?',
-          a: 'Yes. Creatinine is a metabolic byproduct of muscle creatine breakdown. Heavy muscular individuals or those consuming cooked meat/creatine supplements may exhibit elevated creatinine without true renal pathology.'
         }
       ]
     },
@@ -725,33 +273,6 @@
       ]
     },
 
-    'sec-bac-calc': {
-      title: 'BAC Calculator (Blood Alcohol Concentration & Sobriety)',
-      category: 'Pharmacokinetics & Toxicology',
-      badge: 'Widmark Pharmacokinetic Ethanol Model',
-      tagline: 'Widmark pharmacokinetic Blood Alcohol Concentration model: calculate current BAC %, hours until sober, legal driving threshold, and impairment stages.',
-      overview: 'The <strong>Blood Alcohol Concentration (BAC) Calculator</strong> models the pharmacokinetic absorption, distribution, and hepatic metabolism of ethanol in the human body. Utilizing the internationally validated <strong>Widmark Formula</strong>, it estimates your peak BAC %, hours remaining until reaching the legal driving limit (&lt;0.08%), and hours until reaching complete sobriety (0.000%).',
-      steps: [
-        { title: 'Input Body Weight and Biological Sex', desc: 'Sex determines body water distribution volume (r = 0.68 for men, 0.55 for women).' },
-        { title: 'Input Standard Drinks Consumed', desc: 'Enter quantities for Beer (12 oz at 5%), Wine (5 oz at 12%), and 80-proof Spirits/Shots (1.5 oz at 40%).' },
-        { title: 'Input Elapsed Time Since First Drink', desc: 'Enter elapsed time in hours to account for continuous hepatic metabolic breakdown.' },
-        { title: 'Select Stomach Fullness Condition', desc: 'Choose empty stomach (rapid absorption) or full meal (attenuates and delays peak blood alcohol level).' }
-      ],
-      formulaName: 'Widmark Pharmacokinetic Ethanol Model',
-      formulaExpr: '\\text{BAC} = \\left( \\frac{A \\times 5.14}{W \\times r} \\right) - (\\beta \\times H)',
-      formulaExplanation: 'Where A is ounces of pure alcohol consumed, W is body weight in pounds, r is gender distribution factor (0.68 men, 0.55 women), β is the metabolic elimination rate (~0.015% per hour), and H is elapsed hours.',
-      example: '<strong>Toxicology Example:</strong> An 80 kg (176 lb) male consuming 3 standard beers over 2 hours has an estimated current BAC of <strong>0.047%</strong> (Mild Euphoria), placing him below the 0.08% driving limit, with approximately <strong>3 hours and 8 minutes</strong> until reaching complete sobriety (0.000%).',
-      faqs: [
-        {
-          q: 'What is the legal driving threshold for BAC in the United States and internationally?',
-          a: 'In the United States and Canada, the legal limit for non-commercial drivers age 21+ is 0.08% BAC (0.05% in Utah). Many European and international countries enforce stricter thresholds of 0.05%, 0.02%, or zero tolerance (0.00%). Never drive if impaired.'
-        },
-        {
-          q: 'Can coffee, cold showers, or exercise speed up alcohol metabolism?',
-          a: 'No. Approximately 90% to 98% of alcohol is metabolized solely by liver enzymes (alcohol dehydrogenase and CYP2E1) at a fixed biological rate of ~0.015% BAC per hour. Neither caffeine nor physical activity can accelerate this enzymatic process.'
-        }
-      ]
-    },
     'sec-sci-calc': {
       title: 'Standard & Scientific Calculator',
       category: 'Math Solvers & Analysis',
@@ -1274,7 +795,7 @@
     // Check initial financial calculator
     updateGuide('sec-loan-calc', 'financial');
     // Check initial fitness calculator
-    updateGuide('sec-calorie-calc', 'fitness');
+    updateGuide('sec-bf-calc', 'fitness');
     // Check initial math calculator
     updateGuide('sec-sci-calc', 'math');
     // Check initial other calculator

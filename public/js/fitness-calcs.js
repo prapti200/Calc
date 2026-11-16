@@ -112,85 +112,6 @@ const FitnessCalcs = {
   },
 
   // 2. DEDICATED CALORIE CALCULATOR & MACRO PLANNER
-  calcCalorie() {
-    const gender = this.calGender || 'male';
-    const age = parseFloat(document.getElementById('cal-age')?.value) || 28;
-    let weightKg = parseFloat(document.getElementById('cal-weight')?.value) || 75;
-    let heightCm = parseFloat(document.getElementById('cal-height')?.value) || 178;
-    const unit = this.calUnit || 'metric';
-
-    if (unit === 'imperial') {
-      const weightLbs = parseFloat(document.getElementById('cal-weight-lbs')?.value) || 165;
-      const heightFt = parseFloat(document.getElementById('cal-height-ft')?.value) || 5;
-      const heightIn = parseFloat(document.getElementById('cal-height-in')?.value) || 10;
-      weightKg = weightLbs * 0.45359237;
-      heightCm = (heightFt * 12 + heightIn) * 2.54;
-    }
-
-    if (weightKg <= 0 || heightCm <= 0 || age <= 0) return;
-
-    const activity = parseFloat(document.getElementById('cal-activity')?.value) || 1.55;
-    const goal = document.getElementById('cal-goal')?.value || 'maintain';
-    const diet = document.getElementById('cal-diet')?.value || 'balanced';
-
-    // BMR via Mifflin-St Jeor
-    let bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age);
-    bmr += (gender === 'male' ? 5 : -161);
-
-    // TDEE
-    const tdee = Math.round(bmr * activity);
-
-    // Goal adjustment
-    let targetCals = tdee;
-    let goalLabel = 'Maintain Current Weight';
-    if (goal === 'mild-loss') {
-      targetCals = tdee - 250;
-      goalLabel = 'Mild Weight Loss (-0.25 kg / 0.5 lb per wk)';
-    } else if (goal === 'weight-loss') {
-      targetCals = tdee - 500;
-      goalLabel = 'Weight Loss (-0.5 kg / 1.0 lb per wk)';
-    } else if (goal === 'extreme-loss') {
-      targetCals = tdee - 1000;
-      goalLabel = 'Fast Weight Loss (-1.0 kg / 2.0 lbs per wk)';
-    } else if (goal === 'mild-gain') {
-      targetCals = tdee + 250;
-      goalLabel = 'Mild Muscle Gain (+0.25 kg / 0.5 lb per wk)';
-    } else if (goal === 'gain') {
-      targetCals = tdee + 500;
-      goalLabel = 'Bulking / Muscle Gain (+0.5 kg / 1.0 lb per wk)';
-    }
-
-    // Clinical safety floor
-    const minFloor = gender === 'male' ? 1500 : 1200;
-    targetCals = Math.max(minFloor, Math.round(targetCals));
-
-    // Macro distributions
-    let pPct = 0.30, cPct = 0.40, fPct = 0.30;
-    if (diet === 'high-protein') { pPct = 0.40; cPct = 0.35; fPct = 0.25; }
-    else if (diet === 'low-carb') { pPct = 0.35; cPct = 0.25; fPct = 0.40; }
-    else if (diet === 'keto') { pPct = 0.25; cPct = 0.05; fPct = 0.70; }
-
-    const pGrams = Math.round((targetCals * pPct) / 4);
-    const cGrams = Math.round((targetCals * cPct) / 4);
-    const fGrams = Math.round((targetCals * fPct) / 9);
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    setVal('res-cal-target', `${targetCals.toLocaleString()} kcal/day`);
-    setVal('res-cal-maintenance', `${tdee.toLocaleString()} kcal`);
-    setVal('res-cal-bmr', `${Math.round(bmr).toLocaleString()} kcal`);
-    setVal('res-cal-goal-label', goalLabel);
-    setVal('res-cal-protein', `${pGrams}g (${Math.round(pGrams * 4)} kcal)`);
-    setVal('res-cal-carbs', `${cGrams}g (${Math.round(cGrams * 4)} kcal)`);
-    setVal('res-cal-fats', `${fGrams}g (${Math.round(fGrams * 9)} kcal)`);
-
-    setVal('res-cal-row-maintain', `${tdee.toLocaleString()} kcal`);
-    setVal('res-cal-row-mild-loss', `${Math.max(minFloor, tdee - 250).toLocaleString()} kcal`);
-    setVal('res-cal-row-loss', `${Math.max(minFloor, tdee - 500).toLocaleString()} kcal`);
-    setVal('res-cal-row-fast-loss', `${Math.max(minFloor, tdee - 1000).toLocaleString()} kcal`);
-    setVal('res-cal-row-mild-gain', `${(tdee + 250).toLocaleString()} kcal`);
-    setVal('res-cal-row-gain', `${(tdee + 500).toLocaleString()} kcal`);
-  },
-
   // 3. BODY FAT % CALCULATOR (US Navy Method)
   calcBodyFat() {
     const height = parseFloat(document.getElementById('bf-height')?.value) || 175;
@@ -247,440 +168,14 @@ const FitnessCalcs = {
   },
 
   // 4. BMR CALCULATOR (Mifflin-St Jeor, Harris-Benedict & Katch-McArdle)
-  calcBMR() {
-    const age = parseFloat(document.getElementById('bmr-age')?.value) || 28;
-    const weight = parseFloat(document.getElementById('bmr-weight')?.value) || 75;
-    const height = parseFloat(document.getElementById('bmr-height')?.value) || 178;
-    const activityMult = parseFloat(document.getElementById('bmr-activity')?.value) || 1.375;
-    const bfPct = parseFloat(document.getElementById('bmr-bodyfat')?.value) || 18;
-
-    if (age <= 0 || weight <= 0 || height <= 0) return;
-
-    // 1. Mifflin-St Jeor
-    let mifflin = 10 * weight + 6.25 * height - 5 * age;
-    mifflin += (this.bmrGender === 'male' ? 5 : -161);
-
-    // 2. Revised Harris-Benedict
-    let harris = this.bmrGender === 'male'
-      ? 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
-      : 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
-
-    // 3. Katch-McArdle (Lean body mass formula)
-    const lbmKg = weight * (1 - (bfPct / 100));
-    const katch = 370 + (21.6 * lbmKg);
-
-    const tdee = Math.round(mifflin * activityMult);
-    const hourlyBurn = (mifflin / 24).toFixed(1);
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    setVal('res-bmr-val', `${Math.round(mifflin)} kcal/day`);
-    setVal('res-tdee-val', `${tdee} kcal/day`);
-    setVal('res-bmr-mifflin', `${Math.round(mifflin)} kcal`);
-    setVal('res-bmr-harris', `${Math.round(harris)} kcal`);
-    setVal('res-bmr-katch', `${Math.round(katch)} kcal`);
-    setVal('res-bmr-hourly', `${hourlyBurn} kcal/hr`);
-
-    setVal('res-mild-loss', `${Math.max(1200, tdee - 250)} kcal`);
-    setVal('res-weight-loss', `${Math.max(1200, tdee - 500)} kcal`);
-    setVal('res-muscle-gain', `${tdee + 350} kcal`);
-  },
-
   // 6. PACE CALCULATOR (Running, Walking, Cycling & Finish Predictions)
-  calcPace() {
-    const mode = this.paceMode || 'pace';
-    const distUnit = this.paceDistUnit || 'km';
-    const paceUnit = this.pacePaceUnit || 'km';
-
-    let dist = parseFloat(document.getElementById('pace-dist')?.value) || 5;
-    let distKm = distUnit === 'km' ? dist : dist * 1.609344;
-    let distMiles = distKm / 1.609344;
-
-    let h = parseInt(document.getElementById('pace-time-h')?.value) || 0;
-    let m = parseInt(document.getElementById('pace-time-m')?.value) || 25;
-    let s = parseInt(document.getElementById('pace-time-s')?.value) || 0;
-    let totalSec = (h * 3600) + (m * 60) + s;
-
-    let pMin = parseInt(document.getElementById('pace-p-min')?.value) || 5;
-    let pSec = parseInt(document.getElementById('pace-p-sec')?.value) || 0;
-    let paceSecPerUnit = (pMin * 60) + pSec;
-
-    const formatPace = (sec) => {
-      const min = Math.floor(sec / 60);
-      const remSec = Math.round(sec % 60);
-      return `${min}:${remSec < 10 ? '0' : ''}${remSec}`;
-    };
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    if (mode === 'pace') {
-      if (distKm <= 0 || totalSec <= 0) return;
-      const secPerKm = totalSec / distKm;
-      const secPerMi = totalSec / distMiles;
-
-      const paceKmStr = formatPace(secPerKm) + ' /km';
-      const paceMiStr = formatPace(secPerMi) + ' /mi';
-      const speedKmh = ((distKm / totalSec) * 3600).toFixed(2) + ' km/h';
-      const speedMph = ((distMiles / totalSec) * 3600).toFixed(2) + ' mph';
-
-      setVal('res-pace-primary', paceUnit === 'km' ? paceKmStr : paceMiStr);
-      setVal('res-pace-alt', paceUnit === 'km' ? paceMiStr : paceKmStr);
-      setVal('res-pace-speed-kmh', speedKmh);
-      setVal('res-pace-speed-mph', speedMph);
-
-      const predict = (dKm) => {
-        const sec = secPerKm * dKm;
-        const th = Math.floor(sec / 3600);
-        const tm = Math.floor((sec % 3600) / 60);
-        const ts = Math.round(sec % 60);
-        return th > 0 ? `${th}h ${tm < 10 ? '0' : ''}${tm}m ${ts < 10 ? '0' : ''}${ts}s` : `${tm}m ${ts < 10 ? '0' : ''}${ts}s`;
-      };
-
-      setVal('res-pace-5k', predict(5));
-      setVal('res-pace-10k', predict(10));
-      setVal('res-pace-half', predict(21.0975));
-      setVal('res-pace-full', predict(42.195));
-    } else if (mode === 'time') {
-      if (distKm <= 0 || paceSecPerUnit <= 0) return;
-      const secPerKm = paceUnit === 'km' ? paceSecPerUnit : paceSecPerUnit / 1.609344;
-      const calcSec = Math.round(secPerKm * distKm);
-      const th = Math.floor(calcSec / 3600);
-      const tm = Math.floor((calcSec % 3600) / 60);
-      const ts = calcSec % 60;
-      setVal('res-pace-primary', `${th > 0 ? th + 'h ' : ''}${tm}m ${ts < 10 ? '0' : ''}${ts}s`);
-      setVal('res-pace-alt', `${((distKm / calcSec) * 3600).toFixed(2)} km/h`);
-    } else if (mode === 'distance') {
-      if (totalSec <= 0 || paceSecPerUnit <= 0) return;
-      const secPerKm = paceUnit === 'km' ? paceSecPerUnit : paceSecPerUnit / 1.609344;
-      const calcKm = totalSec / secPerKm;
-      const calcMi = calcKm / 1.609344;
-      setVal('res-pace-primary', `${calcKm.toFixed(2)} km`);
-      setVal('res-pace-alt', `${calcMi.toFixed(2)} miles`);
-    }
-  },
-
   // 10. CALORIES BURNED CALCULATOR (MET-Based Exercise Energy Burn)
-  calcCaloriesBurned() {
-    const met = parseFloat(document.getElementById('cb-activity')?.value) || 8.0;
-    const duration = parseFloat(document.getElementById('cb-duration')?.value) || 45;
-    const unit = this.cbUnit || 'metric';
-
-    let weightKg = parseFloat(document.getElementById('cb-weight')?.value) || 75;
-    if (unit === 'imperial') {
-      const weightLbs = parseFloat(document.getElementById('cb-weight-lbs')?.value) || 165;
-      weightKg = weightLbs * 0.45359237;
-    }
-
-    if (duration <= 0 || weightKg <= 0) return;
-
-    // Compendium of Physical Activities Formula:
-    // Calories = Duration(min) * (MET * 3.5 * weightKg / 200)
-    const calsTotal = duration * (met * 3.5 * weightKg / 200);
-    const calsPerMin = calsTotal / duration;
-    const calsPerHour = calsPerMin * 60;
-    const fatGrams = (calsTotal / 7.7);
-    const fatOz = fatGrams * 0.035274;
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    setVal('res-cb-total', `${Math.round(calsTotal).toLocaleString()} kcal`);
-    setVal('res-cb-per-hour', `${Math.round(calsPerHour).toLocaleString()} kcal/hr`);
-    setVal('res-cb-per-min', `${calsPerMin.toFixed(1)} kcal/min`);
-    setVal('res-cb-fat', `${fatGrams.toFixed(1)} g (${fatOz.toFixed(2)} oz)`);
-
-    const compCalc = (m) => Math.round(duration * (m * 3.5 * weightKg / 200));
-    setVal('res-cb-run', `${compCalc(9.8)} kcal`);
-    setVal('res-cb-cycle', `${compCalc(8.0)} kcal`);
-    setVal('res-cb-swim', `${compCalc(7.0)} kcal`);
-    setVal('res-cb-walk', `${compCalc(3.5)} kcal`);
-    setVal('res-cb-weights', `${compCalc(6.0)} kcal`);
-    setVal('res-cb-hiit', `${compCalc(8.0)} kcal`);
-  },
-
   // 11. ONE REP MAX (1RM) CALCULATOR
-  calcOneRepMax() {
-    const weight = parseFloat(document.getElementById('orm-weight')?.value) || 100;
-    const reps = parseInt(document.getElementById('orm-reps')?.value) || 5;
-    const unit = this.ormUnit || 'kg';
-
-    if (weight <= 0 || reps <= 0) return;
-
-    if (reps === 1) {
-      this.render1RMTable(weight, unit);
-      const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-      setVal('res-orm-max', `${weight.toFixed(1)} ${unit}`);
-      setVal('res-orm-epley', `${weight.toFixed(1)} ${unit}`);
-      setVal('res-orm-brzycki', `${weight.toFixed(1)} ${unit}`);
-      setVal('res-orm-lombardi', `${weight.toFixed(1)} ${unit}`);
-      setVal('res-orm-oconner', `${weight.toFixed(1)} ${unit}`);
-      return;
-    }
-
-    const epley = weight * (1 + reps / 30);
-    const brzycki = reps < 37 ? weight * (36 / (37 - reps)) : epley;
-    const lombardi = weight * Math.pow(reps, 0.10);
-    const oconner = weight * (1 + 0.025 * reps);
-    const mayhew = (100 * weight) / (52.2 + 41.9 * Math.exp(-0.055 * reps));
-
-    const avg1RM = (epley + brzycki + lombardi + oconner + mayhew) / 5;
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    setVal('res-orm-max', `${Math.round(avg1RM * 10) / 10} ${unit}`);
-    setVal('res-orm-epley', `${Math.round(epley * 10) / 10} ${unit}`);
-    setVal('res-orm-brzycki', `${Math.round(brzycki * 10) / 10} ${unit}`);
-    setVal('res-orm-lombardi', `${Math.round(lombardi * 10) / 10} ${unit}`);
-    setVal('res-orm-oconner', `${Math.round(oconner * 10) / 10} ${unit}`);
-
-    this.render1RMTable(avg1RM, unit);
-  },
-
-  render1RMTable(oneRM, unit) {
-    const percentages = [
-      { pct: 100, reps: '1 rep' },
-      { pct: 95, reps: '2 reps' },
-      { pct: 90, reps: '4 reps' },
-      { pct: 85, reps: '6 reps' },
-      { pct: 80, reps: '8 reps' },
-      { pct: 75, reps: '10 reps' },
-      { pct: 70, reps: '12 reps' },
-      { pct: 65, reps: '15 reps' },
-      { pct: 60, reps: '20 reps' },
-      { pct: 50, reps: 'Warm-up' }
-    ];
-
-    const tbody = document.getElementById('orm-breakdown-tbody');
-    if (!tbody) return;
-
-    tbody.innerHTML = percentages.map(item => {
-      const load = Math.round((oneRM * (item.pct / 100)) * 10) / 10;
-      return `
-        <tr>
-          <td><strong>${item.pct}%</strong></td>
-          <td style="font-weight:700; color:var(--accent-primary);">${load} ${unit}</td>
-          <td style="color:var(--text-muted);">${item.reps}</td>
-        </tr>
-      `;
-    }).join('');
-  },
-
   // 12. TARGET HEART RATE CALCULATOR (Karvonen HRR & 5 Heart Rate Zones)
-  calcTargetHeartRate() {
-    const age = parseInt(document.getElementById('thr-age')?.value) || 30;
-    const rhr = parseInt(document.getElementById('thr-rhr')?.value) || 65;
-    const formula = document.getElementById('thr-formula')?.value || 'tanaka';
-
-    if (age <= 0 || rhr <= 0) return;
-
-    let maxHR = 208 - (0.7 * age); // Tanaka
-    if (formula === 'fox') {
-      maxHR = 220 - age;
-    } else if (formula === 'gellish') {
-      maxHR = 207 - (0.7 * age);
-    }
-    maxHR = Math.round(maxHR);
-
-    const hrr = Math.max(0, maxHR - rhr);
-
-    const calcZone = (lowPct, highPct) => {
-      const lowBpm = Math.round(rhr + (lowPct * hrr));
-      const highBpm = Math.round(rhr + (highPct * hrr));
-      return `${lowBpm} – ${highBpm} bpm`;
-    };
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    setVal('res-thr-max', `${maxHR} bpm`);
-    setVal('res-thr-hrr', `${hrr} bpm`);
-    setVal('res-thr-rhr-display', `${rhr} bpm`);
-
-    setVal('res-thr-zone1', calcZone(0.50, 0.60));
-    setVal('res-thr-zone2', calcZone(0.60, 0.70));
-    setVal('res-thr-zone3', calcZone(0.70, 0.80));
-    setVal('res-thr-zone4', calcZone(0.80, 0.90));
-    setVal('res-thr-zone5', calcZone(0.90, 1.00));
-  },
-
   // 13. WATER INTAKE CALCULATOR
-  calcWater() {
-    const weightKg = parseFloat(document.getElementById('water-weight')?.value) || 70;
-    const exerciseMins = parseFloat(document.getElementById('water-exercise')?.value) || 30;
-    const climate = document.getElementById('water-climate')?.value || 'temperate';
-
-    if (weightKg <= 0) return;
-
-    // Baseline: ~35ml per kg body weight
-    let waterMl = weightKg * 35;
-    // Exercise: add ~350ml per 30 minutes of moderate activity
-    waterMl += (exerciseMins / 30) * 350;
-    // Climate adjustment
-    if (climate === 'hot') waterMl *= 1.15;
-    else if (climate === 'very-hot') waterMl *= 1.30;
-
-    const litres = (waterMl / 1000).toFixed(1);
-    const flOz = Math.round(waterMl * 0.033814);
-    const glasses = Math.round(waterMl / 250);
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    setVal('res-water-litres', `${litres} L`);
-    setVal('res-water-floz', `${flOz} fl oz`);
-    setVal('res-water-glasses', `${glasses} glasses (250ml)`);
-
-    const fillPercent = Math.min(100, Math.round((waterMl / 4000) * 100));
-    const waterLevel = document.getElementById('water-bottle-level');
-    if (waterLevel) waterLevel.style.height = `${fillPercent}%`;
-  },
-
   // ------------------------------------------------------------------------
   // 14. PREGNANCY CALCULATOR (Gestational Age, Trimester, EDD, Fruit, Timeline)
   // ------------------------------------------------------------------------
-  calcPregnancy() {
-    const today = new Date();
-    const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    let eddDate = null;
-    let clinicalLmp = null;
-
-    if (this.pregMethod === 'lmp') {
-      const lmpVal = document.getElementById('preg-lmp-date')?.value;
-      const lmpDate = this.parseLocalDate(lmpVal);
-      const cycleLen = parseInt(document.getElementById('preg-cycle-len')?.value) || 28;
-      eddDate = this.addDays(lmpDate, 280 + (cycleLen - 28));
-      clinicalLmp = this.addDays(eddDate, -280);
-    } else if (this.pregMethod === 'duedate') {
-      const ddVal = document.getElementById('preg-due-date')?.value;
-      eddDate = this.parseLocalDate(ddVal);
-      clinicalLmp = this.addDays(eddDate, -280);
-    } else if (this.pregMethod === 'conception') {
-      const concVal = document.getElementById('preg-conception-date')?.value;
-      const concDate = this.parseLocalDate(concVal);
-      eddDate = this.addDays(concDate, 266);
-      clinicalLmp = this.addDays(eddDate, -280);
-    } else if (this.pregMethod === 'ultrasound') {
-      const usVal = document.getElementById('preg-us-date')?.value;
-      const usDate = this.parseLocalDate(usVal);
-      const usWeeks = parseInt(document.getElementById('preg-us-weeks')?.value) || 0;
-      const usDays = parseInt(document.getElementById('preg-us-days')?.value) || 0;
-      clinicalLmp = this.addDays(usDate, -(usWeeks * 7 + usDays));
-      eddDate = this.addDays(clinicalLmp, 280);
-    }
-
-    if (!eddDate || isNaN(eddDate.getTime())) return;
-
-    const diffDaysTotal = Math.floor((todayMid - clinicalLmp) / 86400000);
-    const gaDays = Math.max(0, Math.min(308, diffDaysTotal)); // clamp 0 to 44 weeks
-    const gaWeeks = Math.floor(gaDays / 7);
-    const gaDaysRem = gaDays % 7;
-
-    const daysRemaining = Math.max(0, Math.ceil((eddDate - todayMid) / 86400000));
-    const pctComplete = Math.min(100, Math.max(0, Math.round((gaDays / 280) * 100)));
-
-    let trimester = '1st Trimester';
-    if (gaWeeks >= 28) {
-      trimester = '3rd Trimester';
-    } else if (gaWeeks >= 14) {
-      trimester = '2nd Trimester';
-    }
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    setVal('res-preg-ga', `${gaWeeks} Weeks, ${gaDaysRem} Days`);
-    setVal('res-preg-edd', this.formatDate(eddDate));
-    setVal('res-preg-days-left', `${daysRemaining} Days to Go`);
-    setVal('res-preg-trimester', trimester);
-    setVal('res-preg-conception', this.formatDate(this.addDays(clinicalLmp, 14)));
-    setVal('res-preg-days-pregnant', `${gaDays} Days`);
-
-    const pBar = document.getElementById('res-preg-progress-bar');
-    if (pBar) pBar.style.width = `${pctComplete}%`;
-    setVal('res-preg-progress-text', `${pctComplete}% of 40-Week Journey`);
-
-    // Fetal Fruit Size lookup
-    const pregFruitMap = {
-      4: { fruit: 'Poppy Seed', emoji: '🌱', size: '~1 mm (0.04 in)', weight: '< 0.1 g', desc: 'Blastocyst implants into uterine wall; amniotic cavity begins forming.' },
-      5: { fruit: 'Apple Seed', emoji: '🍎', size: '~2 mm (0.08 in)', weight: '~0.05 g', desc: 'Neural tube closes; primitive heartbeat circulation starts.' },
-      6: { fruit: 'Sweet Pea', emoji: '🫛', size: '~6 mm (0.25 in)', weight: '~0.15 g', desc: 'Heart beats at ~110 bpm; retinal pigment and ear pits visible.' },
-      7: { fruit: 'Blueberry', emoji: '🫐', size: '~1.3 cm (0.5 in)', weight: '~0.5 g', desc: 'Brain hemispheres dividing; paddle-like limb buds emerge.' },
-      8: { fruit: 'Raspberry', emoji: '🍇', size: '~1.6 cm (0.6 in)', weight: '~1.0 g', desc: 'Webbed fingers separating; spontaneous tiny twitches start.' },
-      9: { fruit: 'Green Olive', emoji: '🫒', size: '~2.3 cm (0.9 in)', weight: '~2.0 g', desc: 'Officially a fetus! Four-chambered heart and joints form.' },
-      10: { fruit: 'Prune', emoji: '🫐', size: '~3.1 cm (1.2 in)', weight: '~4.0 g', desc: 'Vital organs functioning; tiny fingernails and tooth buds form.' },
-      11: { fruit: 'Lime', emoji: '🍋', size: '~4.1 cm (1.6 in)', weight: '~7.0 g', desc: 'Bones begin ossifying; diaphragm movements practice breathing.' },
-      12: { fruit: 'Plum', emoji: '🍑', size: '~5.4 cm (2.1 in)', weight: '~14 g (0.5 oz)', desc: 'Reflexes active; vocal cords form and kidneys produce urine.' },
-      13: { fruit: 'Meyer Lemon', emoji: '🍋', size: '~7.4 cm (2.9 in)', weight: '~23 g (0.8 oz)', desc: 'Final week of 1st trimester; unique fingerprints set in stone.' },
-      14: { fruit: 'Peach', emoji: '🍑', size: '~8.7 cm (3.4 in)', weight: '~43 g (1.5 oz)', desc: '2nd trimester begins! Facial expressions and thumb-sucking.' },
-      15: { fruit: 'Apple', emoji: '🍎', size: '~10.1 cm (4.0 in)', weight: '~70 g (2.5 oz)', desc: 'Baby can perceive light through eyelids; skeleton hardening.' },
-      16: { fruit: 'Avocado', emoji: '🥑', size: '~11.6 cm (4.6 in)', weight: '~100 g (3.5 oz)', desc: 'Ears in final position; heart pumps ~25 quarts of blood daily.' },
-      17: { fruit: 'Pomegranate', emoji: '🫐', size: '~13.0 cm (5.1 in)', weight: '~140 g (4.9 oz)', desc: 'Adipose fat stores accumulate; rubbery cartilage skeleton.' },
-      18: { fruit: 'Bell Pepper', emoji: '🫑', size: '~14.2 cm (5.6 in)', weight: '~190 g (6.7 oz)', desc: 'Myelin sheath insulates nerves; maternal flutter kicks (quickening).' },
-      19: { fruit: 'Mango', emoji: '🥭', size: '~15.3 cm (6.0 in)', weight: '~240 g (8.5 oz)', desc: 'Vernix caseosa coats skin for protective waterproofing.' },
-      20: { fruit: 'Banana', emoji: '🍌', size: '~25.6 cm (10.1 in)', weight: '~300 g (10.6 oz)', desc: 'Halfway mark! Detailed anatomy scan week; taste buds functional.' },
-      21: { fruit: 'Carrot', emoji: '🥕', size: '~26.7 cm (10.5 in)', weight: '~360 g (12.7 oz)', desc: 'Bone marrow produces red blood cells; kicks grow stronger.' },
-      22: { fruit: 'Spaghetti Squash', emoji: '🍈', size: '~27.8 cm (10.9 in)', weight: '~430 g (15.2 oz)', desc: 'Grip reflex active; eyebrows and eyelashes sculpted.' },
-      23: { fruit: 'Grapefruit', emoji: '🍊', size: '~28.9 cm (11.4 in)', weight: '~500 g (1.1 lbs)', desc: 'Rapid Eye Movement (REM) sleep detected; inner ears mature.' },
-      24: { fruit: 'Ear of Corn', emoji: '🌽', size: '~30.0 cm (11.8 in)', weight: '~600 g (1.3 lbs)', desc: 'Viability milestone! Lungs produce surfactant branches.' },
-      25: { fruit: 'Acorn Squash', emoji: '🎃', size: '~34.6 cm (13.6 in)', weight: '~660 g (1.5 lbs)', desc: 'Spine structures solidify; capillaries give skin a rosy hue.' },
-      26: { fruit: 'Zucchini', emoji: '🥒', size: '~35.6 cm (14.0 in)', weight: '~760 g (1.7 lbs)', desc: 'Eyes open for the first time; reacts to external music and voices.' },
-      27: { fruit: 'Cauliflower', emoji: '🥦', size: '~36.6 cm (14.4 in)', weight: '~875 g (1.9 lbs)', desc: 'End of 2nd trimester! Rhythmic diaphragm practice breaths.' },
-      28: { fruit: 'Eggplant', emoji: '🍆', size: '~37.6 cm (14.8 in)', weight: '~1.0 kg (2.2 lbs)', desc: '3rd trimester begins! Baby weighs over 1 kg; blinking eyelashes.' },
-      29: { fruit: 'Butternut Squash', emoji: '🍈', size: '~38.6 cm (15.2 in)', weight: '~1.15 kg (2.5 lbs)', desc: 'Brain rapidly expanding; billions of new neurons firing.' },
-      30: { fruit: 'Cabbage', emoji: '🥬', size: '~39.9 cm (15.7 in)', weight: '~1.3 kg (2.9 lbs)', desc: 'Brain surface folds deeply into distinct adult-like convolutions.' },
-      31: { fruit: 'Coconut', emoji: '🥥', size: '~41.1 cm (16.2 in)', weight: '~1.5 kg (3.3 lbs)', desc: 'Major growth spurt; can turn head side to side.' },
-      32: { fruit: 'Jicama', emoji: '🥔', size: '~42.4 cm (16.7 in)', weight: '~1.7 kg (3.7 lbs)', desc: 'Toenails fully formed; practice breathing exercises lung volume.' },
-      33: { fruit: 'Pineapple', emoji: '🍍', size: '~43.7 cm (17.2 in)', weight: '~1.9 kg (4.2 lbs)', desc: 'Amniotic fluid volume peaks; baby usually rotates head-down.' },
-      34: { fruit: 'Cantaloupe', emoji: '🍈', size: '~45.0 cm (17.7 in)', weight: '~2.15 kg (4.7 lbs)', desc: 'Maternal antibodies pass across placenta to build baby immunity.' },
-      35: { fruit: 'Honeydew', emoji: '🍈', size: '~46.2 cm (18.2 in)', weight: '~2.4 kg (5.3 lbs)', desc: 'Kidneys and liver processing waste; kidneys produce urine daily.' },
-      36: { fruit: 'Romaine Lettuce', emoji: '🥬', size: '~47.4 cm (18.7 in)', weight: '~2.6 kg (5.8 lbs)', desc: 'Facial and sucking muscles ready; shedding fine lanugo hair.' },
-      37: { fruit: 'Swiss Chard', emoji: '🥬', size: '~48.6 cm (19.1 in)', weight: '~2.85 kg (6.3 lbs)', desc: 'Early Term! Surfactant levels fully mature for room air breathing.' },
-      38: { fruit: 'Winter Melon', emoji: '🍈', size: '~49.8 cm (19.6 in)', weight: '~3.1 kg (6.8 lbs)', desc: 'Firm grasp reflex; gaining ~30g of healthy adipose tissue per day.' },
-      39: { fruit: 'Mini Watermelon', emoji: '🍉', size: '~50.7 cm (20.0 in)', weight: '~3.3 kg (7.3 lbs)', desc: 'Full Term! Skull bones pliable to ease passage through birth canal.' },
-      40: { fruit: 'Ripe Watermelon', emoji: '🍉', size: '~51.2 cm (20.2 in)', weight: '~3.5 kg (7.7 lbs)', desc: 'Happy Due Date! Baby is fully mature and ready to be born.' }
-    };
-
-    const targetWeekKey = Math.min(40, Math.max(4, gaWeeks || 4));
-    const fruitData = pregFruitMap[targetWeekKey] || pregFruitMap[40];
-
-    setVal('res-preg-fruit-name', `${fruitData.fruit} (Week ${targetWeekKey})`);
-    setVal('res-preg-fruit-emoji', fruitData.emoji);
-    setVal('res-preg-fruit-stats', `Length: ${fruitData.size} • Weight: ${fruitData.weight}`);
-    setVal('res-preg-fruit-desc', fruitData.desc);
-
-    // Dynamic Milestone Schedule
-    const milestones = [
-      { name: 'Estimated Conception Date', date: this.addDays(clinicalLmp, 14), dayTarget: 14 },
-      { name: 'First Trimester Screening / NIPT', date: this.addDays(clinicalLmp, 70), dayTarget: 70 },
-      { name: 'Doppler Fetal Heartbeat Audible', date: this.addDays(clinicalLmp, 77), dayTarget: 77 },
-      { name: 'End of 1st Trimester (13w 6d)', date: this.addDays(clinicalLmp, 97), dayTarget: 97 },
-      { name: 'Anatomy / Gender Scan (20w 0d)', date: this.addDays(clinicalLmp, 140), dayTarget: 140 },
-      { name: 'Fetal Viability Milestone (24w 0d)', date: this.addDays(clinicalLmp, 168), dayTarget: 168 },
-      { name: 'Glucose Tolerance Screening (26w)', date: this.addDays(clinicalLmp, 182), dayTarget: 182 },
-      { name: 'End of 2nd Trimester (27w 6d)', date: this.addDays(clinicalLmp, 195), dayTarget: 195 },
-      { name: 'Group B Strep (GBS) Screen (36w)', date: this.addDays(clinicalLmp, 252), dayTarget: 252 },
-      { name: 'Full Term Milestone (37w 0d)', date: this.addDays(clinicalLmp, 259), dayTarget: 259 },
-      { name: 'Estimated Due Date (40w 0d)', date: eddDate, dayTarget: 280 }
-    ];
-
-    const mlContainer = document.getElementById('res-preg-milestones-list');
-    if (mlContainer) {
-      mlContainer.innerHTML = milestones.map(m => {
-        let statusClass = 'upcoming';
-        let statusBadge = 'Upcoming';
-        if (gaDays >= m.dayTarget + 7) {
-          statusClass = 'completed';
-          statusBadge = 'Completed ✓';
-        } else if (gaDays >= m.dayTarget - 7) {
-          statusClass = 'current';
-          statusBadge = 'Active / Current ★';
-        }
-        return `
-          <div class="milestone-row ${statusClass}">
-            <span class="milestone-name">
-              <span>${m.name}</span>
-            </span>
-            <div style="display:flex; align-items:center; gap:0.5rem;">
-              <span class="milestone-date-badge">${this.formatDateShort(m.date)}</span>
-              <span class="badge" style="font-size:0.72rem; padding:2px 6px;">${statusBadge}</span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-  },
-
   // ------------------------------------------------------------------------
   // 15. PREGNANCY WEIGHT GAIN CALCULATOR (IOM & ACOG Guidelines)
   // ------------------------------------------------------------------------
@@ -806,127 +301,9 @@ const FitnessCalcs = {
   // ------------------------------------------------------------------------
   // 16. PREGNANCY CONCEPTION CALCULATOR (Retrospective Dating)
   // ------------------------------------------------------------------------
-  calcPregnancyConception() {
-    const today = new Date();
-    const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    let conceptionDate = null;
-    let eddDate = null;
-    let clinicalLmp = null;
-
-    if (this.pconcMethod === 'edd') {
-      const eddVal = document.getElementById('pconc-edd-date')?.value;
-      eddDate = this.parseLocalDate(eddVal);
-      conceptionDate = this.addDays(eddDate, -266);
-      clinicalLmp = this.addDays(eddDate, -280);
-    } else if (this.pconcMethod === 'lmp') {
-      const lmpVal = document.getElementById('pconc-lmp-date')?.value;
-      const lmpDate = this.parseLocalDate(lmpVal);
-      const cycleLen = parseInt(document.getElementById('pconc-cycle-len')?.value) || 28;
-      conceptionDate = this.addDays(lmpDate, cycleLen - 14);
-      eddDate = this.addDays(conceptionDate, 266);
-      clinicalLmp = this.addDays(eddDate, -280);
-    } else if (this.pconcMethod === 'ultrasound') {
-      const usVal = document.getElementById('pconc-us-date')?.value;
-      const usDate = this.parseLocalDate(usVal);
-      const usWeeks = parseInt(document.getElementById('pconc-us-weeks')?.value) || 0;
-      const usDays = parseInt(document.getElementById('pconc-us-days')?.value) || 0;
-      clinicalLmp = this.addDays(usDate, -(usWeeks * 7 + usDays));
-      conceptionDate = this.addDays(clinicalLmp, 14);
-      eddDate = this.addDays(clinicalLmp, 280);
-    }
-
-    if (!conceptionDate || isNaN(conceptionDate.getTime())) return;
-
-    const fertileStart = this.addDays(conceptionDate, -5);
-    const fertileEnd = this.addDays(conceptionDate, 1);
-    const implantStart = this.addDays(conceptionDate, 6);
-    const implantEnd = this.addDays(conceptionDate, 12);
-
-    const fetalDaysTotal = Math.max(0, Math.floor((todayMid - conceptionDate) / 86400000));
-    const fetalWeeks = Math.floor(fetalDaysTotal / 7);
-    const fetalDaysRem = fetalDaysTotal % 7;
-
-    const gaDaysTotal = Math.max(0, Math.floor((todayMid - clinicalLmp) / 86400000));
-    const gaWeeks = Math.floor(gaDaysTotal / 7);
-    const gaDaysRem = gaDaysTotal % 7;
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    setVal('res-pconc-date', this.formatDate(conceptionDate));
-    setVal('res-pconc-intercourse', `${this.formatDateShort(fertileStart)} – ${this.formatDateShort(fertileEnd)}`);
-    setVal('res-pconc-implantation', `${this.formatDateShort(implantStart)} – ${this.formatDateShort(implantEnd)}`);
-    setVal('res-pconc-fetal-age', `${fetalWeeks} Weeks, ${fetalDaysRem} Days`);
-    setVal('res-pconc-ga', `${gaWeeks} Weeks, ${gaDaysRem} Days`);
-    setVal('res-pconc-edd', this.formatDate(eddDate));
-  },
-
   // ------------------------------------------------------------------------
   // 17. DUE DATE CALCULATOR (4 Clinical Methods)
   // ------------------------------------------------------------------------
-  calcDueDate() {
-    const today = new Date();
-    const todayMid = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    let eddDate = null;
-    let clinicalLmp = null;
-
-    if (this.ddMethod === 'lmp') {
-      const lmpVal = document.getElementById('dd-lmp-date')?.value;
-      const lmpDate = this.parseLocalDate(lmpVal);
-      const cycleLen = parseInt(document.getElementById('dd-cycle-len')?.value) || 28;
-      eddDate = this.addDays(lmpDate, 280 + (cycleLen - 28));
-      clinicalLmp = this.addDays(eddDate, -280);
-    } else if (this.ddMethod === 'conception') {
-      const concVal = document.getElementById('dd-conception-date')?.value;
-      const concDate = this.parseLocalDate(concVal);
-      eddDate = this.addDays(concDate, 266);
-      clinicalLmp = this.addDays(eddDate, -280);
-    } else if (this.ddMethod === 'ultrasound') {
-      const usVal = document.getElementById('dd-us-date')?.value;
-      const usDate = this.parseLocalDate(usVal);
-      const usWeeks = parseInt(document.getElementById('dd-us-weeks')?.value) || 0;
-      const usDays = parseInt(document.getElementById('dd-us-days')?.value) || 0;
-      clinicalLmp = this.addDays(usDate, -(usWeeks * 7 + usDays));
-      eddDate = this.addDays(clinicalLmp, 280);
-    } else if (this.ddMethod === 'ivf') {
-      const ivfVal = document.getElementById('dd-ivf-date')?.value;
-      const ivfDate = this.parseLocalDate(ivfVal);
-      const offsetDays = this.ddIvfType === 'day3' ? 263 : 261;
-      eddDate = this.addDays(ivfDate, offsetDays);
-      clinicalLmp = this.addDays(eddDate, -280);
-    }
-
-    if (!eddDate || isNaN(eddDate.getTime())) return;
-
-    const diffDaysTotal = Math.floor((todayMid - clinicalLmp) / 86400000);
-    const gaDays = Math.max(0, Math.min(308, diffDaysTotal));
-    const gaWeeks = Math.floor(gaDays / 7);
-    const gaDaysRem = gaDays % 7;
-
-    const daysRemaining = Math.max(0, Math.ceil((eddDate - todayMid) / 86400000));
-    const pct = Math.min(100, Math.max(0, Math.round((gaDays / 280) * 100)));
-
-    let trimester = '1st Trimester';
-    if (gaWeeks >= 28) trimester = '3rd Trimester';
-    else if (gaWeeks >= 14) trimester = '2nd Trimester';
-
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    setVal('res-dd-due-date', this.formatDate(eddDate));
-    setVal('res-dd-countdown', `${daysRemaining} Days to Arrival`);
-    setVal('res-dd-ga', `${gaWeeks} Weeks, ${gaDaysRem} Days`);
-    setVal('res-dd-trimester', trimester);
-    setVal('res-dd-conception', this.formatDate(this.addDays(clinicalLmp, 14)));
-    setVal('res-dd-end-tri1', this.formatDate(this.addDays(clinicalLmp, 97)));
-    setVal('res-dd-halfway', this.formatDate(this.addDays(clinicalLmp, 140)));
-    setVal('res-dd-viability', this.formatDate(this.addDays(clinicalLmp, 168)));
-    setVal('res-dd-end-tri2', this.formatDate(this.addDays(clinicalLmp, 195)));
-    setVal('res-dd-fullterm', this.formatDate(this.addDays(clinicalLmp, 259)));
-
-    const pb = document.getElementById('res-dd-progress-bar');
-    if (pb) pb.style.width = `${pct}%`;
-    setVal('res-dd-progress-text', `${pct}% completed`);
-  },
-
   // ------------------------------------------------------------------------
   // 18. OVULATION CALCULATOR (Peak Fertility & 6-Cycle Forecast)
   // ------------------------------------------------------------------------
@@ -983,53 +360,6 @@ const FitnessCalcs = {
   // ------------------------------------------------------------------------
   // 19. CONCEPTION CALCULATOR (Planning Conception & Reverse Target EDD)
   // ------------------------------------------------------------------------
-  calcConception() {
-    const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    if (this.concMode === 'fertile') {
-      const lmpVal = document.getElementById('conc-lmp-date')?.value;
-      const lmpDate = this.parseLocalDate(lmpVal);
-      const cycleLen = parseInt(document.getElementById('conc-cycle-len')?.value) || 28;
-
-      if (!lmpDate || isNaN(lmpDate.getTime())) return;
-
-      const ovDate = this.addDays(lmpDate, cycleLen - 14);
-      const primeStart = this.addDays(ovDate, -5);
-      const primeEnd = this.addDays(ovDate, 1);
-      const implantStart = this.addDays(ovDate, 6);
-      const implantEnd = this.addDays(ovDate, 12);
-      const urineTest = this.addDays(ovDate, 12);
-      const bloodTest = this.addDays(ovDate, 10);
-      const predEDD = this.addDays(ovDate, 266);
-
-      setVal('res-conc-prime-window', `${this.formatDateShort(primeStart)} – ${this.formatDateShort(primeEnd)}`);
-      setVal('res-conc-ovulation', this.formatDate(ovDate));
-      setVal('res-conc-implantation', `${this.formatDateShort(implantStart)} – ${this.formatDateShort(implantEnd)}`);
-      setVal('res-conc-urine-test', this.formatDate(urineTest));
-      setVal('res-conc-blood-test', this.formatDate(bloodTest));
-      setVal('res-conc-pred-edd', this.formatDate(predEDD));
-    } else {
-      const targetVal = document.getElementById('conc-target-date')?.value;
-      const targetEDD = this.parseLocalDate(targetVal);
-      const cycleLen = parseInt(document.getElementById('conc-target-cycle-len')?.value) || 28;
-
-      if (!targetEDD || isNaN(targetEDD.getTime())) return;
-
-      const targetConception = this.addDays(targetEDD, -266);
-      const primeStart = this.addDays(targetConception, -5);
-      const primeEnd = targetConception;
-      const targetLmp = this.addDays(targetConception, -(cycleLen - 14));
-
-      const zodiac = this.getZodiacSign(targetEDD.getMonth() + 1, targetEDD.getDate());
-
-      setVal('res-conc-target-conception', this.formatDate(targetConception));
-      setVal('res-conc-target-window', `${this.formatDateShort(primeStart)} – ${this.formatDateShort(primeEnd)}`);
-      setVal('res-conc-target-lmp', this.formatDate(targetLmp));
-      setVal('res-conc-zodiac', zodiac);
-      setVal('res-conc-target-edd-disp', this.formatDate(targetEDD));
-    }
-  },
-
   // ------------------------------------------------------------------------
   // 20. PERIOD CALCULATOR (Cycle Tracker, Phase Progress, PMS Schedule)
   // ------------------------------------------------------------------------
@@ -1117,126 +447,9 @@ const FitnessCalcs = {
   // ========================================================================
   // 21. MACRO CALCULATOR (Mifflin-St Jeor + Goal + Macro Distribution)
   // ========================================================================
-  calcMacro() {
-    const isMale = this.macroGender === 'male';
-    const isMetric = this.macroUnit === 'metric';
-    const age = parseFloat(document.getElementById('macro-age')?.value) || 30;
-    let weightKg = parseFloat(document.getElementById('macro-weight')?.value) || 75;
-    if (!isMetric) {
-      const lbs = parseFloat(document.getElementById('macro-weight-lbs')?.value) || 165;
-      weightKg = lbs * 0.453592;
-    }
-    let heightCm = parseFloat(document.getElementById('macro-height')?.value) || 175;
-    if (!isMetric) {
-      const ft = parseFloat(document.getElementById('macro-height-ft')?.value) || 5;
-      const inch = parseFloat(document.getElementById('macro-height-in')?.value) || 9;
-      heightCm = (ft * 12 + inch) * 2.54;
-    }
-    const actMult = parseFloat(document.getElementById('macro-activity')?.value) || 1.55;
-    const goal = document.getElementById('macro-goal')?.value || 'maintain';
-    const ratio = document.getElementById('macro-ratio')?.value || 'balanced';
-    const meals = parseInt(document.getElementById('macro-meals')?.value, 10) || 3;
-
-    // BMR (Mifflin-St Jeor)
-    const bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + (isMale ? 5 : -161);
-    const tdee = bmr * actMult;
-
-    let calDelta = 0;
-    if (goal === 'cut_mild') calDelta = -250;
-    else if (goal === 'cut') calDelta = -500;
-    else if (goal === 'cut_extreme') calDelta = -1000;
-    else if (goal === 'bulk_lean') calDelta = 250;
-    else if (goal === 'bulk') calDelta = 500;
-
-    const targetCalories = Math.max(1000, Math.round(tdee + calDelta));
-
-    let cPct = 0.50, pPct = 0.25, fPct = 0.25;
-    if (ratio === 'high_protein') { cPct = 0.40; pPct = 0.35; fPct = 0.25; }
-    else if (ratio === 'low_carb') { cPct = 0.20; pPct = 0.40; fPct = 0.40; }
-    else if (ratio === 'keto') { cPct = 0.05; pPct = 0.25; fPct = 0.70; }
-    else if (ratio === 'zone') { cPct = 0.40; pPct = 0.30; fPct = 0.30; }
-
-    const protCal = Math.round(targetCalories * pPct);
-    const protG = Math.round(protCal / 4);
-    const carbCal = Math.round(targetCalories * cPct);
-    const carbG = Math.round(carbCal / 4);
-    const fatCal = Math.round(targetCalories * fPct);
-    const fatG = Math.round(fatCal / 9);
-
-    const fiberG = Math.round(targetCalories * 0.014);
-
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    setTxt('res-macro-calories', `${targetCalories.toLocaleString()} kcal`);
-    setTxt('res-macro-tdee', `TDEE: ${Math.round(tdee).toLocaleString()} kcal`);
-    setTxt('res-macro-protein-g', `${protG} g`);
-    setTxt('res-macro-protein-cal', `${protCal} kcal (${Math.round(pPct * 100)}%)`);
-    setTxt('res-macro-protein-meal', `${Math.round(protG / meals)} g / meal`);
-
-    setTxt('res-macro-carb-g', `${carbG} g`);
-    setTxt('res-macro-carb-cal', `${carbCal} kcal (${Math.round(cPct * 100)}%)`);
-    setTxt('res-macro-carb-meal', `${Math.round(carbG / meals)} g / meal`);
-
-    setTxt('res-macro-fat-g', `${fatG} g`);
-    setTxt('res-macro-fat-cal', `${fatCal} kcal (${Math.round(fPct * 100)}%)`);
-    setTxt('res-macro-fat-meal', `${Math.round(fatG / meals)} g / meal`);
-
-    setTxt('res-macro-fiber', `${fiberG} g daily`);
-
-    const barCarb = document.getElementById('res-macro-bar-carb');
-    const barProt = document.getElementById('res-macro-bar-prot');
-    const barFat = document.getElementById('res-macro-bar-fat');
-    if (barCarb) barCarb.style.width = `${cPct * 100}%`;
-    if (barProt) barProt.style.width = `${pPct * 100}%`;
-    if (barFat) barFat.style.width = `${fPct * 100}%`;
-  },
-
   // ========================================================================
   // 22. CARBOHYDRATE CALCULATOR (ACSM & ISSN Training Volume Guidelines)
   // ========================================================================
-  calcCarb() {
-    const isMetric = this.carbUnit === 'metric';
-    let weightKg = parseFloat(document.getElementById('carb-weight')?.value) || 70;
-    if (!isMetric) {
-      const lbs = parseFloat(document.getElementById('carb-weight-lbs')?.value) || 154;
-      weightKg = lbs * 0.453592;
-    }
-    const intensity = document.getElementById('carb-intensity')?.value || 'moderate';
-    const totalCal = parseFloat(document.getElementById('carb-calories')?.value) || 2400;
-
-    let gPerKg = 6.0;
-    if (intensity === 'light') gPerKg = 3.5;
-    else if (intensity === 'moderate') gPerKg = 6.0;
-    else if (intensity === 'endurance') gPerKg = 8.0;
-    else if (intensity === 'extreme') gPerKg = 10.0;
-    else if (intensity === 'low_carb') gPerKg = 1.5;
-
-    const carbGrams = Math.round(weightKg * gPerKg);
-    const carbKcal = carbGrams * 4;
-    const carbPctOfTotal = Math.min(100, Math.round((carbKcal / totalCal) * 100));
-
-    const complexG = Math.round(carbGrams * 0.85);
-    const sugarMaxG = Math.round((totalCal * 0.10) / 4); // WHO < 10%
-    const fiberMinG = Math.max(28, Math.round(totalCal * 0.014));
-
-    // Timing breakdown
-    const preG = Math.round(weightKg * 1.0);
-    const intraG = intensity === 'endurance' || intensity === 'extreme' ? '45 – 60 g/hr' : '30 g/hr (if >60m)';
-    const postG = Math.round(weightKg * 1.2);
-
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    setTxt('res-carb-daily-g', `${carbGrams} g`);
-    setTxt('res-carb-daily-cal', `${carbKcal.toLocaleString()} kcal`);
-    setTxt('res-carb-pct-cal', `${carbPctOfTotal}% of total calories`);
-    setTxt('res-carb-complex-g', `${complexG} g (whole grains, veggies)`);
-    setTxt('res-carb-sugar-max', `< ${sugarMaxG} g max (WHO limit)`);
-    setTxt('res-carb-fiber-min', `${fiberMinG} g daily minimum`);
-    setTxt('res-carb-pre', `${preG} g (2–3 hrs before training)`);
-    setTxt('res-carb-intra', intraG);
-    setTxt('res-carb-post', `${postG} g (within 1–2 hrs post-workout)`);
-  },
-
   // ========================================================================
   // 23. PROTEIN CALCULATOR (ISSN / Morton et al. Hypertrophy Standards)
   // ========================================================================
@@ -1282,179 +495,12 @@ const FitnessCalcs = {
   // ========================================================================
   // 24. FAT INTAKE CALCULATOR (AHA & Dietary Guidelines for Americans)
   // ========================================================================
-  calcFat() {
-    const totalCal = parseFloat(document.getElementById('fat-calories')?.value) || 2200;
-    const diet = document.getElementById('fat-diet')?.value || 'standard';
-
-    let fatPct = 0.28;
-    if (diet === 'low_fat') fatPct = 0.18;
-    else if (diet === 'standard') fatPct = 0.28;
-    else if (diet === 'moderate') fatPct = 0.32;
-    else if (diet === 'keto') fatPct = 0.70;
-
-    const fatCal = Math.round(totalCal * fatPct);
-    const fatG = Math.round(fatCal / 9);
-
-    const satFatMax = Math.round((totalCal * 0.08) / 9); // <8-10% of calories
-    const mufaG = Math.round((totalCal * 0.15) / 9); // ~15%
-    const pufaG = Math.round((totalCal * 0.07) / 9); // ~7%
-
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    setTxt('res-fat-daily-g', `${fatG} g`);
-    setTxt('res-fat-daily-cal', `${fatCal.toLocaleString()} kcal`);
-    setTxt('res-fat-pct', `${Math.round(fatPct * 100)}% of total daily energy`);
-    setTxt('res-fat-saturated-max', `< ${satFatMax} g max (<10% calories)`);
-    setTxt('res-fat-mufa-g', `${mufaG} g (olive oil, avocados, nuts)`);
-    setTxt('res-fat-pufa-g', `${pufaG} g (flax, chia, walnuts)`);
-    setTxt('res-fat-omega3', '500 – 1,000 mg EPA/DHA combined daily');
-  },
-
   // ========================================================================
   // 25. TDEE CALCULATOR (Mifflin-St Jeor, Katch-McArdle, Harris-Benedict)
   // ========================================================================
-  calcTDEE() {
-    const isMale = this.tdeeGender === 'male';
-    const isMetric = this.tdeeUnit === 'metric';
-    const age = parseFloat(document.getElementById('tdee-age')?.value) || 28;
-    let weightKg = parseFloat(document.getElementById('tdee-weight')?.value) || 75;
-    if (!isMetric) {
-      const lbs = parseFloat(document.getElementById('tdee-weight-lbs')?.value) || 165;
-      weightKg = lbs * 0.453592;
-    }
-    let heightCm = parseFloat(document.getElementById('tdee-height')?.value) || 178;
-    if (!isMetric) {
-      const ft = parseFloat(document.getElementById('tdee-height-ft')?.value) || 5;
-      const inch = parseFloat(document.getElementById('tdee-height-in')?.value) || 10;
-      heightCm = (ft * 12 + inch) * 2.54;
-    }
-    const actMult = parseFloat(document.getElementById('tdee-activity')?.value) || 1.55;
-    const formula = document.getElementById('tdee-formula')?.value || 'mifflin';
-    const bf = parseFloat(document.getElementById('tdee-bodyfat')?.value) || 18;
-
-    let bmr = 0;
-    if (formula === 'katch') {
-      const lbmKg = weightKg * (1 - bf / 100);
-      bmr = 370 + (21.6 * lbmKg);
-    } else if (formula === 'harris') {
-      if (isMale) {
-        bmr = 88.362 + (13.397 * weightKg) + (4.799 * heightCm) - (5.677 * age);
-      } else {
-        bmr = 447.593 + (9.247 * weightKg) + (3.098 * heightCm) - (4.330 * age);
-      }
-    } else {
-      // Mifflin-St Jeor default
-      bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + (isMale ? 5 : -161);
-    }
-
-    const tdee = Math.round(bmr * actMult);
-    const bmrRounded = Math.round(bmr);
-
-    // Energy shares
-    const bmrShare = Math.round((bmrRounded / tdee) * 100);
-    const tefShare = 10;
-    const neatShare = 15;
-    const eatShare = Math.max(5, 100 - bmrShare - tefShare - neatShare);
-
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    setTxt('res-tdee-val', `${tdee.toLocaleString()} kcal / day`);
-    setTxt('res-tdee-bmr', `BMR: ${bmrRounded.toLocaleString()} kcal`);
-    setTxt('res-tdee-bmr-share', `${bmrShare}% (${bmrRounded} kcal)`);
-    setTxt('res-tdee-tef-share', `${tefShare}% (${Math.round(tdee * 0.1)} kcal)`);
-    setTxt('res-tdee-neat-share', `${neatShare}% (${Math.round(tdee * 0.15)} kcal)`);
-    setTxt('res-tdee-eat-share', `${eatShare}% (${Math.round(tdee * (eatShare / 100))} kcal)`);
-
-    setTxt('res-tdee-maintain', `${tdee.toLocaleString()} kcal`);
-    setTxt('res-tdee-cut-mild', `${(tdee - 250).toLocaleString()} kcal`);
-    setTxt('res-tdee-cut', `${(tdee - 500).toLocaleString()} kcal`);
-    setTxt('res-tdee-cut-extreme', `${Math.max(1200, tdee - 1000).toLocaleString()} kcal`);
-    setTxt('res-tdee-bulk-clean', `${(tdee + 250).toLocaleString()} kcal`);
-    setTxt('res-tdee-bulk', `${(tdee + 500).toLocaleString()} kcal`);
-  },
-
   // ========================================================================
   // 26. GFR CALCULATOR (2021 CKD-EPI Refit & MDRD Renal Function)
   // ========================================================================
-  calcGFR() {
-    const isFemale = this.gfrGender === 'female';
-    const isUmol = this.gfrUnit === 'umol_l';
-    let scr = parseFloat(document.getElementById('gfr-creatinine')?.value) || 1.0;
-    if (isUmol) {
-      scr = scr / 88.4; // convert µmol/L to mg/dL
-    }
-    const age = parseFloat(document.getElementById('gfr-age')?.value) || 45;
-    const formula = document.getElementById('gfr-formula')?.value || 'ckd_epi';
-
-    let egfr = 0;
-    if (formula === 'mdrd') {
-      const femaleMult = isFemale ? 0.742 : 1.0;
-      egfr = 175 * Math.pow(scr, -1.154) * Math.pow(age, -0.203) * femaleMult;
-    } else {
-      // 2021 CKD-EPI Creatinine Refit Equation (Race-Free)
-      const kappa = isFemale ? 0.7 : 0.9;
-      const alpha = isFemale ? -0.241 : -0.302;
-      const minPart = Math.pow(Math.min(scr / kappa, 1), alpha);
-      const maxPart = Math.pow(Math.max(scr / kappa, 1), -1.200);
-      const agePart = Math.pow(0.9938, age);
-      const femaleMult = isFemale ? 1.012 : 1.0;
-      egfr = 142 * minPart * maxPart * agePart * femaleMult;
-    }
-
-    const roundedEgfr = Math.round(egfr * 10) / 10;
-
-    let stage = 'G1';
-    let stageTitle = 'Normal or High Kidney Function';
-    let color = '#10b981';
-    let desc = 'Kidney function is within optimal healthy range. Continue healthy hydration and routine blood pressure monitoring.';
-
-    if (roundedEgfr >= 90) {
-      stage = 'Stage 1 (G1)';
-      stageTitle = 'Normal or High Function';
-      color = '#10b981';
-      desc = 'Estimated filtration rate is normal (≥90 mL/min/1.73m²). Healthy renal baseline.';
-    } else if (roundedEgfr >= 60) {
-      stage = 'Stage 2 (G2)';
-      stageTitle = 'Mildly Decreased';
-      color = '#34d399';
-      desc = 'Mild reduction in filtration (60–89 mL/min/1.73m²). Common with age; check proteinuria and cardiovascular risk factors.';
-    } else if (roundedEgfr >= 45) {
-      stage = 'Stage 3a (G3a)';
-      stageTitle = 'Mild to Moderately Decreased';
-      color = '#f59e0b';
-      desc = 'Moderate filtration decrease (45–59 mL/min/1.73m²). Medical nephrology evaluation and medication adjustment advised.';
-    } else if (roundedEgfr >= 30) {
-      stage = 'Stage 3b (G3b)';
-      stageTitle = 'Moderately to Severely Decreased';
-      color = '#f97316';
-      desc = 'Significant loss of renal function (30–44 mL/min/1.73m²). Close monitoring of electrolytes, phosphorus, and blood pressure required.';
-    } else if (roundedEgfr >= 15) {
-      stage = 'Stage 4 (G4)';
-      stageTitle = 'Severely Decreased';
-      color = '#ef4444';
-      desc = 'Severe loss of kidney filtration (15–29 mL/min/1.73m²). Nephrologist care and preparation for renal replacement therapy.';
-    } else {
-      stage = 'Stage 5 (G5)';
-      stageTitle = 'Kidney Failure (ESRD)';
-      color = '#b91c1c';
-      desc = 'End-stage renal disease (<15 mL/min/1.73m²). Dialysis or kidney transplantation required.';
-    }
-
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    setTxt('res-gfr-val', `${roundedEgfr} mL/min/1.73m²`);
-    setTxt('res-gfr-stage', stage);
-    setTxt('res-gfr-title', stageTitle);
-    setTxt('res-gfr-desc', desc);
-
-    const badge = document.getElementById('res-gfr-badge');
-    if (badge) {
-      badge.textContent = stageTitle;
-      badge.style.backgroundColor = color;
-      badge.style.color = '#ffffff';
-    }
-  },
-
   // ========================================================================
   // 28. BODY SURFACE AREA (BSA) CALCULATOR (Mosteller, Du Bois, Haycock)
   // ========================================================================
@@ -1506,137 +552,35 @@ const FitnessCalcs = {
   // ========================================================================
   // 29. BAC CALCULATOR (Widmark Ethanol Pharmacokinetics Model)
   // ========================================================================
-  calcBAC() {
-    const isMale = this.bacGender === 'male';
-    const isMetric = this.bacUnit === 'metric';
-    let weightKg = parseFloat(document.getElementById('bac-weight')?.value) || 80;
-    if (!isMetric) {
-      const lbs = parseFloat(document.getElementById('bac-weight-lbs')?.value) || 176;
-      weightKg = lbs * 0.453592;
-    }
-    const beers = parseInt(document.getElementById('bac-beers')?.value, 10) || 0;
-    const wines = parseInt(document.getElementById('bac-wines')?.value, 10) || 0;
-    const shots = parseInt(document.getElementById('bac-shots')?.value, 10) || 0;
-    const customOz = parseFloat(document.getElementById('bac-custom-oz')?.value) || 0;
-    const customAbv = parseFloat(document.getElementById('bac-custom-abv')?.value) || 0;
-    const hours = parseFloat(document.getElementById('bac-hours')?.value) || 2;
-    const stomach = document.getElementById('bac-stomach')?.value || 'empty';
-
-    // Total pure alcohol in grams (14g per standard US drink)
-    let alcoholG = (beers * 14) + (wines * 14) + (shots * 14);
-    if (customOz > 0 && customAbv > 0) {
-      const ml = customOz * 29.5735;
-      alcoholG += ml * (customAbv / 100) * 0.789;
-    }
-
-    const weightG = weightKg * 1000;
-    let r = isMale ? 0.68 : 0.55;
-    if (stomach === 'full') r += 0.07; // food dampens peak absorption
-
-    const beta = 0.015; // elimination % per hour
-
-    let rawBac = 0;
-    if (alcoholG > 0) {
-      rawBac = ((alcoholG / (r * weightG)) * 100) - (beta * hours);
-    }
-    const currentBac = Math.max(0, Math.round(rawBac * 1000) / 1000);
-
-    const soberHours = currentBac > 0 ? (currentBac / beta) : 0;
-    const soberHrInt = Math.floor(soberHours);
-    const soberMin = Math.round((soberHours - soberHrInt) * 60);
-
-    const legalLimit = 0.08;
-    const legalHours = currentBac > legalLimit ? ((currentBac - legalLimit) / beta) : 0;
-    const legalHrInt = Math.floor(legalHours);
-    const legalMin = Math.round((legalHours - legalHrInt) * 60);
-
-    let stage = 'Sober / Normal';
-    let color = '#10b981';
-    let symptoms = 'Normal state, no motor impairment detected.';
-
-    if (currentBac === 0) {
-      stage = 'Zero Impairment';
-      color = '#10b981';
-      symptoms = 'Blood alcohol is 0.000%. Safe to drive and operate machinery.';
-    } else if (currentBac < 0.03) {
-      stage = 'Subclinical (0.01 – 0.02%)';
-      color = '#34d399';
-      symptoms = 'Mild euphoria, slight body warmth. Subtle judgment changes.';
-    } else if (currentBac < 0.06) {
-      stage = 'Mild Euphoria (0.03 – 0.05%)';
-      color = '#f59e0b';
-      symptoms = 'Relaxation, lowered inhibitions, reduced vigilance. Minor reaction time slowing.';
-    } else if (currentBac < 0.08) {
-      stage = 'Impaired Coordination (0.06 – 0.07%)';
-      color = '#f97316';
-      symptoms = 'Impaired depth perception, divided attention deficits. Approaching legal limit.';
-    } else if (currentBac < 0.15) {
-      stage = 'Legally Intoxicated (0.08 – 0.14%)';
-      color = '#ef4444';
-      symptoms = 'Illegal to drive. Balance loss, slurred speech, impaired gross motor skills, delayed reflexes.';
-    } else if (currentBac < 0.25) {
-      stage = 'Severe Intoxication (0.15 – 0.24%)';
-      color = '#dc2626';
-      symptoms = 'Severe motor impairment, loss of physical control, nausea, high risk of blackout.';
-    } else {
-      stage = 'Life-Threatening Poisoning (≥0.25%)';
-      color = '#7f1d1d';
-      symptoms = 'Risk of respiratory failure, coma, or fatal alcohol poisoning. Immediate emergency care.';
-    }
-
-    const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-
-    setTxt('res-bac-val', `${currentBac.toFixed(3)}%`);
-    setTxt('res-bac-status', stage);
-    setTxt('res-bac-symptoms', symptoms);
-
-    setTxt('res-bac-sober-time', currentBac > 0 ? `${soberHrInt} hrs ${soberMin} mins` : 'Sober Now (0.000%)');
-    setTxt('res-bac-legal-time', currentBac > 0.08 ? `${legalHrInt} hrs ${legalMin} mins` : 'Below Legal Limit (<0.08%)');
-
-    const badge = document.getElementById('res-bac-badge');
-    if (badge) {
-      badge.textContent = stage;
-      badge.style.backgroundColor = color;
-      badge.style.color = '#ffffff';
-    }
-  },
-
     // Setup all event listeners
   init() {
-    // 1. BMI Unit Toggle & Inputs
-    
+    const now = new Date();
+    const setDefDate = (id, daysOffset) => {
+      const el = document.getElementById(id);
+      if (el && !el.value) {
+        el.value = this.toInputDate(this.addDays(now, daysOffset));
+      }
+    };
 
-    // 2. Calorie Calculator Unit & Inputs
-    document.querySelectorAll('.cal-gender-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.cal-gender-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.calGender = btn.dataset.gender;
-        this.calcCalorie();
-      });
-    });
+    const syncSlider = (rangeId, numId, badgeId, suffix, onCalc) => {
+      const rangeEl = document.getElementById(rangeId);
+      const numEl = document.getElementById(numId);
+      const badgeEl = document.getElementById(badgeId);
+      if (rangeEl && numEl) {
+        rangeEl.addEventListener('input', () => {
+          numEl.value = rangeEl.value;
+          if (badgeEl) badgeEl.textContent = rangeEl.value + (suffix ? ' ' + suffix : '');
+          if (onCalc) onCalc();
+        });
+        numEl.addEventListener('input', () => {
+          rangeEl.value = numEl.value;
+          if (badgeEl) badgeEl.textContent = numEl.value + (suffix ? ' ' + suffix : '');
+          if (onCalc) onCalc();
+        });
+      }
+    };
 
-    document.querySelectorAll('.cal-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.cal-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.calUnit = btn.dataset.unit;
-        const metric = document.getElementById('cal-metric-inputs');
-        const imperial = document.getElementById('cal-imperial-inputs');
-        if (metric && imperial) {
-          metric.style.display = this.calUnit === 'metric' ? 'flex' : 'none';
-          imperial.style.display = this.calUnit === 'imperial' ? 'flex' : 'none';
-        }
-        this.calcCalorie();
-      });
-    });
-
-    ['cal-age', 'cal-weight', 'cal-height', 'cal-weight-lbs', 'cal-height-ft', 'cal-height-in', 'cal-activity', 'cal-goal', 'cal-diet'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcCalorie());
-      document.getElementById(id)?.addEventListener('change', () => this.calcCalorie());
-    });
-
-    // 3. Body Fat Gender & Inputs
+    // 1. Body Fat (US Navy Method) Gender & Inputs
     document.querySelectorAll('.bf-gender-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.bf-gender-btn').forEach(b => b.classList.remove('active'));
@@ -1654,253 +598,37 @@ const FitnessCalcs = {
       document.getElementById(id)?.addEventListener('input', () => this.calcBodyFat());
     });
 
-    // 4. BMR Gender & Inputs
-    document.querySelectorAll('.bmr-gender-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.bmr-gender-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.bmrGender = btn.dataset.gender;
-        this.calcBMR();
-      });
-    });
-
-    ['bmr-age', 'bmr-weight', 'bmr-height', 'bmr-activity', 'bmr-bodyfat'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcBMR());
-      document.getElementById(id)?.addEventListener('change', () => this.calcBMR());
-    });
-
-    
-
-    // 6. Pace Calculator Controls
-    document.querySelectorAll('.pace-mode-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.pace-mode-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.paceMode = btn.dataset.mode;
-        
-        const timeWrap = document.getElementById('pace-time-group');
-        const distWrap = document.getElementById('pace-dist-group');
-        const paceWrap = document.getElementById('pace-pace-group');
-
-        if (timeWrap) timeWrap.style.display = this.paceMode === 'time' ? 'none' : 'block';
-        if (distWrap) distWrap.style.display = this.paceMode === 'distance' ? 'none' : 'block';
-        if (paceWrap) paceWrap.style.display = this.paceMode === 'pace' ? 'none' : 'block';
-
-        this.calcPace();
-      });
-    });
-
-    document.querySelectorAll('.pace-preset-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const d = parseFloat(btn.dataset.dist) || 5;
-        const u = btn.dataset.unit || 'km';
-        const distInput = document.getElementById('pace-dist');
-        const unitSelect = document.getElementById('pace-dist-unit');
-        if (distInput) distInput.value = d;
-        if (unitSelect) unitSelect.value = u;
-        this.paceDistUnit = u;
-        this.calcPace();
-      });
-    });
-
-    ['pace-dist', 'pace-dist-unit', 'pace-time-h', 'pace-time-m', 'pace-time-s', 'pace-p-min', 'pace-p-sec', 'pace-pace-unit'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => {
-        if (id === 'pace-dist-unit') this.paceDistUnit = document.getElementById(id)?.value;
-        if (id === 'pace-pace-unit') this.pacePaceUnit = document.getElementById(id)?.value;
-        this.calcPace();
-      });
-      document.getElementById(id)?.addEventListener('change', () => {
-        if (id === 'pace-dist-unit') this.paceDistUnit = document.getElementById(id)?.value;
-        if (id === 'pace-pace-unit') this.pacePaceUnit = document.getElementById(id)?.value;
-        this.calcPace();
-      });
-    });
-
-    // 7. Army Body Fat Controls
-    
-
-    // 10. Calories Burned Controls
-    document.querySelectorAll('.cb-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.cb-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.cbUnit = btn.dataset.unit;
-        const kgInp = document.getElementById('cb-weight-kg-wrap');
-        const lbsInp = document.getElementById('cb-weight-lbs-wrap');
-        if (kgInp && lbsInp) {
-          kgInp.style.display = this.cbUnit === 'metric' ? 'block' : 'none';
-          lbsInp.style.display = this.cbUnit === 'imperial' ? 'block' : 'none';
-        }
-        this.calcCaloriesBurned();
-      });
-    });
-
-    ['cb-activity', 'cb-duration', 'cb-weight', 'cb-weight-lbs'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcCaloriesBurned());
-      document.getElementById(id)?.addEventListener('change', () => this.calcCaloriesBurned());
-    });
-
-    // 11. One Rep Max Controls
-    document.querySelectorAll('.orm-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.orm-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.ormUnit = btn.dataset.unit;
-        const unitLabel = document.getElementById('orm-unit-label');
-        if (unitLabel) unitLabel.textContent = this.ormUnit;
-        this.calcOneRepMax();
-      });
-    });
-
-    document.querySelectorAll('.orm-reps-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const reps = parseInt(btn.dataset.reps) || 5;
-        const input = document.getElementById('orm-reps');
-        if (input) input.value = reps;
-        document.querySelectorAll('.orm-reps-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.calcOneRepMax();
-      });
-    });
-
-    ['orm-weight', 'orm-reps'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcOneRepMax());
-    });
-
-    // 12. Target Heart Rate Controls
-    ['thr-age', 'thr-rhr', 'thr-formula'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcTargetHeartRate());
-      document.getElementById(id)?.addEventListener('change', () => this.calcTargetHeartRate());
-    });
-
-    // 13. Water Inputs
-    ['water-weight', 'water-exercise', 'water-climate'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcWater());
-      document.getElementById(id)?.addEventListener('change', () => this.calcWater());
-    });
-
-    // 14. Pregnancy Calculator Controls & Defaults
-    const now = new Date();
-    const setDefDate = (id, daysOffset) => {
-      const el = document.getElementById(id);
-      if (el && !el.value) {
-        el.value = this.toInputDate(this.addDays(now, daysOffset));
-      }
-    };
-
-    setDefDate('preg-lmp-date', -70);
-    setDefDate('preg-due-date', 210);
-    setDefDate('preg-conception-date', -56);
-    setDefDate('preg-us-date', -14);
-
-    document.querySelectorAll('.preg-method-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.preg-method-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.pregMethod = btn.dataset.method;
-
-        ['lmp', 'duedate', 'conception', 'ultrasound'].forEach(m => {
-          const wrap = document.getElementById(`preg-wrap-${m}`);
-          if (wrap) wrap.style.display = m === this.pregMethod ? 'block' : 'none';
-        });
-        this.calcPregnancy();
-      });
-    });
-
-    ['preg-lmp-date', 'preg-cycle-len', 'preg-due-date', 'preg-conception-date', 'preg-us-date', 'preg-us-weeks', 'preg-us-days'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcPregnancy());
-      document.getElementById(id)?.addEventListener('change', () => this.calcPregnancy());
-    });
-
-    // 15. Pregnancy Weight Gain Controls
+    // 2. Pregnancy Weight Gain Controls
     document.querySelectorAll('.pw-unit-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.pw-unit-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         this.pwUnit = btn.dataset.unit;
-        const met = document.getElementById('pw-metric-inputs');
-        const imp = document.getElementById('pw-imperial-inputs');
+        const met = document.getElementById('pw-inputs-metric');
+        const imp = document.getElementById('pw-inputs-imperial');
         if (met && imp) {
-          met.style.display = this.pwUnit === 'metric' ? 'flex' : 'none';
-          imp.style.display = this.pwUnit === 'imperial' ? 'flex' : 'none';
+          met.style.display = this.pwUnit === 'metric' ? 'block' : 'none';
+          imp.style.display = this.pwUnit === 'imperial' ? 'block' : 'none';
         }
         this.calcPregnancyWeight();
       });
     });
 
-    document.querySelectorAll('.pw-type-btn').forEach(btn => {
+    document.querySelectorAll('.pw-preg-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.pw-type-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.pw-preg-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        this.pwType = btn.dataset.type;
+        this.pwPregnancyType = btn.dataset.type;
         this.calcPregnancyWeight();
       });
     });
 
-    ['pw-pre-weight', 'pw-pre-height', 'pw-cur-weight', 'pw-pre-weight-lbs', 'pw-pre-height-ft', 'pw-pre-height-in', 'pw-cur-weight-lbs', 'pw-week'].forEach(id => {
+    ['pw-pre-weight', 'pw-height', 'pw-cur-weight', 'pw-week', 'pw-pre-weight-lbs', 'pw-height-ft', 'pw-height-in', 'pw-cur-weight-lbs'].forEach(id => {
       document.getElementById(id)?.addEventListener('input', () => this.calcPregnancyWeight());
       document.getElementById(id)?.addEventListener('change', () => this.calcPregnancyWeight());
     });
 
-    // 16. Pregnancy Conception Retrospective Controls & Defaults
-    setDefDate('pconc-edd-date', 182);
-    setDefDate('pconc-lmp-date', -98);
-    setDefDate('pconc-us-date', -28);
-
-    document.querySelectorAll('.pconc-method-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.pconc-method-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.pconcMethod = btn.dataset.method;
-
-        ['edd', 'lmp', 'ultrasound'].forEach(m => {
-          const wrap = document.getElementById(`pconc-wrap-${m}`);
-          if (wrap) wrap.style.display = m === this.pconcMethod ? 'block' : 'none';
-        });
-        this.calcPregnancyConception();
-      });
-    });
-
-    ['pconc-edd-date', 'pconc-lmp-date', 'pconc-cycle-len', 'pconc-us-date', 'pconc-us-weeks', 'pconc-us-days'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcPregnancyConception());
-      document.getElementById(id)?.addEventListener('change', () => this.calcPregnancyConception());
-    });
-
-    // 17. Due Date Calculator Controls & Defaults
-    setDefDate('dd-lmp-date', -56);
-    setDefDate('dd-conception-date', -42);
-    setDefDate('dd-us-date', -21);
-    setDefDate('dd-ivf-date', -35);
-
-    document.querySelectorAll('.dd-method-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.dd-method-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.ddMethod = btn.dataset.method;
-
-        ['lmp', 'conception', 'ultrasound', 'ivf'].forEach(m => {
-          const wrap = document.getElementById(`dd-wrap-${m}`);
-          if (wrap) wrap.style.display = m === this.ddMethod ? 'block' : 'none';
-        });
-        this.calcDueDate();
-      });
-    });
-
-    document.querySelectorAll('.dd-ivf-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.dd-ivf-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.ddIvfType = btn.dataset.ivf;
-        this.calcDueDate();
-      });
-    });
-
-    ['dd-lmp-date', 'dd-cycle-len', 'dd-conception-date', 'dd-us-date', 'dd-us-weeks', 'dd-us-days', 'dd-ivf-date'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcDueDate());
-      document.getElementById(id)?.addEventListener('change', () => this.calcDueDate());
-    });
-
-    // 18. Ovulation Calculator Controls & Defaults
+    // 3. Ovulation Calculator Controls & Defaults
     setDefDate('ov-lmp-date', -10);
 
     ['ov-lmp-date', 'ov-cycle-len', 'ov-luteal-len'].forEach(id => {
@@ -1908,36 +636,7 @@ const FitnessCalcs = {
       document.getElementById(id)?.addEventListener('change', () => this.calcOvulation());
     });
 
-    // 19. Conception Planner Controls & Defaults
-    setDefDate('conc-lmp-date', -8);
-    setDefDate('conc-target-date', 270);
-
-    document.querySelectorAll('.conc-mode-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.conc-mode-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.concMode = btn.dataset.mode;
-
-        const wrapFertile = document.getElementById('conc-wrap-fertile');
-        const wrapTarget = document.getElementById('conc-wrap-target');
-        const resFertile = document.getElementById('conc-res-fertile');
-        const resTarget = document.getElementById('conc-res-target');
-
-        if (wrapFertile) wrapFertile.style.display = this.concMode === 'fertile' ? 'block' : 'none';
-        if (wrapTarget) wrapTarget.style.display = this.concMode === 'target' ? 'block' : 'none';
-        if (resFertile) resFertile.style.display = this.concMode === 'fertile' ? 'block' : 'none';
-        if (resTarget) resTarget.style.display = this.concMode === 'target' ? 'block' : 'none';
-
-        this.calcConception();
-      });
-    });
-
-    ['conc-lmp-date', 'conc-cycle-len', 'conc-target-date', 'conc-target-cycle-len'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcConception());
-      document.getElementById(id)?.addEventListener('change', () => this.calcConception());
-    });
-
-    // 20. Period Calculator Controls & Defaults
+    // 4. Period Calculator Controls & Defaults
     setDefDate('period-lmp-date', -14);
 
     ['period-lmp-date', 'period-cycle-len', 'period-bleed-len'].forEach(id => {
@@ -1945,91 +644,7 @@ const FitnessCalcs = {
       document.getElementById(id)?.addEventListener('change', () => this.calcPeriod());
     });
 
-
-    // Helper to sync range slider with number input
-    const syncSlider = (rangeId, numId, badgeId, suffix, onCalc) => {
-      const rangeEl = document.getElementById(rangeId);
-      const numEl = document.getElementById(numId);
-      const badgeEl = document.getElementById(badgeId);
-      if (rangeEl && numEl) {
-        rangeEl.addEventListener('input', () => {
-          numEl.value = rangeEl.value;
-          if (badgeEl) badgeEl.textContent = `${rangeEl.value} ${suffix}`;
-          onCalc();
-        });
-        numEl.addEventListener('input', () => {
-          rangeEl.value = numEl.value;
-          if (badgeEl) badgeEl.textContent = `${numEl.value} ${suffix}`;
-          onCalc();
-        });
-        numEl.addEventListener('change', () => {
-          rangeEl.value = numEl.value;
-          if (badgeEl) badgeEl.textContent = `${numEl.value} ${suffix}`;
-          onCalc();
-        });
-      }
-    };
-
-    // 21. Macro Calculator Event Listeners
-    document.querySelectorAll('.macro-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.macro-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.macroUnit = btn.dataset.unit;
-        const met = document.getElementById('macro-inputs-metric');
-        const imp = document.getElementById('macro-inputs-imperial');
-        if (met && imp) {
-          met.style.display = this.macroUnit === 'metric' ? 'block' : 'none';
-          imp.style.display = this.macroUnit === 'imperial' ? 'block' : 'none';
-        }
-        this.calcMacro();
-      });
-    });
-
-    document.querySelectorAll('.macro-gender-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.macro-gender-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.macroGender = btn.dataset.gender;
-        this.calcMacro();
-      });
-    });
-
-    syncSlider('macro-age-range', 'macro-age', 'macro-age-val', 'yrs', () => this.calcMacro());
-    syncSlider('macro-weight-range', 'macro-weight', 'macro-weight-val', 'kg', () => this.calcMacro());
-    syncSlider('macro-height-range', 'macro-height', 'macro-height-val', 'cm', () => this.calcMacro());
-    syncSlider('macro-weight-lbs-range', 'macro-weight-lbs', 'macro-weight-lbs-val', 'lbs', () => this.calcMacro());
-
-    ['macro-height-ft', 'macro-height-in', 'macro-activity', 'macro-goal', 'macro-ratio', 'macro-meals'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcMacro());
-      document.getElementById(id)?.addEventListener('change', () => this.calcMacro());
-    });
-
-    // 22. Carbohydrate Calculator Event Listeners
-    document.querySelectorAll('.carb-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.carb-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.carbUnit = btn.dataset.unit;
-        const met = document.getElementById('carb-inputs-metric');
-        const imp = document.getElementById('carb-inputs-imperial');
-        if (met && imp) {
-          met.style.display = this.carbUnit === 'metric' ? 'block' : 'none';
-          imp.style.display = this.carbUnit === 'imperial' ? 'block' : 'none';
-        }
-        this.calcCarb();
-      });
-    });
-
-    syncSlider('carb-weight-range', 'carb-weight', 'carb-weight-val', 'kg', () => this.calcCarb());
-    syncSlider('carb-weight-lbs-range', 'carb-weight-lbs', 'carb-weight-lbs-val', 'lbs', () => this.calcCarb());
-    syncSlider('carb-calories-range', 'carb-calories', 'carb-calories-val', 'kcal', () => this.calcCarb());
-
-    ['carb-intensity'].forEach(id => {
-      document.getElementById(id)?.addEventListener('change', () => this.calcCarb());
-    });
-
-    // 23. Protein Calculator Event Listeners
+    // 5. Protein Calculator Event Listeners
     document.querySelectorAll('.prot-unit-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.prot-unit-btn').forEach(b => b.classList.remove('active'));
@@ -2048,103 +663,11 @@ const FitnessCalcs = {
     syncSlider('prot-weight-range', 'prot-weight', 'prot-weight-val', 'kg', () => this.calcProtein());
     syncSlider('prot-weight-lbs-range', 'prot-weight-lbs', 'prot-weight-lbs-val', 'lbs', () => this.calcProtein());
 
-    ['prot-goal', 'prot-meals'].forEach(id => {
+    ['prot-activity', 'prot-goal'].forEach(id => {
       document.getElementById(id)?.addEventListener('change', () => this.calcProtein());
     });
 
-    // 24. Fat Intake Calculator Event Listeners
-    syncSlider('fat-calories-range', 'fat-calories', 'fat-calories-val', 'kcal', () => this.calcFat());
-    ['fat-diet'].forEach(id => {
-      document.getElementById(id)?.addEventListener('change', () => this.calcFat());
-    });
-
-    // 25. TDEE Calculator Event Listeners
-    document.querySelectorAll('.tdee-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tdee-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.tdeeUnit = btn.dataset.unit;
-        const met = document.getElementById('tdee-inputs-metric');
-        const imp = document.getElementById('tdee-inputs-imperial');
-        if (met && imp) {
-          met.style.display = this.tdeeUnit === 'metric' ? 'block' : 'none';
-          imp.style.display = this.tdeeUnit === 'imperial' ? 'block' : 'none';
-        }
-        this.calcTDEE();
-      });
-    });
-
-    document.querySelectorAll('.tdee-gender-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tdee-gender-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.tdeeGender = btn.dataset.gender;
-        this.calcTDEE();
-      });
-    });
-
-    syncSlider('tdee-age-range', 'tdee-age', 'tdee-age-val', 'yrs', () => this.calcTDEE());
-    syncSlider('tdee-weight-range', 'tdee-weight', 'tdee-weight-val', 'kg', () => this.calcTDEE());
-    syncSlider('tdee-height-range', 'tdee-height', 'tdee-height-val', 'cm', () => this.calcTDEE());
-    syncSlider('tdee-weight-lbs-range', 'tdee-weight-lbs', 'tdee-weight-lbs-val', 'lbs', () => this.calcTDEE());
-
-    document.getElementById('tdee-formula')?.addEventListener('change', (e) => {
-      const bfGroup = document.getElementById('tdee-bodyfat-group');
-      if (bfGroup) {
-        bfGroup.style.display = e.target.value === 'katch' ? 'block' : 'none';
-      }
-      this.calcTDEE();
-    });
-
-    ['tdee-height-ft', 'tdee-height-in', 'tdee-activity', 'tdee-bodyfat'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcTDEE());
-      document.getElementById(id)?.addEventListener('change', () => this.calcTDEE());
-    });
-
-    // 26. GFR Calculator Event Listeners
-    document.querySelectorAll('.gfr-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.gfr-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.gfrUnit = btn.dataset.unit;
-        const lbl = document.getElementById('gfr-unit-label');
-        const badge = document.getElementById('gfr-creatinine-val');
-        const crInput = document.getElementById('gfr-creatinine');
-        const crRange = document.getElementById('gfr-creatinine-range');
-        if (this.gfrUnit === 'umol_l') {
-          if (lbl) lbl.textContent = 'µmol/L';
-          if (crRange) { crRange.min = 25; crRange.max = 700; crRange.step = 5; crRange.value = 88; }
-          if (crInput) { crInput.min = 20; crInput.max = 1200; crInput.step = 1; crInput.value = 88; }
-          if (badge) badge.textContent = '88 µmol/L';
-        } else {
-          if (lbl) lbl.textContent = 'mg/dL';
-          if (crRange) { crRange.min = 0.3; crRange.max = 8.0; crRange.step = 0.05; crRange.value = 1.0; }
-          if (crInput) { crInput.min = 0.2; crInput.max = 15.0; crInput.step = 0.05; crInput.value = 1.0; }
-          if (badge) badge.textContent = '1.0 mg/dL';
-        }
-        this.calcGFR();
-      });
-    });
-
-    document.querySelectorAll('.gfr-gender-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.gfr-gender-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.gfrGender = btn.dataset.gender;
-        this.calcGFR();
-      });
-    });
-
-    syncSlider('gfr-creatinine-range', 'gfr-creatinine', 'gfr-creatinine-val', this.gfrUnit === 'umol_l' ? 'µmol/L' : 'mg/dL', () => this.calcGFR());
-    syncSlider('gfr-age-range', 'gfr-age', 'gfr-age-val', 'yrs', () => this.calcGFR());
-    ['gfr-formula'].forEach(id => {
-      document.getElementById(id)?.addEventListener('change', () => this.calcGFR());
-    });
-
-    // 27. Body Type Calculator Event Listeners
-    
-
-    // 28. Body Surface Area (BSA) Event Listeners
+    // 6. Body Surface Area (BSA) Event Listeners
     document.querySelectorAll('.bsa-unit-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.bsa-unit-btn').forEach(b => b.classList.remove('active'));
@@ -2169,40 +692,6 @@ const FitnessCalcs = {
       document.getElementById(id)?.addEventListener('change', () => this.calcBSA());
     });
 
-    // 29. BAC Calculator Event Listeners
-    document.querySelectorAll('.bac-unit-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.bac-unit-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.bacUnit = btn.dataset.unit;
-        const met = document.getElementById('bac-inputs-metric');
-        const imp = document.getElementById('bac-inputs-imperial');
-        if (met && imp) {
-          met.style.display = this.bacUnit === 'metric' ? 'block' : 'none';
-          imp.style.display = this.bacUnit === 'imperial' ? 'block' : 'none';
-        }
-        this.calcBAC();
-      });
-    });
-
-    document.querySelectorAll('.bac-gender-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.bac-gender-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.bacGender = btn.dataset.gender;
-        this.calcBAC();
-      });
-    });
-
-    syncSlider('bac-weight-range', 'bac-weight', 'bac-weight-val', 'kg', () => this.calcBAC());
-    syncSlider('bac-weight-lbs-range', 'bac-weight-lbs', 'bac-weight-lbs-val', 'lbs', () => this.calcBAC());
-    syncSlider('bac-hours-range', 'bac-hours', 'bac-hours-val', 'hrs', () => this.calcBAC());
-
-    ['bac-beers', 'bac-wines', 'bac-shots', 'bac-stomach'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcBAC());
-      document.getElementById(id)?.addEventListener('change', () => this.calcBAC());
-    });
-
     // Switcher pills inside detail view
     document.querySelectorAll('#fit-detail-view .switcher-pill').forEach(pill => {
       pill.addEventListener('click', () => {
@@ -2211,34 +700,13 @@ const FitnessCalcs = {
       });
     });
 
-    // Initial calculations across all tools
-    this.calcCalorie();
+    // Initial calculations across preserved tools
     this.calcBodyFat();
-    this.calcBMR();
-    this.calcPace();
-    this.calcCaloriesBurned();
-    this.calcOneRepMax();
-    this.calcTargetHeartRate();
-    this.calcWater();
-
-    // Initial Maternal & Cycle calculations
-    this.calcPregnancy();
     this.calcPregnancyWeight();
-    this.calcPregnancyConception();
-    this.calcDueDate();
     this.calcOvulation();
-    this.calcConception();
     this.calcPeriod();
-
-    // Initial 9 Health, Nutrition & Clinical calculations
-    this.calcMacro();
-    this.calcCarb();
     this.calcProtein();
-    this.calcFat();
-    this.calcTDEE();
-    this.calcGFR();
     this.calcBSA();
-    this.calcBAC();
   },
 
   // ------------------------------------------------------------------------
