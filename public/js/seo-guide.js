@@ -45,66 +45,6 @@
       ]
     },
 
-    'sec-auto-loan-calc': {
-      title: 'Auto Loan & Car Financing Calculator',
-      category: 'Automotive & Vehicle Finance',
-      badge: 'Auto Lending Standard',
-      tagline: 'Comprehensive vehicle financing calculations including down payment, dealer trade-in equity, negative equity rollovers, state sales taxes, and bi-weekly payoff.',
-      overview: 'Purchasing a vehicle is one of the largest consumer financial transactions. The <strong>Auto Loan Calculator</strong> provides clear, dealer-independent clarity into true monthly car payments across 24 to 84-month terms. It accounts for down payments, existing vehicle trade-in values, negative equity rollovers from upside-down trades, local vehicle sales tax rates, and title/dealer fees so you can negotiate at the dealership with confidence.',
-      steps: [
-        { title: 'Enter Vehicle Purchase Price', desc: 'Input the agreed negotiated vehicle price before taxes and dealer add-ons.' },
-        { title: 'Account for Down Payment & Trade-In', desc: 'Deduct upfront cash savings and net equity from your existing trade-in vehicle to reduce the financed sum.' },
-        { title: 'Factor in State Sales Tax & Fees', desc: 'Add local municipal sales tax percentages and registration fees to avoid unexpected dealership financing surprises.' },
-        { title: 'Select Loan Term & Financing APR', desc: 'Compare 36, 48, 60, and 72-month terms to balance affordable monthly payments against long-term interest costs.' }
-      ],
-      formulaName: 'Net Vehicle Amount Financed & Monthly Installment',
-      formulaExpr: 'P_{financed} = (Price - DownPayment - NetTradeIn) \\times (1 + \\text{TaxRate}) + \\text{Fees}',
-      formulaExplanation: 'The monthly payment is then determined using standard amortization where monthly interest is compounded on the net financed amount over the term.',
-      example: '<strong>Vehicle Example:</strong> Buying a $35,000 vehicle with $5,000 down, $2,000 trade-in equity, and 7% sales tax at 5.5% APR for 60 months yields a monthly payment of <strong>$572.18</strong>, with total interest of $4,351 over the 5-year life of the car loan.',
-      faqs: [
-        {
-          q: 'What is the recommended car loan term length?',
-          a: 'Financial advisors widely recommend financing vehicles for 60 months (5 years) or fewer. Longer terms like 72 or 84 months lower monthly payments but increase the risk of becoming upside-down (owing more than the car is worth as it depreciates).'
-        },
-        {
-          q: 'What does negative equity on a trade-in mean?',
-          a: 'If you owe $18,000 on your current vehicle and the dealership values its trade-in at $15,000, you have $3,000 in negative equity. If rolled into your new auto loan, you finance the new vehicle plus the $3,000 shortfall.'
-        },
-        {
-          q: 'Is this calculation completely secure and private?',
-          a: 'Yes! All auto financing calculations execute 100% locally in your browser with zero remote server logging.'
-        }
-      ]
-    },
-
-    'sec-401k-calc': {
-      title: '401(k) Retirement Savings Planner',
-      category: 'Retirement & Wealth Building',
-      badge: 'IRS Annual Contribution Guidelines',
-      tagline: 'Compound interest wealth projection, annual employer match optimization, salary growth modeling, and inflation-adjusted retirement nest egg.',
-      overview: 'A 401(k) retirement plan is one of the most effective tax-advantaged wealth accumulation tools available. The <strong>401(k) Retirement Calculator</strong> models your long-term retirement savings growth by compounding employee salary deferrals, corporate employer matching contributions, and investment returns across multi-decade accumulation horizons.',
-      steps: [
-        { title: 'Enter Current Age & Retirement Goal Age', desc: 'Establish your investment horizon (e.g., current age 30, target retirement age 67).' },
-        { title: 'Input Salary & Contribution Rate', desc: 'Provide your annual income and the percentage you contribute each paycheck.' },
-        { title: 'Include Employer Matching Contribution', desc: 'Take full advantage of corporate matches (e.g. 50% match up to 6% of salary) to maximize free wealth accumulation.' },
-        { title: 'Simulate Compound Returns', desc: 'Forecast future portfolio balance based on historical equity returns (e.g., 7% to 9% annual growth).' }
-      ],
-      formulaName: 'Compound Annuity with Annual Contribution Scaling',
-      formulaExpr: 'FV = P_0(1+r)^t + \\sum_{k=1}^{t} C_k(1+g)^k (1+r)^{t-k}',
-      formulaExplanation: 'Where P_0 is initial balance, C_k is annual contribution increasing at salary growth rate g, and r is the expected annual portfolio return rate.',
-      example: '<strong>401(k) Projection:</strong> Starting at age 30 with $20,000 balance, earning $85,000/yr, contributing 8% with a 4% employer match at 7.5% annual return yields a projected retirement nest egg of over <strong>$1.84 Million</strong> by age 67.',
-      faqs: [
-        {
-          q: 'What is the employer 401(k) match?',
-          a: 'An employer match is supplemental money contributed by your employer based on your contributions. It represents an immediate 50% to 100% guaranteed return on your contributed funds.'
-        },
-        {
-          q: 'How does compounding accelerate retirement savings?',
-          a: 'Compound interest generates earnings on past earnings. Over 30 years, compound investment growth accounts for the vast majority of your total retirement balance, far exceeding your direct salary contributions.'
-        }
-      ]
-    },
-
     'sec-bf-calc': {
       title: 'Body Fat % (US Navy Method)',
       category: 'Body Composition & Anthropometry',
