@@ -10,37 +10,38 @@
   // Curated knowledge base for popular calculators
   const SEO_DATABASE = {
     'sec-loan-calc': {
-      title: 'Loan & EMI Payment Calculator (Personal, Auto & Gold Loans)',
+      id: 'sec-loan-calc',
+      title: 'Bike EMI Calculator – Two-Wheeler, Car & Loan EMI Calculator',
       category: 'Financial Planning & Banking',
       badge: 'Banking Standard Amortization',
-      tagline: 'Precision monthly loan installments, total interest liability, and gold loan calculated repayment schedules.',
-      overview: 'The <strong>Loan & EMI Calculator</strong> is an advanced financial computation tool designed to evaluate personal loans, commercial bank debt, retail financing, auto loans, and our dedicated <strong>gold loan calculator</strong> module. It accurately models reducing-balance interest compounding to reveal your exact monthly obligations, total debt liability over the entire tenure, and how each installment breaks down between debt reduction and banking interest charges. Whether calculating vehicle financing or getting your <strong>gold loan calculated</strong> against physical gold collateral, this tool helps borrowers compare lending offers, avoid hidden charges, and choose repayment horizons that fit their budget.',
+      tagline: 'Calculate two-wheeler, car, and personal loan installments with real-time amortization modeling.',
+      overview: 'Calculate your monthly two-wheeler installments instantly with our free Bike EMI Calculator. You can also use this universal EMI Calculator to check interest, principal breakdown, and repayment schedules for car and personal loans.',
       steps: [
-        { title: 'Specify Principal Borrowing Amount', desc: 'Enter your target loan sum (e.g. $250,000) using the numeric field or drag the interactive slider to test various loan amounts.' },
-        { title: 'Configure Annual Interest Rate (APR)', desc: 'Enter the annual percentage rate charged by your lender (e.g. 6.5%). Even a 0.5% rate reduction can save thousands in cumulative interest.' },
-        { title: 'Set Repayment Tenure (Years or Months)', desc: 'Adjust your loan term (e.g. 15 or 30 years). Shorter terms increase monthly payments but drastically decrease overall interest liability.' },
-        { title: 'Analyze Results & Copy Direct Figures', desc: 'Inspect your monthly EMI, total interest, and proportional breakdown bar. Click any figure to copy it instantly to your clipboard.' }
+        { title: 'Select Bike, Car or General EMI Preset', desc: 'Choose Bike Loan (₹1,00,000 / 11.5% / 3 Yrs), Car Loan, or General EMI to auto-populate borrowing presets.' },
+        { title: 'Specify Principal Borrowing Amount', desc: 'Enter your vehicle on-road price minus down payment using the numeric input or interactive slider.' },
+        { title: 'Configure Annual Interest Rate (APR)', desc: 'Enter the annual percentage rate (e.g. 11.5%) charged by your financing bank or NBFC.' },
+        { title: 'Set Repayment Tenure (Years or Months)', desc: 'Adjust your loan term (e.g. 3 years for bikes, 5 years for cars) to see immediate monthly payments.' }
       ],
       formulaName: 'Reducing Balance Loan Amortization Formula (Standard EMI)',
-      formulaExpr: 'EMI = P × \\frac{r(1 + r)^n}{(1 + r)^n - 1}',
-      formulaExplanation: 'Where <strong>P</strong> is the principal loan amount, <strong>r</strong> is the periodic monthly interest rate (annual rate divided by 12 and by 100), and <strong>n</strong> is the total number of monthly repayment periods (tenure in years × 12).',
-      example: '<strong>Worked Example:</strong> Borrowing $250,000 at an annual interest rate of 6.5% for 15 years (180 months) yields a fixed monthly payment of <strong>$2,177.77</strong>. Across the entire term, you will repay $250,000 in principal and <strong>$141,998</strong> in cumulative interest, resulting in a total payment of $391,998.',
+      formulaExpr: 'EMI = P 	imes rac{r(1 + r)^n}{(1 + r)^n - 1}',
+      formulaExplanation: 'Where P is the principal loan amount (₹1,00,000), r is the periodic monthly interest rate (annual rate divided by 12 and 100), and n is the total number of monthly repayment periods (tenure in years &times; 12).',
+      example: '<strong>Worked Example:</strong> Borrowing <strong>₹1,00,000</strong> for a two-wheeler bike loan at an annual interest rate of <strong>11.5%</strong> for <strong>3 years (36 months)</strong> yields a fixed monthly payment of <strong>₹3,298.05</strong>. Across the entire term, you will repay ₹1,00,000 in principal and <strong>₹18,729.85</strong> in cumulative interest, resulting in a total payment of ₹1,18,729.85.',
       faqs: [
         {
-          q: 'What is an Equated Monthly Installment (EMI)?',
-          a: 'An EMI is a fixed monthly payment made by a borrower to a lender on a specified calendar date each month. Each payment is split between the repayment of the principal loan balance and accrued interest on the outstanding sum.'
+          q: 'How is bike EMI calculated?',
+          a: 'Bike EMI is calculated using the reducing-balance formula: EMI = P × r × (1 + r)^n / ((1 + r)^n - 1), where P is the principal loan amount, r is the monthly interest rate (annual rate divided by 12 and 100), and n is the tenure in months. In this structure, every payment covers accrued interest on the remaining balance with the rest paying down principal.'
         },
         {
-          q: 'How does loan tenure affect total borrowing cost?',
-          a: 'Lengthening your loan tenure lowers your required monthly installment, making immediate cash flow more manageable. However, extending the repayment period keeps your principal balance outstanding longer, substantially increasing the total interest paid over time.'
+          q: 'Can I use this tool as a car loan EMI calculator?',
+          a: 'Yes, absolutely. By clicking the Car Loan preset or adjusting the sliders to your vehicle\'s loan amount (e.g. ₹8,00,000) and tenure (e.g. 5 years), this universal EMI engine computes the exact monthly installment, interest liability, and amortization schedule for auto loans.'
         },
         {
-          q: 'Can extra payments reduce my loan tenure and interest?',
-          a: 'Yes! Making extra principal payments or switching to bi-weekly schedules directly reduces the remaining loan balance faster. Because interest is calculated on the remaining balance, every extra dollar paid reduces future interest charges and accelerates your debt-freedom date.'
+          q: 'Does a longer loan tenure reduce my monthly EMI?',
+          a: 'Yes. Choosing a longer tenure spreads the principal repayment across more months, resulting in a lower monthly EMI. However, interest accrues over a longer period, which increases the total cumulative interest paid over the life of the loan.'
         },
         {
-          q: 'Is my financial data stored or transmitted over the internet?',
-          a: '<strong>Never.</strong> This calculator runs 100% client-side in your web browser. No loan amounts, salary records, or personal data ever leave your device or get logged on remote servers.'
+          q: 'What is the typical interest rate for a two-wheeler loan in India?',
+          a: 'Two-wheeler and bike loan interest rates in India typically range from 9.5% to 18% per annum, depending on the lender, loan amount, your credit score (CIBIL), and whether the vehicle is new or pre-owned.'
         }
       ]
     },
@@ -294,6 +295,9 @@
   };
 
   function ensureEightFaqs(faqs, title, category) {
+    if (title && (title.includes('Bike EMI') || title.includes('Loan & EMI') || title.includes('Two-Wheeler'))) {
+      return (faqs || []).slice(0, 4);
+    }
     const existingQuestions = new Set((faqs || []).map(f => (f.q || '').toLowerCase().trim()));
     const isFin = category === 'financial' || category === 'finance';
     const isFit = category === 'fitness' || category === 'health';
@@ -482,6 +486,7 @@
    */
   function updateFaqSchema(data) {
     try {
+      // 1. FAQPage Schema
       let scriptEl = document.getElementById('calc-faq-schema-ld');
       if (!scriptEl) {
         scriptEl = document.createElement('script');
@@ -502,6 +507,32 @@
         }))
       };
       scriptEl.textContent = JSON.stringify(schemaData);
+
+      // 2. SoftwareApplication Schema
+      let appScriptEl = document.getElementById('calc-software-schema-ld');
+      if (!appScriptEl) {
+        appScriptEl = document.createElement('script');
+        appScriptEl.id = 'calc-software-schema-ld';
+        appScriptEl.type = 'application/ld+json';
+        document.head.appendChild(appScriptEl);
+      }
+      const isBike = (data.id === 'sec-loan-calc' || (data.title && (data.title.includes('Bike EMI') || data.title.includes('Loan'))));
+      const appSchema = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": isBike ? "Bike EMI Calculator" : (data.title || "CALC• Modern Calculator"),
+        "operatingSystem": "Any",
+        "applicationCategory": "FinanceApplication",
+        "description": isBike
+          ? "Calculate your monthly installments instantly with our free Bike EMI Calculator. Check exact interest and repayment schedules for two-wheeler, car, and personal loans."
+          : (data.overview ? data.overview.replace(/<[^>]+>/g, '').trim() : "Precision online calculator"),
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "INR"
+        }
+      };
+      appScriptEl.textContent = JSON.stringify(appSchema);
     } catch (err) {
       console.warn('FAQ Schema update notice:', err);
     }
@@ -511,6 +542,142 @@
    * Builds the complete HTML string for the SEO & Informational Guide
    */
   function buildGuideHtml(data) {
+    if (data.id === 'sec-loan-calc') {
+      const loanFaqsHtml = (data.faqs || []).map((faq, idx) => `
+        <details class="seo-faq-item"${idx === 0 ? ' open' : ''}>
+          <summary class="seo-faq-question">
+            <h3 style="font-size:1rem; font-weight:600; margin:0; display:inline; color:inherit;">${faq.q}</h3>
+            <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="seo-faq-answer">
+            <p>${faq.a}</p>
+          </div>
+        </details>
+      `).join('');
+
+      return `
+        <section class="calc-seo-guide-wrap" aria-labelledby="seo-guide-heading">
+          <!-- Client-Side Security & Privacy Guarantee Banner -->
+          <div class="seo-privacy-banner">
+            <div class="seo-privacy-icon-box">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <polyline points="9 12 11 14 15 10"></polyline>
+              </svg>
+            </div>
+            <div class="seo-privacy-content">
+              <div class="seo-privacy-title">
+                <span>100% Client-Side &amp; Private Calculation</span>
+                <span class="seo-verified-badge">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Banking Standard Amortization Verified
+                </span>
+              </div>
+              <p class="seo-privacy-text">
+                All computations run directly within your web browser using pure client-side JavaScript. <strong>Zero financial figures, loan balances, salary numbers, or personal inputs are ever sent over the network or saved on remote servers.</strong> Completely safe, instant, private, and 100% free to use.
+              </p>
+            </div>
+          </div>
+
+          <!-- SEO Header Row -->
+          <div class="seo-header-row">
+            <div class="seo-header-text">
+              <span class="seo-category-pill">Financial Planning &amp; Banking</span>
+              <div class="seo-main-heading" id="seo-guide-heading" style="font-size:1.4rem; font-weight:700; margin:0.35rem 0 0.15rem; color:var(--text-primary);">Two-Wheeler, Car &amp; Loan EMI Repayment Guide</div>
+              <p class="seo-tagline">Calculate two-wheeler, car, and personal loan installments with real-time amortization modeling.</p>
+            </div>
+          </div>
+
+          <!-- 2-Column Grid: How to Use vs Car Loan Guide -->
+          <div class="seo-guide-grid">
+            <!-- Column 1: How to Use the Bike EMI Calculator -->
+            <article class="seo-card">
+              <div class="seo-card-header">
+                <div class="seo-card-icon-wrap">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </div>
+                <h2 class="seo-card-title" style="font-size:1.15rem; margin:0;">How to Use the Bike EMI Calculator</h2>
+              </div>
+              <div class="seo-card-body">
+                <p class="seo-paragraph">
+                  1. <strong>Select a Loan Preset:</strong> Click the quick-preset pills (Bike Loan ₹1,00,000 / 11.5%, Car Loan ₹8,00,000 / 9%, or General EMI) to auto-fill common market benchmarks instantly.<br>
+                  2. <strong>Adjust Principal &amp; Rate Sliders:</strong> Drag the Loan Amount slider or enter your exact on-road borrowing needs, then set the annual interest rate quoted by your lender.<br>
+                  3. <strong>Choose Loan Tenure:</strong> Select the repayment period in years or months to evaluate your monthly cash flow against cumulative interest charges.<br>
+                  4. <strong>Review Amortization Schedule:</strong> Instantly inspect the real-time EMI breakdown, cumulative interest payout, and annual repayment table.
+                </p>
+              </div>
+            </article>
+
+            <!-- Column 2: Car Loan EMI Calculator & Down Payment Guide -->
+            <article class="seo-card">
+              <div class="seo-card-header">
+                <div class="seo-card-icon-wrap">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="3" width="15" height="13"></rect>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                  </svg>
+                </div>
+                <h2 class="seo-card-title" style="font-size:1.15rem; margin:0;">Car Loan EMI Calculator &amp; Down Payment Guide</h2>
+              </div>
+              <div class="seo-card-body">
+                <p class="seo-paragraph">
+                  Financing a passenger vehicle involves balancing loan amounts, interest rates, and loan tenures. Auto loans typically range between 5 and 7 years (60 to 84 months) to keep monthly EMIs manageable. However, extending the tenure substantially increases the cumulative interest paid to the lender. Making a substantial upfront down payment of 15% to 25% of the vehicle&#39;s on-road price significantly reduces the net principal borrowed. A lower principal decreases both your monthly installment and overall interest liability. Using our Car Loan preset allows you to test different down payment amounts, optimize your borrowing tenure, and secure comfortable, budget-friendly monthly car payments.
+                </p>
+              </div>
+            </article>
+          </div>
+
+          <!-- Formula & Mathematical Foundation -->
+          <article class="seo-card seo-formula-card">
+            <div class="seo-card-header">
+              <div class="seo-card-icon-wrap">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                  <line x1="8" y1="9" x2="16" y2="9"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                  <line x1="12" y1="12" x2="12" y2="12"></line>
+                </svg>
+              </div>
+              <h2 class="seo-card-title" style="font-size:1.15rem; margin:0;">Loan EMI Calculator Formula &amp; Example</h2>
+            </div>
+            <div class="seo-card-body">
+              <div class="seo-formula-banner">
+                <span class="seo-formula-label">Reducing Balance Equated Monthly Installment Formula</span>
+                <code class="seo-formula-code">EMI = P &times; r &times; (1 + r)^n / ((1 + r)^n - 1)</code>
+              </div>
+              <p class="seo-formula-desc">
+                Where <strong>P</strong> is the principal loan amount, <strong>r</strong> is the periodic monthly interest rate (Annual Rate / 12 / 100), and <strong>n</strong> is the total tenure in months.<br><br>
+                <strong>Worked Example:</strong> For a ₹1,00,000 two-wheeler loan at 11.5% annual interest for 3 years (36 months):<br>
+                &bull; Monthly Rate (r) = 11.5 / 1200 &asymp; 0.0095833<br>
+                &bull; Calculated Monthly EMI = <strong>₹3,298.05</strong><br>
+                &bull; Total Repayment Over 3 Years = ₹3,298.05 &times; 36 = <strong>₹1,18,729.85</strong><br>
+                &bull; Total Interest Charge = ₹1,18,729.85 - ₹1,00,000 = <strong>₹18,729.85</strong> (84.2% Principal, 15.8% Interest)
+              </p>
+            </div>
+          </article>
+
+          <!-- Frequently Asked Questions -->
+          <article class="seo-card seo-faq-card">
+            <div class="seo-card-header">
+              <div class="seo-card-icon-wrap">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+              <h2 class="seo-card-title" style="font-size:1.15rem; margin:0;">Frequently Asked Questions</h2>
+            </div>
+            <div class="seo-faqs-container">
+              ${loanFaqsHtml}
+            </div>
+          </article>
+        </section>
+      `;
+    }
+
     // STRICT GUARANTEE: Ensure exactly 8 FAQs are present
     data.faqs = ensureEightFaqs(data.faqs || [], data.title, data.category);
 

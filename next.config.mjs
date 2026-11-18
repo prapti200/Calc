@@ -4,6 +4,15 @@ const nextConfig = {
   reactStrictMode: false,
   poweredByHeader: false,
   trailingSlash: false,
+  async redirects() {
+    return [
+      {
+        source: '/financial/loan-calculator',
+        destination: '/financial/bike-emi-calculator',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

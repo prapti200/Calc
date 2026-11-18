@@ -10,7 +10,7 @@
   // Master definition of all 104+ calculators with canonical slugs, aliases, and titles
   const CALC_REGISTRY = [
     // --- FINANCIAL CALCULATORS (73 Tools) ---
-    { id: 'sec-loan-calc', cat: 'financial', slug: 'loan-calculator', aliases: ['loan', 'emi', 'loan-calc', 'emi-calculator', 'gold-loan', 'gold-loan-calculator', 'gold-loan-calc'], title: 'Loan & EMI Calculator' },
+    { id: 'sec-loan-calc', cat: 'financial', slug: 'bike-emi-calculator', aliases: ['bike-loan', 'bike-loan-calculator', 'bike-emi', 'two-wheeler-loan', 'loan-calculator', 'loan', 'emi', 'loan-calc', 'emi-calculator', 'gold-loan', 'gold-loan-calculator', 'gold-loan-calc'], title: 'Bike EMI Calculator – Two-Wheeler, Car & Loan EMI Calculator' },
     { id: 'sec-inflation-calc', cat: 'financial', slug: 'inflation-calculator', aliases: ['inflation', 'cpi', 'purchasing-power'], title: 'Inflation Calculator' },
     { id: 'sec-heloc-calc', cat: 'financial', slug: 'heloc-calculator', aliases: ['heloc', 'home-equity-line-of-credit'], title: 'HELOC Calculator' },
     { id: 'sec-salary-calc', cat: 'financial', slug: 'salary-calculator', aliases: ['salary', 'wage-conversion', 'hourly-to-salary', 'wage-calculator'], title: 'Salary & Wage Calculator' },

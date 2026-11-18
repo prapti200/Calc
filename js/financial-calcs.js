@@ -3,11 +3,11 @@
    ========================================================================== */
 
 const FinancialCalcs = {
-  currency: '$',
+  currency: '₹',
 
   formatCurrency(val, currency = this.currency) {
     if (isNaN(val) || !isFinite(val)) return `${currency}0.00`;
-    return `${currency}${val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `${currency}${val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   },
 
   setCurrency(curr) {
@@ -1352,7 +1352,38 @@ const FinancialCalcs = {
       });
     });
 
-    // 2. Loan Slider Sync
+    // 2. Loan Slider Sync & Presets (Bike Loan, Car Loan, General EMI)
+    document.querySelectorAll('.loan-preset-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const amt = parseFloat(btn.dataset.amt);
+        const rate = parseFloat(btn.dataset.rate);
+        const years = parseFloat(btn.dataset.years);
+
+        const amtInp = document.getElementById('loan-amount');
+        const amtRange = document.getElementById('loan-amount-range');
+        const rateInp = document.getElementById('loan-rate');
+        const rateRange = document.getElementById('loan-rate-range');
+        const yearsInp = document.getElementById('loan-years');
+        const yearsRange = document.getElementById('loan-years-range');
+
+        if (amtInp) amtInp.value = amt;
+        if (amtRange) {
+          if (amt > parseFloat(amtRange.max)) amtRange.max = amt * 1.5;
+          amtRange.value = amt;
+        }
+        if (rateInp) rateInp.value = rate;
+        if (rateRange) rateRange.value = rate;
+        if (yearsInp) yearsInp.value = years;
+        if (yearsRange) yearsRange.value = years;
+
+        document.querySelectorAll('.loan-preset-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        this.calcLoanEMI();
+      });
+    });
+
     this.syncInputSlider('loan-amount', 'loan-amount-range', () => this.calcLoanEMI());
     this.syncInputSlider('loan-rate', 'loan-rate-range', () => this.calcLoanEMI());
     this.syncInputSlider('loan-years', 'loan-years-range', () => this.calcLoanEMI());

@@ -1,6 +1,13 @@
 {
   "outputDirectory": "out",
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/financial/loan-calculator",
+      "destination": "/financial/bike-emi-calculator",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
