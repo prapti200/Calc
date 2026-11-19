@@ -645,20 +645,9 @@
    */
   function buildGuideHtml(data) {
         if (data.id === 'sec-heloc-calc') {
-          const helocFaqsHtml = (data.faqs || []).map((faq, idx) => `
-            <details class="seo-faq-item"${idx === 0 ? ' open' : ''}>
-              <summary class="seo-faq-question">
-                <h3 style="font-size:1rem; font-weight:600; margin:0; display:inline; color:inherit;">${faq.q}</h3>
-                <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </summary>
-              <div class="seo-faq-answer">
-                <p>${faq.a}</p>
-              </div>
-            </details>
-          `).join('');
-
           return `
         <section class="calc-seo-guide-wrap" aria-labelledby="seo-guide-heading">
+          <!-- Client-Side Security & Privacy Guarantee Banner -->
           <div class="seo-privacy-banner">
             <div class="seo-privacy-icon-box">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -680,177 +669,129 @@
             </div>
           </div>
 
-          <article class="seo-guide-article">
-            <header class="seo-guide-header">
-              <span class="seo-guide-eyebrow">Comprehensive Mortgage &amp; Home Equity Guide</span>
-              <h2 id="seo-guide-heading" class="seo-guide-title">How to Use This HELOC Payment Calculator</h2>
-              <div class="seo-guide-meta">
-                <span>Published: November 2026</span>
-                <span class="seo-meta-dot">•</span>
-                <span>Editorial Standard: Consumer Finance Protection Bureau (CFPB) &amp; Federal Reserve Guidelines</span>
-                <span class="seo-meta-dot">•</span>
-                <span>Reading Time: 6 min</span>
-              </div>
-            </header>
+          <!-- Section Intro Row -->
+          <div class="seo-header-row">
+            <div class="seo-header-text">
+              <span class="seo-category-pill">Mortgage &amp; Home Equity Planning</span>
+              <div class="seo-main-heading" id="seo-guide-heading" style="font-size:1.4rem; font-weight:700; margin:0.35rem 0 0.15rem; color:var(--text-primary);">HELOC Calculator – Monthly Draw &amp; Repayment Payment Estimator Guide</div>
+              <p class="seo-tagline">Estimate interest-only draw payments, model the amortized principal jump at repayment, calculate payment shock, and measure available borrowing power.</p>
+            </div>
+          </div>
 
-            <div class="seo-guide-body">
-              <p class="seo-lead">
-                A <strong>Home Equity Line of Credit (HELOC)</strong> is one of the most flexible borrowing instruments available to homeowners, functioning much like a credit card backed by your home's equity. However, unlike traditional fixed-rate loans, HELOCs feature two distinct borrowing phases: an initial <strong>interest-only draw period</strong> followed by a fully amortizing <strong>repayment period</strong>. Use this 4-step walkthrough to accurately model your cash flow and prepare for payment adjustments:
+          <!-- 2-Column Grid: How to Use & Mathematical Foundation -->
+          <div class="seo-guide-grid">
+            <!-- Column 1: How to Use This HELOC Payment Calculator -->
+            <article class="seo-card">
+              <div class="seo-card-header">
+                <div class="seo-card-icon-wrap">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                </div>
+                <h2 class="seo-card-title" style="font-size:1.15rem; margin:0;">How to Use This HELOC Payment Calculator</h2>
+              </div>
+              <div class="seo-card-body">
+                <p class="seo-paragraph">
+                  A <strong>Home Equity Line of Credit (HELOC)</strong> features two distinct borrowing phases: an initial <strong>interest-only draw period</strong> followed by a fully amortizing <strong>repayment period</strong>. Use this 4-step walkthrough to model cash flows and prepare for payment transitions:
+                </p>
+                <div class="seo-steps-container" style="display:flex; flex-direction:column; gap:0.65rem; margin-top:0.5rem;">
+                  <div class="seo-step-item" style="display:flex; gap:0.75rem; align-items:flex-start;">
+                    <div class="seo-step-num" style="min-width:24px; height:24px; border-radius:50%; background:var(--accent-primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;">1</div>
+                    <div class="seo-step-content">
+                      <strong style="color:var(--text-primary);">Specify HELOC Borrowing Amount:</strong>
+                      <span style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-top:2px;">Enter your planned draw balance (default <code>$50,000</code>). You can also switch to the <em>Max HELOC Credit Line</em> tab to calculate available equity based on your home's market value and existing mortgage.</span>
+                    </div>
+                  </div>
+                  <div class="seo-step-item" style="display:flex; gap:0.75rem; align-items:flex-start;">
+                    <div class="seo-step-num" style="min-width:24px; height:24px; border-radius:50%; background:var(--accent-primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;">2</div>
+                    <div class="seo-step-content">
+                      <strong style="color:var(--text-primary);">Set Variable Interest Rate (APR):</strong>
+                      <span style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-top:2px;">Input your lender's APR (default <code>7.50%</code>) or pick from benchmark presets (from <code>6.50% Best Credit</code> to <code>9.50% High LTV</code>). HELOC rates float based on the U.S. Prime Rate (<code>7.00%</code> in Nov 2026) plus lender margin.</span>
+                    </div>
+                  </div>
+                  <div class="seo-step-item" style="display:flex; gap:0.75rem; align-items:flex-start;">
+                    <div class="seo-step-num" style="min-width:24px; height:24px; border-radius:50%; background:var(--accent-primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;">3</div>
+                    <div class="seo-step-content">
+                      <strong style="color:var(--text-primary);">Configure Draw &amp; Repayment Durations:</strong>
+                      <span style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-top:2px;">Select your interest-only draw term (standard <strong>10 years</strong>) and principal-and-interest repayment term (standard <strong>20 years</strong>) using quick presets.</span>
+                    </div>
+                  </div>
+                  <div class="seo-step-item" style="display:flex; gap:0.75rem; align-items:flex-start;">
+                    <div class="seo-step-num" style="min-width:24px; height:24px; border-radius:50%; background:var(--accent-primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;">4</div>
+                    <div class="seo-step-content">
+                      <strong style="color:var(--text-primary);">Analyze Payment Shock &amp; Prepayment Savings:</strong>
+                      <span style="display:block; font-size:0.85rem; color:var(--text-secondary); margin-top:2px;">Compare your low Phase 1 draw payment with the higher Phase 2 amortized payment. Review the highlighted payment shock jump, and test how voluntary principal payments during the draw period save thousands.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Column 2: Mathematical Foundation & HELOC Payment Formulas -->
+            <article class="seo-card">
+              <div class="seo-card-header">
+                <div class="seo-card-icon-wrap">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                    <line x1="8" y1="9" x2="16" y2="9"></line>
+                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                    <line x1="12" y1="12" x2="12" y2="12"></line>
+                  </svg>
+                </div>
+                <h2 class="seo-card-title" style="font-size:1.15rem; margin:0;">Mathematical Foundation &amp; HELOC Payment Formulas</h2>
+              </div>
+              <div class="seo-card-body">
+                <p class="seo-paragraph">
+                  Accurately calculating HELOC payments requires splitting the loan into two separate financial equations: the interest-only draw phase and the reducing-balance amortization phase:
+                </p>
+                <div class="seo-formula-banner" style="margin:0.75rem 0; padding:0.85rem 1rem; background:var(--bg-secondary); border-left:3px solid var(--accent-green); border-radius:var(--radius-md);">
+                  <div style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted); font-weight:700;">Phase 1: Draw Period (Interest-Only Payment Formula)</div>
+                  <code class="seo-formula-code" style="font-size:1.05rem; font-weight:700; color:var(--text-primary); display:block; margin:0.35rem 0;">Monthly Payment (Draw) = B &times; (r / 12)</code>
+                </div>
+                <div class="seo-formula-banner" style="margin:0.75rem 0; padding:0.85rem 1rem; background:var(--bg-secondary); border-left:3px solid var(--accent-primary); border-radius:var(--radius-md);">
+                  <div style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted); font-weight:700;">Phase 2: Repayment Period (Amortized P&amp;I Formula)</div>
+                  <code class="seo-formula-code" style="font-size:1.05rem; font-weight:700; color:var(--text-primary); display:block; margin:0.35rem 0;">Monthly Payment (Repay) = B &times; [i(1 + i)^n] / [(1 + i)^n - 1]</code>
+                </div>
+                <div class="seo-formula-banner" style="margin:0.75rem 0; padding:0.85rem 1rem; background:var(--bg-secondary); border-left:3px solid var(--accent-amber); border-radius:var(--radius-md);">
+                  <div style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted); font-weight:700;">Maximum Available HELOC Line (CLTV Formula)</div>
+                  <code class="seo-formula-code" style="font-size:1.05rem; font-weight:700; color:var(--text-primary); display:block; margin:0.35rem 0;">Max HELOC = (Home Value &times; Max CLTV) - Current Mortgage Balance</code>
+                </div>
+                <p class="seo-paragraph" style="font-size:0.82rem; color:var(--text-secondary); margin-top:0.5rem;">
+                  <strong>Variable Definitions:</strong> <strong>B</strong> = Drawn balance (<code>$50,000</code>); <strong>r</strong> = Annual interest rate (<code>7.50%</code> = 0.075); <strong>i</strong> = Monthly interest rate (<code>r / 12</code> = 0.00625); <strong>n</strong> = Repayment months (<code>20 Yrs &times; 12 = 240 mos</code>).
+                </p>
+                <div class="seo-example-box" style="margin-top:1rem; padding:0.85rem 1.15rem; background:rgba(37, 99, 235, 0.04); border-left:3px solid var(--accent-primary); border-radius:0 10px 10px 0;">
+                  <h3 style="font-size:1rem; font-weight:700; margin:0 0 0.5rem; color:var(--text-primary);">Step-by-Step Worked Example ($50,000 HELOC at 7.50% APR)</h3>
+                  <ul style="font-size:0.82rem; color:var(--text-secondary); line-height:1.6; margin:0.4rem 0 0 1.25rem; padding:0;">
+                    <li><strong>Draw Phase Monthly Payment (Years 1–10):</strong> $50,000 &times; (0.075 / 12) = <strong>$312.50/month</strong> ($37,500 total interest over 120 months).</li>
+                    <li><strong>Repayment Phase Monthly Payment (Years 11–30):</strong> With $n = 240$ and $i = 0.00625$, monthly amortized payment resets to <strong>$402.80/month</strong> ($46,671 total repayment interest).</li>
+                    <li><strong>Payment Shock Jump:</strong> Monthly outflow jumps by <strong>+$90.30/mo (+28.9%)</strong> at month 121. Total 30-year borrowing cost equals <strong>$134,171.24</strong>.</li>
+                    <li><strong>Voluntary Principal Prepayment:</strong> Paying just <strong>$100/mo</strong> toward principal during the draw phase lowers Phase 2 payments from $402.80 to <strong>$306.12/mo</strong> and saves over <strong>$14,200</strong> in total lifetime interest.</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Section 3: Current HELOC Rates & Benchmark Context (November 2026) -->
+          <article class="seo-card" style="margin-top:1.25rem;">
+            <div class="seo-card-header">
+              <div class="seo-card-icon-wrap">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                  <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                </svg>
+              </div>
+              <h2 class="seo-card-title" style="font-size:1.15rem; margin:0;">Current HELOC Rates &amp; Benchmark Context (November 2026)</h2>
+            </div>
+            <div class="seo-card-body">
+              <p class="seo-paragraph">
+                Almost all Home Equity Lines of Credit are variable-rate credit facilities tied directly to the <strong>U.S. Prime Rate</strong> (published by the Wall Street Journal), which sits <strong>3.00% above the Federal Reserve's Federal Funds Target Rate</strong>. As of <strong>November 2026</strong>, the U.S. Prime Rate is <strong>7.00%</strong>. A borrower's effective APR equals the Prime Rate plus or minus a lender margin based on credit score and Combined Loan-to-Value (CLTV):
               </p>
 
-              <div class="seo-steps-grid">
-                <div class="seo-step-card">
-                  <div class="seo-step-num">1</div>
-                  <h3 class="seo-step-title">Specify Your HELOC Borrowing Amount</h3>
-                  <p class="seo-step-desc">Enter the total credit balance you plan to draw from your line of credit (default <code>$50,000</code>). If you want to check your maximum borrowing capacity first, switch to the <em>Max HELOC Credit Line</em> tab to calculate available equity based on your home's appraised market value and existing mortgage.</p>
-                </div>
-                <div class="seo-step-card">
-                  <div class="seo-step-num">2</div>
-                  <h3 class="seo-step-title">Set Your Variable Annual Interest Rate (APR)</h3>
-                  <p class="seo-step-desc">Input your lender's expected APR (default <code>7.50%</code>) or pick from our benchmark pills (from <code>6.50% Best Credit</code> to <code>9.50% High LTV</code>). HELOC rates are indexed to the U.S. Prime Rate (<code>7.00%</code> in November 2026) plus a lender margin.</p>
-                </div>
-                <div class="seo-step-card">
-                  <div class="seo-step-num">3</div>
-                  <h3 class="seo-step-title">Configure Draw &amp; Repayment Durations</h3>
-                  <p class="seo-step-desc">Select your draw term (typically <strong>10 years</strong>) and repayment term (typically <strong>20 years</strong>). The draw period dictates how long you can withdraw funds and make interest-only payments, while the repayment term defines how quickly you must pay off the remaining principal.</p>
-                </div>
-                <div class="seo-step-card">
-                  <div class="seo-step-num">4</div>
-                  <h3 class="seo-step-title">Analyze the Payment Shock &amp; Amortization</h3>
-                  <p class="seo-step-desc">Review your two monthly payment tiers: the affordable <strong>Phase 1 Draw Payment</strong> versus the higher <strong>Phase 2 Repayment Payment</strong>. Note the highlighted <em>Payment Shock</em> jump, and test how voluntary principal contributions during the draw phase reduce lifetime interest.</p>
-                </div>
-              </div>
-
-              <section class="seo-content-block">
-                <h2>Mathematical Foundation &amp; HELOC Payment Formulas</h2>
-                <p>
-                  Accurately calculating HELOC payments requires splitting the loan into two separate financial equations: the interest-only draw phase and the reducing-balance amortization phase. Additionally, lenders calculate your borrowing ceiling using Combined Loan-to-Value (CLTV) underwriting constraints.
-                </p>
-
-                <div class="seo-formula-box">
-                  <div class="seo-formula-header">
-                    <span class="seo-formula-badge">Phase 1: Draw Period (Interest-Only Payment Formula)</span>
-                  </div>
-                  <div class="seo-formula-math">
-                    $$\text{Monthly Payment}_{\text{Draw}} = B \times \frac{r}{12}$$
-                  </div>
-                  <p class="seo-formula-caption">
-                    During the draw period, you are only obligated to pay the accrued monthly finance charge on the drawn balance. No principal reduction is required unless specified by your contract.
-                  </p>
-                </div>
-
-                <div class="seo-formula-box">
-                  <div class="seo-formula-header">
-                    <span class="seo-formula-badge">Phase 2: Repayment Period (Amortized P&amp;I Formula)</span>
-                  </div>
-                  <div class="seo-formula-math">
-                    $$\text{Monthly Payment}_{\text{Repay}} = B \times \frac{i(1 + i)^n}{(1 + i)^n - 1}$$
-                  </div>
-                  <p class="seo-formula-caption">
-                    Once the draw period closes, the line of credit converts into a fully amortizing term loan where each payment covers both interest and principal reduction.
-                  </p>
-                </div>
-
-                <div class="seo-formula-box">
-                  <div class="seo-formula-header">
-                    <span class="seo-formula-badge">Maximum Available HELOC Line (CLTV Formula)</span>
-                  </div>
-                  <div class="seo-formula-math">
-                    $$\text{Max HELOC} = (\text{Home Value} \times \text{Max CLTV}) - \text{Current Mortgage Balance}$$
-                  </div>
-                  <p class="seo-formula-caption">
-                    Determines the maximum allowable borrowing capacity permitted by underwriting limits (typically 80% to 85% CLTV).
-                  </p>
-                </div>
-
-                <div class="seo-variables-table-wrap">
-                  <table class="seo-table">
-                    <thead>
-                      <tr>
-                        <th>Variable</th>
-                        <th>Mathematical Meaning</th>
-                        <th>Standard Baseline Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><code>B</code></td>
-                        <td>Outstanding drawn HELOC balance</td>
-                        <td><code>$50,000.00</code></td>
-                      </tr>
-                      <tr>
-                        <td><code>r</code></td>
-                        <td>Nominal annual percentage rate (APR)</td>
-                        <td><code>7.50%</code> (0.0750)</td>
-                      </tr>
-                      <tr>
-                        <td><code>i</code></td>
-                        <td>Monthly periodic interest rate (<code>r / 12</code>)</td>
-                        <td><code>0.00625</code> (0.625% per month)</td>
-                      </tr>
-                      <tr>
-                        <td><code>n</code></td>
-                        <td>Total repayment term in months (<code>Years × 12</code>)</td>
-                        <td><code>240 months</code> (20 years)</td>
-                      </tr>
-                      <tr>
-                        <td><code>Max CLTV</code></td>
-                        <td>Maximum Combined Loan-to-Value percentage allowed</td>
-                        <td><code>80.0%</code> to <code>85.0%</code></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="seo-example-card">
-                  <h3 class="seo-example-title">Step-by-Step Worked Example ($50,000 HELOC at 7.50% APR)</h3>
-                  <p>
-                    Suppose a homeowner draws <strong>$50,000</strong> from their home equity line with a <strong>10-year draw period</strong> and a <strong>20-year repayment term</strong> at an APR of <strong>7.50%</strong>:
-                  </p>
-                  <ol class="seo-example-list">
-                    <li>
-                      <strong>Phase 1 Draw Payment (Months 1 to 120):</strong>
-                      <br>
-                      $$\text{Monthly Interest} = \$50,000 \times \frac{0.075}{12} = \$312.50/\text{month}$$
-                      Over the 10-year draw period (120 payments), the borrower pays <strong>$37,500.00</strong> in pure interest without reducing a single dollar of principal.
-                    </li>
-                    <li>
-                      <strong>Phase 2 Repayment Payment (Months 121 to 360):</strong>
-                      <br>
-                      With $n = 240$ months and monthly rate $i = 0.00625$:
-                      $$(1 + 0.00625)^{240} \approx 4.460817$$
-                      $$\text{Monthly Repayment} = \$50,000 \times \frac{0.00625 \times 4.460817}{4.460817 - 1} = \$402.80/\text{month}$$
-                      Over 240 months, total repayment equals $240 \times \$402.7968 = \$96,671.24$, consisting of <strong>$50,000.00</strong> principal and <strong>$46,671.24</strong> interest.
-                    </li>
-                    <li>
-                      <strong>The Payment Shock Jump:</strong>
-                      <br>
-                      At month 121, monthly cash outflow jumps immediately from <strong>$312.50</strong> to <strong>$402.80</strong>—an increase of <strong>+$90.30/month (+28.9%)</strong>.
-                    </li>
-                    <li>
-                      <strong>Total Lifetime Cost &amp; Extra Payment Benefit:</strong>
-                      <br>
-                      Across the entire 30-year lifecycle, total interest equals <strong>$84,171.24</strong> ($37,500 draw + $46,671 repayment), making the total borrowing cost <strong>$134,171.24</strong>.
-                      <br>
-                      <em>Strategic Insight:</em> If the borrower pays an optional <strong>$100.00/month</strong> toward principal during the draw phase, the loan balance drops by $12,000 by year 10, shrinking Phase 2 payments from $402.80 to <strong>$306.12/month</strong> and saving over <strong>$14,200</strong> in total lifetime interest.
-                    </li>
-                  </ol>
-                </div>
-              </section>
-
-              <section class="seo-content-block">
-                <h2>Current HELOC Rates &amp; Benchmark Context (November 2026)</h2>
-                <p>
-                  Unlike fixed-rate first mortgages, almost all Home Equity Lines of Credit are variable-rate loans tied directly to the <strong>U.S. Prime Rate</strong>, published daily by the Wall Street Journal. The Prime Rate represents the rate commercial banks offer to their most creditworthy corporate borrowers and historically floats <strong>3.00% above the Federal Reserve's Federal Funds Target Upper Limit</strong>.
-                </p>
-                <p>
-                  As of <strong>November 2026</strong>, the U.S. Prime Rate stands at <strong>7.00%</strong>. A borrower's effective HELOC APR is calculated as:
-                  $$\text{HELOC APR} = \text{Prime Rate (7.00\%)} \pm \text{Lender Margin}$$
-                  Lender margins typically range from <strong>-0.50% to +2.50%</strong> based on credit score, loan amount, and Combined Loan-to-Value (CLTV):
-                </p>
-
-                <div class="seo-category-table-wrap">
-                  <table class="seo-table">
+              <div style="margin-top:1rem;">
+                <h3 style="font-size:1rem; font-weight:700; margin:0 0 0.65rem; color:var(--text-primary);">HELOC APR Benchmarks by Credit Tier (Nov 2026)</h3>
+                <div style="overflow-x:auto; border-radius:var(--radius-md); border:1px solid var(--card-border);">
+                  <table class="breakdown-table" style="margin-top:0;">
                     <thead>
                       <tr>
                         <th>Credit Tier &amp; Equity Profile</th>
@@ -887,151 +828,228 @@
                     </tbody>
                   </table>
                 </div>
+              </div>
 
-                <div class="seo-comparison-section">
-                  <h3>HELOC vs. Home Equity Loan vs. Cash-Out Refinance</h3>
-                  <p>
-                    Choosing the right home equity financing strategy depends on whether you require a revolving safety cushion or a lump sum, your interest rate risk tolerance, and your current first-mortgage interest rate:
+              <div style="margin-top:1.5rem;">
+                <h3 style="font-size:1rem; font-weight:700; margin:0 0 0.65rem; color:var(--text-primary);">HELOC vs. Home Equity Loan vs. Cash-Out Refinance</h3>
+                <div style="overflow-x:auto; border-radius:var(--radius-md); border:1px solid var(--card-border);">
+                  <table class="breakdown-table" style="margin-top:0;">
+                    <thead>
+                      <tr>
+                        <th>Feature</th>
+                        <th>HELOC (Line of Credit)</th>
+                        <th>Home Equity Loan (2nd Mortgage)</th>
+                        <th>Cash-Out Refinance</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Interest Rate Type</strong></td>
+                        <td>Variable (indexed to Prime Rate)</td>
+                        <td>Fixed for entire loan term</td>
+                        <td>Fixed or Adjustable</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Payout Structure</strong></td>
+                        <td>Revolving draw (borrow as needed)</td>
+                        <td>Lump-sum distribution</td>
+                        <td>Lump-sum distribution</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Repayment Structure</strong></td>
+                        <td>Interest-only draw, then amortized</td>
+                        <td>Immediate fixed principal + interest</td>
+                        <td>Immediate fixed principal + interest</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Impact on 1st Mortgage</strong></td>
+                        <td>None (1st mortgage stays intact)</td>
+                        <td>None (1st mortgage stays intact)</td>
+                        <td>Replaces 1st mortgage completely</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Typical Closing Costs</strong></td>
+                        <td>$0 to $500 (often waived by lenders)</td>
+                        <td>2% – 5% of loan amount</td>
+                        <td>3% – 6% of entire new loan balance</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Best Use Case</strong></td>
+                        <td>Ongoing renovations, emergency liquidity, phased college tuition</td>
+                        <td>One-time debt consolidation, fixed-budget home addition</td>
+                        <td>When current market mortgage rates are lower than your existing rate</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Section 4: How to Lower Your HELOC Monthly Payment & Avoid Payment Shock -->
+          <article class="seo-card" style="margin-top:1.25rem;">
+            <div class="seo-card-header">
+              <div class="seo-card-icon-wrap">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <h2 class="seo-card-title" style="font-size:1.15rem; margin:0;">How to Lower Your HELOC Monthly Payment &amp; Avoid Payment Shock</h2>
+            </div>
+            <div class="seo-card-body">
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem;">
+                <div>
+                  <h3 style="font-size:1rem; font-weight:700; margin:0 0 0.5rem; color:var(--text-primary);">1. Pay Principal During the Draw Period</h3>
+                  <p class="seo-paragraph" style="font-size:0.88rem;">
+                    Never treat the 10-year interest-only draw period as a free ride. Voluntarily paying $100 to $250 per month toward principal reduces the outstanding balance that enters repayment, lowering monthly finance charges immediately and eliminating payment shock.
                   </p>
-                  <div class="seo-table-responsive">
-                    <table class="seo-table comparison-table">
-                      <thead>
-                        <tr>
-                          <th>Feature</th>
-                          <th>HELOC (Line of Credit)</th>
-                          <th>Home Equity Loan (2nd Mortgage)</th>
-                          <th>Cash-Out Refinance</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td><strong>Interest Rate Type</strong></td>
-                          <td>Variable (indexed to Prime Rate)</td>
-                          <td>Fixed for entire loan term</td>
-                          <td>Fixed or Adjustable</td>
-                        </tr>
-                        <tr>
-                          <td><strong>Payout Structure</strong></td>
-                          <td>Revolving draw (borrow as needed)</td>
-                          <td>Lump-sum distribution</td>
-                          <td>Lump-sum distribution</td>
-                        </tr>
-                        <tr>
-                          <td><strong>Repayment Structure</strong></td>
-                          <td>Interest-only draw, then amortized</td>
-                          <td>Immediate fixed principal + interest</td>
-                          <td>Immediate fixed principal + interest</td>
-                        </tr>
-                        <tr>
-                          <td><strong>Impact on 1st Mortgage</strong></td>
-                          <td>None (1st mortgage stays intact)</td>
-                          <td>None (1st mortgage stays intact)</td>
-                          <td>Replaces 1st mortgage completely</td>
-                        </tr>
-                        <tr>
-                          <td><strong>Typical Closing Costs</strong></td>
-                          <td>$0 to $500 (often waived by lenders)</td>
-                          <td>2% – 5% of loan amount</td>
-                          <td>3% – 6% of entire new loan balance</td>
-                        </tr>
-                        <tr>
-                          <td><strong>Best Use Case</strong></td>
-                          <td>Ongoing renovations, emergency liquidity, phased college tuition</td>
-                          <td>One-time major debt consolidation, fixed-budget home addition</td>
-                          <td>When current market mortgage rates are lower than your existing rate</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
                 </div>
-              </section>
-
-              <section class="seo-content-block">
-                <h2>How to Lower Your HELOC Monthly Payment &amp; Avoid Payment Shock</h2>
-                <p>
-                  "Payment shock" occurs at the conclusion of the draw period (typically at year 10) when payments reset to include both principal amortization and accrued interest. Follow these three proven financial strategies to soften or eliminate payment shock:
-                </p>
-
-                <div class="seo-pillar-cards">
-                  <div class="seo-pillar-card">
-                    <div class="seo-pillar-header">
-                      <span class="seo-pillar-icon">💰</span>
-                      <h3>1. Pay Principal During the Draw Period</h3>
-                    </div>
-                    <p>
-                      Never treat the interest-only draw period as a 10-year free ride. By voluntarily paying even $100 to $250 per month directly toward the principal balance during the draw phase, you lower the outstanding balance that enters the repayment phase. Because interest compounds on a smaller balance, your monthly finance charges decline immediately, creating a virtuous compounding payoff loop.
-                    </p>
-                  </div>
-
-                  <div class="seo-pillar-card">
-                    <div class="seo-pillar-header">
-                      <span class="seo-pillar-icon">🔒</span>
-                      <h3>2. Rate-Lock Fixed-Rate Sub-Accounts</h3>
-                    </div>
-                    <p>
-                      Many top HELOC lenders (such as Bank of America, Citizens Bank, and Figure) offer a <strong>Fixed-Rate Loan Option (FRLO)</strong>. This feature allows you to convert all or a portion of your variable-rate drawn balance into a fixed-rate sub-account with a locked interest rate and set repayment term. Locking in fixed tranches shields your budget against unexpected Federal Reserve rate hikes.
-                    </p>
-                  </div>
-
-                  <div class="seo-pillar-card">
-                    <div class="seo-pillar-header">
-                      <span class="seo-pillar-icon">📊</span>
-                      <h3>3. Keep Combined Loan-to-Value (CLTV) Under 80%</h3>
-                    </div>
-                    <p>
-                      Lenders penalize loans that exceed 80% CLTV with risk-adjusted margin surcharges of 0.75% to 2.00% APR. Maintaining total mortgage and credit line debt below 80% of your home's appraised valuation unlocks prime borrowing tiers and eliminates costly private mortgage insurance (PMI) equivalents.
-                    </p>
-                  </div>
+                <div>
+                  <h3 style="font-size:1rem; font-weight:700; margin:0 0 0.5rem; color:var(--text-primary);">2. Rate-Lock Fixed-Rate Sub-Accounts</h3>
+                  <p class="seo-paragraph" style="font-size:0.88rem;">
+                    Many major lenders offer a Fixed-Rate Loan Option (FRLO), allowing you to convert portions of your variable-rate drawn balance into fixed-rate tranches with predictable monthly schedules, shielding your budget against unexpected Federal Reserve rate hikes.
+                  </p>
                 </div>
-              </section>
-
-              <section class="seo-faq-section" aria-labelledby="faq-title">
-                <div class="seo-faq-header">
-                  <span class="seo-faq-eyebrow">Frequently Asked Questions</span>
-                  <h2 id="faq-title" class="seo-faq-title">Frequently Asked Questions (FAQs)</h2>
-                  <p class="seo-faq-subtitle">Clear, expert answers to common queries regarding HELOC monthly payments, draw periods, underwriting rules, and tax deductibility.</p>
+                <div>
+                  <h3 style="font-size:1rem; font-weight:700; margin:0 0 0.5rem; color:var(--text-primary);">3. Keep Combined Loan-to-Value (CLTV) Under 80%</h3>
+                  <p class="seo-paragraph" style="font-size:0.88rem;">
+                    Lenders add margin surcharges of 0.75% to 2.00% APR on loans exceeding 80% CLTV. Keeping your combined first mortgage and credit line under 80% of your home's appraised value unlocks prime pricing tiers and maximizes borrowing efficiency.
+                  </p>
                 </div>
+              </div>
+            </div>
+          </article>
 
-                <div class="seo-faq-accordion">
-                  ${helocFaqsHtml}
+          <!-- Section 5: Frequently Asked Questions (FAQs) -->
+          <article class="seo-card seo-faq-card" style="margin-top:1.25rem;">
+            <div class="seo-card-header">
+              <div class="seo-card-icon-wrap">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+              <h2 class="seo-card-title" style="font-size:1.15rem; margin:0;">Frequently Asked Questions (FAQs)</h2>
+            </div>
+            <div class="seo-faqs-container">
+              <details class="seo-faq-item" open>
+                <summary class="seo-faq-question">
+                  <h3 style="font-size:1rem; font-weight:600; margin:0; display:inline; color:inherit;">How is a HELOC monthly payment calculated?</h3>
+                  <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </summary>
+                <div class="seo-faq-answer">
+                  <p>A HELOC monthly payment is calculated in two phases: during the draw period, payments are interest-only: <code>Payment = Balance &times; (APR / 12)</code>. During the repayment period, the balance fully amortizes over the remaining term (typically 20 years) combining principal and interest using the standard amortization formula.</p>
                 </div>
-              </section>
+              </details>
 
-              <section class="seo-related-calcs-section" style="margin-top:2.5rem; padding-top:2rem; border-top:1px solid var(--border-subtle, rgba(255,255,255,0.08));">
-                <h3 style="font-size:1.25rem; font-weight:700; color:var(--text-primary, #ffffff); margin-bottom:1rem;">Related Financial Calculators</h3>
-                <p style="font-size:0.9rem; color:var(--text-secondary, #94a3b8); margin-bottom:1.5rem;">Explore our suite of client-side, zero-tracking financial modeling tools:</p>
-                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:1rem;">
-                  <a href="/financial/bike-emi-calculator" class="seo-related-card" style="display:block; padding:1.25rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:10px; text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
-                    <div style="font-weight:600; font-size:1rem; color:var(--text-primary, #ffffff); margin-bottom:0.35rem;">Bike &amp; Loan EMI Calculator</div>
-                    <div style="font-size:0.825rem; color:var(--text-secondary, #94a3b8); line-height:1.4;">Calculate monthly loan payments, amortization, and interest schedules.</div>
-                  </a>
-                  <a href="/financial/inflation-calculator" class="seo-related-card" style="display:block; padding:1.25rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:10px; text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
-                    <div style="font-weight:600; font-size:1rem; color:var(--text-primary, #ffffff); margin-bottom:0.35rem;">Inflation Calculator</div>
-                    <div style="font-size:0.825rem; color:var(--text-secondary, #94a3b8); line-height:1.4;">Project future purchasing power erosion and CPI compounding trends.</div>
-                  </a>
-                  <a href="/financial/salary-calculator" class="seo-related-card" style="display:block; padding:1.25rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:10px; text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
-                    <div style="font-weight:600; font-size:1rem; color:var(--text-primary, #ffffff); margin-bottom:0.35rem;">Salary &amp; Wage Calculator</div>
-                    <div style="font-size:0.825rem; color:var(--text-secondary, #94a3b8); line-height:1.4;">Convert hourly, weekly, bi-weekly, and annual salary earnings.</div>
-                  </a>
-                  <a href="/financial/roi-calculator" class="seo-related-card" style="display:block; padding:1.25rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:10px; text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
-                    <div style="font-weight:600; font-size:1rem; color:var(--text-primary, #ffffff); margin-bottom:0.35rem;">ROI &amp; Margin Calculator</div>
-                    <div style="font-size:0.825rem; color:var(--text-secondary, #94a3b8); line-height:1.4;">Measure investment gains, net profit margins, and annualized ROI.</div>
-                  </a>
-                  <a href="/financial/sip-calculator" class="seo-related-card" style="display:block; padding:1.25rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:10px; text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
-                    <div style="font-weight:600; font-size:1rem; color:var(--text-primary, #ffffff); margin-bottom:0.35rem;">SIP Investment Calculator</div>
-                    <div style="font-size:0.825rem; color:var(--text-secondary, #94a3b8); line-height:1.4;">Forecast wealth growth through systematic recurring mutual fund deposits.</div>
-                  </a>
-                  <a href="/financial/price-discount-calculator" class="seo-related-card" style="display:block; padding:1.25rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:10px; text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
-                    <div style="font-weight:600; font-size:1rem; color:var(--text-primary, #ffffff); margin-bottom:0.35rem;">Price Discount Calculator</div>
-                    <div style="font-size:0.825rem; color:var(--text-secondary, #94a3b8); line-height:1.4;">Compute net sale prices, savings amount, and percentage deductions.</div>
-                  </a>
+              <details class="seo-faq-item">
+                <summary class="seo-faq-question">
+                  <h3 style="font-size:1rem; font-weight:600; margin:0; display:inline; color:inherit;">What is the monthly payment on a $50,000 HELOC?</h3>
+                  <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </summary>
+                <div class="seo-faq-answer">
+                  <p>At the current benchmark rate of <strong>7.50% APR</strong>, the monthly payment on a $50,000 HELOC during a 10-year interest-only draw period is <strong>$312.50 per month</strong>. During a subsequent 20-year repayment period, the monthly payment resets to <strong>$402.80 per month</strong> (a +$90.30/mo jump).</p>
                 </div>
-              </section>
+              </details>
+
+              <details class="seo-faq-item">
+                <summary class="seo-faq-question">
+                  <h3 style="font-size:1rem; font-weight:600; margin:0; display:inline; color:inherit;">What is the monthly payment on a $100,000 HELOC?</h3>
+                  <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </summary>
+                <div class="seo-faq-answer">
+                  <p>At <strong>7.50% APR</strong>, the monthly payment on a $100,000 HELOC is <strong>$625.00 per month</strong> during the interest-only draw period, and <strong>$805.59 per month</strong> during a 20-year repayment period.</p>
+                </div>
+              </details>
+
+              <details class="seo-faq-item">
+                <summary class="seo-faq-question">
+                  <h3 style="font-size:1rem; font-weight:600; margin:0; display:inline; color:inherit;">How much home equity do I need to qualify for a HELOC?</h3>
+                  <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </summary>
+                <div class="seo-faq-answer">
+                  <p>Most lenders require homeowners to retain at least <strong>15% to 20% equity</strong> in their home, capping the Combined Loan-to-Value (CLTV) ratio at <strong>80% to 85%</strong> across all mortgage balances.</p>
+                </div>
+              </details>
+
+              <details class="seo-faq-item">
+                <summary class="seo-faq-question">
+                  <h3 style="font-size:1rem; font-weight:600; margin:0; display:inline; color:inherit;">What happens when my HELOC draw period ends?</h3>
+                  <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </summary>
+                <div class="seo-faq-answer">
+                  <p>When the draw period ends (typically after 10 years), withdrawal privileges freeze and the loan automatically converts into a fully amortizing repayment phase, causing payments to jump to cover both principal reduction and interest.</p>
+                </div>
+              </details>
+
+              <details class="seo-faq-item">
+                <summary class="seo-faq-question">
+                  <h3 style="font-size:1rem; font-weight:600; margin:0; display:inline; color:inherit;">Are HELOC interest payments tax-deductible?</h3>
+                  <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </summary>
+                <div class="seo-faq-answer">
+                  <p>Under current IRS tax rules through 2026, HELOC interest is tax-deductible only if the borrowed funds are used to buy, build, or substantially improve the home securing the loan.</p>
+                </div>
+              </details>
+
+              <details class="seo-faq-item">
+                <summary class="seo-faq-question">
+                  <h3 style="font-size:1rem; font-weight:600; margin:0; display:inline; color:inherit;">Can I pay off my HELOC early without a penalty?</h3>
+                  <svg class="seo-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </summary>
+                <div class="seo-faq-answer">
+                  <p>Most lenders permit early payoff without a prepayment penalty, though some charge an early closure fee ($300 to $500) if the line of credit is formally closed within the first 24 to 36 months.</p>
+                </div>
+              </details>
+            </div>
+          </article>
+
+          <!-- Section 6: Related Financial Calculators -->
+          <article class="seo-card" style="margin-top:1.25rem;">
+            <div class="seo-card-header">
+              <div class="seo-card-icon-wrap">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+              </div>
+              <h2 class="seo-card-title" style="font-size:1.15rem; margin:0;">Related Financial Calculators</h2>
+            </div>
+            <div class="seo-card-body">
+              <p class="seo-paragraph">
+                Explore our suite of client-side, zero-tracking financial modeling tools:
+              </p>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; margin-top:0.75rem;">
+                <a href="/financial/bike-emi-calculator" style="display:block; padding:1.15rem; background:var(--bg-tertiary); border:1px solid var(--card-border); border-radius:var(--radius-md); text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
+                  <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary); margin-bottom:0.35rem;">Bike &amp; Loan EMI Calculator</div>
+                  <div style="font-size:0.825rem; color:var(--text-secondary); line-height:1.45;">Calculate monthly installments, interest schedules, and repayment breakdowns.</div>
+                </a>
+                <a href="/financial/inflation-calculator" style="display:block; padding:1.15rem; background:var(--bg-tertiary); border:1px solid var(--card-border); border-radius:var(--radius-md); text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
+                  <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary); margin-bottom:0.35rem;">Inflation Calculator</div>
+                  <div style="font-size:0.825rem; color:var(--text-secondary); line-height:1.45;">Measure purchasing power erosion, future living expenses, and real returns.</div>
+                </a>
+                <a href="/financial/salary-calculator" style="display:block; padding:1.15rem; background:var(--bg-tertiary); border:1px solid var(--card-border); border-radius:var(--radius-md); text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
+                  <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary); margin-bottom:0.35rem;">Salary &amp; Wage Calculator</div>
+                  <div style="font-size:0.825rem; color:var(--text-secondary); line-height:1.45;">Convert hourly wages, overtime pay, and annual salaries accurately.</div>
+                </a>
+                <a href="/financial/roi-calculator" style="display:block; padding:1.15rem; background:var(--bg-tertiary); border:1px solid var(--card-border); border-radius:var(--radius-md); text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
+                  <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary); margin-bottom:0.35rem;">ROI &amp; Margin Calculator</div>
+                  <div style="font-size:0.825rem; color:var(--text-secondary); line-height:1.45;">Compute investment profitability, net margins, and annualized ROI.</div>
+                </a>
+                <a href="/financial/sip-calculator" style="display:block; padding:1.15rem; background:var(--bg-tertiary); border:1px solid var(--card-border); border-radius:var(--radius-md); text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
+                  <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary); margin-bottom:0.35rem;">SIP Investment Calculator</div>
+                  <div style="font-size:0.825rem; color:var(--text-secondary); line-height:1.45;">Forecast recurring mutual fund and equity wealth accumulation.</div>
+                </a>
+                <a href="/financial/price-discount-calculator" style="display:block; padding:1.15rem; background:var(--bg-tertiary); border:1px solid var(--card-border); border-radius:var(--radius-md); text-decoration:none; color:inherit; transition:border-color 0.2s, transform 0.2s;">
+                  <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary); margin-bottom:0.35rem;">Price Discount Calculator</div>
+                  <div style="font-size:0.825rem; color:var(--text-secondary); line-height:1.45;">Quickly calculate net discounted prices and percent savings.</div>
+                </a>
+              </div>
             </div>
           </article>
         </section>
-          `;
+  `;
         }
+
         if (data.id === 'sec-inflation-calc') {
       const infFaqsHtml = (data.faqs || []).map((faq, idx) => `
         <details class="seo-faq-item"${idx === 0 ? ' open' : ''}>
