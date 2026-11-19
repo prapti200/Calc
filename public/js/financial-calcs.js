@@ -784,30 +784,261 @@ const FinancialCalcs = {
   },
 
   // ------------------------------------------------------------------------
+  // ------------------------------------------------------------------------
   // 16. INFLATION CALCULATOR (Purchasing Power & Future Cost)
   // ------------------------------------------------------------------------
+  inflationMode: 'forward', // 'forward' = Future Cost, 'backward' = Past Value
+  inflationCurr: '₹',
+
   calcInflation() {
-    const amount = parseFloat(document.getElementById('inf-amount')?.value) || 0;
-    const rate = parseFloat(document.getElementById('inf-rate')?.value) || 0;
-    const years = parseFloat(document.getElementById('inf-years')?.value) || 0;
+    const elAmount = document.getElementById('inf-amount');
+    const elAmountSlider = document.getElementById('inf-amount-slider');
+    const elAmountDisplay = document.getElementById('inf-amount-display');
+
+    const elRate = document.getElementById('inf-rate');
+    const elRateSlider = document.getElementById('inf-rate-slider');
+    const elRateDisplay = document.getElementById('inf-rate-display');
+
+    const elYears = document.getElementById('inf-years');
+    const elYearsSlider = document.getElementById('inf-years-slider');
+    const elYearsDisplay = document.getElementById('inf-years-display');
+
+    let amount = parseFloat(elAmount?.value) || 0;
+    let rate = parseFloat(elRate?.value) || 0;
+    let years = parseFloat(elYears?.value) || 0;
+
+    // Boundary guards
+    if (amount < 0) amount = 0;
+    if (rate < 0) rate = 0;
+    if (years < 1) years = 1;
+
+    const curr = this.inflationCurr || '₹';
+    const mode = this.inflationMode || 'forward';
+
+    // Synchronize display text
+    if (elAmountDisplay) {
+      elAmountDisplay.textContent = `${curr}${Math.round(amount).toLocaleString('en-IN')}`;
+    }
+    if (elRateDisplay) {
+      elRateDisplay.textContent = `${rate.toFixed(1)}%`;
+    }
+    if (elYearsDisplay) {
+      elYearsDisplay.textContent = `${Math.round(years)} ${years === 1 ? 'Year' : 'Years'}`;
+    }
 
     const r = rate / 100;
     const factor = Math.pow(1 + r, years);
 
-    const futurePower = factor > 0 ? amount / factor : amount;
-    const futureCost = amount * factor;
-    const lossPct = factor > 0 ? (1 - (1 / factor)) * 100 : 0;
-    const cumulativeInflation = (factor - 1) * 100;
+    // Dynamic labels depending on mode
+    const elLblAmount = document.getElementById('lbl-inf-amount');
+    const elLblCost = document.getElementById('lbl-res-inf-cost');
+    const elLblPower = document.getElementById('lbl-res-inf-power');
+    const elCostSub = document.getElementById('res-inf-cost-sub');
+
+    let futureCost = 0;
+    let purchasingPower = 0;
+    let lossPct = 0;
+    let cumulativeInflation = 0;
+    let costIncrease = 0;
+    let doublingYears = rate > 0 ? (Math.log(2) / Math.log(1 + r)) : 0;
+
+    if (mode === 'forward') {
+      if (elLblAmount) elLblAmount.textContent = 'Current Amount Today';
+      if (elLblCost) elLblCost.textContent = 'Future Inflation-Adjusted Cost';
+      if (elLblPower) elLblPower.textContent = "Purchasing Power";
+
+      futureCost = amount * factor;
+      purchasingPower = factor > 0 ? amount / factor : amount;
+      lossPct = factor > 0 ? (1 - (1 / factor)) * 100 : 0;
+      cumulativeInflation = (factor - 1) * 100;
+      costIncrease = futureCost - amount;
+
+      if (elCostSub) {
+        elCostSub.textContent = `Required in ${Math.round(years)} years to purchase what ${curr}${Math.round(amount).toLocaleString('en-IN')} buys today.`;
+      }
+    } else {
+      // Backward: Past Value / Historical Equivalent
+      if (elLblAmount) elLblAmount.textContent = 'Historical Amount in Past Year';
+      if (elLblCost) elLblCost.textContent = "Today's Equivalent Purchasing Power";
+      if (elLblPower) elLblPower.textContent = 'Past Purchasing Base';
+
+      futureCost = amount * factor; // What ₹X in past year equals today
+      purchasingPower = amount;
+      cumulativeInflation = (factor - 1) * 100;
+      lossPct = (1 - (1 / factor)) * 100;
+      costIncrease = futureCost - amount;
+
+      if (elCostSub) {
+        elCostSub.textContent = `What ${curr}${Math.round(amount).toLocaleString('en-IN')} from ${Math.round(years)} years ago is worth in today's money.`;
+      }
+    }
 
     const elPower = document.getElementById('res-inf-power');
     const elCost = document.getElementById('res-inf-cost');
     const elLoss = document.getElementById('res-inf-loss');
     const elCum = document.getElementById('res-inf-cumulative');
+    const elDoubling = document.getElementById('res-inf-doubling');
 
-    if (elPower) elPower.textContent = this.formatCurrency(futurePower);
-    if (elCost) elCost.textContent = this.formatCurrency(futureCost);
-    if (elLoss) elLoss.textContent = `-${lossPct.toFixed(1)}% Loss in Value`;
-    if (elCum) elCum.textContent = `+${cumulativeInflation.toFixed(1)}% Total Inflation`;
+    const fmtCurr = (val) => `${curr}${Math.round(val).toLocaleString('en-IN')}`;
+
+    if (elCost) elCost.textContent = fmtCurr(futureCost);
+    if (elPower) elPower.textContent = fmtCurr(purchasingPower);
+    if (elLoss) elLoss.textContent = `-${lossPct.toFixed(1)}% Loss`;
+    if (elCum) elCum.textContent = `+${fmtCurr(costIncrease)} (+${cumulativeInflation.toFixed(1)}%)`;
+    if (elDoubling) {
+      elDoubling.textContent = doublingYears > 0 && doublingYears < 100 ? `~${doublingYears.toFixed(1)} Years` : 'N/A';
+    }
+
+    this.renderInflationChart(amount, rate, years, mode, curr);
+    this.renderInflationTable(amount, rate, years, mode, curr);
+  },
+
+  renderInflationChart(amount, rate, years, mode, curr) {
+    const wrapper = document.getElementById('inf-chart-wrapper');
+    if (!wrapper) return;
+
+    const r = rate / 100;
+    const n = Math.min(Math.max(Math.round(years), 1), 40);
+
+    const pointsCost = [];
+    const pointsPower = [];
+    let maxVal = amount;
+
+    for (let i = 0; i <= n; i++) {
+      const f = Math.pow(1 + r, i);
+      const c = amount * f;
+      const p = f > 0 ? amount / f : amount;
+      pointsCost.push({ year: i, val: c });
+      pointsPower.push({ year: i, val: p });
+      if (c > maxVal) maxVal = c;
+    }
+
+    const width = 600;
+    const height = 200;
+    const padX = 55;
+    const padY = 25;
+    const chartW = width - padX - 20;
+    const chartH = height - padY - 30;
+
+    const scaleX = (yr) => padX + (yr / n) * chartW;
+    const scaleY = (v) => padY + chartH - (v / (maxVal * 1.08)) * chartH;
+
+    let pathCostD = `M ${scaleX(0)} ${scaleY(pointsCost[0].val)}`;
+    let pathPowerD = `M ${scaleX(0)} ${scaleY(pointsPower[0].val)}`;
+    let areaCostD = `M ${scaleX(0)} ${scaleY(pointsCost[0].val)}`;
+    let areaPowerD = `M ${scaleX(0)} ${scaleY(pointsPower[0].val)}`;
+
+    for (let i = 1; i <= n; i++) {
+      const x = scaleX(i);
+      const yC = scaleY(pointsCost[i].val);
+      const yP = scaleY(pointsPower[i].val);
+      pathCostD += ` L ${x} ${yC}`;
+      pathPowerD += ` L ${x} ${yP}`;
+      areaCostD += ` L ${x} ${yC}`;
+      areaPowerD += ` L ${x} ${yP}`;
+    }
+
+    areaCostD += ` L ${scaleX(n)} ${padY + chartH} L ${scaleX(0)} ${padY + chartH} Z`;
+    areaPowerD += ` L ${scaleX(n)} ${padY + chartH} L ${scaleX(0)} ${padY + chartH} Z`;
+
+    const baselineY = scaleY(amount);
+
+    const fmtCompact = (num) => {
+      if (num >= 10000000) return `${curr}${(num / 10000000).toFixed(1)}Cr`;
+      if (num >= 100000) return `${curr}${(num / 100000).toFixed(1)}L`;
+      if (num >= 1000) return `${curr}${(num / 1000).toFixed(0)}k`;
+      return `${curr}${Math.round(num)}`;
+    };
+
+    const gridY = [0, 0.33, 0.66, 1.0].map(pct => {
+      const val = maxVal * 1.08 * pct;
+      const y = scaleY(val);
+      return `<g>
+        <line x1="${padX}" y1="${y}" x2="${width - 15}" y2="${y}" stroke="var(--card-border)" stroke-dasharray="3 3" stroke-width="1"/>
+        <text x="${padX - 8}" y="${y + 4}" font-size="10" fill="var(--text-muted)" text-anchor="end" font-family="var(--font-mono)">${fmtCompact(val)}</text>
+      </g>`;
+    }).join('');
+
+    const midYear = Math.round(n / 2);
+    const yearTicks = `
+      <text x="${scaleX(0)}" y="${height - 8}" font-size="10" fill="var(--text-muted)" text-anchor="start" font-family="var(--font-mono)">Yr 0</text>
+      <text x="${scaleX(midYear)}" y="${height - 8}" font-size="10" fill="var(--text-muted)" text-anchor="middle" font-family="var(--font-mono)">Yr ${midYear}</text>
+      <text x="${scaleX(n)}" y="${height - 8}" font-size="10" fill="var(--text-muted)" text-anchor="end" font-family="var(--font-mono)">Yr ${n}</text>
+    `;
+
+    const endX = scaleX(n);
+    const endCostY = scaleY(pointsCost[n].val);
+    const endPowerY = scaleY(pointsPower[n].val);
+
+    const svg = `
+      <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="width:100%; height:100%; display:block; overflow:visible;">
+        <defs>
+          <linearGradient id="grad-cost-inf" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#10b981" stop-opacity="0.32"/>
+            <stop offset="100%" stop-color="#10b981" stop-opacity="0.02"/>
+          </linearGradient>
+          <linearGradient id="grad-power-inf" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.02"/>
+          </linearGradient>
+        </defs>
+
+        ${gridY}
+
+        <line x1="${padX}" y1="${baselineY}" x2="${width - 15}" y2="${baselineY}" stroke="var(--text-muted)" stroke-dasharray="4 4" stroke-width="1.2" opacity="0.65"/>
+        <text x="${width - 18}" y="${baselineY - 4}" font-size="10" fill="var(--text-muted)" text-anchor="end" font-family="var(--font-mono)">Base: ${fmtCompact(amount)}</text>
+
+        <path d="${areaCostD}" fill="url(#grad-cost-inf)"/>
+        <path d="${areaPowerD}" fill="url(#grad-power-inf)"/>
+
+        <path d="${pathCostD}" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="${pathPowerD}" fill="none" stroke="#f43f5e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <circle cx="${scaleX(0)}" cy="${scaleY(amount)}" r="4" fill="#10b981"/>
+        <circle cx="${endX}" cy="${endCostY}" r="4.5" fill="#10b981"/>
+        <circle cx="${endX}" cy="${endPowerY}" r="4.5" fill="#f43f5e"/>
+
+        <text x="${endX - 6}" y="${endCostY - 8}" font-size="10.5" font-weight="700" fill="#10b981" text-anchor="end" font-family="var(--font-mono)">${fmtCompact(pointsCost[n].val)}</text>
+        <text x="${endX - 6}" y="${endPowerY + 14}" font-size="10.5" font-weight="700" fill="#f43f5e" text-anchor="end" font-family="var(--font-mono)">${fmtCompact(pointsPower[n].val)}</text>
+
+        ${yearTicks}
+      </svg>
+    `;
+
+    wrapper.innerHTML = svg;
+  },
+
+  renderInflationTable(amount, rate, years, mode, curr) {
+    const tbody = document.getElementById('inf-table-body');
+    if (!tbody) return;
+
+    const r = rate / 100;
+    const n = Math.min(Math.max(Math.round(years), 1), 40);
+    const rows = [];
+
+    const fmt = (v) => `${curr}${Math.round(v).toLocaleString('en-IN')}`;
+
+    let prevCost = amount;
+    for (let yr = 1; yr <= n; yr++) {
+      const factor = Math.pow(1 + r, yr);
+      const cost = amount * factor;
+      const power = factor > 0 ? amount / factor : amount;
+      const cumPct = (factor - 1) * 100;
+      const delta = cost - prevCost;
+      prevCost = cost;
+
+      rows.push(`
+        <tr>
+          <td style="font-weight:700; color:var(--text-primary);">Year ${yr}</td>
+          <td style="font-weight:700; color:var(--accent-emerald);">${fmt(cost)}</td>
+          <td style="font-weight:600; color:var(--accent-rose);">${fmt(power)}</td>
+          <td style="color:var(--accent-amber);">+${cumPct.toFixed(1)}%</td>
+          <td style="color:var(--text-secondary);">+${fmt(delta)}</td>
+        </tr>
+      `);
+    }
+
+    tbody.innerHTML = rows.join('');
   },
 
   // ------------------------------------------------------------------------
@@ -1486,9 +1717,73 @@ const FinancialCalcs = {
     });
     document.getElementById('curr-swap-btn')?.addEventListener('click', () => this.swapCurrency());
 
-    // 16. Inflation Inputs
-    ['inf-amount', 'inf-rate', 'inf-years'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => this.calcInflation());
+    // 16. Inflation Inputs & Sliders
+    const bindInfSync = (numId, sliderId) => {
+      const numEl = document.getElementById(numId);
+      const sliderEl = document.getElementById(sliderId);
+      if (!numEl || !sliderEl) return;
+      numEl.addEventListener('input', () => {
+        sliderEl.value = numEl.value;
+        this.calcInflation();
+      });
+      sliderEl.addEventListener('input', () => {
+        numEl.value = sliderEl.value;
+        this.calcInflation();
+      });
+    };
+
+    bindInfSync('inf-amount', 'inf-amount-slider');
+    bindInfSync('inf-rate', 'inf-rate-slider');
+    bindInfSync('inf-years', 'inf-years-slider');
+
+    // Mode Toggle Buttons
+    document.querySelectorAll('.inf-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.inf-mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.inflationMode = btn.getAttribute('data-mode') || 'forward';
+        this.calcInflation();
+      });
+    });
+
+    // Currency Switcher Buttons
+    document.querySelectorAll('.inf-curr-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.inf-curr-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const c = btn.getAttribute('data-curr') || '₹';
+        this.inflationCurr = c;
+        document.querySelectorAll('.inf-curr-symbol').forEach(el => el.textContent = c);
+        this.calcInflation();
+      });
+    });
+
+    // Rate Preset Pills
+    document.querySelectorAll('.inf-rate-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.inf-rate-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const rVal = parseFloat(btn.getAttribute('data-rate'));
+        const numEl = document.getElementById('inf-rate');
+        const sliderEl = document.getElementById('inf-rate-slider');
+        if (numEl) numEl.value = rVal;
+        if (sliderEl) sliderEl.value = rVal;
+        this.calcInflation();
+      });
+    });
+
+    // Years Preset Pills
+    document.querySelectorAll('.inf-years-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.inf-years-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const yVal = parseFloat(btn.getAttribute('data-years'));
+        const numEl = document.getElementById('inf-years');
+        const sliderEl = document.getElementById('inf-years-slider');
+        if (numEl) numEl.value = yVal;
+        if (sliderEl) sliderEl.value = yVal;
+        this.calcInflation();
+      });
     });
 
     // 17. Finance TVM Inputs

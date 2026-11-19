@@ -625,7 +625,7 @@
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Bike EMI Calculator</span>
           </a>
-          <a class="sidebar-calc-item" data-calc-id="sec-inflation-calc" data-category="financial" data-sub="wealth" data-keywords="inflation calculator purchasing power future value money cost of living cpi" title="Inflation Calculator" onclick="openZenithCalc('financial', 'sec-inflation-calc')">
+          <a class="sidebar-calc-item" data-calc-id="sec-inflation-calc" data-category="financial" data-sub="wealth" href="/financial/inflation-calculator" data-keywords="inflation calculator inflation calculator india purchasing power calculator future value money cpi rbi" title="Inflation Calculator India – Future Value &amp; Purchasing Power" onclick="openZenithCalc('financial', 'sec-inflation-calc')">
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Inflation Calculator</span>
           </a>
@@ -1003,7 +1003,7 @@
               </div>
               <span class="compact-calc-arrow">→</span>
             </a>
-            <a class="compact-calc-link" data-calc-id="sec-inflation-calc" data-category="financial" data-sub="wealth" data-keywords="inflation calculator purchasing power future value money cost of living cpi" onclick="openZenithCalc('financial', 'sec-inflation-calc')" title="Inflation Calculator">
+            <a class="compact-calc-link" data-calc-id="sec-inflation-calc" data-category="financial" data-sub="wealth" href="/financial/inflation-calculator" data-keywords="inflation calculator inflation calculator india purchasing power calculator future value money cpi rbi" onclick="openZenithCalc('financial', 'sec-inflation-calc')" title="Inflation Calculator">
               <div class="compact-calc-left">
                 <span class="compact-calc-bullet"></span>
                 <span class="compact-calc-title">Inflation Calculator</span>
@@ -3050,59 +3050,168 @@
         
 
         <!-- 16. Inflation Calculator -->
-        <div class="calc-panel fin-calc-unit" id="sec-inflation-calc" style="display:none;">
+                <div class="calc-panel fin-calc-unit" id="sec-inflation-calc" style="display:none;">
           <div class="panel-header">
-            <div class="panel-title-group">
-              <h2 class="section-heading" style="font-size:1.65rem;">Inflation & Purchasing Power Calculator</h2>
+            <div class="panel-title-group" style="flex-direction:column; align-items:flex-start; gap:0.35rem;">
+              <h1 class="section-heading" style="font-size:1.65rem; margin:0; font-weight:800;">Inflation Calculator India – Calculate Future Value &amp; Purchasing Power</h1>
+              <p class="panel-subtitle" style="font-size:0.88rem; line-height:1.55; color:var(--text-secondary); margin:0.25rem 0 0 0;">
+                Calculate how rising consumer prices erode your rupee purchasing power over time. Use this free inflation calculator for India and global planning to project future living costs, estimate real investment returns, and protect long-term financial goals against CPI inflation.
+              </p>
             </div>
           </div>
+
+          <!-- Mode Selector & Currency Toggle Row -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.25rem; padding-bottom:1rem; border-bottom:1px solid var(--card-border);">
+            <div class="radio-pill-group inf-mode-group" style="display:inline-flex; gap:0.5rem; flex-wrap:wrap;">
+              <button type="button" class="radio-pill-btn inf-mode-btn active" data-mode="forward">Future Cost (Forward Inflation)</button>
+              <button type="button" class="radio-pill-btn inf-mode-btn" data-mode="backward">Past Value (Purchasing Power)</button>
+            </div>
+            <div class="radio-pill-group inf-curr-group" style="display:inline-flex; gap:0.35rem;">
+              <button type="button" class="radio-pill-btn inf-curr-btn active" data-curr="₹">₹ INR</button>
+              <button type="button" class="radio-pill-btn inf-curr-btn" data-curr="$">$ USD</button>
+            </div>
+          </div>
+
           <div class="calc-split-layout">
             <div class="calc-inputs-side">
-              <div class="form-group">
-                <label for="inf-amount">Current Amount</label>
-                <div class="input-with-affix">
-                  <span class="affix curr-symbol">$</span>
-                  <input type="number" id="inf-amount" class="form-input" value="100000" min="100" step="1000">
+              <!-- Initial Amount Input & Slider -->
+              <div class="form-group" style="margin-bottom:1.15rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                  <label for="inf-amount" id="lbl-inf-amount" style="font-weight:600;">Current Amount Today</label>
+                  <span id="inf-amount-display" style="font-size:0.85rem; font-weight:700; color:var(--primary-color);">₹1,00,000</span>
                 </div>
+                <div class="input-with-affix" style="margin-bottom:0.5rem;">
+                  <span class="affix inf-curr-symbol">₹</span>
+                  <input type="number" id="inf-amount" class="form-input" value="100000" min="1000" step="5000">
+                </div>
+                <input type="range" id="inf-amount-slider" class="range-slider" min="10000" max="5000000" step="10000" value="100000" style="width:100%;">
               </div>
 
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-                <div class="form-group">
-                  <label for="inf-rate">Annual Inflation Rate (%)</label>
-                  <div class="input-with-affix">
-                    <input type="number" id="inf-rate" class="form-input" value="3.5" min="0" max="50" step="0.1">
-                    <span class="affix">%</span>
-                  </div>
+              <!-- Annual Inflation Rate Input & Slider -->
+              <div class="form-group" style="margin-bottom:1.15rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                  <label for="inf-rate" style="font-weight:600;">Annual Inflation Rate (%)</label>
+                  <span id="inf-rate-display" style="font-size:0.85rem; font-weight:700; color:var(--primary-color);">6.0%</span>
                 </div>
-                <div class="form-group">
-                  <label for="inf-years">Time Period (Years)</label>
-                  <div class="input-with-affix">
-                    <input type="number" id="inf-years" class="form-input" value="15" min="1" max="60" step="1">
-                    <span class="affix">Yrs</span>
-                  </div>
+                <!-- Rate Preset Pills -->
+                <div class="radio-pill-group inf-rate-presets" style="display:flex; gap:0.35rem; flex-wrap:wrap; margin-bottom:0.6rem;">
+                  <button type="button" class="radio-pill-btn inf-rate-pill" data-rate="4.0">4% RBI Target</button>
+                  <button type="button" class="radio-pill-btn inf-rate-pill active" data-rate="6.0">6% CPI Benchmark</button>
+                  <button type="button" class="radio-pill-btn inf-rate-pill" data-rate="6.09">6.09% India CPI (Oct 2026)</button>
+                  <button type="button" class="radio-pill-btn inf-rate-pill" data-rate="8.0">8% Lifestyle</button>
+                  <button type="button" class="radio-pill-btn inf-rate-pill" data-rate="10.0">10% Education/Medical</button>
                 </div>
+                <div class="input-with-affix" style="margin-bottom:0.5rem;">
+                  <input type="number" id="inf-rate" class="form-input" value="6.0" min="0.1" max="25" step="0.1">
+                  <span class="affix">%</span>
+                </div>
+                <input type="range" id="inf-rate-slider" class="range-slider" min="1.0" max="20.0" step="0.1" value="6.0" style="width:100%;">
+              </div>
+
+              <!-- Time Horizon Input & Slider -->
+              <div class="form-group" style="margin-bottom:0.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                  <label for="inf-years" style="font-weight:600;">Time Period (Years)</label>
+                  <span id="inf-years-display" style="font-size:0.85rem; font-weight:700; color:var(--primary-color);">10 Years</span>
+                </div>
+                <!-- Duration Preset Pills -->
+                <div class="radio-pill-group inf-years-presets" style="display:flex; gap:0.35rem; flex-wrap:wrap; margin-bottom:0.6rem;">
+                  <button type="button" class="radio-pill-btn inf-years-pill" data-years="5">5 Yrs</button>
+                  <button type="button" class="radio-pill-btn inf-years-pill active" data-years="10">10 Yrs</button>
+                  <button type="button" class="radio-pill-btn inf-years-pill" data-years="15">15 Yrs</button>
+                  <button type="button" class="radio-pill-btn inf-years-pill" data-years="20">20 Yrs</button>
+                  <button type="button" class="radio-pill-btn inf-years-pill" data-years="25">25 Yrs</button>
+                </div>
+                <div class="input-with-affix" style="margin-bottom:0.5rem;">
+                  <input type="number" id="inf-years" class="form-input" value="10" min="1" max="50" step="1">
+                  <span class="affix">Yrs</span>
+                </div>
+                <input type="range" id="inf-years-slider" class="range-slider" min="1" max="40" step="1" value="10" style="width:100%;">
               </div>
             </div>
 
             <div class="calc-results-side">
-              <div class="result-card-primary">
-                <div class="result-label">Future Purchasing Power Equivalent</div>
-                <div class="result-value-huge" id="res-inf-power" data-copyable="true">$0.00</div>
+              <!-- Primary Result Hero Card -->
+              <div class="result-card-primary" style="padding:1.25rem 1.5rem; position:relative; overflow:hidden;">
+                <div class="result-label" id="lbl-res-inf-cost" style="font-size:0.85rem; letter-spacing:0.05em; text-transform:uppercase;">Future Inflation-Adjusted Cost</div>
+                <div class="result-value-huge" id="res-inf-cost" data-copyable="true" style="font-size:2.35rem; font-weight:800; margin:0.35rem 0;">₹1,79,085</div>
+                <div id="res-inf-cost-sub" style="font-size:0.82rem; color:var(--text-secondary); line-height:1.4;">Required in 10 years to purchase what ₹1,00,000 buys today.</div>
               </div>
-              <div class="result-stat-grid">
+
+              <!-- Secondary Stat Grid -->
+              <div class="result-stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:0.65rem; margin-top:0.75rem;">
                 <div class="stat-box">
-                  <div class="stat-box-label">Future Cost of Same Goods</div>
-                  <div class="stat-box-val" id="res-inf-cost" data-copyable="true">$0.00</div>
+                  <div class="stat-box-label" id="lbl-res-inf-power">Purchasing Power</div>
+                  <div class="stat-box-val" id="res-inf-power" style="font-weight:700; color:var(--accent-emerald);" data-copyable="true">₹55,839</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Real value in 10 yrs</div>
                 </div>
                 <div class="stat-box">
-                  <div class="stat-box-label">Purchasing Power Loss</div>
-                  <div class="stat-box-val" id="res-inf-loss" style="color:var(--accent-rose);" data-copyable="true">0.0% Loss</div>
+                  <div class="stat-box-label">Value Eroded</div>
+                  <div class="stat-box-val" id="res-inf-loss" style="color:var(--accent-rose); font-weight:700;" data-copyable="true">-44.2% Loss</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Purchasing power lost</div>
                 </div>
-                <div class="stat-box" style="grid-column: span 2;">
-                  <div class="stat-box-label">Cumulative Inflation Impact</div>
-                  <div class="stat-box-val" id="res-inf-cumulative" data-copyable="true">0.0% Total Inflation</div>
+                <div class="stat-box">
+                  <div class="stat-box-label">Total Price Surge</div>
+                  <div class="stat-box-val" id="res-inf-cumulative" style="font-weight:700; color:var(--accent-amber);" data-copyable="true">+₹79,085 (+79.1%)</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Cumulative CPI rise</div>
+                </div>
+                <div class="stat-box">
+                  <div class="stat-box-label">Doubling Horizon</div>
+                  <div class="stat-box-val" id="res-inf-doubling" style="font-weight:700; color:var(--text-primary);" data-copyable="true">~12.0 Years</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Rule of 72 price doubling</div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Visual Chart Section -->
+          <div class="inf-visual-section" style="margin-top:1.5rem; background:var(--bg-tertiary); border:1px solid var(--card-border); border-radius:var(--radius-lg); padding:1.25rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
+              <div style="font-size:0.95rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:0.4rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                Nominal vs. Inflation-Adjusted Trajectory
+              </div>
+              <div style="display:flex; gap:0.85rem; font-size:0.75rem; flex-wrap:wrap;">
+                <span style="display:inline-flex; align-items:center; gap:0.35rem; color:var(--accent-emerald); font-weight:600;">
+                  <span style="width:10px; height:10px; border-radius:2px; background:var(--accent-emerald);"></span> Future Cost
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:0.35rem; color:var(--accent-rose); font-weight:600;">
+                  <span style="width:10px; height:10px; border-radius:2px; background:var(--accent-rose);"></span> Purchasing Power
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:0.35rem; color:var(--text-muted); font-weight:600;">
+                  <span style="width:10px; height:2px; background:var(--text-muted);"></span> Nominal Baseline
+                </span>
+              </div>
+            </div>
+            <div id="inf-chart-wrapper" style="width:100%; height:220px; position:relative;">
+              <!-- Dynamic SVG Chart Injected via JavaScript -->
+            </div>
+          </div>
+
+          <!-- Year-by-Year Amortization Schedule Table -->
+          <div class="inf-table-section" style="margin-top:1.25rem; background:var(--bg-tertiary); border:1px solid var(--card-border); border-radius:var(--radius-lg); padding:1.25rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+              <div style="font-size:0.95rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:0.4rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Annual Compounding Breakdown Schedule
+              </div>
+              <span style="font-size:0.75rem; color:var(--text-muted);">Year-by-Year CPI Compounding Matrix</span>
+            </div>
+            <div style="overflow-x:auto; max-height:280px; overflow-y:auto; border-radius:var(--radius-md); border:1px solid var(--card-border);">
+              <table class="breakdown-table" style="margin-top:0;">
+                <thead>
+                  <tr style="position:sticky; top:0; z-index:1; background:var(--bg-secondary);">
+                    <th>Year</th>
+                    <th>Future Cost</th>
+                    <th>Purchasing Power</th>
+                    <th>Cumulative Price Rise</th>
+                    <th>Annual Delta</th>
+                  </tr>
+                </thead>
+                <tbody id="inf-table-body">
+                  <!-- Dynamically populated rows via JavaScript -->
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

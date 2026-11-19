@@ -6,6 +6,11 @@
       "source": "/financial/loan-calculator",
       "destination": "/financial/bike-emi-calculator",
       "permanent": true
+    },
+    {
+      "source": "/financial/inflation",
+      "destination": "/financial/inflation-calculator",
+      "permanent": true
     }
   ],
   "rewrites": [

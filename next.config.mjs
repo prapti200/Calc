@@ -7,6 +7,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/financial/inflation',
+        destination: '/financial/inflation-calculator',
+        permanent: true,
+      },
+      {
         source: '/financial/loan-calculator',
         destination: '/financial/bike-emi-calculator',
         permanent: true,
