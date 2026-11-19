@@ -15,6 +15,7 @@
       category: 'Wealth & Macroeconomic Planning',
       badge: 'MoSPI CPI & RBI Target Verified',
       tagline: 'Understand the silent erosion of compounding price increases, project real future costs, and shield your retirement corpus using verified CPI metrics.',
+      keywords: 'inflation calculator, inflation calculator india, future value of money calculator, purchasing power calculator, CPI inflation calculator India, rupee value over time, inflation adjusted return calculator, historical inflation rate in India, CAGR inflation formula, consumer price index, rbi inflation target, cpi inflation, mospi cpi',
       overview: 'Calculate how rising consumer prices erode your rupee purchasing power over time. Use this free inflation calculator for India and global planning to project future living costs, estimate real investment returns, and protect long-term financial goals against CPI inflation.',
       faqs: [
         {
@@ -559,6 +560,12 @@
       }
       const isBike = (data.id === 'sec-loan-calc' || (data.title && (data.title.includes('Bike EMI') || data.title.includes('Loan'))));
       const isInflation = (data.id === 'sec-inflation-calc' || (data.title && data.title.includes('Inflation')));
+      if (isInflation) {
+        const metaKw = document.querySelector('meta[name="keywords"]');
+        if (metaKw) {
+          metaKw.setAttribute('content', 'inflation calculator, inflation calculator india, future value of money calculator, purchasing power calculator, CPI inflation calculator India, rupee value over time, inflation adjusted return calculator, historical inflation rate in India, CAGR inflation formula, consumer price index, rbi inflation target, cpi inflation, mospi cpi');
+        }
+      }
       const appSchema = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",

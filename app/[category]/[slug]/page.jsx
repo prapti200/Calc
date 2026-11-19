@@ -14,12 +14,42 @@ export async function generateMetadata({ params }) {
     return {
       title: 'Inflation Calculator India – Future Value & Purchasing Power',
       description: 'Free Inflation Calculator India to check future value of money, purchasing power loss, and real returns using RBI & MoSPI CPI rates. Fast, accurate & mobile-ready.',
+      keywords: [
+        'inflation calculator',
+        'inflation calculator india',
+        'future value of money calculator',
+        'purchasing power calculator',
+        'CPI inflation calculator India',
+        'rupee value over time',
+        'inflation adjusted return calculator',
+        'historical inflation rate in India',
+        'CAGR inflation formula',
+        'consumer price index',
+        'rbi inflation target',
+        'cpi inflation',
+        'mospi cpi'
+      ],
       alternates: {
         canonical: '/financial/inflation-calculator',
       },
       openGraph: {
         title: 'Inflation Calculator India – Future Value & Purchasing Power',
         description: 'Free Inflation Calculator India to check future value of money, purchasing power loss, and real returns using RBI & MoSPI CPI rates. Fast, accurate & mobile-ready.',
+      keywords: [
+        'inflation calculator',
+        'inflation calculator india',
+        'future value of money calculator',
+        'purchasing power calculator',
+        'CPI inflation calculator India',
+        'rupee value over time',
+        'inflation adjusted return calculator',
+        'historical inflation rate in India',
+        'CAGR inflation formula',
+        'consumer price index',
+        'rbi inflation target',
+        'cpi inflation',
+        'mospi cpi'
+      ],
         url: '/financial/inflation-calculator',
         type: 'website',
       },
@@ -27,6 +57,21 @@ export async function generateMetadata({ params }) {
         card: 'summary_large_image',
         title: 'Inflation Calculator India – Future Value & Purchasing Power',
         description: 'Free Inflation Calculator India to check future value of money, purchasing power loss, and real returns using RBI & MoSPI CPI rates. Fast, accurate & mobile-ready.',
+      keywords: [
+        'inflation calculator',
+        'inflation calculator india',
+        'future value of money calculator',
+        'purchasing power calculator',
+        'CPI inflation calculator India',
+        'rupee value over time',
+        'inflation adjusted return calculator',
+        'historical inflation rate in India',
+        'CAGR inflation formula',
+        'consumer price index',
+        'rbi inflation target',
+        'cpi inflation',
+        'mospi cpi'
+      ],
       },
     };
   }
@@ -77,6 +122,7 @@ export default function CalculatorPage({ params }) {
     "operatingSystem": "Any",
     "applicationCategory": "FinanceApplication",
     "description": "Free Inflation Calculator India to check future value of money, purchasing power loss, and real returns using RBI & MoSPI CPI rates. Fast, accurate & mobile-ready.",
+    "keywords": "inflation calculator, inflation calculator india, future value of money calculator, purchasing power calculator, CPI inflation calculator India, rupee value over time, inflation adjusted return calculator, historical inflation rate in India, CAGR inflation formula, consumer price index, rbi inflation target, cpi inflation, mospi cpi",
     "offers": {
       "@type": "Offer",
       "price": "0",
