@@ -30,6 +30,7 @@ const FinancialCalcs = {
     this.calcDiscountTax();
     this.calcTipSplit();
     this.calcROI();
+    this.calcPayCommission();
     this.calcHELOC();
     this.calcSalary();
     this.calcSimpleInterest();
@@ -526,6 +527,305 @@ const FinancialCalcs = {
   },
 
   // ------------------------------------------------------------------------
+  // ------------------------------------------------------------------------
+  // 31B. 8TH PAY COMMISSION SALARY CALCULATOR (Pay Matrix & Fitment Factor)
+  // ------------------------------------------------------------------------
+  cpcPayLevel: '1',
+  cpcFitment: 2.28,
+  cpcCity: 'X',
+  cpcDaRate: 0,
+  cpcPension: 'NPS',
+  cpcArrearsMonths: 12,
+  cpcMatrixExpanded: false,
+
+  CPC_LEVEL_DATA: {
+    '1': { name: 'Level 1', gp: 'GP 1800', entryBasic: 18000, taMetro: 1350, taOther: 900, cghs: 250 },
+    '2': { name: 'Level 2', gp: 'GP 1900', entryBasic: 19900, taMetro: 1350, taOther: 900, cghs: 250 },
+    '3': { name: 'Level 3', gp: 'GP 2000', entryBasic: 21700, taMetro: 3600, taOther: 1800, cghs: 250 },
+    '4': { name: 'Level 4', gp: 'GP 2400', entryBasic: 25500, taMetro: 3600, taOther: 1800, cghs: 250 },
+    '5': { name: 'Level 5', gp: 'GP 2800', entryBasic: 29200, taMetro: 3600, taOther: 1800, cghs: 250 },
+    '6': { name: 'Level 6', gp: 'GP 4200', entryBasic: 35400, taMetro: 3600, taOther: 1800, cghs: 450 },
+    '7': { name: 'Level 7', gp: 'GP 4600', entryBasic: 44900, taMetro: 3600, taOther: 1800, cghs: 650 },
+    '8': { name: 'Level 8', gp: 'GP 4800', entryBasic: 47600, taMetro: 3600, taOther: 1800, cghs: 650 },
+    '9': { name: 'Level 9', gp: 'GP 5400', entryBasic: 53100, taMetro: 7200, taOther: 3600, cghs: 650 },
+    '10': { name: 'Level 10', gp: 'GP 5400', entryBasic: 56100, taMetro: 7200, taOther: 3600, cghs: 650 },
+    '11': { name: 'Level 11', gp: 'GP 6600', entryBasic: 67700, taMetro: 7200, taOther: 3600, cghs: 650 },
+    '12': { name: 'Level 12', gp: 'GP 7600', entryBasic: 78800, taMetro: 7200, taOther: 3600, cghs: 1000 },
+    '13': { name: 'Level 13', gp: 'Director', entryBasic: 123100, taMetro: 7200, taOther: 3600, cghs: 1000 },
+    '14': { name: 'Level 14', gp: 'Joint Sec', entryBasic: 144200, taMetro: 7200, taOther: 3600, cghs: 1000 },
+    '15': { name: 'Level 15', gp: 'Pr Sec', entryBasic: 182200, taMetro: 7200, taOther: 3600, cghs: 1000 },
+    '16': { name: 'Level 16', gp: 'Spl Sec', entryBasic: 205400, taMetro: 7200, taOther: 3600, cghs: 1000 },
+    '17': { name: 'Level 17', gp: 'Secretary', entryBasic: 225000, taMetro: 7200, taOther: 3600, cghs: 1000 },
+    '18': { name: 'Level 18', gp: 'Cab Sec', entryBasic: 250000, taMetro: 7200, taOther: 3600, cghs: 1000 }
+  },
+
+  onCpcLevelChange() {
+    const sel = document.getElementById('cpc-pay-level');
+    if (!sel) return;
+    this.cpcPayLevel = sel.value;
+    const levelData = this.CPC_LEVEL_DATA[sel.value] || this.CPC_LEVEL_DATA['1'];
+    const basicInput = document.getElementById('cpc-basic-pay');
+    if (basicInput) {
+      basicInput.value = levelData.entryBasic;
+      basicInput.min = levelData.entryBasic;
+    }
+    const taInput = document.getElementById('cpc-ta-amount');
+    if (taInput) {
+      taInput.value = (this.cpcCity === 'X') ? levelData.taMetro : levelData.taOther;
+    }
+    this.calcPayCommission();
+  },
+
+  onCpcFitmentRange(val) {
+    this.cpcFitment = parseFloat(val) || 2.28;
+    const span = document.getElementById('cpc-fitment-val');
+    if (span) span.textContent = this.cpcFitment.toFixed(2);
+    document.querySelectorAll('.cpc-fitment-pill').forEach(btn => {
+      const pVal = parseFloat(btn.textContent);
+      if (Math.abs(pVal - this.cpcFitment) < 0.005) {
+        btn.classList.add('active');
+        btn.style.background = 'var(--btn-active-bg, #eff6ff)';
+        btn.style.borderColor = 'var(--btn-active-border, #bfdbfe)';
+        btn.style.color = 'var(--btn-active-text, #2563eb)';
+      } else {
+        btn.classList.remove('active');
+        btn.style.background = 'transparent';
+        btn.style.borderColor = 'transparent';
+        btn.style.color = 'var(--text-secondary)';
+      }
+    });
+    this.calcPayCommission();
+  },
+
+  setCpcFitment(val, btn) {
+    const range = document.getElementById('cpc-fitment-range');
+    if (range) range.value = val;
+    this.cpcFitment = parseFloat(val) || 2.28;
+    const span = document.getElementById('cpc-fitment-val');
+    if (span) span.textContent = this.cpcFitment.toFixed(2);
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('.cpc-fitment-pill').forEach(b => {
+        b.classList.remove('active');
+        b.style.background = 'transparent';
+        b.style.borderColor = 'transparent';
+        b.style.color = 'var(--text-secondary)';
+      });
+      btn.classList.add('active');
+      btn.style.background = 'var(--btn-active-bg, #eff6ff)';
+      btn.style.borderColor = 'var(--btn-active-border, #bfdbfe)';
+      btn.style.color = 'var(--btn-active-text, #2563eb)';
+    }
+    this.calcPayCommission();
+  },
+
+  setCpcCity(city, btn) {
+    this.cpcCity = city;
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('.cpc-city-pill').forEach(b => {
+        b.classList.remove('active');
+        b.style.background = 'transparent';
+        b.style.borderColor = 'transparent';
+        b.style.color = 'var(--text-secondary)';
+      });
+      btn.classList.add('active');
+      btn.style.background = 'var(--btn-active-bg, #eff6ff)';
+      btn.style.borderColor = 'var(--btn-active-border, #bfdbfe)';
+      btn.style.color = 'var(--btn-active-text, #2563eb)';
+    }
+    const levelData = this.CPC_LEVEL_DATA[this.cpcPayLevel] || this.CPC_LEVEL_DATA['1'];
+    const taInput = document.getElementById('cpc-ta-amount');
+    if (taInput) {
+      taInput.value = (city === 'X') ? levelData.taMetro : levelData.taOther;
+    }
+    this.calcPayCommission();
+  },
+
+  onCpcDaInput(val) {
+    this.cpcDaRate = parseFloat(val) || 0;
+    const range = document.getElementById('cpc-da-range');
+    if (range) range.value = this.cpcDaRate;
+    const display = document.getElementById('cpc-da-display');
+    if (display) display.textContent = this.cpcDaRate + '%';
+    this.calcPayCommission();
+  },
+
+  onCpcDaRange(val) {
+    this.cpcDaRate = parseFloat(val) || 0;
+    const input = document.getElementById('cpc-da-rate');
+    if (input) input.value = this.cpcDaRate;
+    const display = document.getElementById('cpc-da-display');
+    if (display) display.textContent = this.cpcDaRate + '%';
+    this.calcPayCommission();
+  },
+
+  setCpcPension(scheme, btn) {
+    this.cpcPension = scheme;
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('.cpc-pension-pill').forEach(b => {
+        b.classList.remove('active');
+        b.style.background = 'transparent';
+        b.style.borderColor = 'transparent';
+        b.style.color = 'var(--text-secondary)';
+      });
+      btn.classList.add('active');
+      btn.style.background = 'var(--btn-active-bg, #eff6ff)';
+      btn.style.borderColor = 'var(--btn-active-border, #bfdbfe)';
+      btn.style.color = 'var(--btn-active-text, #2563eb)';
+    }
+    this.calcPayCommission();
+  },
+
+  onCpcArrearsRange(val) {
+    this.cpcArrearsMonths = parseInt(val, 10) || 12;
+    const span = document.getElementById('cpc-arrears-months-val');
+    if (span) span.textContent = this.cpcArrearsMonths + ' Months';
+    this.calcPayCommission();
+  },
+
+  toggleCpcMatrix() {
+    const wrap = document.getElementById('cpc-matrix-wrap');
+    const btn = document.getElementById('btn-toggle-cpc-matrix');
+    if (!wrap || !btn) return;
+    this.cpcMatrixExpanded = !this.cpcMatrixExpanded;
+    if (this.cpcMatrixExpanded) {
+      wrap.style.maxHeight = 'none';
+      btn.textContent = 'Collapse Pay Matrix ▲';
+    } else {
+      wrap.style.maxHeight = '360px';
+      btn.textContent = 'Show Full Pay Matrix ▼';
+    }
+  },
+
+  calcPayCommission() {
+    const basic7th = parseFloat(document.getElementById('cpc-basic-pay')?.value) || 18000;
+    const fitment = this.cpcFitment || 2.28;
+    const city = this.cpcCity || 'X';
+    const daRate8th = this.cpcDaRate || 0;
+    const pension = this.cpcPension || 'NPS';
+    const arrearsMonths = this.cpcArrearsMonths || 12;
+
+    const levelData = this.CPC_LEVEL_DATA[this.cpcPayLevel] || this.CPC_LEVEL_DATA['1'];
+    const taBase = parseFloat(document.getElementById('cpc-ta-amount')?.value) || (city === 'X' ? levelData.taMetro : levelData.taOther);
+
+    // Update displays
+    const basicDisp = document.getElementById('cpc-basic-display');
+    if (basicDisp) basicDisp.textContent = '₹' + Math.round(basic7th).toLocaleString('en-IN');
+    const taDisp = document.getElementById('cpc-ta-display');
+    if (taDisp) taDisp.textContent = '₹' + Math.round(taBase).toLocaleString('en-IN') + ' / mo';
+
+    // 1. Current 7th CPC Calculation
+    const da7thRate = 0.50; // 50% DA in late 7th CPC
+    const hra7thRate = city === 'X' ? 0.30 : (city === 'Y' ? 0.20 : 0.10);
+    const da7th = basic7th * da7thRate;
+    const hra7th = basic7th * hra7thRate;
+    const ta7th = taBase + (taBase * da7thRate);
+    const gross7th = basic7th + da7th + hra7th + ta7th;
+
+    const nps7th = pension === 'NPS' ? 0.10 * (basic7th + da7th) : 0;
+    const cghs7th = levelData.cghs;
+    const profTax7th = 200;
+    const annualGross7th = gross7th * 12;
+    let annualTax7th = 0;
+    if (annualGross7th > 775000) {
+      const taxable = annualGross7th - 75000;
+      if (taxable > 1500000) annualTax7th = 150000 + (taxable - 1500000) * 0.30;
+      else if (taxable > 1200000) annualTax7th = 90000 + (taxable - 1200000) * 0.20;
+      else if (taxable > 900000) annualTax7th = 45000 + (taxable - 900000) * 0.15;
+      else if (taxable > 700000) annualTax7th = 20000 + (taxable - 700000) * 0.10;
+    }
+    const monthlyTax7th = annualTax7th / 12;
+    const totalDed7th = nps7th + cghs7th + profTax7th + monthlyTax7th;
+    const net7th = gross7th - totalDed7th;
+
+    // 2. Projected 8th CPC Calculation
+    const basic8th = Math.round(basic7th * fitment);
+    const hra8thRate = city === 'X' ? 0.30 : (city === 'Y' ? 0.20 : 0.10);
+    const da8th = basic8th * (daRate8th / 100);
+    const hra8th = basic8th * hra8thRate;
+    const ta8th = taBase + (taBase * (daRate8th / 100));
+    const gross8th = basic8th + da8th + hra8th + ta8th;
+
+    const nps8th = pension === 'NPS' ? 0.10 * (basic8th + da8th) : 0;
+    const cghs8th = levelData.cghs;
+    const profTax8th = 200;
+
+    const annualGross8th = gross8th * 12;
+    let annualTax8th = 0;
+    if (annualGross8th > 775000) {
+      const taxable8th = annualGross8th - 75000;
+      if (taxable8th > 1500000) annualTax8th = 150000 + (taxable8th - 1500000) * 0.30;
+      else if (taxable8th > 1200000) annualTax8th = 90000 + (taxable8th - 1200000) * 0.20;
+      else if (taxable8th > 900000) annualTax8th = 45000 + (taxable8th - 900000) * 0.15;
+      else if (taxable8th > 700000) annualTax8th = 20000 + (taxable8th - 700000) * 0.10;
+    }
+    const monthlyTax8th = annualTax8th / 12;
+    const totalDed8th = nps8th + cghs8th + profTax8th + monthlyTax8th;
+    const net8th = gross8th - totalDed8th;
+
+    const netHike = net8th - net7th;
+    const pctHike = net7th > 0 ? (netHike / net7th) * 100 : 0;
+    const totalArrears = Math.max(0, netHike) * arrearsMonths;
+
+    // Output bindings
+    const elHike = document.getElementById('res-cpc-net-hike');
+    if (elHike) elHike.textContent = '+₹' + Math.round(netHike).toLocaleString('en-IN') + ' / mo';
+
+    const elHikeSub = document.getElementById('res-cpc-net-hike-sub');
+    if (elHikeSub) {
+      elHikeSub.textContent = `Net take-home pay jumps from ₹${Math.round(net7th).toLocaleString('en-IN')} to ₹${Math.round(net8th).toLocaleString('en-IN')} (+${pctHike.toFixed(1)}% hike)`;
+    }
+
+    const elRevBasic = document.getElementById('res-cpc-revised-basic');
+    if (elRevBasic) elRevBasic.textContent = '₹' + Math.round(basic8th).toLocaleString('en-IN');
+
+    const elRevGross = document.getElementById('res-cpc-revised-gross');
+    if (elRevGross) elRevGross.textContent = '₹' + Math.round(gross8th).toLocaleString('en-IN');
+
+    const elRevHra = document.getElementById('res-cpc-revised-hra');
+    if (elRevHra) elRevHra.textContent = '₹' + Math.round(hra8th).toLocaleString('en-IN');
+
+    const elRevTa = document.getElementById('res-cpc-revised-ta');
+    if (elRevTa) elRevTa.textContent = '₹' + Math.round(ta8th).toLocaleString('en-IN');
+
+    const elDed = document.getElementById('res-cpc-total-deductions');
+    if (elDed) elDed.textContent = '₹' + Math.round(totalDed8th).toLocaleString('en-IN');
+
+    const el7thInHand = document.getElementById('res-cpc-7th-inhand');
+    if (el7thInHand) el7thInHand.textContent = '₹' + Math.round(net7th).toLocaleString('en-IN');
+
+    const elArrears = document.getElementById('res-cpc-arrears-total');
+    if (elArrears) elArrears.textContent = '₹' + Math.round(totalArrears).toLocaleString('en-IN');
+
+    this.renderCpcMatrixTable();
+  },
+
+  renderCpcMatrixTable() {
+    const tbody = document.getElementById('cpc-matrix-tbody');
+    if (!tbody) return;
+
+    const rows = Object.entries(this.CPC_LEVEL_DATA).map(([lvl, data]) => {
+      const b7 = data.entryBasic;
+      const b192 = Math.round(b7 * 1.92);
+      const b228 = Math.round(b7 * 2.28);
+      const b286 = Math.round(b7 * 2.86);
+      const isSelected = lvl === this.cpcPayLevel;
+      const rowBg = isSelected ? 'background:rgba(37,99,235,0.06); font-weight:700;' : '';
+
+      return `
+        <tr style="border-bottom:1px solid var(--card-border); ${rowBg} transition:background 0.15s ease;">
+          <td style="padding:0.6rem 0.85rem; text-align:left; font-weight:700; color:var(--text-primary);">${data.name}</td>
+          <td style="padding:0.6rem 0.85rem; text-align:left; color:var(--text-secondary);">${data.gp}</td>
+          <td style="padding:0.6rem 0.85rem; color:var(--text-primary);">₹${b7.toLocaleString('en-IN')}</td>
+          <td style="padding:0.6rem 0.85rem; color:#059669; font-weight:600;">₹${b192.toLocaleString('en-IN')}</td>
+          <td style="padding:0.6rem 0.85rem; color:var(--primary-color); font-weight:700;">₹${b228.toLocaleString('en-IN')}</td>
+          <td style="padding:0.6rem 0.85rem; color:#7c3aed; font-weight:600;">₹${b286.toLocaleString('en-IN')}</td>
+        </tr>
+      `;
+    }).join('');
+
+    tbody.innerHTML = rows;
+  },
+
   // 32. DOWN PAYMENT CALCULATOR (Savings Timeline & HYSA Growth)
   // ------------------------------------------------------------------------
   // ------------------------------------------------------------------------
@@ -1757,6 +2057,7 @@ const FinancialCalcs = {
       window.SeoGuide.updateGuide(calcId, 'financial');
     }
 
+    if (calcId === 'sec-8th-pay-commission-calc') { this.calcPayCommission(); }
     if (window.scrollToActiveCalculator) { window.scrollToActiveCalculator('fin'); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   },
 
@@ -2107,7 +2408,12 @@ const FinancialCalcs = {
     });
 
     // 36. HELOC Calculator
-    this.syncInputSlider('heloc-draw-amount', 'heloc-draw-amount-range', () => this.calcHELOC());
+    
+    // 8th Pay Commission Listeners
+    ['cpc-basic-pay', 'cpc-ta-amount', 'cpc-da-rate'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', () => this.calcPayCommission());
+    });
+this.syncInputSlider('heloc-draw-amount', 'heloc-draw-amount-range', () => this.calcHELOC());
     this.syncInputSlider('heloc-rate', 'heloc-rate-range', () => this.calcHELOC());
     this.syncInputSlider('heloc-extra-payment', 'heloc-extra-payment-range', () => this.calcHELOC());
     this.syncInputSlider('heloc-home-value', 'heloc-home-value-range', () => this.calcHELOC());
