@@ -7,6 +7,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/financial/heloc',
+        destination: '/financial/heloc-calculator',
+        permanent: true,
+      },
+      {
         source: '/financial/inflation',
         destination: '/financial/inflation-calculator',
         permanent: true,

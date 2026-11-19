@@ -629,7 +629,7 @@
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Inflation Calculator</span>
           </a>
-          <a class="sidebar-calc-item" data-calc-id="sec-heloc-calc" data-category="financial" data-sub="loan" data-keywords="heloc calculator home equity line of credit draw period repayment payment shock interest only" title="HELOC Calculator" onclick="openZenithCalc('financial', 'sec-heloc-calc')">
+          <a class="sidebar-calc-item" data-calc-id="sec-heloc-calc" href="/financial/heloc-calculator" data-category="financial" data-sub="loan" data-keywords="heloc calculator, heloc calculator payment, home equity line of credit calculator, heloc payment calculator, heloc interest only payment calculator, heloc draw period and repayment period calculator, combined loan to value (CLTV) calculator, how much equity can I borrow, heloc amortization schedule" title="HELOC Calculator – Monthly Draw &amp; Repayment Payment Estimator" onclick="openZenithCalc('financial', 'sec-heloc-calc')">
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">HELOC Calculator</span>
           </a>
@@ -1010,7 +1010,7 @@
               </div>
               <span class="compact-calc-arrow">→</span>
             </a>
-            <a class="compact-calc-link" data-calc-id="sec-heloc-calc" data-category="financial" data-sub="loan" data-keywords="heloc calculator home equity line of credit draw period repayment payment shock interest only" onclick="openZenithCalc('financial', 'sec-heloc-calc')" title="HELOC Calculator">
+            <a class="compact-calc-link" data-calc-id="sec-heloc-calc" href="/financial/heloc-calculator" data-category="financial" data-sub="loan" data-keywords="heloc calculator, heloc calculator payment, home equity line of credit calculator, heloc payment calculator, heloc interest only payment calculator, heloc draw period and repayment period calculator, combined loan to value (CLTV) calculator, how much equity can I borrow, heloc amortization schedule" onclick="openZenithCalc('financial', 'sec-heloc-calc')" title="HELOC Calculator – Monthly Draw &amp; Repayment Payment Estimator">
               <div class="compact-calc-left">
                 <span class="compact-calc-bullet"></span>
                 <span class="compact-calc-title">HELOC Calculator</span>
@@ -2300,7 +2300,7 @@
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">Inflation Calculator</span>
           </a>
-          <a class="sidebar-calc-item" data-calc-id="sec-heloc-calc" data-fin-group="new loans real-estate"  title="HELOC Calculator" onclick="FinancialCalcs.openCalculator('sec-heloc-calc')">
+          <a class="sidebar-calc-item" data-calc-id="sec-heloc-calc" href="/financial/heloc-calculator" data-fin-group="new loans real-estate"  title="HELOC Calculator – Monthly Draw &amp; Repayment Payment Estimator" onclick="FinancialCalcs.openCalculator('sec-heloc-calc')">
             <span class="sidebar-calc-dot"></span>
             <span class="sidebar-calc-name">HELOC Calculator</span>
           </a>
@@ -2465,7 +2465,7 @@
 
           <!-- Compact List View -->
           <div class="topic-compact-list" style="display:none;">
-            <a class="compact-calc-link" data-calc-id="sec-heloc-calc" data-fin-group="new loans real-estate"  onclick="FinancialCalcs.openCalculator('sec-heloc-calc')" title="HELOC Calculator">
+            <a class="compact-calc-link" data-calc-id="sec-heloc-calc" href="/financial/heloc-calculator" data-fin-group="new loans real-estate"  onclick="FinancialCalcs.openCalculator('sec-heloc-calc')" title="HELOC Calculator – Monthly Draw &amp; Repayment Payment Estimator">
               <div class="compact-calc-left">
                 <span class="compact-calc-bullet"></span>
                 <span class="compact-calc-title">HELOC Calculator</span>
@@ -3274,105 +3274,275 @@
                 <!-- ==================================================================
              CALCULATOR 31: HELOC CALCULATOR
              ================================================================== -->
-        <div class="calc-panel fin-calc-unit" id="sec-heloc-calc" style="display:none;">
+                <div class="calc-panel fin-calc-unit" id="sec-heloc-calc" style="display:none;">
           <div class="panel-header">
             <div class="panel-title-group">
-              <h2 class="section-heading" style="font-size:1.65rem;">HELOC Calculator (Draw Period vs Repayment Phase Shock)</h2>
+              <h1 class="section-heading" style="font-size:1.65rem; margin-bottom:0.4rem;">HELOC Calculator – Estimate Your Monthly Draw &amp; Repayment Payments</h1>
+              <p class="section-subheading" style="font-size:0.925rem; color:var(--text-secondary, #94a3b8); max-width:860px; line-height:1.55; margin-top:0.25rem;">
+                Estimate your exact monthly payment across both the interest-only draw period and fully amortized repayment phase with our free HELOC calculator. Compare variable APR scenarios indexed to the U.S. Prime Rate, evaluate combined loan-to-value (CLTV) limits on your home's equity, calculate payment shock jump, and model early principal payoff savings.
+              </p>
             </div>
           </div>
+
+          <!-- Mode / View Tabs -->
+          <div class="heloc-mode-tabs" style="display:flex; gap:0.5rem; margin-bottom:1.25rem; border-bottom:1px solid var(--border-subtle, rgba(255,255,255,0.08)); padding-bottom:0.75rem;">
+            <button type="button" class="heloc-tab-btn active" id="tab-btn-heloc-payment" onclick="FinancialCalcs.setHelocMode('payment')" style="padding:0.6rem 1.1rem; border-radius:8px; font-weight:600; font-size:0.875rem; border:1px solid var(--accent-primary, #6366f1); background:var(--accent-primary, #6366f1); color:#ffffff; cursor:pointer; transition:all 0.2s;">
+              1. HELOC Payment Estimator (Draw + Repayment)
+            </button>
+            <button type="button" class="heloc-tab-btn" id="tab-btn-heloc-equity" onclick="FinancialCalcs.setHelocMode('equity')" style="padding:0.6rem 1.1rem; border-radius:8px; font-weight:600; font-size:0.875rem; border:1px solid var(--border-subtle, rgba(255,255,255,0.12)); background:var(--bg-card, #131722); color:var(--text-secondary, #94a3b8); cursor:pointer; transition:all 0.2s;">
+              2. Max HELOC Credit Line (Equity / CLTV)
+            </button>
+          </div>
+
           <div class="calc-split-layout">
             <div class="calc-inputs-side">
-              <div class="form-group">
-                <div class="label-with-slider-val">
-                  <label for="heloc-home-value">Current Home Value</label>
-                  <span class="slider-val-preview" id="heloc-home-value-val">$525,000</span>
-                </div>
-                <div class="input-with-affix">
-                  <span class="affix curr-symbol">$</span>
-                  <input type="number" id="heloc-home-value" class="form-input" value="525000" min="50000" step="10000">
-                </div>
-                <input type="range" id="heloc-home-value-range" class="form-range" min="100000" max="2000000" step="10000" value="525000">
-              </div>
-
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+              
+              <!-- TAB 1: Payment Estimator Inputs -->
+              <div id="heloc-inputs-payment">
+                <!-- HELOC Borrowed / Drawn Amount -->
                 <div class="form-group">
-                  <label for="heloc-mortgage">1st Mortgage Balance</label>
+                  <div class="label-with-slider-val">
+                    <label for="heloc-draw-amount" style="font-weight:600;">HELOC Draw / Borrowed Amount</label>
+                    <span class="slider-val-preview" id="heloc-draw-amount-val">$50,000</span>
+                  </div>
                   <div class="input-with-affix">
                     <span class="affix curr-symbol">$</span>
-                    <input type="number" id="heloc-mortgage" class="form-input" value="290000" min="0" step="5000">
+                    <input type="number" id="heloc-draw-amount" class="form-input" value="50000" min="5000" max="1000000" step="1000">
                   </div>
+                  <input type="range" id="heloc-draw-amount-range" class="form-range" min="5000" max="500000" step="5000" value="50000">
                 </div>
+
+                <!-- Annual Interest Rate / APR -->
                 <div class="form-group">
-                  <label for="heloc-max-cltv">Max CLTV (%)</label>
+                  <div class="label-with-slider-val">
+                    <label for="heloc-rate" style="font-weight:600;">Annual Interest Rate (APR)</label>
+                    <span class="slider-val-preview" id="heloc-rate-val">7.50%</span>
+                  </div>
                   <div class="input-with-affix">
-                    <input type="number" id="heloc-max-cltv" class="form-input" value="85" min="50" max="100">
+                    <input type="number" id="heloc-rate" class="form-input" value="7.5" min="1" max="20" step="0.05">
                     <span class="affix">%</span>
                   </div>
+                  <input type="range" id="heloc-rate-range" class="form-range" min="3" max="15" step="0.05" value="7.5">
+
+                  <!-- APR Quick Benchmark Pills -->
+                  <div class="heloc-pill-group" style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem;">
+                    <button type="button" class="preset-pill" onclick="FinancialCalcs.setHelocRate(6.5, this)" style="font-size:0.75rem; padding:0.3rem 0.6rem; border-radius:6px; border:1px solid var(--border-subtle, rgba(255,255,255,0.1)); background:transparent; color:var(--text-secondary, #94a3b8); cursor:pointer;">6.50% Best Credit</button>
+                    <button type="button" class="preset-pill active" onclick="FinancialCalcs.setHelocRate(7.5, this)" style="font-size:0.75rem; padding:0.3rem 0.6rem; border-radius:6px; border:1px solid var(--accent-primary, #6366f1); background:rgba(99,102,241,0.15); color:var(--accent-primary, #6366f1); cursor:pointer;">7.50% Nov 2026 Avg</button>
+                    <button type="button" class="preset-pill" onclick="FinancialCalcs.setHelocRate(8.5, this)" style="font-size:0.75rem; padding:0.3rem 0.6rem; border-radius:6px; border:1px solid var(--border-subtle, rgba(255,255,255,0.1)); background:transparent; color:var(--text-secondary, #94a3b8); cursor:pointer;">8.50% Prime + 1.5%</button>
+                    <button type="button" class="preset-pill" onclick="FinancialCalcs.setHelocRate(9.5, this)" style="font-size:0.75rem; padding:0.3rem 0.6rem; border-radius:6px; border:1px solid var(--border-subtle, rgba(255,255,255,0.1)); background:transparent; color:var(--text-secondary, #94a3b8); cursor:pointer;">9.50% High LTV</button>
+                  </div>
+                </div>
+
+                <!-- Durations Grid -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                  <div class="form-group">
+                    <label for="heloc-draw-years" style="font-weight:600;">Draw Period (Interest-Only)</label>
+                    <div class="input-with-affix">
+                      <input type="number" id="heloc-draw-years" class="form-input" value="10" min="1" max="15">
+                      <span class="affix">Years</span>
+                    </div>
+                    <div style="display:flex; gap:0.3rem; margin-top:0.4rem;">
+                      <button type="button" class="preset-pill" onclick="FinancialCalcs.setHelocDrawYears(5, this)" style="font-size:0.75rem; padding:0.25rem 0.5rem; border-radius:6px; border:1px solid var(--border-subtle, rgba(255,255,255,0.1)); background:transparent; color:var(--text-secondary, #94a3b8); cursor:pointer;">5 Yrs</button>
+                      <button type="button" class="preset-pill active" onclick="FinancialCalcs.setHelocDrawYears(10, this)" style="font-size:0.75rem; padding:0.25rem 0.5rem; border-radius:6px; border:1px solid var(--accent-primary, #6366f1); background:rgba(99,102,241,0.15); color:var(--accent-primary, #6366f1); cursor:pointer;">10 Yrs</button>
+                      <button type="button" class="preset-pill" onclick="FinancialCalcs.setHelocDrawYears(15, this)" style="font-size:0.75rem; padding:0.25rem 0.5rem; border-radius:6px; border:1px solid var(--border-subtle, rgba(255,255,255,0.1)); background:transparent; color:var(--text-secondary, #94a3b8); cursor:pointer;">15 Yrs</button>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="heloc-repay-years" style="font-weight:600;">Repayment Period (P&amp;I)</label>
+                    <div class="input-with-affix">
+                      <input type="number" id="heloc-repay-years" class="form-input" value="20" min="5" max="30">
+                      <span class="affix">Years</span>
+                    </div>
+                    <div style="display:flex; gap:0.3rem; margin-top:0.4rem;">
+                      <button type="button" class="preset-pill" onclick="FinancialCalcs.setHelocRepayYears(10, this)" style="font-size:0.75rem; padding:0.25rem 0.5rem; border-radius:6px; border:1px solid var(--border-subtle, rgba(255,255,255,0.1)); background:transparent; color:var(--text-secondary, #94a3b8); cursor:pointer;">10 Yrs</button>
+                      <button type="button" class="preset-pill" onclick="FinancialCalcs.setHelocRepayYears(15, this)" style="font-size:0.75rem; padding:0.25rem 0.5rem; border-radius:6px; border:1px solid var(--border-subtle, rgba(255,255,255,0.1)); background:transparent; color:var(--text-secondary, #94a3b8); cursor:pointer;">15 Yrs</button>
+                      <button type="button" class="preset-pill active" onclick="FinancialCalcs.setHelocRepayYears(20, this)" style="font-size:0.75rem; padding:0.25rem 0.5rem; border-radius:6px; border:1px solid var(--accent-primary, #6366f1); background:rgba(99,102,241,0.15); color:var(--accent-primary, #6366f1); cursor:pointer;">20 Yrs</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Optional Extra Monthly Principal Payment -->
+                <div class="form-group" style="margin-top:0.5rem; padding:0.85rem; background:rgba(99,102,241,0.05); border:1px dashed var(--border-subtle, rgba(255,255,255,0.15)); border-radius:8px;">
+                  <div class="label-with-slider-val">
+                    <label for="heloc-extra-payment" style="font-weight:600; font-size:0.875rem;">Optional Extra Principal Payment (Draw Phase)</label>
+                    <span class="slider-val-preview" id="heloc-extra-payment-val">$0 / mo</span>
+                  </div>
+                  <div class="input-with-affix">
+                    <span class="affix curr-symbol">$</span>
+                    <input type="number" id="heloc-extra-payment" class="form-input" value="0" min="0" max="2500" step="25">
+                  </div>
+                  <input type="range" id="heloc-extra-payment-range" class="form-range" min="0" max="1000" step="25" value="0">
+                  <span style="font-size:0.75rem; color:var(--text-secondary, #94a3b8); display:block; margin-top:0.25rem;">Accelerate principal payoff during the draw period to soften payment shock and save thousands in interest.</span>
                 </div>
               </div>
 
-              <div class="form-group">
-                <div class="label-with-slider-val">
-                  <label for="heloc-draw-amount">Initial Drawn Credit Line</label>
-                  <span class="slider-val-preview" id="heloc-draw-amount-val">$75,000</span>
-                </div>
-                <div class="input-with-affix">
-                  <span class="affix curr-symbol">$</span>
-                  <input type="number" id="heloc-draw-amount" class="form-input" value="75000" min="5000" step="5000">
-                </div>
-                <input type="range" id="heloc-draw-amount-range" class="form-range" min="5000" max="500000" step="5000" value="75000">
-              </div>
-
-              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.5rem;">
+              <!-- TAB 2: Equity & Max CLTV Inputs -->
+              <div id="heloc-inputs-equity" style="display:none;">
                 <div class="form-group">
-                  <label for="heloc-rate">Interest Rate</label>
+                  <div class="label-with-slider-val">
+                    <label for="heloc-home-value" style="font-weight:600;">Current Appraised Home Value</label>
+                    <span class="slider-val-preview" id="heloc-home-value-val">$400,000</span>
+                  </div>
                   <div class="input-with-affix">
-                    <input type="number" id="heloc-rate" class="form-input" value="8.5" min="1" max="20" step="0.125">
+                    <span class="affix curr-symbol">$</span>
+                    <input type="number" id="heloc-home-value" class="form-input" value="400000" min="50000" max="2500000" step="10000">
+                  </div>
+                  <input type="range" id="heloc-home-value-range" class="form-range" min="100000" max="1500000" step="10000" value="400000">
+                </div>
+
+                <div class="form-group">
+                  <div class="label-with-slider-val">
+                    <label for="heloc-mortgage" style="font-weight:600;">Current 1st Mortgage Balance</label>
+                    <span class="slider-val-preview" id="heloc-mortgage-val">$250,000</span>
+                  </div>
+                  <div class="input-with-affix">
+                    <span class="affix curr-symbol">$</span>
+                    <input type="number" id="heloc-mortgage" class="form-input" value="250000" min="0" max="2000000" step="5000">
+                  </div>
+                  <input type="range" id="heloc-mortgage-range" class="form-range" min="0" max="1000000" step="5000" value="250000">
+                </div>
+
+                <div class="form-group">
+                  <div class="label-with-slider-val">
+                    <label for="heloc-max-cltv" style="font-weight:600;">Max Combined Loan-to-Value (CLTV)</label>
+                    <span class="slider-val-preview" id="heloc-max-cltv-val">80%</span>
+                  </div>
+                  <div class="input-with-affix">
+                    <input type="number" id="heloc-max-cltv" class="form-input" value="80" min="50" max="100">
                     <span class="affix">%</span>
                   </div>
-                </div>
-                <div class="form-group">
-                  <label for="heloc-draw-years">Draw (Yrs)</label>
-                  <div class="input-with-affix">
-                    <input type="number" id="heloc-draw-years" class="form-input" value="10" min="1" max="15">
-                    <span class="affix">Yrs</span>
+                  <div style="display:flex; gap:0.4rem; margin-top:0.4rem;">
+                    <button type="button" class="preset-pill active" onclick="FinancialCalcs.setHelocCltv(80, this)" style="font-size:0.75rem; padding:0.3rem 0.6rem; border-radius:6px; border:1px solid var(--accent-primary, #6366f1); background:rgba(99,102,241,0.15); color:var(--accent-primary, #6366f1); cursor:pointer;">80% Standard CLTV</button>
+                    <button type="button" class="preset-pill" onclick="FinancialCalcs.setHelocCltv(85, this)" style="font-size:0.75rem; padding:0.3rem 0.6rem; border-radius:6px; border:1px solid var(--border-subtle, rgba(255,255,255,0.1)); background:transparent; color:var(--text-secondary, #94a3b8); cursor:pointer;">85% Max CLTV</button>
+                    <button type="button" class="preset-pill" onclick="FinancialCalcs.setHelocCltv(90, this)" style="font-size:0.75rem; padding:0.3rem 0.6rem; border-radius:6px; border:1px solid var(--border-subtle, rgba(255,255,255,0.1)); background:transparent; color:var(--text-secondary, #94a3b8); cursor:pointer;">90% Aggressive</button>
                   </div>
                 </div>
-                <div class="form-group">
-                  <label for="heloc-repay-years">Repay (Yrs)</label>
-                  <div class="input-with-affix">
-                    <input type="number" id="heloc-repay-years" class="form-input" value="20" min="5" max="30">
-                    <span class="affix">Yrs</span>
-                  </div>
+
+                <div style="margin-top:1rem;">
+                  <button type="button" id="btn-heloc-use-line" onclick="FinancialCalcs.useMaxHelocLine()" style="width:100%; padding:0.75rem 1rem; background:linear-gradient(135deg, var(--accent-primary, #6366f1), #4f46e5); color:#ffffff; border:none; border-radius:8px; font-weight:600; font-size:0.875rem; cursor:pointer; box-shadow:0 2px 8px rgba(99,102,241,0.3); transition:opacity 0.2s;">
+                    Use This Max Line in Payment Estimator →
+                  </button>
                 </div>
               </div>
+
             </div>
 
+            <!-- Results Side -->
             <div class="calc-results-side">
-              <div class="result-card-primary">
-                <div class="result-label">Repayment Payment Shock (Jump at Year 10)</div>
-                <div class="result-value-huge" id="res-heloc-shock" style="color:var(--accent-rose); font-size:1.9rem;" data-copyable="true">+$118.99 Jump / mo</div>
-              </div>
-              <div class="result-stat-grid">
-                <div class="stat-box">
-                  <div class="stat-box-label">Draw Phase (Interest-Only)</div>
-                  <div class="stat-box-val" id="res-heloc-draw-payment" style="color:var(--accent-green);" data-copyable="true">$531.25 / mo</div>
+              
+              <!-- Payment Shock Jump Callout -->
+              <div class="result-card-primary" style="background:linear-gradient(135deg, rgba(239,68,68,0.12), rgba(244,63,94,0.08)); border:1px solid rgba(239,68,68,0.3); padding:1.25rem; border-radius:12px; margin-bottom:1rem;">
+                <div class="result-label" style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent-rose, #f43f5e); font-weight:700;">
+                  Repayment Payment Shock (Jump at Year 10)
                 </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Repayment Phase (Amortized P&I)</div>
-                  <div class="stat-box-val" id="res-heloc-repay-payment" style="color:var(--accent-secondary);" data-copyable="true">$650.24 / mo</div>
+                <div class="result-value-huge" id="res-heloc-shock" style="color:var(--accent-rose, #f43f5e); font-size:2rem; font-weight:800; margin:0.3rem 0;" data-copyable="true">
+                  +$90.30 Jump / mo
                 </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Max Available Line of Credit</div>
-                  <div class="stat-box-val" id="res-heloc-max-line" data-copyable="true">$156,250.00</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Total Lifetime Interest Paid</div>
-                  <div class="stat-box-val" id="res-heloc-total-interest" data-copyable="true">$144,807.60</div>
+                <div id="res-heloc-shock-sub" style="font-size:0.8rem; color:var(--text-secondary, #94a3b8);">
+                  Monthly payment resets from $312.50 to $402.80 (+28.9% increase)
                 </div>
               </div>
+
+              <!-- Stat Box Grid -->
+              <div class="result-stat-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                <div class="stat-box" style="padding:0.9rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:8px;">
+                  <div class="stat-box-label" style="font-size:0.75rem; color:var(--text-secondary, #94a3b8);">Phase 1: Draw Period (Interest Only)</div>
+                  <div class="stat-box-val" id="res-heloc-draw-payment" style="color:var(--accent-green, #10b981); font-size:1.35rem; font-weight:700;" data-copyable="true">$312.50 / mo</div>
+                </div>
+
+                <div class="stat-box" style="padding:0.9rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:8px;">
+                  <div class="stat-box-label" style="font-size:0.75rem; color:var(--text-secondary, #94a3b8);">Phase 2: Repayment (Amortized P&amp;I)</div>
+                  <div class="stat-box-val" id="res-heloc-repay-payment" style="color:var(--accent-primary, #6366f1); font-size:1.35rem; font-weight:700;" data-copyable="true">$402.80 / mo</div>
+                </div>
+
+                <div class="stat-box" style="padding:0.9rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:8px;">
+                  <div class="stat-box-label" style="font-size:0.75rem; color:var(--text-secondary, #94a3b8);">Max HELOC Credit Line (CLTV)</div>
+                  <div class="stat-box-val" id="res-heloc-max-line" style="font-size:1.35rem; font-weight:700;" data-copyable="true">$70,000.00</div>
+                </div>
+
+                <div class="stat-box" style="padding:0.9rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:8px;">
+                  <div class="stat-box-label" style="font-size:0.75rem; color:var(--text-secondary, #94a3b8);">Available Home Equity</div>
+                  <div class="stat-box-val" id="res-heloc-equity" style="font-size:1.35rem; font-weight:700;" data-copyable="true">$150,000.00</div>
+                </div>
+
+                <div class="stat-box" style="padding:0.9rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:8px;">
+                  <div class="stat-box-label" style="font-size:0.75rem; color:var(--text-secondary, #94a3b8);">Total Lifetime Interest Paid</div>
+                  <div class="stat-box-val" id="res-heloc-total-interest" style="font-size:1.25rem; font-weight:700;" data-copyable="true">$84,171.24</div>
+                </div>
+
+                <div class="stat-box" style="padding:0.9rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:8px;">
+                  <div class="stat-box-label" style="font-size:0.75rem; color:var(--text-secondary, #94a3b8);">Total 30-Year Loan Cost</div>
+                  <div class="stat-box-val" id="res-heloc-total-cost" style="font-size:1.25rem; font-weight:700;" data-copyable="true">$134,171.24</div>
+                </div>
+              </div>
+
+              <!-- Extra Principal Savings Callout (Hidden when 0) -->
+              <div id="res-heloc-extra-savings-box" style="display:none; margin-top:0.75rem; padding:0.85rem; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:8px;">
+                <div style="font-size:0.8rem; font-weight:700; color:var(--accent-green, #10b981);">Extra Principal Prepayment Benefit:</div>
+                <div id="res-heloc-extra-savings-text" style="font-size:0.8rem; color:var(--text-secondary, #94a3b8); margin-top:0.2rem;">
+                  Saves $14,200.00 in interest and lowers Phase 2 payment to $306.12/mo.
+                </div>
+              </div>
+
             </div>
           </div>
+
+          <!-- Pure SVG Chart: Phase 1 vs Phase 2 & Loan Trajectory -->
+          <div class="heloc-chart-section" style="margin-top:2rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:12px; padding:1.25rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+              <div>
+                <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary, #ffffff); margin:0;">HELOC Lifecycle: Monthly Payment Shock &amp; Principal Balance</h3>
+                <p style="font-size:0.8rem; color:var(--text-secondary, #94a3b8); margin:0.25rem 0 0 0;">Visualizing Phase 1 (Interest-Only) vs. Phase 2 (Amortized P&amp;I) over the full 30-year lifecycle</p>
+              </div>
+              <div style="display:flex; gap:1rem; font-size:0.75rem; align-items:center;">
+                <span style="display:inline-flex; align-items:center; gap:0.35rem; color:#10b981;">
+                  <span style="display:inline-block; width:10px; height:10px; background:#10b981; border-radius:2px;"></span> Draw Payment ($312.50)
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:0.35rem; color:#6366f1;">
+                  <span style="display:inline-block; width:10px; height:10px; background:#6366f1; border-radius:2px;"></span> Repayment ($402.80)
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:0.35rem; color:#f59e0b;">
+                  <span style="display:inline-block; width:10px; height:10px; background:#f59e0b; border-radius:2px;"></span> Loan Balance
+                </span>
+              </div>
+            </div>
+            <div id="heloc-chart-container" style="width:100%; height:260px; position:relative;">
+              <!-- SVG chart injected dynamically -->
+            </div>
+          </div>
+
+          <!-- Interactive Year-by-Year Amortization Schedule Table -->
+          <div class="heloc-schedule-section" style="margin-top:2rem; background:var(--bg-card, #131722); border:1px solid var(--border-subtle, rgba(255,255,255,0.08)); border-radius:12px; padding:1.25rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+              <div>
+                <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-primary, #ffffff); margin:0;">Year-by-Year HELOC Amortization Schedule</h3>
+                <p style="font-size:0.8rem; color:var(--text-secondary, #94a3b8); margin:0.25rem 0 0 0;">Complete breakdown tagging Draw Phase (Interest-Only) vs. Repayment Phase (Principal &amp; Interest)</p>
+              </div>
+              <button type="button" id="btn-toggle-heloc-table" onclick="FinancialCalcs.toggleHelocTable()" style="padding:0.4rem 0.85rem; font-size:0.8rem; border-radius:6px; border:1px solid var(--border-subtle, rgba(255,255,255,0.15)); background:transparent; color:var(--text-primary, #ffffff); cursor:pointer;">
+                Show Full 30-Year Table ▼
+              </button>
+            </div>
+            <div id="heloc-table-wrap" style="max-height:360px; overflow-y:auto; border:1px solid var(--border-subtle, rgba(255,255,255,0.06)); border-radius:8px;">
+              <table style="width:100%; border-collapse:collapse; text-align:right; font-size:0.825rem;">
+                <thead style="position:sticky; top:0; background:var(--bg-card, #1a1f2e); border-bottom:1px solid var(--border-subtle, rgba(255,255,255,0.1));">
+                  <tr>
+                    <th style="padding:0.6rem 0.75rem; text-align:left;">Year</th>
+                    <th style="padding:0.6rem 0.75rem; text-align:left;">Phase</th>
+                    <th style="padding:0.6rem 0.75rem;">Beginning Balance</th>
+                    <th style="padding:0.6rem 0.75rem;">Interest Paid</th>
+                    <th style="padding:0.6rem 0.75rem;">Principal Paid</th>
+                    <th style="padding:0.6rem 0.75rem;">Total Payment</th>
+                    <th style="padding:0.6rem 0.75rem;">Ending Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="heloc-amortization-tbody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
 
         <!-- ==================================================================

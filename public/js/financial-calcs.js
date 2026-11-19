@@ -254,46 +254,480 @@ const FinancialCalcs = {
   // 30. HOME EQUITY LOAN CALCULATOR (Second Mortgage & CLTV)
   // ------------------------------------------------------------------------
   // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
   // 31. HELOC CALCULATOR (Draw Period vs Repayment Phase Shock)
   // ------------------------------------------------------------------------
+  helocMode: 'payment',
+  helocTableExpanded: false,
+
+  setHelocMode(mode) {
+    this.helocMode = mode;
+    const btnPay = document.getElementById('tab-btn-heloc-payment');
+    const btnEq = document.getElementById('tab-btn-heloc-equity');
+    const panelPay = document.getElementById('heloc-inputs-payment');
+    const panelEq = document.getElementById('heloc-inputs-equity');
+
+    if (mode === 'equity') {
+      if (panelPay) panelPay.style.display = 'none';
+      if (panelEq) panelEq.style.display = 'block';
+      if (btnPay) {
+        btnPay.style.background = 'var(--bg-card, #131722)';
+        btnPay.style.borderColor = 'var(--border-subtle, rgba(255,255,255,0.12))';
+        btnPay.style.color = 'var(--text-secondary, #94a3b8)';
+      }
+      if (btnEq) {
+        btnEq.style.background = 'var(--accent-primary, #6366f1)';
+        btnEq.style.borderColor = 'var(--accent-primary, #6366f1)';
+        btnEq.style.color = '#ffffff';
+      }
+    } else {
+      if (panelPay) panelPay.style.display = 'block';
+      if (panelEq) panelEq.style.display = 'none';
+      if (btnPay) {
+        btnPay.style.background = 'var(--accent-primary, #6366f1)';
+        btnPay.style.borderColor = 'var(--accent-primary, #6366f1)';
+        btnPay.style.color = '#ffffff';
+      }
+      if (btnEq) {
+        btnEq.style.background = 'var(--bg-card, #131722)';
+        btnEq.style.borderColor = 'var(--border-subtle, rgba(255,255,255,0.12))';
+        btnEq.style.color = 'var(--text-secondary, #94a3b8)';
+      }
+    }
+    this.calcHELOC();
+  },
+
+  setHelocRate(rate, btn) {
+    const numInput = document.getElementById('heloc-rate');
+    const rangeInput = document.getElementById('heloc-rate-range');
+    if (numInput) numInput.value = rate;
+    if (rangeInput) rangeInput.value = rate;
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('.preset-pill').forEach(p => {
+        p.classList.remove('active');
+        p.style.background = 'transparent';
+        p.style.borderColor = 'var(--border-subtle, rgba(255,255,255,0.1))';
+        p.style.color = 'var(--text-secondary, #94a3b8)';
+      });
+      btn.classList.add('active');
+      btn.style.background = 'rgba(99,102,241,0.15)';
+      btn.style.borderColor = 'var(--accent-primary, #6366f1)';
+      btn.style.color = 'var(--accent-primary, #6366f1)';
+    }
+    this.calcHELOC();
+  },
+
+  setHelocDrawYears(years, btn) {
+    const input = document.getElementById('heloc-draw-years');
+    if (input) input.value = years;
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('.preset-pill').forEach(p => {
+        p.classList.remove('active');
+        p.style.background = 'transparent';
+        p.style.borderColor = 'var(--border-subtle, rgba(255,255,255,0.1))';
+        p.style.color = 'var(--text-secondary, #94a3b8)';
+      });
+      btn.classList.add('active');
+      btn.style.background = 'rgba(99,102,241,0.15)';
+      btn.style.borderColor = 'var(--accent-primary, #6366f1)';
+      btn.style.color = 'var(--accent-primary, #6366f1)';
+    }
+    this.calcHELOC();
+  },
+
+  setHelocRepayYears(years, btn) {
+    const input = document.getElementById('heloc-repay-years');
+    if (input) input.value = years;
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('.preset-pill').forEach(p => {
+        p.classList.remove('active');
+        p.style.background = 'transparent';
+        p.style.borderColor = 'var(--border-subtle, rgba(255,255,255,0.1))';
+        p.style.color = 'var(--text-secondary, #94a3b8)';
+      });
+      btn.classList.add('active');
+      btn.style.background = 'rgba(99,102,241,0.15)';
+      btn.style.borderColor = 'var(--accent-primary, #6366f1)';
+      btn.style.color = 'var(--accent-primary, #6366f1)';
+    }
+    this.calcHELOC();
+  },
+
+  setHelocCltv(cltv, btn) {
+    const input = document.getElementById('heloc-max-cltv');
+    if (input) input.value = cltv;
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('.preset-pill').forEach(p => {
+        p.classList.remove('active');
+        p.style.background = 'transparent';
+        p.style.borderColor = 'var(--border-subtle, rgba(255,255,255,0.1))';
+        p.style.color = 'var(--text-secondary, #94a3b8)';
+      });
+      btn.classList.add('active');
+      btn.style.background = 'rgba(99,102,241,0.15)';
+      btn.style.borderColor = 'var(--accent-primary, #6366f1)';
+      btn.style.color = 'var(--accent-primary, #6366f1)';
+    }
+    this.calcHELOC();
+  },
+
+  useMaxHelocLine() {
+    const homeVal = parseFloat(document.getElementById('heloc-home-value')?.value) || 400000;
+    const mortgage = parseFloat(document.getElementById('heloc-mortgage')?.value) || 250000;
+    const cltv = parseFloat(document.getElementById('heloc-max-cltv')?.value) || 80;
+    const maxLine = Math.max(5000, (homeVal * (cltv / 100)) - mortgage);
+
+    const drawNum = document.getElementById('heloc-draw-amount');
+    const drawRange = document.getElementById('heloc-draw-amount-range');
+    if (drawNum) drawNum.value = Math.round(maxLine);
+    if (drawRange) drawRange.value = Math.min(parseFloat(drawRange.max), Math.round(maxLine));
+
+    this.setHelocMode('payment');
+  },
+
+  toggleHelocTable() {
+    const wrap = document.getElementById('heloc-table-wrap');
+    const btn = document.getElementById('btn-toggle-heloc-table');
+    if (!wrap || !btn) return;
+
+    this.helocTableExpanded = !this.helocTableExpanded;
+    if (this.helocTableExpanded) {
+      wrap.style.maxHeight = 'none';
+      btn.textContent = 'Collapse Table ▲';
+    } else {
+      wrap.style.maxHeight = '360px';
+      btn.textContent = 'Show Full 30-Year Table ▼';
+    }
+  },
+
   calcHELOC() {
-    const homeValue = parseFloat(document.getElementById('heloc-home-value')?.value) || 0;
+    const homeValue = parseFloat(document.getElementById('heloc-home-value')?.value) || 400000;
     const firstMortgage = parseFloat(document.getElementById('heloc-mortgage')?.value) || 0;
-    const maxCLTV = parseFloat(document.getElementById('heloc-max-cltv')?.value) || 85;
-    const drawnAmt = parseFloat(document.getElementById('heloc-draw-amount')?.value) || 0;
-    const rate = parseFloat(document.getElementById('heloc-rate')?.value) || 8.5;
-    const drawYears = parseFloat(document.getElementById('heloc-draw-years')?.value) || 10;
-    const repayYears = parseFloat(document.getElementById('heloc-repay-years')?.value) || 20;
+    const maxCLTV = parseFloat(document.getElementById('heloc-max-cltv')?.value) || 80;
+    const drawnAmt = parseFloat(document.getElementById('heloc-draw-amount')?.value) || 50000;
+    const rate = parseFloat(document.getElementById('heloc-rate')?.value) || 7.5;
+    const drawYears = Math.max(1, parseInt(document.getElementById('heloc-draw-years')?.value) || 10);
+    const repayYears = Math.max(5, parseInt(document.getElementById('heloc-repay-years')?.value) || 20);
+    const extraPay = parseFloat(document.getElementById('heloc-extra-payment')?.value) || 0;
 
-    if (homeValue <= 0 || drawnAmt <= 0 || rate <= 0) return;
+    // 1. Equity Calculations
+    const maxTotalDebt = homeValue * (maxCLTV / 100);
+    const maxLineAvailable = Math.max(0, maxTotalDebt - firstMortgage);
+    const currentEquity = Math.max(0, homeValue - firstMortgage);
 
-    const maxLineAvailable = Math.max(0, (homeValue * (maxCLTV / 100)) - firstMortgage);
-
-    // Interest-Only Draw Phase
-    const monthlyDrawPayment = (drawnAmt * (rate / 100)) / 12;
-    const totalDrawInterest = monthlyDrawPayment * (drawYears * 12);
-
-    // Amortized Repayment Phase (Principal + Interest)
+    // 2. Dual Phase Simulation
     const r = (rate / 100) / 12;
-    const n = repayYears * 12;
-    const factor = Math.pow(1 + r, n);
-    const monthlyRepayPayment = (drawnAmt * r * factor) / (factor - 1);
-    const totalRepayInterest = (monthlyRepayPayment * n) - drawnAmt;
+    const drawMonths = drawYears * 12;
+    const repayMonths = repayYears * 12;
 
-    const paymentShock = monthlyRepayPayment - monthlyDrawPayment;
-    const totalInterest = totalDrawInterest + totalRepayInterest;
+    // Baseline Phase 1 (Interest-only, no extra)
+    const baseMonthlyDrawPayment = (drawnAmt * (rate / 100)) / 12;
+    const baseTotalDrawInterest = baseMonthlyDrawPayment * drawMonths;
 
+    // Baseline Phase 2 (Amortized P&I)
+    const baseFactor = Math.pow(1 + r, repayMonths);
+    const baseMonthlyRepayPayment = (drawnAmt * r * baseFactor) / (baseFactor - 1);
+    const baseTotalRepayInterest = (baseMonthlyRepayPayment * repayMonths) - drawnAmt;
+    const baseTotalInterest = baseTotalDrawInterest + baseTotalRepayInterest;
+    const basePaymentShock = baseMonthlyRepayPayment - baseMonthlyDrawPayment;
+    const baseShockPct = ((basePaymentShock) / baseMonthlyDrawPayment) * 100;
+
+    // Actual Simulation with optional extra principal payment
+    let balance = drawnAmt;
+    let actualDrawInterest = 0;
+    const yearlyData = [];
+    let curYearInterest = 0;
+    let curYearPrincipal = 0;
+    let curYearExtra = 0;
+    let yearStartBal = balance;
+
+    // Month-by-month through draw phase
+    for (let m = 1; m <= drawMonths; m++) {
+      const interest = balance * r;
+      actualDrawInterest += interest;
+      curYearInterest += interest;
+
+      let extra = 0;
+      if (extraPay > 0 && balance > 0) {
+        extra = Math.min(balance, extraPay);
+        balance -= extra;
+        curYearExtra += extra;
+        curYearPrincipal += extra;
+      }
+
+      if (m % 12 === 0 || m === drawMonths) {
+        const yNum = Math.ceil(m / 12);
+        yearlyData.push({
+          year: yNum,
+          phase: 'Draw (Interest-Only)',
+          startBal: yearStartBal,
+          interest: curYearInterest,
+          principal: curYearPrincipal,
+          totalPaid: curYearInterest + curYearPrincipal,
+          endBal: balance
+        });
+        curYearInterest = 0;
+        curYearPrincipal = 0;
+        curYearExtra = 0;
+        yearStartBal = balance;
+      }
+    }
+
+    // Repayment Phase Calculation on remaining balance
+    const balEnteringRepay = balance;
+    let actualMonthlyRepayPayment = 0;
+    let actualRepayInterest = 0;
+
+    if (balEnteringRepay > 0) {
+      const repayFactor = Math.pow(1 + r, repayMonths);
+      actualMonthlyRepayPayment = (balEnteringRepay * r * repayFactor) / (repayFactor - 1);
+
+      for (let m = 1; m <= repayMonths; m++) {
+        const globalM = drawMonths + m;
+        if (balance <= 0) {
+          if (m % 12 === 0) {
+            const yNum = drawYears + Math.ceil(m / 12);
+            yearlyData.push({
+              year: yNum,
+              phase: 'Repayment (Paid Off)',
+              startBal: 0,
+              interest: 0,
+              principal: 0,
+              totalPaid: 0,
+              endBal: 0
+            });
+          }
+          continue;
+        }
+
+        const interest = balance * r;
+        actualRepayInterest += interest;
+        curYearInterest += interest;
+
+        let scheduledPrinc = Math.min(balance, actualMonthlyRepayPayment - interest);
+        let extra = 0;
+        if (extraPay > 0 && (balance - scheduledPrinc) > 0) {
+          extra = Math.min(balance - scheduledPrinc, extraPay);
+        }
+
+        const totalPrinc = scheduledPrinc + extra;
+        balance = Math.max(0, balance - totalPrinc);
+        curYearPrincipal += totalPrinc;
+        curYearExtra += extra;
+
+        if (m % 12 === 0 || m === repayMonths || balance === 0) {
+          const yNum = drawYears + Math.ceil(m / 12);
+          yearlyData.push({
+            year: yNum,
+            phase: 'Repayment (P&I Amortization)',
+            startBal: yearStartBal,
+            interest: curYearInterest,
+            principal: curYearPrincipal,
+            totalPaid: curYearInterest + curYearPrincipal,
+            endBal: balance
+          });
+          curYearInterest = 0;
+          curYearPrincipal = 0;
+          curYearExtra = 0;
+          yearStartBal = balance;
+          if (balance === 0 && m % 12 !== 0) {
+            // fast forward remaining years
+            break;
+          }
+        }
+      }
+    }
+
+    const totalInterestActual = actualDrawInterest + actualRepayInterest;
+    const totalCostActual = drawnAmt + totalInterestActual;
+    const interestSaved = Math.max(0, baseTotalInterest - totalInterestActual);
+
+    // Update Primary Callout Shock
+    const elShock = document.getElementById('res-heloc-shock');
+    const elShockSub = document.getElementById('res-heloc-shock-sub');
+    const displayRepay = extraPay > 0 ? actualMonthlyRepayPayment : baseMonthlyRepayPayment;
+    const displayShock = Math.max(0, displayRepay - baseMonthlyDrawPayment);
+    const displayShockPct = baseMonthlyDrawPayment > 0 ? (displayShock / baseMonthlyDrawPayment) * 100 : 0;
+
+    if (elShock) {
+      elShock.textContent = `+$${displayShock.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Jump / mo`;
+    }
+    if (elShockSub) {
+      elShockSub.textContent = `Monthly payment resets from $${baseMonthlyDrawPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} to $${displayRepay.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (+${displayShockPct.toFixed(1)}% increase at month ${drawMonths + 1})`;
+    }
+
+    // Update Stat Boxes
     const elDraw = document.getElementById('res-heloc-draw-payment');
     const elRepay = document.getElementById('res-heloc-repay-payment');
-    const elShock = document.getElementById('res-heloc-shock');
     const elMaxLine = document.getElementById('res-heloc-max-line');
+    const elEquity = document.getElementById('res-heloc-equity');
     const elInt = document.getElementById('res-heloc-total-interest');
+    const elCost = document.getElementById('res-heloc-total-cost');
 
-    if (elDraw) elDraw.textContent = this.formatCurrency(monthlyDrawPayment);
-    if (elRepay) elRepay.textContent = this.formatCurrency(monthlyRepayPayment);
-    if (elShock) elShock.textContent = `+${this.formatCurrency(paymentShock)} Jump / mo`;
-    if (elMaxLine) elMaxLine.textContent = this.formatCurrency(maxLineAvailable);
-    if (elInt) elInt.textContent = this.formatCurrency(totalInterest);
+    if (elDraw) elDraw.textContent = `$${baseMonthlyDrawPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / mo`;
+    if (elRepay) elRepay.textContent = `$${displayRepay.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / mo`;
+    if (elMaxLine) elMaxLine.textContent = `$${maxLineAvailable.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    if (elEquity) elEquity.textContent = `$${currentEquity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    if (elInt) elInt.textContent = `$${totalInterestActual.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    if (elCost) elCost.textContent = `$${totalCostActual.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    // Extra savings callout
+    const extraBox = document.getElementById('res-heloc-extra-savings-box');
+    const extraText = document.getElementById('res-heloc-extra-savings-text');
+    if (extraBox && extraText) {
+      if (extraPay > 0 && interestSaved > 0) {
+        extraBox.style.display = 'block';
+        extraText.textContent = `Saves $${interestSaved.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} in lifetime interest and lowers Phase 2 payment to $${displayRepay.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/mo.`;
+      } else {
+        extraBox.style.display = 'none';
+      }
+    }
+
+    // Synchronize preview labels
+    const pDraw = document.getElementById('heloc-draw-amount-val');
+    const pRate = document.getElementById('heloc-rate-val');
+    const pExtra = document.getElementById('heloc-extra-payment-val');
+    const pHome = document.getElementById('heloc-home-value-val');
+    const pMort = document.getElementById('heloc-mortgage-val');
+    const pCltv = document.getElementById('heloc-max-cltv-val');
+
+    if (pDraw) pDraw.textContent = `$${Math.round(drawnAmt).toLocaleString('en-US')}`;
+    if (pRate) pRate.textContent = `${rate.toFixed(2)}%`;
+    if (pExtra) pExtra.textContent = `$${Math.round(extraPay).toLocaleString('en-US')} / mo`;
+    if (pHome) pHome.textContent = `$${Math.round(homeValue).toLocaleString('en-US')}`;
+    if (pMort) pMort.textContent = `$${Math.round(firstMortgage).toLocaleString('en-US')}`;
+    if (pCltv) pCltv.textContent = `${maxCLTV}%`;
+
+    // Render Chart and Table
+    this.renderHelocChart(baseMonthlyDrawPayment, displayRepay, drawnAmt, totalInterestActual, drawYears, repayYears, yearlyData);
+    this.renderHelocTable(yearlyData);
+  },
+
+  renderHelocChart(drawPay, repayPay, drawnAmt, totalInterest, drawYears, repayYears, yearlyData) {
+    const container = document.getElementById('heloc-chart-container');
+    if (!container) return;
+
+    const width = 800;
+    const height = 240;
+    const padding = { top: 30, right: 30, bottom: 40, left: 60 };
+    const chartW = width - padding.left - padding.right;
+    const chartH = height - padding.top - padding.bottom;
+
+    const totalYears = drawYears + repayYears;
+    const maxBal = Math.max(drawnAmt * 1.1, 10000);
+    const maxPay = Math.max(repayPay * 1.25, 500);
+
+    // Generate Balance line points
+    const pts = [];
+    const drawSplitX = padding.left + (drawYears / totalYears) * chartW;
+
+    // Start point
+    pts.push(`${padding.left},${padding.top + chartH * (1 - (drawnAmt / maxBal))}`);
+
+    (yearlyData || []).forEach(d => {
+      const x = padding.left + (d.year / totalYears) * chartW;
+      const y = padding.top + chartH * (1 - (d.endBal / maxBal));
+      pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+    });
+
+    const pathD = `M ${pts.join(' L ')}`;
+    const areaD = `${pathD} L ${padding.left + chartW},${padding.top + chartH} L ${padding.left},${padding.top + chartH} Z`;
+
+    const svgHtml = `
+      <svg viewBox="0 0 ${width} ${height}" style="width:100%; height:100%; overflow:visible; font-family:sans-serif;" aria-label="HELOC Payment Shock Chart">
+        <defs>
+          <linearGradient id="helocBalGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.02"/>
+          </linearGradient>
+          <linearGradient id="helocDrawGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#10b981" stop-opacity="0.05"/>
+          </linearGradient>
+          <linearGradient id="helocRepayGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6366f1" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#6366f1" stop-opacity="0.05"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Horizontal Gridlines -->
+        <line x1="${padding.left}" y1="${padding.top}" x2="${width - padding.right}" y2="${padding.top}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3"/>
+        <line x1="${padding.left}" y1="${padding.top + chartH * 0.5}" x2="${width - padding.right}" y2="${padding.top + chartH * 0.5}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3"/>
+        <line x1="${padding.left}" y1="${padding.top + chartH}" x2="${width - padding.right}" y2="${padding.top + chartH}" stroke="rgba(255,255,255,0.12)"/>
+
+        <!-- Phase Dividing Vertical Line -->
+        <line x1="${drawSplitX}" y1="${padding.top - 10}" x2="${drawSplitX}" y2="${padding.top + chartH}" stroke="rgba(244,63,94,0.6)" stroke-width="2" stroke-dasharray="4,4"/>
+        
+        <!-- Phase Regions Background -->
+        <rect x="${padding.left}" y="${padding.top}" width="${drawSplitX - padding.left}" height="${chartH}" fill="url(#helocDrawGrad)"/>
+        <rect x="${drawSplitX}" y="${padding.top}" width="${width - padding.right - drawSplitX}" height="${chartH}" fill="url(#helocRepayGrad)"/>
+
+        <!-- Phase Labels Above Chart -->
+        <text x="${padding.left + (drawSplitX - padding.left) / 2}" y="${padding.top - 12}" fill="#10b981" font-size="11" font-weight="700" text-anchor="middle">
+          Phase 1: Draw Period (${drawYears} Yrs) • $${drawPay.toFixed(0)}/mo
+        </text>
+        <text x="${drawSplitX + (width - padding.right - drawSplitX) / 2}" y="${padding.top - 12}" fill="#818cf8" font-size="11" font-weight="700" text-anchor="middle">
+          Phase 2: Repayment Phase (${repayYears} Yrs) • $${repayPay.toFixed(0)}/mo
+        </text>
+
+        <!-- Payment Shock Indicator Badge at Dividing Line -->
+        <g transform="translate(${drawSplitX}, ${padding.top + chartH * 0.35})">
+          <rect x="-45" y="-12" width="90" height="24" rx="12" fill="#e11d48" stroke="#ffffff" stroke-width="1.5"/>
+          <text x="0" y="4" fill="#ffffff" font-size="10" font-weight="800" text-anchor="middle">⚡ Shock Jump</text>
+        </g>
+
+        <!-- Balance Filled Area & Line -->
+        <path d="${areaD}" fill="url(#helocBalGrad)"/>
+        <path d="${pathD}" fill="none" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+
+        <!-- X-Axis Labels -->
+        <text x="${padding.left}" y="${padding.top + chartH + 20}" fill="#94a3b8" font-size="11" text-anchor="start">Year 0</text>
+        <text x="${drawSplitX}" y="${padding.top + chartH + 20}" fill="#f43f5e" font-size="11" font-weight="700" text-anchor="middle">Year ${drawYears}</text>
+        <text x="${width - padding.right}" y="${padding.top + chartH + 20}" fill="#94a3b8" font-size="11" text-anchor="end">Year ${totalYears}</text>
+
+        <!-- Y-Axis Ticks (Balance) -->
+        <text x="${padding.left - 8}" y="${padding.top + 5}" fill="#f59e0b" font-size="10" text-anchor="end">$${(drawnAmt / 1000).toFixed(0)}k</text>
+        <text x="${padding.left - 8}" y="${padding.top + chartH * 0.5 + 4}" fill="#94a3b8" font-size="10" text-anchor="end">$${(drawnAmt * 0.5 / 1000).toFixed(0)}k</text>
+        <text x="${padding.left - 8}" y="${padding.top + chartH}" fill="#94a3b8" font-size="10" text-anchor="end">$0</text>
+      </svg>
+    `;
+
+    container.innerHTML = svgHtml;
+  },
+
+  renderHelocTable(yearlyData) {
+    const tbody = document.getElementById('heloc-amortization-tbody');
+    if (!tbody) return;
+
+    if (!yearlyData || yearlyData.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:1.5rem; color:#94a3b8;">No schedule data available.</td></tr>';
+      return;
+    }
+
+    const rowsHtml = yearlyData.map(row => {
+      const isDraw = row.phase.includes('Draw');
+      const badgeStyle = isDraw
+        ? 'background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3);'
+        : 'background:rgba(99,102,241,0.15); color:#818cf8; border:1px solid rgba(99,102,241,0.3);';
+
+      return `
+        <tr style="border-bottom:1px solid var(--border-subtle, rgba(255,255,255,0.05));">
+          <td style="padding:0.55rem 0.75rem; text-align:left; font-weight:600; color:#ffffff;">Yr ${row.year}</td>
+          <td style="padding:0.55rem 0.75rem; text-align:left;">
+            <span style="display:inline-block; font-size:0.75rem; font-weight:600; padding:0.2rem 0.5rem; border-radius:4px; ${badgeStyle}">
+              ${row.phase}
+            </span>
+          </td>
+          <td style="padding:0.55rem 0.75rem; color:#94a3b8;">$${row.startBal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td style="padding:0.55rem 0.75rem; color:#f43f5e;">$${row.interest.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td style="padding:0.55rem 0.75rem; color:#10b981;">$${row.principal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td style="padding:0.55rem 0.75rem; font-weight:600; color:#ffffff;">$${row.totalPaid.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td style="padding:0.55rem 0.75rem; font-weight:600; color:#f59e0b;">$${row.endBal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        </tr>
+      `;
+    }).join('');
+
+    tbody.innerHTML = rowsHtml;
   },
 
   // ------------------------------------------------------------------------
@@ -1878,9 +2312,12 @@ const FinancialCalcs = {
     });
 
     // 36. HELOC Calculator
-    this.syncInputSlider('heloc-home-value', 'heloc-home-value-range', () => this.calcHELOC());
     this.syncInputSlider('heloc-draw-amount', 'heloc-draw-amount-range', () => this.calcHELOC());
-    ['heloc-home-value', 'heloc-mortgage', 'heloc-max-cltv', 'heloc-draw-amount', 'heloc-rate', 'heloc-draw-years', 'heloc-repay-years'].forEach(id => {
+    this.syncInputSlider('heloc-rate', 'heloc-rate-range', () => this.calcHELOC());
+    this.syncInputSlider('heloc-extra-payment', 'heloc-extra-payment-range', () => this.calcHELOC());
+    this.syncInputSlider('heloc-home-value', 'heloc-home-value-range', () => this.calcHELOC());
+    this.syncInputSlider('heloc-mortgage', 'heloc-mortgage-range', () => this.calcHELOC());
+    ['heloc-draw-amount', 'heloc-rate', 'heloc-draw-years', 'heloc-repay-years', 'heloc-extra-payment', 'heloc-home-value', 'heloc-mortgage', 'heloc-max-cltv'].forEach(id => {
       document.getElementById(id)?.addEventListener('input', () => this.calcHELOC());
     });
 

@@ -11,6 +11,11 @@
       "source": "/financial/inflation",
       "destination": "/financial/inflation-calculator",
       "permanent": true
+    },
+    {
+      "source": "/financial/heloc",
+      "destination": "/financial/heloc-calculator",
+      "permanent": true
     }
   ],
   "rewrites": [

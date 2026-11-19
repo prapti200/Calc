@@ -76,6 +76,62 @@ export async function generateMetadata({ params }) {
     };
   }
 
+    if (slug === 'heloc-calculator' || slug === 'heloc' || calc?.id === 'sec-heloc-calc') {
+    return {
+      title: 'HELOC Calculator – Monthly Draw & Repayment Payment Estimator',
+      description: 'Free HELOC Calculator to estimate your monthly payment during both the interest-only draw period and principal-and-interest repayment phase, plus max credit line.',
+      keywords: [
+        'heloc calculator',
+        'heloc calculator payment',
+        'home equity line of credit calculator',
+        'heloc payment calculator',
+        'heloc interest only payment calculator',
+        'heloc draw period and repayment period calculator',
+        'combined loan to value (CLTV) calculator',
+        'how much equity can I borrow',
+        'heloc amortization schedule',
+        'heloc rates november 2026',
+        'payment shock'
+      ],
+      alternates: {
+        canonical: '/financial/heloc-calculator',
+      },
+      openGraph: {
+        title: 'HELOC Calculator – Monthly Draw & Repayment Payment Estimator',
+        description: 'Free HELOC Calculator to estimate your monthly payment during both the interest-only draw period and principal-and-interest repayment phase, plus max credit line.',
+        keywords: [
+          'heloc calculator',
+          'heloc calculator payment',
+          'home equity line of credit calculator',
+          'heloc payment calculator',
+          'heloc interest only payment calculator',
+          'heloc draw period and repayment period calculator',
+          'combined loan to value (CLTV) calculator',
+          'how much equity can I borrow',
+          'heloc amortization schedule'
+        ],
+        url: '/financial/heloc-calculator',
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'HELOC Calculator – Monthly Draw & Repayment Payment Estimator',
+        description: 'Free HELOC Calculator to estimate your monthly payment during both the interest-only draw period and principal-and-interest repayment phase, plus max credit line.',
+        keywords: [
+          'heloc calculator',
+          'heloc calculator payment',
+          'home equity line of credit calculator',
+          'heloc payment calculator',
+          'heloc interest only payment calculator',
+          'heloc draw period and repayment period calculator',
+          'combined loan to value (CLTV) calculator',
+          'how much equity can I borrow',
+          'heloc amortization schedule'
+        ],
+      },
+    };
+  }
+
     if (slug === 'bike-emi-calculator' || slug === 'loan-calculator' || calc?.id === 'sec-loan-calc') {
     return {
       title: 'Bike EMI Calculator – Two-Wheeler, Car & Loan EMI Calculator',
@@ -114,6 +170,7 @@ export default function CalculatorPage({ params }) {
 
   const isBikeCalc = slug === 'bike-emi-calculator' || slug === 'loan-calculator' || calc?.id === 'sec-loan-calc';
   const isInflationCalc = slug === 'inflation-calculator' || slug === 'inflation' || calc?.id === 'sec-inflation-calc';
+  const isHelocCalc = slug === 'heloc-calculator' || slug === 'heloc' || calc?.id === 'sec-heloc-calc';
 
   const inflationSoftwareSchema = {
     "@context": "https://schema.org",
@@ -272,6 +329,110 @@ export default function CalculatorPage({ params }) {
     ]
   };
 
+
+  const helocSoftwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "HELOC Calculator",
+    "operatingSystem": "Any",
+    "applicationCategory": "FinanceApplication",
+    "description": "Free HELOC Calculator to estimate your monthly payment during both the interest-only draw period and principal-and-interest repayment phase, plus max credit line.",
+    "keywords": "heloc calculator, heloc calculator payment, home equity line of credit calculator, heloc payment calculator, heloc interest only payment calculator, heloc draw period and repayment period calculator, combined loan to value (CLTV) calculator, how much equity can I borrow, heloc amortization schedule",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  };
+
+  const helocFaqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How is a HELOC monthly payment calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A HELOC monthly payment is calculated in two phases: during the draw period, payments are interest-only: Payment = Balance × (APR / 12). During the repayment period, the balance fully amortizes over the remaining term (typically 20 years) combining principal and interest using the standard amortization formula."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the monthly payment on a $50,000 HELOC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "At a benchmark rate of 7.50% APR, the monthly payment on a $50,000 HELOC during a 10-year interest-only draw period is $312.50 per month. During a subsequent 20-year repayment period, the monthly payment resets to $402.80 per month (a +$90.30/mo jump)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the monthly payment on a $100,000 HELOC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "At 7.50% APR, the monthly payment on a $100,000 HELOC is $625.00 per month during the interest-only draw period, and $805.59 per month during a 20-year repayment period."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much home equity do I need to qualify for a HELOC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most lenders require homeowners to retain at least 15% to 20% equity in their home, capping the Combined Loan-to-Value (CLTV) ratio at 80% to 85% across all mortgage balances."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens when my HELOC draw period ends?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When the draw period ends (typically after 10 years), withdrawal privileges freeze and the loan automatically converts into a fully amortizing repayment phase, causing payments to jump to cover both principal reduction and interest."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are HELOC interest payments tax-deductible?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under current IRS tax rules through 2026, HELOC interest is tax-deductible only if the borrowed funds are used to buy, build, or substantially improve the home securing the loan."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I pay off my HELOC early without a penalty?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most lenders permit early payoff without a prepayment penalty, though some charge an early closure fee ($300 to $500) if the line of credit is formally closed within the first 24 to 36 months."
+        }
+      }
+    ]
+  };
+
+  const helocBreadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://calcmoderncalcultor.vercel.app/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Financial Calculators",
+        "item": "https://calcmoderncalcultor.vercel.app/financial"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "HELOC Calculator",
+        "item": "https://calcmoderncalcultor.vercel.app/financial/heloc-calculator"
+      }
+    ]
+  };
+
   return (
     <>
       {isInflationCalc && (
@@ -287,6 +448,22 @@ export default function CalculatorPage({ params }) {
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(inflationBreadcrumbSchema) }}
+          />
+        </>
+      )}
+      {isHelocCalc && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(helocSoftwareSchema) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(helocFaqSchema) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(helocBreadcrumbSchema) }}
           />
         </>
       )}
