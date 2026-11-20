@@ -33,6 +33,7 @@ const FinancialCalcs = {
     this.calcPayCommission();
     this.calcHELOC();
     this.calcSalary();
+    this.calcAdpSalary();
     this.calcSimpleInterest();
   },
 
@@ -1644,84 +1645,317 @@ const FinancialCalcs = {
   // ------------------------------------------------------------------------
   // 35. SALARY & WAGE CONVERSION CALCULATOR
   // ------------------------------------------------------------------------
-  calcSalary() {
-    const amt = parseFloat(document.getElementById('sal-amount')?.value) || 0;
-    const freq = document.getElementById('sal-frequency')?.value || 'annual';
-    const hoursWeek = parseFloat(document.getElementById('sal-hours-week')?.value) || 40;
-    const daysWeek = parseFloat(document.getElementById('sal-days-week')?.value) || 5;
-    const ptoDays = parseFloat(document.getElementById('sal-pto-days')?.value) || 0;
-    const otHours = parseFloat(document.getElementById('sal-ot-hours')?.value) || 0;
-    const otMult = parseFloat(document.getElementById('sal-ot-multiplier')?.value) || 1.5;
-    const bonus = parseFloat(document.getElementById('sal-bonus')?.value) || 0;
+  salState: {
+    ctc: 1200000,
+    variablePct: 0,
+    basicPct: 50,
+    isMetro: true,
+    epfMode: 'standard',
+    monthlyPt: 200,
+    regime: 'new'
+  },
 
-    const totalAnnualHours = hoursWeek * 52;
-    const totalAnnualDays = daysWeek * 52;
+  onSalCtcInput(val) {
+    const num = parseFloat(val) || 0;
+    this.salState.ctc = num;
+    const disp = document.getElementById('sal-ctc-display');
+    if (disp) disp.textContent = '₹' + Math.round(num).toLocaleString('en-IN');
+    this.updateVariableDisplay();
+    this.calcSalary();
+  },
 
-    // Convert input amount to annual base
-    let baseAnnual = 0;
-    if (freq === 'annual') baseAnnual = amt;
-    else if (freq === 'monthly') baseAnnual = amt * 12;
-    else if (freq === 'semimonthly') baseAnnual = amt * 24;
-    else if (freq === 'biweekly') baseAnnual = amt * 26;
-    else if (freq === 'weekly') baseAnnual = amt * 52;
-    else if (freq === 'daily') baseAnnual = amt * totalAnnualDays;
-    else if (freq === 'hourly') baseAnnual = amt * totalAnnualHours;
+  setSalCtc(val, btn) {
+    this.salState.ctc = val;
+    const inp = document.getElementById('sal-ctc-input');
+    if (inp) inp.value = val;
+    const disp = document.getElementById('sal-ctc-display');
+    if (disp) disp.textContent = '₹' + Math.round(val).toLocaleString('en-IN');
 
-    const baseHourly = totalAnnualHours > 0 ? baseAnnual / totalAnnualHours : 0;
-    const otAnnual = otHours * 52 * baseHourly * otMult;
-    const totalAnnual = baseAnnual + otAnnual + bonus;
+    document.querySelectorAll('.sal-ctc-pill').forEach(b => {
+      const active = (b === btn);
+      b.classList.toggle('active', active);
+      b.style.background = active ? 'var(--btn-active-bg, #eff6ff)' : 'transparent';
+      b.style.borderColor = active ? 'var(--btn-active-border, #bfdbfe)' : 'transparent';
+      b.style.color = active ? 'var(--btn-active-text, #2563eb)' : 'var(--text-secondary)';
+      b.style.fontWeight = active ? '700' : 'normal';
+    });
+    this.updateVariableDisplay();
+    this.calcSalary();
+  },
 
-    // Frequency conversions of total
-    const monthly = totalAnnual / 12;
-    const semiMonthly = totalAnnual / 24;
-    const biWeekly = totalAnnual / 26;
-    const weekly = totalAnnual / 52;
-    const daily = totalAnnualDays > 0 ? totalAnnual / totalAnnualDays : 0;
+  onSalVariableChange(val) {
+    const num = Math.min(50, Math.max(0, parseFloat(val) || 0));
+    this.salState.variablePct = num;
+    const range = document.getElementById('sal-variable-range');
+    if (range) range.value = num;
+    this.updateVariableDisplay();
+    this.calcSalary();
+  },
 
-    // Adjusted hourly rate accounting for PTO
-    const hoursPerDay = daysWeek > 0 ? hoursWeek / daysWeek : 8;
-    const actualWorkedHours = Math.max(1, totalAnnualHours - (ptoDays * hoursPerDay));
-    const adjustedHourly = baseAnnual / actualWorkedHours;
+  onSalVariableRange(val) {
+    const num = parseFloat(val) || 0;
+    this.salState.variablePct = num;
+    const inp = document.getElementById('sal-variable-rate');
+    if (inp) inp.value = num;
+    this.updateVariableDisplay();
+    this.calcSalary();
+  },
 
-    // 1099 Contractor Equivalent Rate (~1.30 multiplier)
-    const contractorEquiv = baseHourly * 1.30;
-
-    const el = (id) => document.getElementById(id);
-    if (el('res-sal-annual-total')) el('res-sal-annual-total').textContent = this.formatCurrency(totalAnnual);
-    if (el('res-sal-hourly-base')) el('res-sal-hourly-base').textContent = `${this.formatCurrency(baseHourly)} / hr`;
-    if (el('res-sal-monthly')) el('res-sal-monthly').textContent = this.formatCurrency(monthly);
-    if (el('res-sal-biweekly')) el('res-sal-biweekly').textContent = this.formatCurrency(biWeekly);
-    if (el('res-sal-semimonthly')) el('res-sal-semimonthly').textContent = this.formatCurrency(semiMonthly);
-    if (el('res-sal-weekly')) el('res-sal-weekly').textContent = this.formatCurrency(weekly);
-    if (el('res-sal-daily')) el('res-sal-daily').textContent = this.formatCurrency(daily);
-    if (el('res-sal-hourly-adjusted')) el('res-sal-hourly-adjusted').textContent = `${this.formatCurrency(adjustedHourly)} / hr`;
-    if (el('res-sal-ot-annual')) el('res-sal-ot-annual').textContent = this.formatCurrency(otAnnual);
-    if (el('res-sal-1099-equiv')) el('res-sal-1099-equiv').textContent = `${this.formatCurrency(contractorEquiv)} / hr`;
-
-    // Matrix Table
-    const rows = [
-      { name: 'Annual (1 year)', base: baseAnnual, extra: otAnnual + bonus, total: totalAnnual },
-      { name: 'Monthly (12x / yr)', base: baseAnnual / 12, extra: (otAnnual + bonus) / 12, total: monthly },
-      { name: 'Semi-Monthly (24x / yr)', base: baseAnnual / 24, extra: (otAnnual + bonus) / 24, total: semiMonthly },
-      { name: 'Bi-Weekly (26x / yr)', base: baseAnnual / 26, extra: (otAnnual + bonus) / 26, total: biWeekly },
-      { name: 'Weekly (52x / yr)', base: baseAnnual / 52, extra: (otAnnual + bonus) / 52, total: weekly },
-      { name: 'Daily (Worked day)', base: totalAnnualDays > 0 ? baseAnnual / totalAnnualDays : 0, extra: totalAnnualDays > 0 ? (otAnnual + bonus) / totalAnnualDays : 0, total: daily },
-      { name: 'Hourly (Standard 40h)', base: baseHourly, extra: totalAnnualHours > 0 ? (otAnnual + bonus) / totalAnnualHours : 0, total: totalAnnualHours > 0 ? totalAnnual / totalAnnualHours : 0 }
-    ];
-
-    if (el('sal-table-body')) {
-      el('sal-table-body').innerHTML = rows.map(r => `
-        <tr>
-          <td style="font-weight:700;">${r.name}</td>
-          <td>${this.formatCurrency(r.base)}</td>
-          <td style="color:var(--accent-secondary);">${this.formatCurrency(r.extra)}</td>
-          <td style="color:var(--accent-green); font-weight:700;">${this.formatCurrency(r.total)}</td>
-        </tr>
-      `).join('');
+  updateVariableDisplay() {
+    const disp = document.getElementById('sal-variable-display');
+    if (disp) {
+      const amt = Math.round(this.salState.ctc * (this.salState.variablePct / 100));
+      disp.textContent = `${this.salState.variablePct}% (₹${amt.toLocaleString('en-IN')})`;
     }
   },
 
-  // ------------------------------------------------------------------------
+  onSalBasicRange(val) {
+    const num = parseFloat(val) || 50;
+    this.salState.basicPct = num;
+    const disp = document.getElementById('sal-basic-pct-display');
+    if (disp) {
+      const fixedCtc = Math.max(0, this.salState.ctc - Math.round(this.salState.ctc * (this.salState.variablePct / 100)));
+      const basicAmt = Math.round(fixedCtc * (num / 100));
+      disp.textContent = `${num}% (₹${basicAmt.toLocaleString('en-IN')}/yr)`;
+    }
+    this.calcSalary();
+  },
+
+  setSalHra(isMetro, btn) {
+    this.salState.isMetro = isMetro;
+    document.querySelectorAll('.sal-hra-pill').forEach(b => {
+      const active = (b === btn);
+      b.classList.toggle('active', active);
+      b.style.background = active ? 'var(--btn-active-bg, #eff6ff)' : 'transparent';
+      b.style.borderColor = active ? 'var(--btn-active-border, #bfdbfe)' : 'transparent';
+      b.style.color = active ? 'var(--btn-active-text, #2563eb)' : 'var(--text-secondary)';
+      b.style.fontWeight = active ? '700' : 'normal';
+    });
+    this.calcSalary();
+  },
+
+  setSalEpf(mode, btn) {
+    this.salState.epfMode = mode;
+    document.querySelectorAll('.sal-epf-pill').forEach(b => {
+      const active = (b === btn);
+      b.classList.toggle('active', active);
+      b.style.background = active ? 'var(--btn-active-bg, #eff6ff)' : 'transparent';
+      b.style.borderColor = active ? 'var(--btn-active-border, #bfdbfe)' : 'transparent';
+      b.style.color = active ? 'var(--btn-active-text, #2563eb)' : 'var(--text-secondary)';
+      b.style.fontWeight = active ? '700' : 'normal';
+    });
+    this.calcSalary();
+  },
+
+  setSalPt(amt, btn) {
+    this.salState.monthlyPt = amt;
+    const disp = document.getElementById('sal-pt-display');
+    if (disp) disp.textContent = amt > 0 ? `₹${amt} / mo` : '₹0 / mo (Exempt)';
+    document.querySelectorAll('.sal-pt-pill').forEach(b => {
+      const active = (b === btn);
+      b.classList.toggle('active', active);
+      b.style.background = active ? 'var(--btn-active-bg, #eff6ff)' : 'transparent';
+      b.style.borderColor = active ? 'var(--btn-active-border, #bfdbfe)' : 'transparent';
+      b.style.color = active ? 'var(--btn-active-text, #2563eb)' : 'var(--text-secondary)';
+      b.style.fontWeight = active ? '700' : 'normal';
+    });
+    this.calcSalary();
+  },
+
+  setSalRegime(regime, btn) {
+    this.salState.regime = regime;
+    document.querySelectorAll('.sal-regime-pill').forEach(b => {
+      const active = (b === btn);
+      b.classList.toggle('active', active);
+      b.style.background = active ? 'var(--btn-active-bg, #eff6ff)' : 'transparent';
+      b.style.borderColor = active ? 'var(--btn-active-border, #bfdbfe)' : 'transparent';
+      b.style.color = active ? 'var(--btn-active-text, #2563eb)' : 'var(--text-secondary)';
+      b.style.fontWeight = active ? '700' : 'normal';
+    });
+    this.calcSalary();
+  },
+
+  calcSalary() {
+    const ctcEl = document.getElementById('sal-ctc-input');
+    if (!ctcEl) return;
+
+    const ctc = Math.max(0, this.salState.ctc);
+    const variableAmt = Math.round(ctc * (this.salState.variablePct / 100));
+    const fixedCtc = Math.max(0, ctc - variableAmt);
+
+    // Basic pay
+    const annualBasic = Math.round(fixedCtc * (this.salState.basicPct / 100));
+    const monthlyBasic = Math.round(annualBasic / 12);
+
+    // HRA
+    const hraPct = this.salState.isMetro ? 0.50 : 0.40;
+    const annualHra = Math.round(annualBasic * hraPct);
+    const monthlyHra = Math.round(annualHra / 12);
+
+    // EPF
+    let employeeEpfAnnual, employerEpfAnnual;
+    if (this.salState.epfMode === 'capped') {
+      employeeEpfAnnual = 1800 * 12;
+      employerEpfAnnual = 1800 * 12;
+    } else {
+      employeeEpfAnnual = Math.round(annualBasic * 0.12);
+      employerEpfAnnual = Math.round(annualBasic * 0.12);
+    }
+    const employeeEpfMonthly = Math.round(employeeEpfAnnual / 12);
+    const employerEpfMonthly = Math.round(employerEpfAnnual / 12);
+
+    // Gratuity (4.81% of basic)
+    const annualGratuity = Math.round(annualBasic * 0.0481);
+    const monthlyGratuity = Math.round(annualGratuity / 12);
+
+    // Gross Salary
+    const employerCost = employerEpfAnnual + annualGratuity;
+    const annualGross = Math.max(0, fixedCtc - employerCost);
+    const monthlyGross = Math.round(annualGross / 12);
+
+    // Special Allowance
+    let annualSpecial = annualGross - annualBasic - annualHra;
+    if (annualSpecial < 0) annualSpecial = 0;
+    const monthlySpecial = Math.round(annualSpecial / 12);
+
+    // Professional Tax
+    const annualPt = this.salState.monthlyPt === 200 ? 2500 : (this.salState.monthlyPt * 12);
+    const monthlyPt = this.salState.monthlyPt;
+
+    // Income Tax FY 2026-27
+    const computeTaxForRegime = (regime) => {
+      if (regime === 'new') {
+        const stdDed = 75000;
+        const taxable = Math.max(0, annualGross - stdDed);
+        let tax = 0;
+        if (taxable <= 400000) tax = 0;
+        else if (taxable <= 800000) tax = (taxable - 400000) * 0.05;
+        else if (taxable <= 1200000) tax = 20000 + (taxable - 800000) * 0.10;
+        else if (taxable <= 1600000) tax = 60000 + (taxable - 1200000) * 0.15;
+        else if (taxable <= 2000000) tax = 120000 + (taxable - 1600000) * 0.20;
+        else if (taxable <= 2400000) tax = 200000 + (taxable - 2000000) * 0.25;
+        else tax = 300000 + (taxable - 2400000) * 0.30;
+
+        if (taxable <= 1200000) {
+          tax = 0; // Section 87A full rebate
+        }
+        return Math.round(tax * 1.04);
+      } else {
+        const stdDed = 50000;
+        const sec80C = Math.min(150000, employeeEpfAnnual);
+        const taxable = Math.max(0, annualGross - stdDed - sec80C);
+        let tax = 0;
+        if (taxable <= 250000) tax = 0;
+        else if (taxable <= 500000) tax = (taxable - 250000) * 0.05;
+        else if (taxable <= 1000000) tax = 12500 + (taxable - 500000) * 0.20;
+        else tax = 112500 + (taxable - 1000000) * 0.30;
+
+        if (taxable <= 500000) tax = 0;
+        return Math.round(tax * 1.04);
+      }
+    };
+
+    const annualTaxNew = computeTaxForRegime('new');
+    const annualTaxOld = computeTaxForRegime('old');
+    const annualTax = this.salState.regime === 'new' ? annualTaxNew : annualTaxOld;
+    const monthlyTax = Math.round(annualTax / 12);
+
+    // In-Hand Take-Home
+    const annualInHand = Math.max(0, annualGross - employeeEpfAnnual - annualPt - annualTax);
+    const monthlyInHand = Math.round(annualInHand / 12);
+
+    // Total employee deductions
+    const totalDeductionsAnnual = employeeEpfAnnual + annualPt + annualTax;
+    const totalDeductionsMonthly = Math.round(totalDeductionsAnnual / 12);
+
+    const taxSavingsAnnual = Math.max(0, annualTaxOld - annualTaxNew);
+    const taxSavingsMonthly = Math.round(taxSavingsAnnual / 12);
+
+    // Update DOM
+    const fmt = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
+
+    const inhandMonthlyEl = document.getElementById('res-sal-inhand-monthly');
+    if (inhandMonthlyEl) inhandMonthlyEl.textContent = fmt(monthlyInHand) + ' / mo';
+
+    const inhandAnnualEl = document.getElementById('res-sal-inhand-annual');
+    if (inhandAnnualEl) {
+      inhandAnnualEl.innerHTML = `Annual Net Take-Home: <strong>${fmt(annualInHand)}</strong> &bull; Total Deductions: <strong>${fmt(totalDeductionsAnnual)}</strong>`;
+    }
+
+    const regimeBadgeEl = document.getElementById('res-sal-regime-badge');
+    if (regimeBadgeEl) {
+      if (this.salState.regime === 'new' && taxSavingsAnnual > 0) {
+        regimeBadgeEl.innerHTML = `✓ You save <strong>${fmt(taxSavingsMonthly)}/mo</strong> (${fmt(taxSavingsAnnual)}/yr) with New Tax Regime`;
+        regimeBadgeEl.style.display = 'inline-flex';
+      } else if (this.salState.regime === 'new' && annualTaxNew === 0) {
+        regimeBadgeEl.innerHTML = `✓ Zero Income Tax (100% Tax-Free under Section 87A)`;
+        regimeBadgeEl.style.display = 'inline-flex';
+      } else {
+        regimeBadgeEl.innerHTML = `Tax calculated under ${this.salState.regime === 'new' ? 'New' : 'Old'} Regime`;
+        regimeBadgeEl.style.display = 'inline-flex';
+      }
+    }
+
+    const grossMonthlyEl = document.getElementById('res-sal-gross-monthly');
+    if (grossMonthlyEl) grossMonthlyEl.textContent = fmt(monthlyGross);
+
+    const dedMonthlyEl = document.getElementById('res-sal-deductions-monthly');
+    if (dedMonthlyEl) dedMonthlyEl.textContent = fmt(totalDeductionsMonthly);
+
+    const epfMonthlyEl = document.getElementById('res-sal-epf-monthly');
+    if (epfMonthlyEl) epfMonthlyEl.textContent = fmt(employeeEpfMonthly);
+
+    const taxMonthlyEl = document.getElementById('res-sal-tax-monthly');
+    if (taxMonthlyEl) taxMonthlyEl.textContent = annualTax > 0 ? fmt(monthlyTax) : '₹0 (Nil)';
+
+    // Breakdown table rows
+    const tbody = document.getElementById('sal-breakdown-rows');
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr style="border-bottom:1px solid var(--card-border);">
+          <td style="padding:0.45rem 0.75rem; font-weight:600;">Basic Pay (${this.salState.basicPct}%)</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right;">${fmt(monthlyBasic)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right;">${fmt(annualBasic)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border); background:var(--bg-tertiary);">
+          <td style="padding:0.45rem 0.75rem; font-weight:600;">House Rent Allowance (HRA)</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right;">${fmt(monthlyHra)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right;">${fmt(annualHra)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border);">
+          <td style="padding:0.45rem 0.75rem; font-weight:600;">Special Allowance</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right;">${fmt(monthlySpecial)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right;">${fmt(annualSpecial)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border); background:var(--bg-tertiary); font-weight:700;">
+          <td style="padding:0.5rem 0.75rem; color:var(--primary-color, #2563eb);">Gross Earnings</td>
+          <td style="padding:0.5rem 0.75rem; text-align:right; color:var(--primary-color, #2563eb);">${fmt(monthlyGross)}</td>
+          <td style="padding:0.5rem 0.75rem; text-align:right; color:var(--primary-color, #2563eb);">${fmt(annualGross)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border);">
+          <td style="padding:0.45rem 0.75rem; color:#dc2626;">Employee EPF (12%)</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmt(employeeEpfMonthly)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmt(employeeEpfAnnual)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border); background:var(--bg-tertiary);">
+          <td style="padding:0.45rem 0.75rem; color:#dc2626;">Professional Tax (PT)</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmt(monthlyPt)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmt(annualPt)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border);">
+          <td style="padding:0.45rem 0.75rem; color:#dc2626;">Income Tax TDS (${this.salState.regime === 'new' ? 'New' : 'Old'} Regime)</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmt(monthlyTax)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmt(annualTax)}</td>
+        </tr>
+        <tr style="background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.05)); font-weight:800; font-size:0.9rem;">
+          <td style="padding:0.6rem 0.75rem; color:#059669;">Net Monthly In-Hand Salary</td>
+          <td style="padding:0.6rem 0.75rem; text-align:right; color:#059669;">${fmt(monthlyInHand)}</td>
+          <td style="padding:0.6rem 0.75rem; text-align:right; color:#059669;">${fmt(annualInHand)}</td>
+        </tr>
+      `;
+    }
+  },
+
   // 36. MARRIAGE TAX CALCULATOR (PENALTY VS BONUS)
   
 
@@ -2058,6 +2292,8 @@ const FinancialCalcs = {
     }
 
     if (calcId === 'sec-8th-pay-commission-calc') { this.calcPayCommission(); }
+    if (calcId === 'sec-salary-calc') { this.calcSalary(); }
+    if (calcId === 'sec-adp-salary-calc') { this.calcAdpSalary(); }
     if (window.scrollToActiveCalculator) { window.scrollToActiveCalculator('fin'); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   },
 
@@ -2765,6 +3001,323 @@ this.syncInputSlider('heloc-draw-amount', 'heloc-draw-amount-range', () => this.
 
     updatePreview();
   }
-};
+
+  // ------------------------------------------------------------------------
+  // ADP SALARY & PAYCHECK CALCULATOR 2026
+  // ------------------------------------------------------------------------
+  adpState: {
+    payType: 'salary',
+    annualSalary: 75000,
+    hourlyRate: 36.06,
+    hourlyHours: 40,
+    frequency: 'biweekly',
+    filingStatus: 'single',
+    state: 'CA',
+    k401Pct: 5,
+    healthPerCheck: 100,
+    hsaPerCheck: 0
+  },
+
+  setAdpPayType(type, btn) {
+    this.adpState.payType = type;
+    document.querySelectorAll('.adp-type-pill').forEach(b => {
+      const active = (b === btn);
+      b.classList.toggle('active', active);
+      b.style.background = active ? 'var(--btn-active-bg, #eff6ff)' : 'transparent';
+      b.style.borderColor = active ? 'var(--btn-active-border, #bfdbfe)' : 'transparent';
+      b.style.color = active ? 'var(--btn-active-text, #2563eb)' : 'var(--text-secondary)';
+      b.style.fontWeight = active ? '700' : 'normal';
+    });
+    const salGroup = document.getElementById('adp-salary-input-group');
+    const hrGroup = document.getElementById('adp-hourly-input-group');
+    if (salGroup) salGroup.style.display = type === 'salary' ? 'block' : 'none';
+    if (hrGroup) hrGroup.style.display = type === 'hourly' ? 'block' : 'none';
+    this.calcAdpSalary();
+  },
+
+  setAdpSalary(val, btn) {
+    this.adpState.annualSalary = val;
+    const inp = document.getElementById('adp-salary-input');
+    if (inp) inp.value = val;
+    document.querySelectorAll('.adp-salary-pill').forEach(b => {
+      const active = (b === btn);
+      b.classList.toggle('active', active);
+      b.style.background = active ? 'var(--btn-active-bg, #eff6ff)' : 'transparent';
+      b.style.borderColor = active ? 'var(--btn-active-border, #bfdbfe)' : 'transparent';
+      b.style.color = active ? 'var(--btn-active-text, #2563eb)' : 'var(--text-secondary)';
+      b.style.fontWeight = active ? '700' : 'normal';
+    });
+    this.calcAdpSalary();
+  },
+
+  onAdpSalaryInput(val) {
+    this.adpState.annualSalary = parseFloat(val) || 0;
+    this.calcAdpSalary();
+  },
+
+  onAdpHourlyRateInput(val) {
+    this.adpState.hourlyRate = parseFloat(val) || 0;
+    this.calcAdpSalary();
+  },
+
+  onAdpHourlyHoursInput(val) {
+    this.adpState.hourlyHours = parseFloat(val) || 40;
+    this.calcAdpSalary();
+  },
+
+  setAdpFreq(freq, btn) {
+    this.adpState.frequency = freq;
+    document.querySelectorAll('.adp-freq-pill').forEach(b => {
+      const active = (b === btn);
+      b.classList.toggle('active', active);
+      b.style.background = active ? 'var(--btn-active-bg, #eff6ff)' : 'transparent';
+      b.style.borderColor = active ? 'var(--btn-active-border, #bfdbfe)' : 'transparent';
+      b.style.color = active ? 'var(--btn-active-text, #2563eb)' : 'var(--text-secondary)';
+      b.style.fontWeight = active ? '700' : 'normal';
+    });
+    this.calcAdpSalary();
+  },
+
+  setAdpFilingStatus(status, btn) {
+    this.adpState.filingStatus = status;
+    document.querySelectorAll('.adp-status-pill').forEach(b => {
+      const active = (b === btn);
+      b.classList.toggle('active', active);
+      b.style.background = active ? 'var(--btn-active-bg, #eff6ff)' : 'transparent';
+      b.style.borderColor = active ? 'var(--btn-active-border, #bfdbfe)' : 'transparent';
+      b.style.color = active ? 'var(--btn-active-text, #2563eb)' : 'var(--text-secondary)';
+      b.style.fontWeight = active ? '700' : 'normal';
+    });
+    this.calcAdpSalary();
+  },
+
+  onAdpStateChange(stateVal) {
+    this.adpState.state = stateVal;
+    this.calcAdpSalary();
+  },
+
+  onAdp401kRange(val) {
+    this.adpState.k401Pct = parseFloat(val) || 0;
+    this.calcAdpSalary();
+  },
+
+  onAdpHealthInput(val) {
+    this.adpState.healthPerCheck = parseFloat(val) || 0;
+    this.calcAdpSalary();
+  },
+
+  onAdpHsaInput(val) {
+    this.adpState.hsaPerCheck = parseFloat(val) || 0;
+    this.calcAdpSalary();
+  },
+
+  calcAdpSalary() {
+    const rootEl = document.getElementById('sec-adp-salary-calc');
+    if (!rootEl) return;
+
+    const periodsMap = {
+      weekly: 52,
+      biweekly: 26,
+      semimonthly: 24,
+      monthly: 12
+    };
+    const periods = periodsMap[this.adpState.frequency] || 26;
+
+    let grossAnnual;
+    if (this.adpState.payType === 'salary') {
+      grossAnnual = Math.max(0, this.adpState.annualSalary);
+    } else {
+      grossAnnual = Math.max(0, this.adpState.hourlyRate * this.adpState.hourlyHours * 52);
+    }
+
+    const grossPerCheck = Math.round((grossAnnual / periods) * 100) / 100;
+
+    // Display salary input preview
+    const salDisp = document.getElementById('adp-salary-display');
+    if (salDisp) salDisp.textContent = '$' + Math.round(grossAnnual).toLocaleString('en-US');
+
+    // Pre-Tax Deductions
+    const k401PerCheck = Math.round((grossPerCheck * (this.adpState.k401Pct / 100)) * 100) / 100;
+    const k401Disp = document.getElementById('adp-401k-display');
+    if (k401Disp) k401Disp.textContent = `${this.adpState.k401Pct}% ($${k401PerCheck.toFixed(2)}/check)`;
+
+    const totalPreTaxPerCheck = k401PerCheck + this.adpState.healthPerCheck + this.adpState.hsaPerCheck;
+    const totalPreTaxAnnual = totalPreTaxPerCheck * periods;
+
+    // FICA
+    const ficaTaxableCheck = Math.max(0, grossPerCheck - this.adpState.healthPerCheck - this.adpState.hsaPerCheck);
+    const ficaTaxableAnnual = ficaTaxableCheck * periods;
+
+    const ssAnnual = Math.min(ficaTaxableAnnual, 184500) * 0.062;
+    const ssPerCheck = Math.round((ssAnnual / periods) * 100) / 100;
+
+    const medThreshold = this.adpState.filingStatus === 'mfj' ? 250000 : 200000;
+    let medAnnual = ficaTaxableAnnual * 0.0145;
+    if (ficaTaxableAnnual > medThreshold) {
+      medAnnual += (ficaTaxableAnnual - medThreshold) * 0.009;
+    }
+    const medPerCheck = Math.round((medAnnual / periods) * 100) / 100;
+    const ficaTotalCheck = ssPerCheck + medPerCheck;
+
+    // Federal Tax (2026 Brackets)
+    const stdDeductions = {
+      single: 16100,
+      mfj: 32200,
+      hoh: 24150
+    };
+    const stdDed = stdDeductions[this.adpState.filingStatus] || 16100;
+    const fedTaxableAnnual = Math.max(0, grossAnnual - totalPreTaxAnnual - stdDed);
+
+    const computeFedTax = (taxable, status) => {
+      if (taxable <= 0) return 0;
+      if (status === 'mfj') {
+        if (taxable <= 23850) return taxable * 0.10;
+        if (taxable <= 96950) return 2385 + (taxable - 23850) * 0.12;
+        if (taxable <= 206700) return 11157 + (taxable - 96950) * 0.22;
+        if (taxable <= 394600) return 35302 + (taxable - 206700) * 0.24;
+        if (taxable <= 501050) return 80398 + (taxable - 394600) * 0.32;
+        if (taxable <= 751600) return 114462 + (taxable - 501050) * 0.35;
+        return 202154.5 + (taxable - 751600) * 0.37;
+      } else {
+        if (taxable <= 11925) return taxable * 0.10;
+        if (taxable <= 48475) return 1192.5 + (taxable - 11925) * 0.12;
+        if (taxable <= 103350) return 5578.5 + (taxable - 48475) * 0.22;
+        if (taxable <= 197300) return 17651 + (taxable - 103350) * 0.24;
+        if (taxable <= 250525) return 40199 + (taxable - 197300) * 0.32;
+        if (taxable <= 626350) return 57231 + (taxable - 250525) * 0.35;
+        return 188769.75 + (taxable - 626350) * 0.37;
+      }
+    };
+
+    const fedTaxAnnual = computeFedTax(fedTaxableAnnual, this.adpState.filingStatus);
+    const fedTaxPerCheck = Math.round((fedTaxAnnual / periods) * 100) / 100;
+
+    // State Tax
+    const stateRates = {
+      AK: 0, FL: 0, NV: 0, NH: 0, SD: 0, TN: 0, TX: 0, WA: 0, WY: 0,
+      CA: 0.06, NY: 0.05, IL: 0.0495, PA: 0.0307, NJ: 0.055, MA: 0.05,
+      OH: 0.035, NC: 0.045, GA: 0.0549, VA: 0.0575, MI: 0.0425, CO: 0.044,
+      AZ: 0.025, IN: 0.0305, MO: 0.048, MD: 0.0575, WI: 0.053, MN: 0.068,
+      SC: 0.064, AL: 0.05, LA: 0.0425, KY: 0.04, OR: 0.0875, OK: 0.0475,
+      CT: 0.055, UT: 0.0465, IA: 0.044, AR: 0.044, MS: 0.047, KS: 0.055,
+      NM: 0.049, NE: 0.058, ID: 0.05695, WV: 0.051, HI: 0.075, ME: 0.0675,
+      RI: 0.0475, MT: 0.059, DE: 0.055, ND: 0.02, VT: 0.066, DC: 0.065,
+      default: 0.04
+    };
+    const stateRate = stateRates[this.adpState.state] !== undefined ? stateRates[this.adpState.state] : stateRates.default;
+    const stateTaxAnnual = Math.max(0, (grossAnnual - totalPreTaxAnnual) * stateRate);
+    const stateTaxPerCheck = Math.round((stateTaxAnnual / periods) * 100) / 100;
+
+    // Net Take-Home Pay
+    const totalDeductionsPerCheck = totalPreTaxPerCheck + ssPerCheck + medPerCheck + fedTaxPerCheck + stateTaxPerCheck;
+    const netPayPerCheck = Math.max(0, Math.round((grossPerCheck - totalDeductionsPerCheck) * 100) / 100);
+    const netPayAnnual = Math.round(netPayPerCheck * periods * 100) / 100;
+
+    // State Badge
+    const stateBadge = document.getElementById('adp-state-rate-badge');
+    const resStateBadge = document.getElementById('res-adp-state-badge');
+    const stateLabels = {
+      TX: 'Texas (0.0% No State Tax)',
+      FL: 'Florida (0.0% No State Tax)',
+      WA: 'Washington (0.0% No State Tax)',
+      NV: 'Nevada (0.0% No State Tax)',
+      TN: 'Tennessee (0.0% No State Tax)',
+      WY: 'Wyoming (0.0% No State Tax)',
+      SD: 'South Dakota (0.0% No State Tax)',
+      AK: 'Alaska (0.0% No State Tax)',
+      NH: 'New Hampshire (0.0% No Wage Tax)',
+      CA: 'California (~6.00%)',
+      NY: 'New York (~5.00%)',
+      IL: 'Illinois (4.95% Flat)',
+      PA: 'Pennsylvania (3.07% Flat)'
+    };
+    const stateText = stateLabels[this.adpState.state] || `${this.adpState.state} ~(${(stateRate * 100).toFixed(2)}%)`;
+    if (stateBadge) stateBadge.textContent = stateText;
+    if (resStateBadge) {
+      if (stateRate === 0) {
+        resStateBadge.innerHTML = `✓ 0.00% State Income Tax (${this.adpState.state})`;
+        resStateBadge.style.background = '#ecfdf5';
+        resStateBadge.style.color = '#059669';
+        resStateBadge.style.borderColor = '#a7f3d0';
+      } else {
+        resStateBadge.innerHTML = `${stateText} State Withholding`;
+        resStateBadge.style.background = '#eff6ff';
+        resStateBadge.style.color = '#1d4ed8';
+        resStateBadge.style.borderColor = '#bfdbfe';
+      }
+    }
+
+    // DOM Updates
+    const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const fmtInt = (n) => '$' + Math.round(n).toLocaleString('en-US');
+
+    const netCheckEl = document.getElementById('res-adp-net-check');
+    if (netCheckEl) netCheckEl.textContent = fmt(netPayPerCheck) + ' / check';
+
+    const netAnnEl = document.getElementById('res-adp-net-annual');
+    if (netAnnEl) {
+      const freqLabel = { weekly: 'Weekly (52)', biweekly: 'Bi-Weekly (26)', semimonthly: 'Semi-Monthly (24)', monthly: 'Monthly (12)' }[this.adpState.frequency];
+      netAnnEl.innerHTML = `Annual Net Take-Home: <strong>${fmtInt(netPayAnnual)} / yr</strong> &bull; ${freqLabel} Paychecks`;
+    }
+
+    const grossCheckEl = document.getElementById('res-adp-gross-check');
+    if (grossCheckEl) grossCheckEl.textContent = fmt(grossPerCheck);
+
+    const fedCheckEl = document.getElementById('res-adp-fed-check');
+    if (fedCheckEl) fedCheckEl.textContent = '-' + fmt(fedTaxPerCheck);
+
+    const ficaCheckEl = document.getElementById('res-adp-fica-check');
+    if (ficaCheckEl) ficaCheckEl.textContent = '-' + fmt(ficaTotalCheck);
+
+    const pretaxCheckEl = document.getElementById('res-adp-pretax-check');
+    if (pretaxCheckEl) pretaxCheckEl.textContent = '-' + fmt(totalPreTaxPerCheck);
+
+    // Pay Stub Breakdown Table
+    const tbody = document.getElementById('adp-breakdown-rows');
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr style="border-bottom:1px solid var(--card-border); font-weight:700;">
+          <td style="padding:0.45rem 0.75rem; color:var(--text-primary);">Gross Earnings</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:var(--primary-color, #2563eb);">${fmt(grossPerCheck)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:var(--primary-color, #2563eb);">${fmtInt(grossAnnual)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border); background:var(--bg-tertiary);">
+          <td style="padding:0.45rem 0.75rem; color:#2563eb;">Pre-Tax 401(k) (${this.adpState.k401Pct}%)</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#2563eb;">-${fmt(k401PerCheck)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#2563eb;">-${fmtInt(k401PerCheck * periods)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border);">
+          <td style="padding:0.45rem 0.75rem; color:#2563eb;">Health / Dental Insurance (Pre-Tax)</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#2563eb;">-${fmt(this.adpState.healthPerCheck)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#2563eb;">-${fmtInt(this.adpState.healthPerCheck * periods)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border); background:var(--bg-tertiary);">
+          <td style="padding:0.45rem 0.75rem; color:#dc2626;">FICA: Social Security (6.2%)</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmt(ssPerCheck)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmtInt(ssAnnual)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border);">
+          <td style="padding:0.45rem 0.75rem; color:#dc2626;">FICA: Medicare (1.45%)</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmt(medPerCheck)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmtInt(medAnnual)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border); background:var(--bg-tertiary);">
+          <td style="padding:0.45rem 0.75rem; color:#dc2626;">Federal Income Tax (2026 Tables)</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmt(fedTaxPerCheck)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">-${fmtInt(fedTaxAnnual)}</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--card-border);">
+          <td style="padding:0.45rem 0.75rem; color:#dc2626;">State Income Tax (${this.adpState.state})</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">${stateRate === 0 ? '$0.00 (Exempt)' : '-' + fmt(stateTaxPerCheck)}</td>
+          <td style="padding:0.45rem 0.75rem; text-align:right; color:#dc2626;">${stateRate === 0 ? '$0 (Exempt)' : '-' + fmtInt(stateTaxAnnual)}</td>
+        </tr>
+        <tr style="background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.05)); font-weight:800; font-size:0.9rem;">
+          <td style="padding:0.6rem 0.75rem; color:#059669;">Net Take-Home Paycheck</td>
+          <td style="padding:0.6rem 0.75rem; text-align:right; color:#059669;">${fmt(netPayPerCheck)}</td>
+          <td style="padding:0.6rem 0.75rem; text-align:right; color:#059669;">${fmtInt(netPayAnnual)}</td>
+        </tr>
+      `;
+    }
+  }};
 
 window.FinancialCalcs = FinancialCalcs;
