@@ -76,58 +76,7 @@ export async function generateMetadata({ params }) {
     };
   }
 
-    if (slug === '8th-pay-commission-salary-calculator' || slug === '8th-pay-commission' || calc?.id === 'sec-8th-pay-commission-calc') {
-    return {
-      title: '8th Pay Commission Salary Calculator 2026 – Fitment & Matrix',
-      description: 'Free 8th Pay Commission Salary Calculator (8th CPC) to estimate your revised basic pay, HRA, TA, NPS, and net monthly in-hand salary across Pay Levels 1 to 18.',
-      keywords: [
-        '8th pay commission salary calculator',
-        '8th cpc salary calculator',
-        '8th pay commission pay matrix calculator',
-        'fitment factor calculator',
-        '7th vs 8th pay commission salary comparison',
-        '8th pay commission expected salary hike',
-        'central government employee salary calculator 2026',
-        '8th pay commission fitment factor',
-        'central government pay matrix',
-        '8th cpc basic pay'
-      ],
-      alternates: {
-        canonical: '/financial/8th-pay-commission-salary-calculator',
-      },
-      openGraph: {
-        title: '8th Pay Commission Salary Calculator 2026 – Fitment & Matrix',
-        description: 'Free 8th Pay Commission Salary Calculator (8th CPC) to estimate your revised basic pay, HRA, TA, NPS, and net monthly in-hand salary across Pay Levels 1 to 18.',
-        keywords: [
-          '8th pay commission salary calculator',
-          '8th cpc salary calculator',
-          '8th pay commission pay matrix calculator',
-          'fitment factor calculator',
-          '7th vs 8th pay commission salary comparison',
-          '8th pay commission expected salary hike',
-          'central government employee salary calculator 2026'
-        ],
-        url: '/financial/8th-pay-commission-salary-calculator',
-        type: 'website',
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: '8th Pay Commission Salary Calculator 2026 – Fitment & Matrix',
-        description: 'Free 8th Pay Commission Salary Calculator (8th CPC) to estimate your revised basic pay, HRA, TA, NPS, and net monthly in-hand salary across Pay Levels 1 to 18.',
-        keywords: [
-          '8th pay commission salary calculator',
-          '8th cpc salary calculator',
-          '8th pay commission pay matrix calculator',
-          'fitment factor calculator',
-          '7th vs 8th pay commission salary comparison',
-          '8th pay commission expected salary hike',
-          'central government employee salary calculator 2026'
-        ],
-      },
-    };
-  }
-
-  if (slug === 'heloc-calculator' || slug === 'heloc' || calc?.id === 'sec-heloc-calc') {
+    if (slug === 'heloc-calculator' || slug === 'heloc' || calc?.id === 'sec-heloc-calc') {
     return {
       title: 'HELOC Calculator – Monthly Draw & Repayment Payment Estimator',
       description: 'Free HELOC Calculator to estimate your monthly payment during both the interest-only draw period and principal-and-interest repayment phase, plus max credit line.',
@@ -221,111 +170,6 @@ export default function CalculatorPage({ params }) {
 
   const isBikeCalc = slug === 'bike-emi-calculator' || slug === 'loan-calculator' || calc?.id === 'sec-loan-calc';
   const isInflationCalc = slug === 'inflation-calculator' || slug === 'inflation' || calc?.id === 'sec-inflation-calc';
-  const isCpcCalc = slug === '8th-pay-commission-salary-calculator' || slug === '8th-pay-commission' || calc?.id === 'sec-8th-pay-commission-calc';
-
-  const cpcSoftwareSchema = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "8th Pay Commission Salary Calculator",
-    "operatingSystem": "Any",
-    "applicationCategory": "FinanceApplication",
-    "description": "Free 8th Pay Commission Salary Calculator (8th CPC) to estimate your revised basic pay, HRA, TA, NPS, and net monthly in-hand salary across Pay Levels 1 to 18.",
-    "keywords": "8th pay commission salary calculator, 8th cpc salary calculator, 8th pay commission pay matrix calculator, fitment factor calculator, 7th vs 8th pay commission salary comparison, 8th pay commission expected salary hike, central government employee salary calculator 2026",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "INR"
-    }
-  };
-
-  const cpcFaqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How is salary calculated under the 8th Pay Commission?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Under the 8th Pay Commission, salary is calculated by multiplying your existing 7th CPC Basic Pay by an officially notified Fitment Factor (expected between 1.92 and 2.86). This yields your revised 8th CPC Basic Pay. Allowances like House Rent Allowance (HRA: 30%, 20%, or 10% based on X, Y, or Z city class) and Transport Allowance (TA: ₹1,350 to ₹7,200 depending on Pay Level) are recalculated on the new basic pay. Mandatory deductions (10% NPS on Basic + DA, CGHS, and Income Tax TDS) are subtracted to determine monthly take-home salary."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the expected fitment factor for the 8th Pay Commission?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The expected fitment factor for the 8th Pay Commission is projected between 1.92 (conservative baseline) and 2.86 (staff union demand), with 2.28 considered the most probable actuarial compromise. For reference, the 7th CPC applied a fitment factor of 2.57 in 2016, and the 6th CPC applied a factor of 1.86 in 2006. The final official fitment factor will be confirmed upon Union Cabinet approval."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What will be the minimum basic salary in the 8th Pay Commission?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The minimum basic salary (Pay Level 1 entry) is expected to rise from the 7th CPC baseline of ₹18,000 to approximately ₹34,560 at a 1.92 fitment factor, ₹41,040 at a 2.28 fitment factor, or up to ₹51,480 at a 2.86 fitment factor. This represents a 92% to 186% increase in foundational basic pay before allowances."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "From which date will the 8th Pay Commission be applicable?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The 8th Pay Commission is scheduled to take retrospective effect from January 1, 2026. Following the decennial timeline of past Central Pay Commissions (7th CPC effective Jan 1, 2016; 6th CPC effective Jan 1, 2006), any delay in administrative notification will be fully compensated through a retrospective lump-sum arrears payout covering all elapsed months from January 1, 2026."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What happens to Dearness Allowance (DA) when the 8th CPC is implemented?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Under standard Central Pay Commission rules, all accumulated Dearness Allowance (DA) is merged into the revised Basic Pay upon implementation, resetting the ongoing DA rate back to 0%. Fresh bi-annual DA adjustments (announced every January and July) will subsequently accrue on the newly elevated 8th CPC basic pay based on 12-month average AICPI-IW consumer price indices."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How much will minimum pension increase under the 8th Pay Commission?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Central Government minimum basic pension (currently pegged at ₹9,000 per month under 7th CPC for 50% of minimum basic) will increase proportionally with the revised basic pay. Under an expected fitment factor of 1.92 to 2.86, minimum pension will rise to between ₹17,280 and ₹25,740 per month (with ₹20,520/month at the moderate 2.28 estimate), plus Dearness Relief (DR)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Will higher 8th CPC salary increase my Income Tax under FY 2026-27 slabs?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, higher revised basic pay increases taxable gross salary. However, under the New Tax Regime (FY 2026-27), standard deductions (₹75,000 for salaried employees) and full tax rebates under Section 87A mean total income up to ₹7,75,000 incurs zero income tax liability. For employees entering higher tax brackets (10%, 15%, 20%), employer NPS contributions (up to 14% of Basic + DA under Sec 80CCD(2)) remain fully tax-exempt."
-        }
-      }
-    ]
-  };
-
-  const cpcBreadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://calcmoderncalcultor.vercel.app/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Financial Calculators",
-        "item": "https://calcmoderncalcultor.vercel.app/financial"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "8th Pay Commission Salary Calculator",
-        "item": "https://calcmoderncalcultor.vercel.app/financial/8th-pay-commission-salary-calculator"
-      }
-    ]
-  };
-
   const isHelocCalc = slug === 'heloc-calculator' || slug === 'heloc' || calc?.id === 'sec-heloc-calc';
 
   const inflationSoftwareSchema = {
@@ -604,22 +448,6 @@ export default function CalculatorPage({ params }) {
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(inflationBreadcrumbSchema) }}
-          />
-        </>
-      )}
-      {isCpcCalc && (
-        <>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(cpcSoftwareSchema) }}
-          />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(cpcFaqSchema) }}
-          />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(cpcBreadcrumbSchema) }}
           />
         </>
       )}

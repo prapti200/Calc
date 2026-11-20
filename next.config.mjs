@@ -7,31 +7,6 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/financial/8th-pay-commission',
-        destination: '/financial/8th-pay-commission-salary-calculator',
-        permanent: true,
-      },
-      {
-        source: '/financial/8th-cpc-calculator',
-        destination: '/financial/8th-pay-commission-salary-calculator',
-        permanent: true,
-      },
-      {
-        source: '/financial/pay-commission',
-        destination: '/financial/8th-pay-commission-salary-calculator',
-        permanent: true,
-      },
-      {
-        source: '/financial/pay-commission-calculator',
-        destination: '/financial/8th-pay-commission-salary-calculator',
-        permanent: true,
-      },
-      {
-        source: '/financial/8th-cpc-salary-calculator',
-        destination: '/financial/8th-pay-commission-salary-calculator',
-        permanent: true,
-      },
-      {
         source: '/financial/heloc',
         destination: '/financial/heloc-calculator',
         permanent: true,
