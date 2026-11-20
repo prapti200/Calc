@@ -3558,165 +3558,517 @@
              CALCULATOR 35: SALARY & WAGE CONVERSION CALCULATOR
              ================================================================== -->
         <div class="calc-panel fin-calc-unit" id="sec-salary-calc" style="display:none;">
-          <div class="panel-header">
-            <div class="panel-title-group">
-              <h2 class="section-heading" style="font-size:1.65rem;">Salary & Wage Conversion Calculator</h2>
-              <span class="box-region-badge">Multi-Frequency Equivalent Engine</span>
-            </div>
-            <div class="radio-pill-group">
-              <button class="radio-pill-btn sal-preset-btn" data-amt="25" data-freq="hourly">$25/hr</button>
-              <button class="radio-pill-btn sal-preset-btn" data-amt="50000" data-freq="annual">$50k/yr</button>
-              <button class="radio-pill-btn sal-preset-btn active" data-amt="85000" data-freq="annual">$85k/yr</button>
-              <button class="radio-pill-btn sal-preset-btn" data-amt="120000" data-freq="annual">$120k/yr</button>
-              <button class="radio-pill-btn sal-preset-btn" data-amt="200000" data-freq="annual">$200k/yr</button>
-            </div>
+  <div class="panel-header" style="margin-bottom:1.5rem;">
+    <div class="panel-title-group" style="flex-direction:column; align-items:flex-start; gap:0.4rem;">
+      <h1 class="section-heading" style="font-size:1.75rem; margin:0; font-weight:800; color:var(--text-primary);">
+        Salary Calculator: In Hand, Payroll &amp; 8th Pay Commission Estimator
+      </h1>
+      <p class="panel-subtitle" style="font-size:0.925rem; line-height:1.6; color:var(--text-secondary); max-width:880px; margin:0.25rem 0 0 0;">
+        Calculate your exact monthly take-home pay using our free Salary Calculator with dedicated modes for CTC breakdown, payroll deductions, and central government pay revision.
+      </p>
+
+      <!-- Prominently Visible Target Keywords & LSI Semantic Tags Bar -->
+      <div class="sal-keyword-tags-bar" style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-top:0.75rem; align-items:center;">
+        <span style="font-size:0.72rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em; margin-right:0.2rem;">Target Keywords:</span>
+        <span class="seo-keyword-pill" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.76rem; font-weight:700; padding:0.3rem 0.75rem; border-radius:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; box-shadow:0 1px 2px rgba(37,99,235,0.06);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          salary calculator
+        </span>
+        <span class="seo-keyword-pill" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.76rem; font-weight:700; padding:0.3rem 0.75rem; border-radius:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; box-shadow:0 1px 2px rgba(37,99,235,0.06);">
+          in hand salary calculator
+        </span>
+        <span class="seo-keyword-pill" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.76rem; font-weight:700; padding:0.3rem 0.75rem; border-radius:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; box-shadow:0 1px 2px rgba(37,99,235,0.06);">
+          adp salary calculator
+        </span>
+        <span class="seo-keyword-pill" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.76rem; font-weight:700; padding:0.3rem 0.75rem; border-radius:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; box-shadow:0 1px 2px rgba(37,99,235,0.06);">
+          8th pay commission salary calculator
+        </span>
+      </div>
+
+      <!-- Unified 3-Mode Tab Bar -->
+      <div class="sal-mode-tabs-bar" style="display:flex; gap:0.5rem; margin-top:1.25rem; width:100%; border-bottom:2px solid var(--card-border, #e2e8f0); padding-bottom:0.25rem;">
+        <button type="button" class="sal-mode-tab active" id="tab-btn-inhand" onclick="FinancialCalcs.switchSalaryTab('inhand', this)" style="padding:0.65rem 1.15rem; font-weight:700; font-size:0.9rem; border-radius:6px 6px 0 0; border:1px solid var(--btn-active-border, #bfdbfe); border-bottom:2px solid #2563eb; background:var(--btn-active-bg, #eff6ff); color:var(--btn-active-text, #2563eb); cursor:pointer; transition:all 0.15s ease;">
+          In Hand Salary Calculator
+        </button>
+        <button type="button" class="sal-mode-tab" id="tab-btn-adp" onclick="FinancialCalcs.switchSalaryTab('adp', this)" style="padding:0.65rem 1.15rem; font-weight:600; font-size:0.9rem; border-radius:6px 6px 0 0; border:1px solid transparent; border-bottom:2px solid transparent; background:transparent; color:var(--text-secondary); cursor:pointer; transition:all 0.15s ease;">
+          ADP Salary Calculator
+        </button>
+        <button type="button" class="sal-mode-tab" id="tab-btn-cpc" onclick="FinancialCalcs.switchSalaryTab('cpc', this)" style="padding:0.65rem 1.15rem; font-weight:600; font-size:0.9rem; border-radius:6px 6px 0 0; border:1px solid transparent; border-bottom:2px solid transparent; background:transparent; color:var(--text-secondary); cursor:pointer; transition:all 0.15s ease;">
+          8th Pay Commission Salary Calculator
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- MODE 1: IN HAND SALARY CALCULATOR (CTC TO TAKE-HOME) -->
+  <!-- ====================================================================== -->
+  <div id="sal-view-inhand" class="sal-mode-view" style="display:block;">
+    <div class="calc-split-layout">
+      <!-- Inputs Column -->
+      <div class="calc-inputs-side">
+        <!-- Annual CTC Input & Quick Presets -->
+        <div class="input-card" style="margin-bottom:1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <label for="sal-ctc-input" class="input-label" style="font-weight:700; margin:0; color:var(--text-primary);">Annual Cost to Company (CTC)</label>
+            <span id="sal-ctc-display" style="font-size:0.875rem; font-weight:700; color:var(--primary-color, #2563eb);">₹12,00,000</span>
           </div>
-          <div class="calc-split-layout">
-            <div class="calc-inputs-side">
-              <div style="display:grid; grid-template-columns:1.2fr 0.8fr; gap:0.75rem;">
-                <div class="form-group">
-                  <label for="sal-amount">Compensation Amount</label>
-                  <div class="input-with-affix">
-                    <span class="affix curr-symbol">$</span>
-                    <input type="number" id="sal-amount" class="form-input" value="85000" min="0" step="500">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="sal-frequency">Frequency</label>
-                  <select id="sal-frequency" class="form-input">
-                    <option value="annual" selected>Per Year</option>
-                    <option value="monthly">Per Month</option>
-                    <option value="semimonthly">Semi-Monthly (24x)</option>
-                    <option value="biweekly">Bi-Weekly (26x)</option>
-                    <option value="weekly">Per Week</option>
-                    <option value="daily">Per Day</option>
-                    <option value="hourly">Per Hour</option>
-                  </select>
-                </div>
-              </div>
-
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-                <div class="form-group">
-                  <div class="label-with-slider-val">
-                    <label for="sal-hours-week">Hours / Week</label>
-                    <span class="slider-val-preview" id="sal-hours-week-val">40 hrs</span>
-                  </div>
-                  <input type="number" id="sal-hours-week" class="form-input" value="40" min="1" max="80">
-                  <input type="range" id="sal-hours-week-range" class="form-range" min="10" max="60" value="40">
-                </div>
-                <div class="form-group">
-                  <div class="label-with-slider-val">
-                    <label for="sal-days-week">Days / Week</label>
-                    <span class="slider-val-preview" id="sal-days-week-val">5 days</span>
-                  </div>
-                  <input type="number" id="sal-days-week" class="form-input" value="5" min="1" max="7">
-                  <input type="range" id="sal-days-week-range" class="form-range" min="1" max="7" value="5">
-                </div>
-              </div>
-
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-                <div class="form-group">
-                  <label for="sal-pto-days">Paid Time Off (PTO + Holidays)</label>
-                  <div class="input-with-affix">
-                    <input type="number" id="sal-pto-days" class="form-input" value="15" min="0" max="60">
-                    <span class="affix">Days</span>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="sal-bonus">Annual Bonus / Commissions</label>
-                  <div class="input-with-affix">
-                    <span class="affix curr-symbol">$</span>
-                    <input type="number" id="sal-bonus" class="form-input" value="0" min="0" step="500">
-                  </div>
-                </div>
-              </div>
-
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-                <div class="form-group">
-                  <div class="label-with-slider-val">
-                    <label for="sal-ot-hours">Overtime Hours / Week</label>
-                    <span class="slider-val-preview" id="sal-ot-hours-val">0 hrs</span>
-                  </div>
-                  <input type="number" id="sal-ot-hours" class="form-input" value="0" min="0" max="40">
-                  <input type="range" id="sal-ot-hours-range" class="form-range" min="0" max="25" value="0">
-                </div>
-                <div class="form-group">
-                  <label for="sal-ot-multiplier">Overtime Multiplier</label>
-                  <select id="sal-ot-multiplier" class="form-input">
-                    <option value="1.5" selected>1.5x (Time & a Half)</option>
-                    <option value="2.0">2.0x (Double Time)</option>
-                    <option value="1.0">1.0x (Straight Time)</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="calc-results-side">
-              <div class="result-card-primary">
-                <div class="result-label">Total Annualized Compensation</div>
-                <div class="result-value-huge" id="res-sal-annual-total" style="color:var(--accent-primary); font-size:1.85rem;" data-copyable="true">$85,000.00</div>
-                <div style="margin-top:0.35rem; font-size:0.85rem; color:var(--text-secondary);">
-                  Base Equivalent: <strong id="res-sal-hourly-base" style="color:var(--accent-green);">$40.87 / hr</strong>
-                </div>
-              </div>
-
-              <div class="result-stat-grid">
-                <div class="stat-box">
-                  <div class="stat-box-label">Monthly Gross Pay</div>
-                  <div class="stat-box-val" id="res-sal-monthly" data-copyable="true">$7,083.33</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Bi-Weekly Paycheck (26x)</div>
-                  <div class="stat-box-val" id="res-sal-biweekly" style="color:var(--accent-primary);" data-copyable="true">$3,269.23</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Semi-Monthly Paycheck (24x)</div>
-                  <div class="stat-box-val" id="res-sal-semimonthly" data-copyable="true">$3,541.67</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Weekly Gross Pay (52x)</div>
-                  <div class="stat-box-val" id="res-sal-weekly" data-copyable="true">$1,634.62</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Daily Wage (5 days/wk)</div>
-                  <div class="stat-box-val" id="res-sal-daily" data-copyable="true">$326.92</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Adjusted Hourly Rate (Excl. PTO)</div>
-                  <div class="stat-box-val" id="res-sal-hourly-adjusted" style="color:var(--accent-green);" data-copyable="true">$43.37 / hr</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Annual Overtime Pay</div>
-                  <div class="stat-box-val" id="res-sal-ot-annual" data-copyable="true">$0.00</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">1099 Contractor Equiv. Rate</div>
-                  <div class="stat-box-val" id="res-sal-1099-equiv" style="color:var(--accent-secondary);" data-copyable="true">$53.13 / hr</div>
-                </div>
-              </div>
-            </div>
+          <!-- Quick Presets -->
+          <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.75rem;">
+            <button type="button" class="sal-ctc-pill" onclick="FinancialCalcs.setSalCtc(600000, this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">₹6 LPA</button>
+            <button type="button" class="sal-ctc-pill" onclick="FinancialCalcs.setSalCtc(1000000, this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">₹10 LPA</button>
+            <button type="button" class="sal-ctc-pill active" onclick="FinancialCalcs.setSalCtc(1200000, this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--btn-active-border, #bfdbfe); background:var(--btn-active-bg, #eff6ff); color:var(--btn-active-text, #2563eb); font-weight:700; cursor:pointer;">₹12 LPA (Popular)</button>
+            <button type="button" class="sal-ctc-pill" onclick="FinancialCalcs.setSalCtc(1275000, this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">₹12.75 LPA (Zero Tax)</button>
+            <button type="button" class="sal-ctc-pill" onclick="FinancialCalcs.setSalCtc(1800000, this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">₹18 LPA</button>
+            <button type="button" class="sal-ctc-pill" onclick="FinancialCalcs.setSalCtc(2500000, this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">₹25 LPA</button>
           </div>
-
-          <!-- Comprehensive Frequency Conversion Matrix -->
-          <div style="padding:1.25rem 1.75rem; border-top:1px solid var(--card-border); background:rgba(0,0,0,0.12);">
-            <div style="font-weight:700; font-size:0.95rem; margin-bottom:0.6rem; display:flex; align-items:center; gap:0.4rem;">
-              <span>💼</span> Complete Pay Frequency Conversion Matrix
-            </div>
-            <table class="breakdown-table">
-              <thead>
-                <tr>
-                  <th>Pay Frequency</th>
-                  <th>Base Earnings</th>
-                  <th>Overtime & Bonus</th>
-                  <th>Total Gross Wages</th>
-                </tr>
-              </thead>
-              <tbody id="sal-table-body">
-                <!-- Injected via financial-calcs.js -->
-              </tbody>
-            </table>
+          <div class="input-with-symbol">
+            <span class="symbol-prefix">₹</span>
+            <input type="number" id="sal-ctc-input" value="1200000" min="100000" max="100000000" step="10000" oninput="FinancialCalcs.onSalCtcInput(this.value)" class="calc-input" style="padding-left:1.75rem; width:100%; border-radius:6px;">
           </div>
         </div>
+
+        <!-- Basic Pay % & Variable Bonus Sliders -->
+        <div class="input-card" style="margin-bottom:1.25rem;">
+          <div style="margin-bottom:0.85rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+              <label for="sal-basic-pct-range" class="input-label" style="font-weight:700; margin:0; color:var(--text-primary); font-size:0.85rem;">Basic Pay (% of CTC)</label>
+              <span id="sal-basic-pct-display" style="font-size:0.85rem; font-weight:700; color:var(--text-primary);">50% (₹6,00,000/yr)</span>
+            </div>
+            <input type="range" id="sal-basic-pct-range" min="30" max="60" step="5" value="50" oninput="FinancialCalcs.onSalBasicRange(this.value)" style="width:100%; accent-color:var(--primary-color, #2563eb);">
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+              <label for="sal-variable-range" class="input-label" style="font-weight:700; margin:0; color:var(--text-primary); font-size:0.85rem;">Annual Variable Pay / Bonus (%)</label>
+              <span id="sal-variable-display" style="font-size:0.85rem; font-weight:700; color:var(--text-primary);">0% (₹0)</span>
+            </div>
+            <input type="range" id="sal-variable-range" min="0" max="50" step="5" value="0" oninput="FinancialCalcs.onSalVariableChange(this.value)" style="width:100%; accent-color:var(--primary-color, #2563eb);">
+          </div>
+        </div>
+
+        <!-- HRA, EPF & PT Toggles -->
+        <div class="input-card" style="margin-bottom:1.25rem;">
+          <!-- HRA Location -->
+          <div style="margin-bottom:0.85rem;">
+            <label class="input-label" style="font-weight:700; display:block; margin-bottom:0.4rem; color:var(--text-primary); font-size:0.85rem;">HRA City Category</label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+              <button type="button" class="sal-hra-pill active" onclick="FinancialCalcs.setSalHra(true, this)" style="padding:0.5rem; border-radius:6px; border:1px solid var(--btn-active-border, #bfdbfe); background:var(--btn-active-bg, #eff6ff); color:var(--btn-active-text, #2563eb); font-weight:700; cursor:pointer; font-size:0.8rem;">
+                Metro (50% Basic)
+              </button>
+              <button type="button" class="sal-hra-pill" onclick="FinancialCalcs.setSalHra(false, this)" style="padding:0.5rem; border-radius:6px; border:1px solid transparent; background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.8rem;">
+                Non-Metro (40% Basic)
+              </button>
+            </div>
+          </div>
+
+          <!-- EPF Mode -->
+          <div style="margin-bottom:0.85rem;">
+            <label class="input-label" style="font-weight:700; display:block; margin-bottom:0.4rem; color:var(--text-primary); font-size:0.85rem;">Employee Provident Fund (EPF)</label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+              <button type="button" class="sal-epf-pill active" onclick="FinancialCalcs.setSalEpf('standard', this)" style="padding:0.5rem; border-radius:6px; border:1px solid var(--btn-active-border, #bfdbfe); background:var(--btn-active-bg, #eff6ff); color:var(--btn-active-text, #2563eb); font-weight:700; cursor:pointer; font-size:0.8rem;">
+                12% of Full Basic
+              </button>
+              <button type="button" class="sal-epf-pill" onclick="FinancialCalcs.setSalEpf('capped', this)" style="padding:0.5rem; border-radius:6px; border:1px solid transparent; background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.8rem;">
+                Capped ₹1,800 / mo
+              </button>
+            </div>
+          </div>
+
+          <!-- Professional Tax & Regime -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+            <div>
+              <label class="input-label" style="font-weight:700; display:block; margin-bottom:0.4rem; color:var(--text-primary); font-size:0.85rem;">Professional Tax</label>
+              <div style="display:flex; gap:0.35rem;">
+                <button type="button" class="sal-pt-pill active" onclick="FinancialCalcs.setSalPt(200, this)" style="flex:1; padding:0.45rem 0.2rem; border-radius:6px; border:1px solid var(--btn-active-border, #bfdbfe); background:var(--btn-active-bg, #eff6ff); color:var(--btn-active-text, #2563eb); font-weight:700; cursor:pointer; font-size:0.75rem;">
+                  ₹200/mo
+                </button>
+                <button type="button" class="sal-pt-pill" onclick="FinancialCalcs.setSalPt(0, this)" style="flex:1; padding:0.45rem 0.2rem; border-radius:6px; border:1px solid transparent; background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.75rem;">
+                  ₹0 Exempt
+                </button>
+              </div>
+            </div>
+            <div>
+              <label class="input-label" style="font-weight:700; display:block; margin-bottom:0.4rem; color:var(--text-primary); font-size:0.85rem;">Tax Regime</label>
+              <div style="display:flex; gap:0.35rem;">
+                <button type="button" class="sal-regime-pill active" onclick="FinancialCalcs.setSalRegime('new', this)" style="flex:1; padding:0.45rem 0.2rem; border-radius:6px; border:1px solid var(--btn-active-border, #bfdbfe); background:var(--btn-active-bg, #eff6ff); color:var(--btn-active-text, #2563eb); font-weight:700; cursor:pointer; font-size:0.75rem;">
+                  New (FY26-27)
+                </button>
+                <button type="button" class="sal-regime-pill" onclick="FinancialCalcs.setSalRegime('old', this)" style="flex:1; padding:0.45rem 0.2rem; border-radius:6px; border:1px solid transparent; background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.75rem;">
+                  Old Regime
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Column -->
+      <div class="calc-results-side">
+        <!-- Highlight Card -->
+        <div class="result-highlight-card" style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:10px; padding:1.5rem; margin-bottom:1.25rem; box-shadow:0 1px 3px rgba(0,0,0,0.05); text-align:center;">
+          <span class="result-label" style="font-size:0.85rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em; display:block; margin-bottom:0.35rem;">
+            Estimated Net Monthly In-Hand Salary
+          </span>
+          <div class="result-value-large" id="res-sal-inhand-monthly" style="font-size:2.35rem; font-weight:900; color:#059669; line-height:1.2; margin-bottom:0.4rem;">
+            ₹86,400 / mo
+          </div>
+          <div id="res-sal-inhand-annual" style="font-size:0.875rem; color:var(--text-secondary);">
+            Annual Net Take-Home: <strong>₹10,36,800</strong> &bull; Total Deductions: <strong>₹1,63,200</strong>
+          </div>
+          <div id="res-sal-regime-badge" style="display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.75rem; padding:0.35rem 0.85rem; border-radius:6px; background:#ecfdf5; color:#059669; font-size:0.8rem; font-weight:700; border:1px solid #a7f3d0;">
+            ✓ Zero Income Tax (100% Tax-Free under Section 87A)
+          </div>
+        </div>
+
+        <!-- 4 Stat Boxes -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem;">
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Gross Monthly Salary</div>
+            <div id="res-sal-gross-monthly" style="font-size:1.15rem; font-weight:800; color:var(--text-primary); margin-top:0.25rem;">₹94,100</div>
+          </div>
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Monthly Income Tax (TDS)</div>
+            <div id="res-sal-tax-monthly" style="font-size:1.15rem; font-weight:800; color:#059669; margin-top:0.25rem;">₹0 (Nil)</div>
+          </div>
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Total Monthly Deductions</div>
+            <div id="res-sal-deductions-monthly" style="font-size:1.15rem; font-weight:800; color:#dc2626; margin-top:0.25rem;">₹7,700</div>
+          </div>
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Total PF Contribution</div>
+            <div id="res-sal-epf-monthly" style="font-size:1.15rem; font-weight:800; color:#2563eb; margin-top:0.25rem;">₹12,000 / mo</div>
+          </div>
+        </div>
+
+        <!-- Visual Breakdown Bar -->
+        <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.85rem; margin-bottom:1.25rem;">
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:700; margin-bottom:0.4rem;">
+            <span style="color:#059669;">In-Hand: <span id="bar-sal-inhand-pct">91.8%</span></span>
+            <span style="color:#2563eb;">PF &amp; PT: <span id="bar-sal-pf-pct">8.2%</span></span>
+            <span style="color:#dc2626;">Taxes: <span id="bar-sal-tax-pct">0.0%</span></span>
+          </div>
+          <div style="height:10px; width:100%; display:flex; border-radius:4px; overflow:hidden; background:#e2e8f0;">
+            <div id="bar-sal-inhand-fill" style="width:91.8%; background:#059669; transition:width 0.3s ease;"></div>
+            <div id="bar-sal-pf-fill" style="width:8.2%; background:#2563eb; transition:width 0.3s ease;"></div>
+            <div id="bar-sal-tax-fill" style="width:0%; background:#dc2626; transition:width 0.3s ease;"></div>
+          </div>
+        </div>
+
+        <!-- Breakdown Table -->
+        <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; overflow:hidden;">
+          <div style="padding:0.6rem 0.85rem; background:var(--bg-tertiary); border-bottom:1px solid var(--card-border); font-weight:700; font-size:0.825rem; color:var(--text-primary); display:flex; justify-content:space-between;">
+            <span>CTC Component Breakdown</span>
+            <span>Monthly / Annual</span>
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:0.825rem;">
+            <thead>
+              <tr style="background:var(--bg-tertiary); border-bottom:1px solid var(--card-border);">
+                <th style="padding:0.45rem 0.75rem; text-align:left; color:var(--text-secondary); font-weight:600;">Salary Component</th>
+                <th style="padding:0.45rem 0.75rem; text-align:right; color:var(--text-secondary); font-weight:600;">Monthly</th>
+                <th style="padding:0.45rem 0.75rem; text-align:right; color:var(--text-secondary); font-weight:600;">Annual</th>
+              </tr>
+            </thead>
+            <tbody id="sal-breakdown-rows">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- MODE 2: ADP SALARY CALCULATOR (GROSS-TO-NET PAYCHECK MODE) -->
+  <!-- ====================================================================== -->
+  <div id="sal-view-adp" class="sal-mode-view" style="display:none;">
+    <div class="calc-split-layout">
+      <!-- Inputs Column -->
+      <div class="calc-inputs-side">
+        <!-- Gross Pay Input & Frequency -->
+        <div class="input-card" style="margin-bottom:1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <label for="adp-gross-input" class="input-label" style="font-weight:700; margin:0; color:var(--text-primary);">Gross Pay (Annual or Period)</label>
+            <span id="adp-gross-display" style="font-size:0.875rem; font-weight:700; color:var(--primary-color, #2563eb);">$75,000 / yr</span>
+          </div>
+          <!-- Presets -->
+          <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.75rem;">
+            <button type="button" class="adp-sal-pill" onclick="FinancialCalcs.setAdpGross(45000, this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">$45k</button>
+            <button type="button" class="adp-sal-pill" onclick="FinancialCalcs.setAdpGross(65000, this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">$65k</button>
+            <button type="button" class="adp-sal-pill active" onclick="FinancialCalcs.setAdpGross(75000, this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--btn-active-border, #bfdbfe); background:var(--btn-active-bg, #eff6ff); color:var(--btn-active-text, #2563eb); font-weight:700; cursor:pointer;">$75k (Median)</button>
+            <button type="button" class="adp-sal-pill" onclick="FinancialCalcs.setAdpGross(100000, this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">$100k</button>
+            <button type="button" class="adp-sal-pill" onclick="FinancialCalcs.setAdpGross(150000, this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">$150k</button>
+          </div>
+          <div class="input-with-symbol">
+            <span class="symbol-prefix">$</span>
+            <input type="number" id="adp-gross-input" value="75000" min="1000" max="10000000" step="1000" oninput="FinancialCalcs.onAdpGrossInput(this.value)" class="calc-input" style="padding-left:1.75rem; width:100%; border-radius:6px;">
+          </div>
+        </div>
+
+        <!-- Pay Frequency -->
+        <div class="input-card" style="margin-bottom:1.25rem;">
+          <label class="input-label" style="font-weight:700; display:block; margin-bottom:0.5rem; color:var(--text-primary); font-size:0.85rem;">Pay Frequency</label>
+          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.4rem;">
+            <button type="button" class="adp-freq-pill active" onclick="FinancialCalcs.setAdpFreq('biweekly', this)" style="padding:0.5rem 0.2rem; text-align:center; border-radius:6px; border:1px solid var(--btn-active-border, #bfdbfe); background:var(--btn-active-bg, #eff6ff); color:var(--btn-active-text, #2563eb); font-weight:700; cursor:pointer; font-size:0.75rem;">
+              Bi-Weekly<br><span style="font-size:0.68rem; font-weight:normal; opacity:0.8;">26 checks</span>
+            </button>
+            <button type="button" class="adp-freq-pill" onclick="FinancialCalcs.setAdpFreq('semimonthly', this)" style="padding:0.5rem 0.2rem; text-align:center; border-radius:6px; border:1px solid transparent; background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.75rem;">
+              Semi-Monthly<br><span style="font-size:0.68rem; opacity:0.8;">24 checks</span>
+            </button>
+            <button type="button" class="adp-freq-pill" onclick="FinancialCalcs.setAdpFreq('weekly', this)" style="padding:0.5rem 0.2rem; text-align:center; border-radius:6px; border:1px solid transparent; background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.75rem;">
+              Weekly<br><span style="font-size:0.68rem; opacity:0.8;">52 checks</span>
+            </button>
+            <button type="button" class="adp-freq-pill" onclick="FinancialCalcs.setAdpFreq('monthly', this)" style="padding:0.5rem 0.2rem; text-align:center; border-radius:6px; border:1px solid transparent; background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.75rem;">
+              Monthly<br><span style="font-size:0.68rem; opacity:0.8;">12 checks</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Taxes & Deductions -->
+        <div class="input-card" style="margin-bottom:1.25rem;">
+          <div style="margin-bottom:0.85rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+              <span style="font-size:0.85rem; font-weight:600; color:var(--text-primary);">Pre-Tax 401(k) / NPS Contribution</span>
+              <span id="adp-401k-display" style="font-size:0.85rem; font-weight:700; color:var(--text-primary);">5%</span>
+            </div>
+            <input type="range" id="adp-401k-range" min="0" max="30" step="1" value="5" oninput="FinancialCalcs.onAdp401kRange(this.value)" style="width:100%; accent-color:var(--primary-color, #2563eb);">
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.85rem;">
+            <div>
+              <label for="adp-tax-rate" style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:0.25rem; color:var(--text-secondary);">Income Tax Rate (%)</label>
+              <input type="number" id="adp-tax-rate" value="10" min="0" max="50" step="0.5" oninput="FinancialCalcs.onAdpTaxRate(this.value)" class="calc-input" style="width:100%; border-radius:6px;">
+            </div>
+            <div>
+              <label for="adp-fica-rate" style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:0.25rem; color:var(--text-secondary);">Social Security / FICA (%)</label>
+              <input type="number" id="adp-fica-rate" value="6.2" min="0" max="15" step="0.1" oninput="FinancialCalcs.onAdpFicaRate(this.value)" class="calc-input" style="width:100%; border-radius:6px;">
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+            <div>
+              <label for="adp-med-rate" style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:0.25rem; color:var(--text-secondary);">Medicare Rate (%)</label>
+              <input type="number" id="adp-med-rate" value="1.45" min="0" max="10" step="0.05" oninput="FinancialCalcs.onAdpMedRate(this.value)" class="calc-input" style="width:100%; border-radius:6px;">
+            </div>
+            <div>
+              <label for="adp-insurance-check" style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:0.25rem; color:var(--text-secondary);">Health Ins. ($/check)</label>
+              <div class="input-with-symbol">
+                <span class="symbol-prefix">$</span>
+                <input type="number" id="adp-insurance-check" value="100" min="0" max="2000" step="10" oninput="FinancialCalcs.onAdpInsurance(this.value)" class="calc-input" style="padding-left:1.75rem; width:100%; border-radius:6px;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Column -->
+      <div class="calc-results-side">
+        <!-- Highlight Card -->
+        <div class="result-highlight-card" style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:10px; padding:1.5rem; margin-bottom:1.25rem; box-shadow:0 1px 3px rgba(0,0,0,0.05); text-align:center;">
+          <span class="result-label" style="font-size:0.85rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em; display:block; margin-bottom:0.35rem;">
+            Net Paycheck Take-Home
+          </span>
+          <div class="result-value-large" id="res-adp-net-check" style="font-size:2.35rem; font-weight:900; color:#059669; line-height:1.2; margin-bottom:0.4rem;">
+            $2,079.20 / check
+          </div>
+          <div id="res-adp-net-annual" style="font-size:0.875rem; color:var(--text-secondary);">
+            Annual Net Take-Home: <strong>$54,059.20</strong> &bull; Bi-Weekly (26 Checks)
+          </div>
+          <div id="res-adp-tax-rate-badge" style="display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.75rem; padding:0.35rem 0.85rem; border-radius:6px; background:#eff6ff; color:#1d4ed8; font-size:0.8rem; font-weight:700; border:1px solid #bfdbfe;">
+            Effective Total Deduction Rate: 27.9%
+          </div>
+        </div>
+
+        <!-- 4 Stat Boxes -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem;">
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Gross Pay / Check</div>
+            <div id="res-adp-gross-check" style="font-size:1.15rem; font-weight:800; color:var(--text-primary); margin-top:0.25rem;">$2,884.62</div>
+          </div>
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Total Deductions</div>
+            <div id="res-adp-deductions-check" style="font-size:1.15rem; font-weight:800; color:#dc2626; margin-top:0.25rem;">-$805.42</div>
+          </div>
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">FICA (SS + Medicare)</div>
+            <div id="res-adp-fica-check" style="font-size:1.15rem; font-weight:800; color:#dc2626; margin-top:0.25rem;">-$220.67</div>
+          </div>
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Pre-Tax (401k + Ins)</div>
+            <div id="res-adp-pretax-check" style="font-size:1.15rem; font-weight:800; color:#2563eb; margin-top:0.25rem;">-$244.23</div>
+          </div>
+        </div>
+
+        <!-- Visual Breakdown Bar -->
+        <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.85rem; margin-bottom:1.25rem;">
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:700; margin-bottom:0.4rem;">
+            <span style="color:#059669;">Net Paycheck: <span id="bar-adp-net-pct">72.1%</span></span>
+            <span style="color:#2563eb;">Pre-Tax: <span id="bar-adp-pretax-pct">8.5%</span></span>
+            <span style="color:#dc2626;">Taxes: <span id="bar-adp-tax-pct">19.4%</span></span>
+          </div>
+          <div style="height:10px; width:100%; display:flex; border-radius:4px; overflow:hidden; background:#e2e8f0;">
+            <div id="bar-adp-net-fill" style="width:72.1%; background:#059669; transition:width 0.3s ease;"></div>
+            <div id="bar-adp-pretax-fill" style="width:8.5%; background:#2563eb; transition:width 0.3s ease;"></div>
+            <div id="bar-adp-tax-fill" style="width:19.4%; background:#dc2626; transition:width 0.3s ease;"></div>
+          </div>
+        </div>
+
+        <!-- Gross vs Net Summary Table -->
+        <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; overflow:hidden;">
+          <div style="padding:0.6rem 0.85rem; background:var(--bg-tertiary); border-bottom:1px solid var(--card-border); font-weight:700; font-size:0.825rem; color:var(--text-primary); display:flex; justify-content:space-between;">
+            <span>Gross vs. Net Pay Stub Breakdown</span>
+            <span>Check / Annual</span>
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:0.825rem;">
+            <thead>
+              <tr style="background:var(--bg-tertiary); border-bottom:1px solid var(--card-border);">
+                <th style="padding:0.45rem 0.75rem; text-align:left; color:var(--text-secondary); font-weight:600;">Item</th>
+                <th style="padding:0.45rem 0.75rem; text-align:right; color:var(--text-secondary); font-weight:600;">Per Paycheck</th>
+                <th style="padding:0.45rem 0.75rem; text-align:right; color:var(--text-secondary); font-weight:600;">Annual</th>
+              </tr>
+            </thead>
+            <tbody id="adp-breakdown-rows">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- MODE 3: 8TH PAY COMMISSION SALARY CALCULATOR -->
+  <!-- ====================================================================== -->
+  <div id="sal-view-cpc" class="sal-mode-view" style="display:none;">
+    <div class="calc-split-layout">
+      <!-- Inputs Column -->
+      <div class="calc-inputs-side">
+        <!-- 7th CPC Basic Pay & Level Presets -->
+        <div class="input-card" style="margin-bottom:1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <label for="cpc-basic-input" class="input-label" style="font-weight:700; margin:0; color:var(--text-primary);">Existing 7th CPC Basic Pay</label>
+            <span id="cpc-basic-display" style="font-size:0.875rem; font-weight:700; color:var(--primary-color, #2563eb);">₹35,400 (Level 6)</span>
+          </div>
+          <!-- Presets -->
+          <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.75rem;">
+            <button type="button" class="cpc-lvl-pill" onclick="FinancialCalcs.setCpcBasic(18000, 'Level 1', this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">L1: ₹18k</button>
+            <button type="button" class="cpc-lvl-pill" onclick="FinancialCalcs.setCpcBasic(21700, 'Level 2', this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">L2: ₹21.7k</button>
+            <button type="button" class="cpc-lvl-pill" onclick="FinancialCalcs.setCpcBasic(25500, 'Level 4', this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">L4: ₹25.5k</button>
+            <button type="button" class="cpc-lvl-pill active" onclick="FinancialCalcs.setCpcBasic(35400, 'Level 6', this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--btn-active-border, #bfdbfe); background:var(--btn-active-bg, #eff6ff); color:var(--btn-active-text, #2563eb); font-weight:700; cursor:pointer;">L6: ₹35.4k</button>
+            <button type="button" class="cpc-lvl-pill" onclick="FinancialCalcs.setCpcBasic(44900, 'Level 7', this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">L7: ₹44.9k</button>
+            <button type="button" class="cpc-lvl-pill" onclick="FinancialCalcs.setCpcBasic(56100, 'Level 10', this)" style="font-size:0.75rem; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer;">L10: ₹56.1k</button>
+          </div>
+          <div class="input-with-symbol">
+            <span class="symbol-prefix">₹</span>
+            <input type="number" id="cpc-basic-input" value="35400" min="18000" max="250000" step="100" oninput="FinancialCalcs.onCpcBasicInput(this.value)" class="calc-input" style="padding-left:1.75rem; width:100%; border-radius:6px;">
+          </div>
+        </div>
+
+        <!-- Fitment Factor Selector -->
+        <div class="input-card" style="margin-bottom:1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+            <label class="input-label" style="font-weight:700; margin:0; color:var(--text-primary); font-size:0.85rem;">8th CPC Fitment Factor</label>
+            <span id="cpc-fitment-display" style="font-size:0.85rem; font-weight:700; color:var(--primary-color, #2563eb);">2.57× (Benchmark)</span>
+          </div>
+          <!-- Presets -->
+          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.4rem; margin-bottom:0.75rem;">
+            <button type="button" class="cpc-fit-pill" onclick="FinancialCalcs.setCpcFitment(2.10, this)" style="padding:0.45rem 0.2rem; text-align:center; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.75rem;">
+              2.10<br><span style="font-size:0.65rem; opacity:0.8;">Baseline</span>
+            </button>
+            <button type="button" class="cpc-fit-pill" onclick="FinancialCalcs.setCpcFitment(2.28, this)" style="padding:0.45rem 0.2rem; text-align:center; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.75rem;">
+              2.28<br><span style="font-size:0.65rem; opacity:0.8;">Parity</span>
+            </button>
+            <button type="button" class="cpc-fit-pill active" onclick="FinancialCalcs.setCpcFitment(2.57, this)" style="padding:0.45rem 0.2rem; text-align:center; border-radius:6px; border:1px solid var(--btn-active-border, #bfdbfe); background:var(--btn-active-bg, #eff6ff); color:var(--btn-active-text, #2563eb); font-weight:700; cursor:pointer; font-size:0.75rem;">
+              2.57<br><span style="font-size:0.65rem; opacity:0.8;">7th Match</span>
+            </button>
+            <button type="button" class="cpc-fit-pill" onclick="FinancialCalcs.setCpcFitment(2.86, this)" style="padding:0.45rem 0.2rem; text-align:center; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.75rem;">
+              2.86<br><span style="font-size:0.65rem; opacity:0.8;">Proposed</span>
+            </button>
+          </div>
+          <input type="range" id="cpc-fitment-range" min="1.80" max="3.50" step="0.01" value="2.57" oninput="FinancialCalcs.onCpcFitmentRange(this.value)" style="width:100%; accent-color:var(--primary-color, #2563eb);">
+        </div>
+
+        <!-- City Category for HRA -->
+        <div class="input-card" style="margin-bottom:1.25rem;">
+          <label class="input-label" style="font-weight:700; display:block; margin-bottom:0.4rem; color:var(--text-primary); font-size:0.85rem;">City Category for HRA</label>
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.4rem;">
+            <button type="button" class="cpc-hra-pill" onclick="FinancialCalcs.setCpcHra(0.30, this)" style="padding:0.5rem 0.2rem; text-align:center; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.75rem;">
+              X-City (30%)<br><span style="font-size:0.65rem; opacity:0.8;">Delhi, Mumbai</span>
+            </button>
+            <button type="button" class="cpc-hra-pill active" onclick="FinancialCalcs.setCpcHra(0.20, this)" style="padding:0.5rem 0.2rem; text-align:center; border-radius:6px; border:1px solid var(--btn-active-border, #bfdbfe); background:var(--btn-active-bg, #eff6ff); color:var(--btn-active-text, #2563eb); font-weight:700; cursor:pointer; font-size:0.75rem;">
+              Y-City (20%)<br><span style="font-size:0.65rem; opacity:0.8;">Tier-2 Cities</span>
+            </button>
+            <button type="button" class="cpc-hra-pill" onclick="FinancialCalcs.setCpcHra(0.10, this)" style="padding:0.5rem 0.2rem; text-align:center; border-radius:6px; border:1px solid var(--card-border); background:transparent; color:var(--text-secondary); cursor:pointer; font-size:0.75rem;">
+              Z-City (10%)<br><span style="font-size:0.65rem; opacity:0.8;">Rural / Small</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Column -->
+      <div class="calc-results-side">
+        <!-- Highlight Card -->
+        <div class="result-highlight-card" style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:10px; padding:1.5rem; margin-bottom:1.25rem; box-shadow:0 1px 3px rgba(0,0,0,0.05); text-align:center;">
+          <span class="result-label" style="font-size:0.85rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em; display:block; margin-bottom:0.35rem;">
+            Projected 8th CPC Revised Basic Pay
+          </span>
+          <div class="result-value-large" id="res-cpc-revised-basic" style="font-size:2.35rem; font-weight:900; color:#2563eb; line-height:1.2; margin-bottom:0.4rem;">
+            ₹90,978 / mo
+          </div>
+          <div id="res-cpc-basic-sub" style="font-size:0.875rem; color:var(--text-secondary);">
+            Current Basic: <strong>₹35,400</strong> &bull; Fitment: <strong>2.57×</strong>
+          </div>
+          <div id="res-cpc-hike-badge" style="display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.75rem; padding:0.35rem 0.85rem; border-radius:6px; background:#ecfdf5; color:#059669; font-size:0.8rem; font-weight:700; border:1px solid #a7f3d0;">
+            Estimated Net Salary Hike: +₹42,832/mo (+61.2% over 7th CPC with 63% DA)
+          </div>
+        </div>
+
+        <!-- 4 Stat Boxes -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem;">
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Projected Gross Salary</div>
+            <div id="res-cpc-gross" style="font-size:1.15rem; font-weight:800; color:var(--text-primary); margin-top:0.25rem;">₹1,12,774 / mo</div>
+          </div>
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Estimated Revised HRA</div>
+            <div id="res-cpc-hra" style="font-size:1.15rem; font-weight:800; color:#2563eb; margin-top:0.25rem;">₹18,196 / mo</div>
+          </div>
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Transport Allowance (TA)</div>
+            <div id="res-cpc-ta" style="font-size:1.15rem; font-weight:800; color:var(--text-primary); margin-top:0.25rem;">₹3,600 / mo</div>
+          </div>
+          <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; padding:0.75rem; text-align:center;">
+            <div style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">7th CPC Total (w/ 63% DA)</div>
+            <div id="res-cpc-7th-total" style="font-size:1.15rem; font-weight:800; color:var(--text-secondary); margin-top:0.25rem;">₹69,942 / mo</div>
+          </div>
+        </div>
+
+        <!-- Comparison Summary Table -->
+        <div style="background:var(--bg-secondary, #ffffff); border:1px solid var(--card-border, #e2e8f0); border-radius:8px; overflow:hidden;">
+          <div style="padding:0.6rem 0.85rem; background:var(--bg-tertiary); border-bottom:1px solid var(--card-border); font-weight:700; font-size:0.825rem; color:var(--text-primary); display:flex; justify-content:space-between;">
+            <span>7th CPC vs. 8th CPC Pay Matrix Comparison</span>
+            <span>Monthly ₹</span>
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:0.825rem;">
+            <thead>
+              <tr style="background:var(--bg-tertiary); border-bottom:1px solid var(--card-border);">
+                <th style="padding:0.45rem 0.75rem; text-align:left; color:var(--text-secondary); font-weight:600;">Metric</th>
+                <th style="padding:0.45rem 0.75rem; text-align:right; color:var(--text-secondary); font-weight:600;">7th CPC (Current)</th>
+                <th style="padding:0.45rem 0.75rem; text-align:right; color:var(--text-secondary); font-weight:600;">8th CPC (Projected)</th>
+              </tr>
+            </thead>
+            <tbody id="cpc-breakdown-rows">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:0.72rem; color:var(--text-secondary); margin-top:0.6rem; font-style:italic; line-height:1.4;">
+          *Note: Final 8th CPC fitment factors and pay matrices await official Union Cabinet approval. Projections reflect recommendations submitted to the Ministry of Finance.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
 
         <!-- ======================================================================
              CALCULATOR 39: CASH BACK OR LOW INTEREST CALCULATOR

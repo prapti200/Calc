@@ -76,7 +76,53 @@ export async function generateMetadata({ params }) {
     };
   }
 
-    if (slug === 'heloc-calculator' || slug === 'heloc' || calc?.id === 'sec-heloc-calc') {
+      if (slug === 'salary-calculator' || slug === 'salary' || calc?.id === 'sec-salary-calc') {
+    return {
+      title: 'Salary Calculator – In Hand, ADP & 8th Pay Commission (2026)',
+      description: 'Free online Salary Calculator to check monthly take-home pay. Use our In Hand Salary Calculator, ADP Salary Calculator paycheck estimator, and 8th Pay Commission Salary Calculator.',
+      keywords: [
+        'salary calculator',
+        'in hand salary calculator',
+        'adp salary calculator',
+        '8th pay commission salary calculator',
+        'ctc to in hand salary',
+        'take home pay calculator',
+        'paycheck estimator',
+        '8th cpc salary calculator',
+        'fitment factor calculator',
+        'gross to net salary',
+        'fy 2026-27 salary calculator'
+      ],
+      alternates: {
+        canonical: '/financial/salary-calculator',
+      },
+      openGraph: {
+        title: 'Salary Calculator – In Hand, ADP & 8th Pay Commission (2026)',
+        description: 'Free online Salary Calculator to check monthly take-home pay. Use our In Hand Salary Calculator, ADP Salary Calculator paycheck estimator, and 8th Pay Commission Salary Calculator.',
+        keywords: [
+          'salary calculator',
+          'in hand salary calculator',
+          'adp salary calculator',
+          '8th pay commission salary calculator'
+        ],
+        url: '/financial/salary-calculator',
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'Salary Calculator – In Hand, ADP & 8th Pay Commission (2026)',
+        description: 'Free online Salary Calculator to check monthly take-home pay. Use our In Hand Salary Calculator, ADP Salary Calculator paycheck estimator, and 8th Pay Commission Salary Calculator.',
+        keywords: [
+          'salary calculator',
+          'in hand salary calculator',
+          'adp salary calculator',
+          '8th pay commission salary calculator'
+        ],
+      },
+    };
+  }
+
+  if (slug === 'heloc-calculator' || slug === 'heloc' || calc?.id === 'sec-heloc-calc') {
     return {
       title: 'HELOC Calculator – Monthly Draw & Repayment Payment Estimator',
       description: 'Free HELOC Calculator to estimate your monthly payment during both the interest-only draw period and principal-and-interest repayment phase, plus max credit line.',
@@ -170,6 +216,87 @@ export default function CalculatorPage({ params }) {
 
   const isBikeCalc = slug === 'bike-emi-calculator' || slug === 'loan-calculator' || calc?.id === 'sec-loan-calc';
   const isInflationCalc = slug === 'inflation-calculator' || slug === 'inflation' || calc?.id === 'sec-inflation-calc';
+  const isSalaryCalc = slug === 'salary-calculator' || slug === 'salary' || calc?.id === 'sec-salary-calc';
+
+  const salarySoftwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Salary Calculator – In Hand, ADP & 8th Pay Commission",
+    "operatingSystem": "Any",
+    "applicationCategory": "FinanceApplication",
+    "description": "Free online Salary Calculator to check monthly take-home pay. Use our In Hand Salary Calculator, ADP Salary Calculator paycheck estimator, and 8th Pay Commission Salary Calculator.",
+    "keywords": "salary calculator, in hand salary calculator, adp salary calculator, 8th pay commission salary calculator",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
+    }
+  };
+
+  const salaryFaqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How accurate is this salary calculator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This salary calculator provides institutional-grade mathematical accuracy by applying official statutory payroll formulas. The In Hand Salary mode incorporates the latest FY 2026-27 Union Budget tax slabs (including the enhanced ₹75,000 standard deduction and Section 87A full rebate for taxable income up to ₹12 Lakhs), the Employees' Provident Fund Act (12% and ₹1,800 cap), and state Professional Tax schedules. The ADP mode calculates standard US federal and state withholding models, and the 8th Pay Commission mode uses established Central Pay Commission merger mechanics."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate monthly take-home in the in hand salary calculator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In the in hand salary calculator tab, simply input your annual Cost to Company (CTC) package and configure your Basic Pay percentage (typically 50%). The calculator automatically subtracts employer-side retirement accruals (Employer EPF and statutory gratuity) to arrive at Gross Salary, then deducts Employee EPF (12%), monthly Professional Tax (₹200), and income tax TDS to yield your exact net take-home salary deposited each month."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the ADP salary calculator mode differ from CTC calculation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The adp salary calculator mode is designed for gross-to-net paycheck calculations rather than annual CTC packages. Instead of deducting employer costs from an overall package, it starts directly with your gross wage per pay period (Bi-Weekly, Semi-Monthly, Weekly, or Monthly) and itemizes pre-tax retirement deductions (401k/NPS), statutory social insurance (FICA 6.2% Social Security + 1.45% Medicare), and income tax withholding to show your exact check-by-check take-home pay."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What fitment factor does the 8th pay commission salary calculator use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our 8th pay commission salary calculator provides multiple fitment factor scenarios based on proposals submitted by staff associations and central employee confederations: 2.10 (conservative baseline), 2.28 (parity hike), 2.57 (matching the 7th CPC fitment factor benchmark), and 2.86 (ambitious proposal). You can also adjust the custom fitment slider anywhere between 1.80 and 3.50 to test custom revision models while accounting for X, Y, and Z city HRA revisions."
+        }
+      }
+    ]
+  };
+
+  const salaryBreadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://calcmoderncalcultor.vercel.app/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Financial Calculators",
+        "item": "https://calcmoderncalcultor.vercel.app/financial"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Salary Calculator",
+        "item": "https://calcmoderncalcultor.vercel.app/financial/salary-calculator"
+      }
+    ]
+  };
+
   const isHelocCalc = slug === 'heloc-calculator' || slug === 'heloc' || calc?.id === 'sec-heloc-calc';
 
   const inflationSoftwareSchema = {
@@ -448,6 +575,22 @@ export default function CalculatorPage({ params }) {
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(inflationBreadcrumbSchema) }}
+          />
+        </>
+      )}
+      {isSalaryCalc && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(salarySoftwareSchema) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(salaryFaqSchema) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(salaryBreadcrumbSchema) }}
           />
         </>
       )}
