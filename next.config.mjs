@@ -46,41 +46,6 @@ const nextConfig = {
         destination: '/financial/bike-emi-calculator',
         permanent: true,
       },
-      {
-        source: '/financial/in-hand-salary-calculator',
-        destination: '/financial/salary-calculator',
-        permanent: true,
-      },
-      {
-        source: '/financial/ctc-to-in-hand-calculator',
-        destination: '/financial/salary-calculator',
-        permanent: true,
-      },
-      {
-        source: '/financial/take-home-salary-calculator',
-        destination: '/financial/salary-calculator',
-        permanent: true,
-      },
-      {
-        source: '/financial/adp-paycheck-calculator',
-        destination: '/financial/adp-salary-calculator',
-        permanent: true,
-      },
-      {
-        source: '/financial/adp-paycheck',
-        destination: '/financial/adp-salary-calculator',
-        permanent: true,
-      },
-      {
-        source: '/financial/adp-salary',
-        destination: '/financial/adp-salary-calculator',
-        permanent: true,
-      },
-      {
-        source: '/financial/us-paycheck-calculator',
-        destination: '/financial/adp-salary-calculator',
-        permanent: true,
-      },
     ];
   },
 };
