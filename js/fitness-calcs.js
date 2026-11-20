@@ -112,61 +112,336 @@ const FitnessCalcs = {
   },
 
   // 2. DEDICATED CALORIE CALCULATOR & MACRO PLANNER
-  // 3. BODY FAT % CALCULATOR (US Navy Method)
-  calcBodyFat() {
-    const height = parseFloat(document.getElementById('bf-height')?.value) || 175;
-    const neck = parseFloat(document.getElementById('bf-neck')?.value) || 38;
-    const waist = parseFloat(document.getElementById('bf-waist')?.value) || 85;
-    const hip = parseFloat(document.getElementById('bf-hip')?.value) || 95;
-    const weight = parseFloat(document.getElementById('bf-weight')?.value) || 75;
+  // 3. BODY FAT % CALCULATOR (US Navy Method & Deurenberg BMI Method)
+  bfUnit: 'metric',      // 'metric' or 'us'
+  bfMethod: 'navy',      // 'navy' or 'bmi'
+  bfGender: 'male',      // 'male' or 'female'
 
-    if (height <= 0 || neck <= 0 || waist <= 0) return;
+  setBfUnit(unit, btn) {
+    if (this.bfUnit === unit) return;
+    const oldUnit = this.bfUnit;
+    this.bfUnit = unit;
 
-    let bodyFat = 0;
-    try {
-      if (this.bodyFatGender === 'male') {
-        if (waist - neck <= 0) return;
-        bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+    const btnMetric = document.getElementById('bf-unit-metric');
+    const btnUs = document.getElementById('bf-unit-us');
+    if (btnMetric && btnUs) {
+      if (unit === 'metric') {
+        btnMetric.className = 'bf-toggle-pill active';
+        btnMetric.style.background = '#ffffff';
+        btnMetric.style.color = '#2563eb';
+        btnMetric.style.fontWeight = '700';
+        btnMetric.style.boxShadow = '0 1px 2px rgba(0,0,0,0.06)';
+        btnUs.className = 'bf-toggle-pill';
+        btnUs.style.background = 'transparent';
+        btnUs.style.color = '#64748b';
+        btnUs.style.fontWeight = '600';
+        btnUs.style.boxShadow = 'none';
       } else {
-        if (waist + hip - neck <= 0) return;
-        bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height)) - 450;
+        btnUs.className = 'bf-toggle-pill active';
+        btnUs.style.background = '#ffffff';
+        btnUs.style.color = '#2563eb';
+        btnUs.style.fontWeight = '700';
+        btnUs.style.boxShadow = '0 1px 2px rgba(0,0,0,0.06)';
+        btnMetric.className = 'bf-toggle-pill';
+        btnMetric.style.background = 'transparent';
+        btnMetric.style.color = '#64748b';
+        btnMetric.style.fontWeight = '600';
+        btnMetric.style.boxShadow = 'none';
       }
-    } catch (e) {
+    }
+
+    const weightEl = document.getElementById('bf-weight');
+    const heightEl = document.getElementById('bf-height');
+    const neckEl = document.getElementById('bf-neck');
+    const waistEl = document.getElementById('bf-waist');
+    const hipEl = document.getElementById('bf-hip');
+
+    if (unit === 'us' && oldUnit === 'metric') {
+      if (weightEl) weightEl.value = (parseFloat(weightEl.value) * 2.20462).toFixed(1);
+      if (heightEl) heightEl.value = (parseFloat(heightEl.value) / 2.54).toFixed(1);
+      if (neckEl) neckEl.value = (parseFloat(neckEl.value) / 2.54).toFixed(1);
+      if (waistEl) waistEl.value = (parseFloat(waistEl.value) / 2.54).toFixed(1);
+      if (hipEl) hipEl.value = (parseFloat(hipEl.value) / 2.54).toFixed(1);
+      const wLbl = document.getElementById('bf-weight-unit-label'); if (wLbl) wLbl.textContent = 'lbs';
+      const hLbl = document.getElementById('bf-height-unit-label'); if (hLbl) hLbl.textContent = 'in';
+      const nLbl = document.getElementById('bf-neck-unit-label'); if (nLbl) nLbl.textContent = 'in';
+      const wstLbl = document.getElementById('bf-waist-unit-label'); if (wstLbl) wstLbl.textContent = 'in';
+      const hpLbl = document.getElementById('bf-hip-unit-label'); if (hpLbl) hpLbl.textContent = 'in';
+    } else if (unit === 'metric' && oldUnit === 'us') {
+      if (weightEl) weightEl.value = (parseFloat(weightEl.value) / 2.20462).toFixed(1);
+      if (heightEl) heightEl.value = (parseFloat(heightEl.value) * 2.54).toFixed(1);
+      if (neckEl) neckEl.value = (parseFloat(neckEl.value) * 2.54).toFixed(1);
+      if (waistEl) waistEl.value = (parseFloat(waistEl.value) * 2.54).toFixed(1);
+      if (hipEl) hipEl.value = (parseFloat(hipEl.value) * 2.54).toFixed(1);
+      const wLbl = document.getElementById('bf-weight-unit-label'); if (wLbl) wLbl.textContent = 'kg';
+      const hLbl = document.getElementById('bf-height-unit-label'); if (hLbl) hLbl.textContent = 'cm';
+      const nLbl = document.getElementById('bf-neck-unit-label'); if (nLbl) nLbl.textContent = 'cm';
+      const wstLbl = document.getElementById('bf-waist-unit-label'); if (wstLbl) wstLbl.textContent = 'cm';
+      const hpLbl = document.getElementById('bf-hip-unit-label'); if (hpLbl) hpLbl.textContent = 'cm';
+    }
+
+    this.calcBodyFat();
+  },
+
+  setBfMethod(method, btn) {
+    this.bfMethod = method;
+    const btnNavy = document.getElementById('bf-method-navy');
+    const btnBmi = document.getElementById('bf-method-bmi');
+    if (btnNavy && btnBmi) {
+      if (method === 'navy') {
+        btnNavy.className = 'bf-toggle-pill active';
+        btnNavy.style.background = '#ffffff';
+        btnNavy.style.color = '#2563eb';
+        btnNavy.style.fontWeight = '700';
+        btnNavy.style.boxShadow = '0 1px 2px rgba(0,0,0,0.06)';
+        btnBmi.className = 'bf-toggle-pill';
+        btnBmi.style.background = 'transparent';
+        btnBmi.style.color = '#64748b';
+        btnBmi.style.fontWeight = '600';
+        btnBmi.style.boxShadow = 'none';
+      } else {
+        btnBmi.className = 'bf-toggle-pill active';
+        btnBmi.style.background = '#ffffff';
+        btnBmi.style.color = '#2563eb';
+        btnBmi.style.fontWeight = '700';
+        btnBmi.style.boxShadow = '0 1px 2px rgba(0,0,0,0.06)';
+        btnNavy.className = 'bf-toggle-pill';
+        btnNavy.style.background = 'transparent';
+        btnNavy.style.color = '#64748b';
+        btnNavy.style.fontWeight = '600';
+        btnNavy.style.boxShadow = 'none';
+      }
+    }
+    this.calcBodyFat();
+  },
+
+  setBfGender(gender, btn) {
+    this.bfGender = gender;
+    this.bodyFatGender = gender;
+    const btnMale = document.getElementById('bf-gender-male');
+    const btnFemale = document.getElementById('bf-gender-female');
+    if (btnMale && btnFemale) {
+      if (gender === 'male') {
+        btnMale.className = 'bf-gender-pill active';
+        btnMale.style.background = '#ffffff';
+        btnMale.style.color = '#2563eb';
+        btnMale.style.fontWeight = '700';
+        btnMale.style.boxShadow = '0 1px 2px rgba(0,0,0,0.06)';
+        btnFemale.className = 'bf-gender-pill';
+        btnFemale.style.background = 'transparent';
+        btnFemale.style.color = '#64748b';
+        btnFemale.style.fontWeight = '600';
+        btnFemale.style.boxShadow = 'none';
+      } else {
+        btnFemale.className = 'bf-gender-pill active';
+        btnFemale.style.background = '#ffffff';
+        btnFemale.style.color = '#2563eb';
+        btnFemale.style.fontWeight = '700';
+        btnFemale.style.boxShadow = '0 1px 2px rgba(0,0,0,0.06)';
+        btnMale.className = 'bf-gender-pill';
+        btnMale.style.background = 'transparent';
+        btnMale.style.color = '#64748b';
+        btnMale.style.fontWeight = '600';
+        btnMale.style.boxShadow = 'none';
+      }
+    }
+
+    const hipGroup = document.getElementById('bf-hip-group');
+    if (hipGroup) {
+      hipGroup.style.display = gender === 'female' ? 'block' : 'none';
+    }
+
+    const waistHint = document.getElementById('bf-waist-hint');
+    if (waistHint) {
+      waistHint.textContent = gender === 'male' ? 'Men: at navel (relaxed exhalation)' : 'Women: narrowest point of torso';
+    }
+
+    this.calcBodyFat();
+  },
+
+  onBfInput() {
+    this.calcBodyFat();
+  },
+
+  calcBodyFat() {
+    const age = parseFloat(document.getElementById('bf-age')?.value) || 30;
+    const rawWeight = parseFloat(document.getElementById('bf-weight')?.value) || 75;
+    const rawHeight = parseFloat(document.getElementById('bf-height')?.value) || 175;
+    const rawNeck = parseFloat(document.getElementById('bf-neck')?.value) || 38;
+    const rawWaist = parseFloat(document.getElementById('bf-waist')?.value) || 85;
+    const rawHip = parseFloat(document.getElementById('bf-hip')?.value) || 95;
+
+    const isUS = this.bfUnit === 'us';
+    const heightCm = isUS ? rawHeight * 2.54 : rawHeight;
+    const weightKg = isUS ? rawWeight / 2.20462 : rawWeight;
+    const neckCm = isUS ? rawNeck * 2.54 : rawNeck;
+    const waistCm = isUS ? rawWaist * 2.54 : rawWaist;
+    const hipCm = isUS ? rawHip * 2.54 : rawHip;
+
+    const alertEl = document.getElementById('bf-validation-alert');
+    const msgEl = document.getElementById('bf-validation-msg');
+
+    if (heightCm <= 50 || weightKg <= 10) {
+      if (alertEl && msgEl) {
+        msgEl.textContent = 'Please enter realistic height and weight values.';
+        alertEl.style.display = 'block';
+      }
       return;
     }
 
-    bodyFat = Math.max(3, Math.min(60, Math.round(bodyFat * 10) / 10));
-
-    const fatMassKg = (weight * bodyFat) / 100;
-    const leanMassKg = weight - fatMassKg;
-
-    let category = '';
-    let categoryColor = '';
-
-    if (this.bodyFatGender === 'male') {
-      if (bodyFat < 6) { category = 'Essential Fat'; categoryColor = '#38bdf8'; }
-      else if (bodyFat < 14) { category = 'Athletes'; categoryColor = '#10b981'; }
-      else if (bodyFat < 18) { category = 'Fitness'; categoryColor = '#059669'; }
-      else if (bodyFat < 25) { category = 'Average'; categoryColor = '#f59e0b'; }
-      else { category = 'Obese'; categoryColor = '#ef4444'; }
-    } else {
-      if (bodyFat < 14) { category = 'Essential Fat'; categoryColor = '#38bdf8'; }
-      else if (bodyFat < 21) { category = 'Athletes'; categoryColor = '#10b981'; }
-      else if (bodyFat < 25) { category = 'Fitness'; categoryColor = '#059669'; }
-      else if (bodyFat < 32) { category = 'Average'; categoryColor = '#f59e0b'; }
-      else { category = 'Obese'; categoryColor = '#ef4444'; }
+    if (this.bfMethod === 'navy') {
+      if (this.bfGender === 'male' && (waistCm - neckCm <= 0)) {
+        if (alertEl && msgEl) {
+          msgEl.textContent = 'Waist circumference must be greater than neck circumference.';
+          alertEl.style.display = 'block';
+        }
+        return;
+      }
+      if (this.bfGender === 'female' && ((waistCm + hipCm - neckCm) <= 0)) {
+        if (alertEl && msgEl) {
+          msgEl.textContent = 'Waist + Hip measurements must be greater than neck circumference.';
+          alertEl.style.display = 'block';
+        }
+        return;
+      }
     }
 
+    if (alertEl) alertEl.style.display = 'none';
+
+    // 1. U.S. Navy Method
+    let navyBf = 0;
+    try {
+      if (this.bfGender === 'male') {
+        navyBf = 495 / (1.0324 - 0.19077 * Math.log10(Math.max(1, waistCm - neckCm)) + 0.15456 * Math.log10(heightCm)) - 450;
+      } else {
+        navyBf = 495 / (1.29579 - 0.35004 * Math.log10(Math.max(1, waistCm + hipCm - neckCm)) + 0.22100 * Math.log10(heightCm)) - 450;
+      }
+    } catch (e) {
+      navyBf = 16.4;
+    }
+    navyBf = Math.max(2, Math.min(65, Math.round(navyBf * 10) / 10));
+
+    // 2. Deurenberg BMI Formula
+    const heightM = heightCm / 100;
+    const bmi = weightKg / (heightM * heightM);
+    let bmiBf = (this.bfGender === 'male') ? ((1.20 * bmi) + (0.23 * age) - 16.2) : ((1.20 * bmi) + (0.23 * age) - 5.4);
+    bmiBf = Math.max(2, Math.min(65, Math.round(bmiBf * 10) / 10));
+
+    const activeBf = (this.bfMethod === 'bmi') ? bmiBf : navyBf;
+
+    // 3. Mass Split
+    const fatMassKg = (weightKg * activeBf) / 100;
+    const leanMassKg = Math.max(0, weightKg - fatMassKg);
+    const fatMassLbs = fatMassKg * 2.20462;
+    const leanMassLbs = leanMassKg * 2.20462;
+
+    // 4. ACE Category
+    let category = '';
+    let categoryColor = '#15803d';
+    let categoryBg = '#dcfce7';
+    let categoryBorder = '#86efac';
+
+    if (this.bfGender === 'male') {
+      if (activeBf < 2) {
+        category = 'Extremely Low'; categoryColor = '#b91c1c'; categoryBg = '#fef2f2'; categoryBorder = '#fecaca';
+      } else if (activeBf < 6) {
+        category = 'Essential Fat'; categoryColor = '#0369a1'; categoryBg = '#f0f9ff'; categoryBorder = '#bae6fd';
+      } else if (activeBf < 14) {
+        category = 'Athletes'; categoryColor = '#15803d'; categoryBg = '#f0fdf4'; categoryBorder = '#bbf7d0';
+      } else if (activeBf < 18) {
+        category = 'Fitness'; categoryColor = '#059669'; categoryBg = '#ecfdf5'; categoryBorder = '#a7f3d0';
+      } else if (activeBf < 25) {
+        category = 'Average'; categoryColor = '#b45309'; categoryBg = '#fefce8'; categoryBorder = '#fef08a';
+      } else {
+        category = 'Obese'; categoryColor = '#b91c1c'; categoryBg = '#fef2f2'; categoryBorder = '#fecaca';
+      }
+    } else {
+      if (activeBf < 10) {
+        category = 'Extremely Low'; categoryColor = '#b91c1c'; categoryBg = '#fef2f2'; categoryBorder = '#fecaca';
+      } else if (activeBf < 14) {
+        category = 'Essential Fat'; categoryColor = '#0369a1'; categoryBg = '#f0f9ff'; categoryBorder = '#bae6fd';
+      } else if (activeBf < 21) {
+        category = 'Athletes'; categoryColor = '#15803d'; categoryBg = '#f0fdf4'; categoryBorder = '#bbf7d0';
+      } else if (activeBf < 25) {
+        category = 'Fitness'; categoryColor = '#059669'; categoryBg = '#ecfdf5'; categoryBorder = '#a7f3d0';
+      } else if (activeBf < 32) {
+        category = 'Average'; categoryColor = '#b45309'; categoryBg = '#fefce8'; categoryBorder = '#fef08a';
+      } else {
+        category = 'Obese'; categoryColor = '#b91c1c'; categoryBg = '#fef2f2'; categoryBorder = '#fecaca';
+      }
+    }
+
+    // 5. Ideal Range
+    let idealRange = '';
+    let ageGroup = '';
+    if (this.bfGender === 'male') {
+      if (age < 40) { idealRange = '8% – 19%'; ageGroup = 'Men (Age 20–39)'; }
+      else if (age < 60) { idealRange = '11% – 21%'; ageGroup = 'Men (Age 40–59)'; }
+      else { idealRange = '13% – 24%'; ageGroup = 'Men (Age 60+)'; }
+    } else {
+      if (age < 40) { idealRange = '21% – 32%'; ageGroup = 'Women (Age 20–39)'; }
+      else if (age < 60) { idealRange = '23% – 33%'; ageGroup = 'Women (Age 40–59)'; }
+      else { idealRange = '24% – 35%'; ageGroup = 'Women (Age 60+)'; }
+    }
+
+    // 6. Range bar marker position
+    const minBar = this.bfGender === 'male' ? 2 : 8;
+    const maxBar = this.bfGender === 'male' ? 35 : 45;
+    const pos = Math.max(3, Math.min(96, ((activeBf - minBar) / (maxBar - minBar)) * 100));
+
+    // 7. Update DOM elements
     const setVal = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-    setVal('res-bf-val', `${bodyFat.toFixed(1)}%`);
-    setVal('res-bf-category', category);
-    setVal('res-bf-fatmass', `${fatMassKg.toFixed(1)} kg (${(fatMassKg * 2.20462).toFixed(1)} lbs)`);
-    setVal('res-bf-leanmass', `${leanMassKg.toFixed(1)} kg (${(leanMassKg * 2.20462).toFixed(1)} lbs)`);
 
-    const catEl = document.getElementById('res-bf-category');
-    if (catEl) catEl.style.color = categoryColor;
+    setVal('res-bf-val', activeBf.toFixed(1) + '%');
+    
+    const badge = document.getElementById('res-bf-category-badge');
+    if (badge) {
+      badge.textContent = category;
+      badge.style.color = categoryColor;
+      badge.style.background = categoryBg;
+      badge.style.borderColor = categoryBorder;
+    }
+
+    setVal('res-bf-method-label', this.bfMethod === 'navy' ? '(U.S. Navy Method)' : '(BMI Estimate Method)');
+
+    const marker = document.getElementById('res-bf-marker');
+    if (marker) {
+      marker.style.left = pos.toFixed(1) + '%';
+    }
+
+    if (isUS) {
+      setVal('res-bf-fatmass', fatMassLbs.toFixed(1) + ' lbs');
+      setVal('res-bf-fatmass-sub', fatMassKg.toFixed(1) + ' kg');
+      setVal('res-bf-leanmass', leanMassLbs.toFixed(1) + ' lbs');
+      setVal('res-bf-leanmass-sub', leanMassKg.toFixed(1) + ' kg');
+    } else {
+      setVal('res-bf-fatmass', fatMassKg.toFixed(1) + ' kg');
+      setVal('res-bf-fatmass-sub', fatMassLbs.toFixed(1) + ' lbs');
+      setVal('res-bf-leanmass', leanMassKg.toFixed(1) + ' kg');
+      setVal('res-bf-leanmass-sub', leanMassLbs.toFixed(1) + ' lbs');
+    }
+
+    const secLabel = document.getElementById('res-bf-secondary-label');
+    const secVal = document.getElementById('res-bf-secondary-val');
+    const secSub = document.getElementById('res-bf-secondary-sub');
+    if (secLabel && secVal && secSub) {
+      if (this.bfMethod === 'navy') {
+        secLabel.textContent = 'BMI-Based Estimate';
+        secVal.textContent = bmiBf.toFixed(1) + '%';
+        secSub.textContent = 'Deurenberg Formula';
+      } else {
+        secLabel.textContent = 'U.S. Navy Estimate';
+        secVal.textContent = navyBf.toFixed(1) + '%';
+        secSub.textContent = 'Hodgdon & Beckett';
+      }
+    }
+
+    setVal('res-bf-ideal-range', idealRange);
+    setVal('res-bf-ideal-sub', ageGroup);
+
+    setVal('res-bf-bmi-quick', bmi.toFixed(1) + ' kg/m²');
+    setVal('res-bf-bodytype-quick', category);
   },
-
   // 4. BMR CALCULATOR (Mifflin-St Jeor, Harris-Benedict & Katch-McArdle)
   // 6. PACE CALCULATOR (Running, Walking, Cycling & Finish Predictions)
   // 10. CALORIES BURNED CALCULATOR (MET-Based Exercise Energy Burn)

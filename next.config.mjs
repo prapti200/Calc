@@ -21,6 +21,16 @@ const nextConfig = {
         destination: '/financial/bike-emi-calculator',
         permanent: true,
       },
+      {
+        source: '/body-fat',
+        destination: '/body-fat-calculator',
+        permanent: true,
+      },
+      {
+        source: '/fitness/body-fat',
+        destination: '/body-fat-calculator',
+        permanent: true,
+      },
     ];
   },
 };

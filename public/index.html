@@ -4843,72 +4843,288 @@
 
           <!-- 2. BMR & TDEE -->
                 <!-- 3. Body Fat % -->
-        <div class="calc-panel fit-calc-unit" id="sec-bf-calc" style="display:none;">
-          <div class="panel-header">
-            <h2 class="section-heading" style="font-size:1.65rem;">Body Fat % Calculator (US Navy Method)</h2>
-            <div class="radio-pill-group">
-              <button class="radio-pill-btn bf-gender-btn active" data-gender="male">Male</button>
-              <button class="radio-pill-btn bf-gender-btn" data-gender="female">Female</button>
-            </div>
-          </div>
-          <div class="calc-split-layout">
-            <div class="calc-inputs-side">
-              <div class="form-group">
-                <label>Height (cm)</label>
-                <div class="input-with-affix">
-                  <input type="number" id="bf-height" class="form-input" value="175" min="120" max="230">
-                  <span class="affix">cm</span>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Weight (kg)</label>
-                <div class="input-with-affix">
-                  <input type="number" id="bf-weight" class="form-input" value="75" min="30" max="250">
-                  <span class="affix">kg</span>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Neck Circumference (cm)</label>
-                <div class="input-with-affix">
-                  <input type="number" id="bf-neck" class="form-input" value="38" min="20" max="60" step="0.5">
-                  <span class="affix">cm</span>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Waist Circumference (at navel) (cm)</label>
-                <div class="input-with-affix">
-                  <input type="number" id="bf-waist" class="form-input" value="85" min="40" max="160" step="0.5">
-                  <span class="affix">cm</span>
-                </div>
-              </div>
-              <div class="form-group" id="bf-hip-group" style="display:none;">
-                <label>Hip Circumference (females only) (cm)</label>
-                <div class="input-with-affix">
-                  <input type="number" id="bf-hip" class="form-input" value="95" min="50" max="180" step="0.5">
-                  <span class="affix">cm</span>
-                </div>
-              </div>
-            </div>
+        <div class="calc-panel fit-calc-unit" id="sec-bf-calc" style="display:none; width:100%; max-width:1100px; margin:0 auto; padding:0 0.5rem;">
+  <!-- Header Section -->
+  <div class="panel-header" style="margin-bottom:1.5rem; text-align:left;">
+    <div class="panel-title-group" style="display:flex; flex-direction:column; align-items:flex-start; gap:0.4rem; width:100%;">
+      <h1 class="section-heading" style="font-size:1.85rem; font-weight:800; color:#0f172a; margin:0; line-height:1.25; letter-spacing:-0.02em;">
+        Body Fat Calculator
+      </h1>
+      <p class="panel-subtitle" style="font-size:0.95rem; line-height:1.6; color:#475569; max-width:880px; margin:0.35rem 0 0 0;">
+        Calculate your exact body fat percentage, total fat mass, lean muscle mass, and ACE fitness category instantly using simple tape measurements or the BMI method. Get accurate body composition metrics calibrated for both men and women.
+      </p>
 
-            <div class="calc-results-side">
-              <div class="result-card-primary">
-                <div class="result-label">Estimated Body Fat Percentage</div>
-                <div class="result-value-huge" id="res-bf-val" data-copyable="true">16.4%</div>
-                <div id="res-bf-category" style="font-weight:700; color:var(--accent-primary); margin-top:0.25rem;">Fitness</div>
-              </div>
-              <div class="result-stat-grid">
-                <div class="stat-box">
-                  <div class="stat-box-label">Fat Mass</div>
-                  <div class="stat-box-val" id="res-bf-fatmass" data-copyable="true">12.3 kg</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Lean Body Mass</div>
-                  <div class="stat-box-val" id="res-bf-leanmass" style="color:var(--accent-green);" data-copyable="true">62.7 kg</div>
-                </div>
-              </div>
-            </div>
+      <!-- Prominently Visible Target Keywords & LSI Semantic Tags Bar -->
+      <div class="bf-keyword-tags-bar" style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-top:0.85rem; align-items:center;">
+        <span style="font-size:0.72rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; margin-right:0.2rem;">Target Searches:</span>
+        <span class="seo-keyword-pill" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.76rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          body fat calculator
+        </span>
+        <span class="seo-keyword-pill" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.76rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;">
+          body fat percentage calculator
+        </span>
+        <span class="seo-keyword-pill" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.76rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;">
+          us navy body fat calculator
+        </span>
+        <span class="seo-keyword-pill" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.76rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;">
+          body fat calculator men
+        </span>
+        <span class="seo-keyword-pill" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.76rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;">
+          body fat calculator women
+        </span>
+        <span class="seo-keyword-pill" style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.76rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:6px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;">
+          lean body mass calculator
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two-Column Calculator Card (Side-by-side on desktop, stacked on mobile) -->
+  <div class="bf-grid-layout" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1.5rem; align-items:start;">
+    
+    <!-- LEFT CARD: INPUTS (Light Theme: White card, subtle slate border) -->
+    <div class="bf-card-inputs" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:1.5rem; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+      
+      <!-- Toggle Controls (Unit System, Method, Gender) -->
+      <div style="display:flex; flex-direction:column; gap:1rem; margin-bottom:1.25rem;">
+        
+        <!-- Unit Toggle -->
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.4rem;">
+            Unit System
+          </label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; background:#f1f5f9; padding:0.25rem; border-radius:8px; border:1px solid #e2e8f0;">
+            <button type="button" id="bf-unit-metric" class="bf-toggle-pill active" onclick="FitnessCalcs.setBfUnit('metric', this)" style="padding:0.5rem 0.75rem; font-size:0.85rem; font-weight:700; border-radius:6px; border:none; background:#ffffff; color:#2563eb; box-shadow:0 1px 2px rgba(0,0,0,0.06); cursor:pointer; transition:all 0.15s ease;">
+              Metric (cm, kg)
+            </button>
+            <button type="button" id="bf-unit-us" class="bf-toggle-pill" onclick="FitnessCalcs.setBfUnit('us', this)" style="padding:0.5rem 0.75rem; font-size:0.85rem; font-weight:600; border-radius:6px; border:none; background:transparent; color:#64748b; cursor:pointer; transition:all 0.15s ease;">
+              US Units (in, lbs)
+            </button>
           </div>
         </div>
+
+        <!-- Formula Method Toggle -->
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.4rem;">
+            Calculation Method
+          </label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; background:#f1f5f9; padding:0.25rem; border-radius:8px; border:1px solid #e2e8f0;">
+            <button type="button" id="bf-method-navy" class="bf-toggle-pill active" onclick="FitnessCalcs.setBfMethod('navy', this)" style="padding:0.5rem 0.75rem; font-size:0.825rem; font-weight:700; border-radius:6px; border:none; background:#ffffff; color:#2563eb; box-shadow:0 1px 2px rgba(0,0,0,0.06); cursor:pointer; transition:all 0.15s ease;">
+              U.S. Navy Method (Default)
+            </button>
+            <button type="button" id="bf-method-bmi" class="bf-toggle-pill" onclick="FitnessCalcs.setBfMethod('bmi', this)" style="padding:0.5rem 0.75rem; font-size:0.825rem; font-weight:600; border-radius:6px; border:none; background:transparent; color:#64748b; cursor:pointer; transition:all 0.15s ease;">
+              BMI Estimate Method
+            </button>
+          </div>
+        </div>
+
+        <!-- Gender Toggle -->
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.4rem;">
+            Biological Sex (Affects Adipose Distribution)
+          </label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; background:#f1f5f9; padding:0.25rem; border-radius:8px; border:1px solid #e2e8f0;">
+            <button type="button" id="bf-gender-male" class="bf-gender-pill active" onclick="FitnessCalcs.setBfGender('male', this)" style="padding:0.5rem 0.75rem; font-size:0.85rem; font-weight:700; border-radius:6px; border:none; background:#ffffff; color:#2563eb; box-shadow:0 1px 2px rgba(0,0,0,0.06); cursor:pointer; transition:all 0.15s ease;">
+              Male
+            </button>
+            <button type="button" id="bf-gender-female" class="bf-gender-pill" onclick="FitnessCalcs.setBfGender('female', this)" style="padding:0.5rem 0.75rem; font-size:0.85rem; font-weight:600; border-radius:6px; border:none; background:transparent; color:#64748b; cursor:pointer; transition:all 0.15s ease;">
+              Female (Adds Hip)
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Validation Error Box (friendly inline message) -->
+      <div id="bf-validation-alert" style="display:none; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1.25rem; font-size:0.825rem; color:#b91c1c;">
+        <span id="bf-validation-msg">Waist measurement must be greater than neck circumference.</span>
+      </div>
+
+      <!-- Numeric Input Fields -->
+      <div style="display:flex; flex-direction:column; gap:0.95rem;">
+        
+        <!-- 1. Age -->
+        <div class="bf-input-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+            <label for="bf-age" style="font-weight:700; font-size:0.875rem; color:#1e293b; margin:0;">Age</label>
+            <span style="font-size:0.75rem; color:#64748b;">Years (18 – 90)</span>
+          </div>
+          <div style="position:relative;">
+            <input type="number" id="bf-age" value="30" min="18" max="100" step="1" oninput="FitnessCalcs.onBfInput()" class="bf-field-input" style="width:100%; padding:0.6rem 0.85rem; border:1px solid #cbd5e1; border-radius:8px; font-size:0.95rem; font-weight:600; color:#0f172a; outline:none; transition:border-color 0.15s ease;" onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.15)';" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';">
+          </div>
+        </div>
+
+        <!-- 2. Weight -->
+        <div class="bf-input-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+            <label for="bf-weight" style="font-weight:700; font-size:0.875rem; color:#1e293b; margin:0;">Weight</label>
+            <span id="bf-weight-unit-label" style="font-size:0.75rem; font-weight:700; color:#2563eb;">kg</span>
+          </div>
+          <div style="position:relative;">
+            <input type="number" id="bf-weight" value="75" min="30" max="350" step="0.5" oninput="FitnessCalcs.onBfInput()" class="bf-field-input" style="width:100%; padding:0.6rem 0.85rem; border:1px solid #cbd5e1; border-radius:8px; font-size:0.95rem; font-weight:600; color:#0f172a; outline:none; transition:border-color 0.15s ease;" onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.15)';" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';">
+          </div>
+        </div>
+
+        <!-- 3. Height -->
+        <div class="bf-input-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+            <label for="bf-height" style="font-weight:700; font-size:0.875rem; color:#1e293b; margin:0;">Height</label>
+            <span id="bf-height-unit-label" style="font-size:0.75rem; font-weight:700; color:#2563eb;">cm</span>
+          </div>
+          <div style="position:relative;">
+            <input type="number" id="bf-height" value="175" min="100" max="250" step="0.5" oninput="FitnessCalcs.onBfInput()" class="bf-field-input" style="width:100%; padding:0.6rem 0.85rem; border:1px solid #cbd5e1; border-radius:8px; font-size:0.95rem; font-weight:600; color:#0f172a; outline:none; transition:border-color 0.15s ease;" onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.15)';" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';">
+          </div>
+        </div>
+
+        <!-- 4. Neck Circumference -->
+        <div class="bf-input-group" id="bf-neck-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+            <label for="bf-neck" style="font-weight:700; font-size:0.875rem; color:#1e293b; margin:0;">Neck Circumference</label>
+            <span id="bf-neck-unit-label" style="font-size:0.75rem; font-weight:700; color:#2563eb;">cm</span>
+          </div>
+          <div style="position:relative;">
+            <input type="number" id="bf-neck" value="38" min="20" max="75" step="0.5" oninput="FitnessCalcs.onBfInput()" class="bf-field-input" style="width:100%; padding:0.6rem 0.85rem; border:1px solid #cbd5e1; border-radius:8px; font-size:0.95rem; font-weight:600; color:#0f172a; outline:none; transition:border-color 0.15s ease;" onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.15)';" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';">
+          </div>
+          <span style="font-size:0.735rem; color:#64748b; margin-top:0.25rem; display:block;">Measure just below the larynx (Adam's apple)</span>
+        </div>
+
+        <!-- 5. Waist Circumference -->
+        <div class="bf-input-group" id="bf-waist-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+            <label for="bf-waist" style="font-weight:700; font-size:0.875rem; color:#1e293b; margin:0;">Waist Circumference</label>
+            <span id="bf-waist-unit-label" style="font-size:0.75rem; font-weight:700; color:#2563eb;">cm</span>
+          </div>
+          <div style="position:relative;">
+            <input type="number" id="bf-waist" value="85" min="40" max="200" step="0.5" oninput="FitnessCalcs.onBfInput()" class="bf-field-input" style="width:100%; padding:0.6rem 0.85rem; border:1px solid #cbd5e1; border-radius:8px; font-size:0.95rem; font-weight:600; color:#0f172a; outline:none; transition:border-color 0.15s ease;" onfocus="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.15)';" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';">
+          </div>
+          <span id="bf-waist-hint" style="font-size:0.735rem; color:#64748b; margin-top:0.25rem; display:block;">Men: at navel; Women: narrowest point</span>
+        </div>
+
+        <!-- 6. Hip Circumference (Female only) -->
+        <div class="bf-input-group" id="bf-hip-group" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+            <label for="bf-hip" style="font-weight:700; font-size:0.875rem; color:#1e293b; margin:0;">Hip Circumference (Females Only)</label>
+            <span id="bf-hip-unit-label" style="font-size:0.75rem; font-weight:700; color:#db2777;">cm</span>
+          </div>
+          <div style="position:relative;">
+            <input type="number" id="bf-hip" value="95" min="50" max="220" step="0.5" oninput="FitnessCalcs.onBfInput()" class="bf-field-input" style="width:100%; padding:0.6rem 0.85rem; border:1px solid #cbd5e1; border-radius:8px; font-size:0.95rem; font-weight:600; color:#0f172a; outline:none; transition:border-color 0.15s ease;" onfocus="this.style.borderColor='#db2777'; this.style.boxShadow='0 0 0 3px rgba(219,39,119,0.15)';" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';">
+          </div>
+          <span style="font-size:0.735rem; color:#64748b; margin-top:0.25rem; display:block;">Measure at the widest point of hips and buttocks</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT CARD: RESULTS (Light Theme: Soft ice-blue background, dark readable slate text) -->
+    <div class="bf-card-results" style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:14px; padding:1.75rem; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+      
+      <!-- Primary Readout Header -->
+      <div style="text-align:center; padding-bottom:1.25rem; border-bottom:1px solid #e0f2fe;">
+        <span style="font-size:0.825rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#0369a1; display:block; margin-bottom:0.35rem;">
+          Estimated Body Fat Percentage
+        </span>
+        <div id="res-bf-val" style="font-size:3rem; font-weight:900; color:#0f172a; line-height:1.1; margin-bottom:0.4rem;">
+          16.4%
+        </div>
+        
+        <!-- ACE Category Badge -->
+        <div style="display:flex; justify-content:center; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+          <span id="res-bf-category-badge" style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.35rem 0.95rem; border-radius:20px; font-size:0.85rem; font-weight:700; background:#dcfce7; color:#15803d; border:1px solid #86efac;">
+            Fitness
+          </span>
+          <span id="res-bf-method-label" style="font-size:0.75rem; color:#64748b; font-weight:600;">
+            (U.S. Navy Method)
+          </span>
+        </div>
+      </div>
+
+      <!-- Visual Multi-Tier ACE Range Bar -->
+      <div style="margin:1.35rem 0;">
+        <div style="display:flex; justify-content:space-between; font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:0.35rem;">
+          <span>Essential</span>
+          <span>Athletes</span>
+          <span>Fitness</span>
+          <span>Average</span>
+          <span>Obese</span>
+        </div>
+        
+        <!-- Bar track with colored segments -->
+        <div style="position:relative; width:100%; height:12px; border-radius:6px; background:#e2e8f0; overflow:hidden; display:flex;">
+          <div style="width:12%; background:#38bdf8;" title="Essential Fat"></div>
+          <div style="width:20%; background:#10b981;" title="Athletes"></div>
+          <div style="width:15%; background:#059669;" title="Fitness"></div>
+          <div style="width:25%; background:#f59e0b;" title="Average"></div>
+          <div style="width:28%; background:#ef4444;" title="Obese"></div>
+        </div>
+
+        <!-- Pointer Marker indicator -->
+        <div style="position:relative; width:100%; height:16px; margin-top:2px;">
+          <div id="res-bf-marker" style="position:absolute; left:47%; transform:translateX(-50%); top:0; font-size:0.75rem; font-weight:800; color:#0f172a; display:flex; flex-direction:column; align-items:center;">
+            <span>▲</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4-Card Breakdown Metrics Grid -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:0.5rem;">
+        
+        <!-- 1. Body Fat Mass -->
+        <div style="background:#ffffff; border:1px solid #e0f2fe; border-radius:10px; padding:0.85rem; text-align:center; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+          <div style="font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase;">Total Fat Mass</div>
+          <div id="res-bf-fatmass" style="font-size:1.15rem; font-weight:800; color:#0f172a; margin-top:0.25rem;">
+            12.3 kg
+          </div>
+          <div id="res-bf-fatmass-sub" style="font-size:0.725rem; color:#64748b;">
+            27.1 lbs
+          </div>
+        </div>
+
+        <!-- 2. Lean Body Mass -->
+        <div style="background:#ffffff; border:1px solid #e0f2fe; border-radius:10px; padding:0.85rem; text-align:center; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+          <div style="font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase;">Lean Body Mass</div>
+          <div id="res-bf-leanmass" style="font-size:1.15rem; font-weight:800; color:#15803d; margin-top:0.25rem;">
+            62.7 kg
+          </div>
+          <div id="res-bf-leanmass-sub" style="font-size:0.725rem; color:#64748b;">
+            138.2 lbs
+          </div>
+        </div>
+
+        <!-- 3. Secondary Formula Estimate (BMI / Navy) -->
+        <div style="background:#ffffff; border:1px solid #e0f2fe; border-radius:10px; padding:0.85rem; text-align:center; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+          <div id="res-bf-secondary-label" style="font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase;">BMI-Based Estimate</div>
+          <div id="res-bf-secondary-val" style="font-size:1.15rem; font-weight:800; color:#2563eb; margin-top:0.25rem;">
+            21.5%
+          </div>
+          <div id="res-bf-secondary-sub" style="font-size:0.725rem; color:#64748b;">
+            Deurenberg Formula
+          </div>
+        </div>
+
+        <!-- 4. Ideal Body Fat Range -->
+        <div style="background:#ffffff; border:1px solid #e0f2fe; border-radius:10px; padding:0.85rem; text-align:center; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+          <div style="font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase;">Ideal Range (Age &amp; Sex)</div>
+          <div id="res-bf-ideal-range" style="font-size:1.15rem; font-weight:800; color:#0f172a; margin-top:0.25rem;">
+            8% – 19%
+          </div>
+          <div id="res-bf-ideal-sub" style="font-size:0.725rem; color:#64748b;">
+            Men (Age 20–39)
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Context Box -->
+      <div style="margin-top:1rem; padding:0.65rem 0.85rem; background:#ffffff; border:1px solid #e0f2fe; border-radius:8px; font-size:0.75rem; color:#475569; display:flex; justify-content:space-between; align-items:center;">
+        <span><strong>BMI:</strong> <span id="res-bf-bmi-quick">24.5 kg/m²</span></span>
+        <span><strong>Body Type:</strong> <span id="res-bf-bodytype-quick">Lean / Athletic</span></span>
+      </div>
+
+    </div>
+
+  </div>
+</div>
 
         <!-- 4. Water Intake -->
                 <!-- 6. Calorie Calculator (TDEE & Deficit Targets) -->

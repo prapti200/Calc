@@ -19,7 +19,7 @@
     { id: 'sec-disc-calc', cat: 'financial', slug: 'price-discount-calculator', aliases: ['price-discount', 'sale-price', 'percent-off'], title: 'Sale Price Discount Calculator' },
 
     // --- HEALTH, FITNESS & MATERNAL CALCULATORS (20 Tools) ---
-    { id: 'sec-bf-calc', cat: 'fitness', slug: 'body-fat-calculator', aliases: ['body-fat', 'bf', 'body-fat-percentage', 'navy-body-fat'], title: 'Body Fat % (US Navy Method)' },
+    { id: 'sec-bf-calc', cat: 'fitness', slug: 'body-fat-calculator', aliases: ['body-fat', 'bf', 'body-fat-percentage', 'navy-body-fat', 'us-navy-body-fat-calculator', 'lean-body-mass-calculator'], title: 'Body Fat Calculator – Free US Navy & BMI Fat % Estimator', keywords: 'body fat calculator, body fat percentage calculator, us navy body fat calculator, body fat calculator men, body fat calculator women, lean body mass calculator' },
     // 7 Maternal & Cycle Calculators
     { id: 'sec-pregnancy-weight-calc', cat: 'fitness', slug: 'pregnancy-weight-gain-calculator', aliases: ['pregnancy-weight', 'pregnancy-weight-gain', 'maternal-weight', 'iom-weight'], title: 'Pregnancy Weight Gain Calculator' },
     { id: 'sec-ovulation-calc', cat: 'fitness', slug: 'ovulation-calculator', aliases: ['ovulation', 'fertile-days', 'ovulation-calendar'], title: 'Ovulation Calculator' },
