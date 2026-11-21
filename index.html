@@ -319,6 +319,32 @@
           <svg class="nav-tab-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path><line x1="8" y1="2" x2="16" y2="2"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
           Scientific
         </button>
+
+        <!-- Small Search Bar on Right Hand Side of Scientific Calculator -->
+        <div class="zenith-nav-search-wrap" id="nav-search-wrapper" role="search">
+          <span class="zenith-nav-search-icon" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+          <input 
+            type="search" 
+            id="nav-search-input" 
+            class="zenith-nav-search-input" 
+            placeholder="Search calculators..." 
+            autocomplete="off" 
+            autocapitalize="none" 
+            autocorrect="off" 
+            spellcheck="false"
+            aria-label="Search all calculators"
+          >
+          <span class="zenith-nav-search-shortcut" id="nav-search-shortcut">⌘K</span>
+          <button type="button" class="zenith-nav-search-clear" id="nav-search-clear" onclick="window.clearNavSearch()" style="display:none;" aria-label="Clear search">✕</button>
+
+          <!-- Floating Instant Dropdown for Live Results -->
+          <div class="zenith-nav-search-dropdown" id="nav-search-dropdown" style="display:none;" role="listbox"></div>
+        </div>
       </nav>
 
       <!-- Header Actions (Bold pill buttons, centered vertically) -->

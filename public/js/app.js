@@ -1948,5 +1948,177 @@
     }
   });
 
+
+  // ==========================================================================
+  // ZENITH NAV SEARCH ENGINE (Small Size Search on Right Hand Side of Scientific)
+  // ==========================================================================
+  (function initZenithNavSearch() {
+    function setup() {
+      const navInput = document.getElementById('nav-search-input');
+      const navWrap = document.getElementById('nav-search-wrapper');
+      const navClear = document.getElementById('nav-search-clear');
+      const navDropdown = document.getElementById('nav-search-dropdown');
+
+      if (!navInput || !navDropdown) return;
+
+      function getCleanTitle(title) {
+        if (!title) return '';
+        return title.split('–')[0].split('-')[0].trim();
+      }
+
+      function renderNavResults(rawQuery) {
+        const q = (rawQuery || '').trim().toLowerCase();
+        if (!q) {
+          navDropdown.style.display = 'none';
+          navDropdown.innerHTML = '';
+          if (navClear) navClear.style.display = 'none';
+          return;
+        }
+
+        if (navClear) navClear.style.display = 'flex';
+
+        const registry = window.CALC_REGISTRY || [];
+        const matches = [];
+
+        for (const item of registry) {
+          const titleLower = (item.title || '').toLowerCase();
+          const cleanTitleLower = getCleanTitle(item.title).toLowerCase();
+          const slugLower = (item.slug || '').toLowerCase();
+          const kwLower = (item.keywords || '').toLowerCase();
+          const aliasesLower = (item.aliases || []).join(' ').toLowerCase();
+
+          let score = 0;
+          if (cleanTitleLower === q || titleLower === q) score += 1000;
+          else if (cleanTitleLower.startsWith(q) || titleLower.startsWith(q)) score += 500;
+          else if (slugLower === q) score += 400;
+          else if (slugLower.startsWith(q)) score += 300;
+          else if (titleLower.includes(q)) score += 200;
+          else if (slugLower.includes(q)) score += 150;
+          else if (kwLower.includes(q)) score += 100;
+          else if (aliasesLower.includes(q)) score += 80;
+
+          if (score > 0) {
+            matches.push({ item, score });
+          }
+        }
+
+        matches.sort((a, b) => b.score - a.score);
+        const topMatches = matches.slice(0, 8);
+
+        if (topMatches.length === 0) {
+          navDropdown.innerHTML = `
+            <div class="zenith-nav-search-empty">
+              No calculators found for "<strong>${q.replace(/[<>&"]/g, '')}</strong>".<br>
+              <span style="font-size:0.75rem; color:#94a3b8; margin-top:4px; display:inline-block;">Press Enter to search all 44 tools</span>
+            </div>
+          `;
+          navDropdown.style.display = 'block';
+          return;
+        }
+
+        const categoryLabels = {
+          financial: 'Finance',
+          fitness: 'Fitness',
+          math: 'Math',
+          other: 'Utility',
+          standard: 'Scientific'
+        };
+
+        let html = '';
+        topMatches.forEach(({ item }) => {
+          const catLabel = categoryLabels[item.cat] || item.cat || 'Tool';
+          const targetUrl = item.cat ? `/${item.cat}/${item.slug}` : `/${item.slug}`;
+          const cleanTitle = getCleanTitle(item.title);
+          html += `
+            <a class="zenith-nav-search-dropdown-item" href="${targetUrl}" onclick="window.onNavSearchResultClick(event, '${item.id || ''}', '${targetUrl}')">
+              <div class="zenith-nav-search-item-info">
+                <span class="zenith-nav-search-item-title">${cleanTitle}</span>
+              </div>
+              <span class="zenith-nav-search-item-badge">${catLabel}</span>
+            </a>
+          `;
+        });
+
+        html += `
+          <div class="zenith-nav-search-footer">
+            <span>${topMatches.length} matching tool${topMatches.length > 1 ? 's' : ''}</span>
+            <span>Press ↵ to view all</span>
+          </div>
+        `;
+
+        navDropdown.innerHTML = html;
+        navDropdown.style.display = 'block';
+      }
+
+      navInput.addEventListener('input', (e) => {
+        renderNavResults(e.target.value);
+      });
+
+      navInput.addEventListener('focus', () => {
+        if (navInput.value.trim()) {
+          renderNavResults(navInput.value);
+        }
+      });
+
+      navInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          navDropdown.style.display = 'none';
+          navInput.blur();
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          const query = navInput.value.trim();
+          navDropdown.style.display = 'none';
+          if (window.SuiteSearchEngine) {
+            window.SuiteSearchEngine.search('hub', query);
+            const globalInput = document.getElementById('global-search-input');
+            if (globalInput) globalInput.value = query;
+          }
+        }
+      });
+
+      // Close on outside click
+      document.addEventListener('click', (e) => {
+        if (navWrap && !navWrap.contains(e.target)) {
+          navDropdown.style.display = 'none';
+        }
+      });
+
+      window.clearNavSearch = function() {
+        navInput.value = '';
+        renderNavResults('');
+        navInput.focus();
+      };
+
+      window.onNavSearchResultClick = function(event, calcId, targetUrl) {
+        navDropdown.style.display = 'none';
+        if (window.AppRouter && targetUrl) {
+          event.preventDefault();
+          window.AppRouter.navigate(targetUrl);
+        }
+      };
+
+      // Keyboard shortcut: Ctrl+K, Cmd+K, or / to focus the nav search input
+      window.addEventListener('keydown', (e) => {
+        const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName);
+        if ((e.key === '/' || ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')))) {
+          if (isInput && document.activeElement === navInput) {
+            return;
+          }
+          if (!isInput) {
+            e.preventDefault();
+            navInput.focus();
+            navInput.select();
+          }
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setup);
+    } else {
+      setup();
+    }
+  })();
+
 })();
 
