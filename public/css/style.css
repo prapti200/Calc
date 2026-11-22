@@ -246,13 +246,14 @@ input, select, textarea {
 }
 
 .app-header-inner {
-  width: 100%;
-  max-width: 1140px; /* Brings calculator name, nav ribbon, and settings closer towards the center! */
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.15rem;
+  width: 100% !important;
+  max-width: 1420px !important; /* Expands to fit brand, shifted navigation ribbon, search, and action buttons comfortably */
+  margin: 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.65rem !important;
+  box-sizing: border-box !important;
 }
 
 .header-left-group {
@@ -428,9 +429,11 @@ input, select, textarea {
 
 /* Header Controls & Professional Settings */
 .header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  margin-left: auto !important; /* Pushes to the right end safely */
+  flex-shrink: 0 !important;    /* NEVER gets squished or pushed off screen */
 }
 
 .icon-btn {
@@ -2567,17 +2570,21 @@ input, select, textarea {
 .zenith-header-nav {
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
-  gap: 0.5rem !important;
-  margin: 0 auto !important; /* Perfectly centered navigation ribbon straight in the screen */
+  justify-content: flex-start !important;
+  gap: 0.3rem !important;
+  margin: 0 !important;
+  margin-left: 0.5rem !important; /* Shifted toward the left hand side right next to brand */
+  margin-right: auto !important;   /* Leaves remaining space on right for action buttons */
   background: transparent !important;
   border: none !important;
   border-radius: 0 !important;
-  padding: 0.35rem 0.25rem !important;
+  padding: 0.35rem 0.15rem !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   transition: all 0.2s ease;
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
 }
 
 [data-theme="dark"] .zenith-header-nav {
@@ -2605,12 +2612,12 @@ input, select, textarea {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 0.42rem !important;
-  font-size: 0.88rem !important;
-  font-weight: 750 !important; /* Bold font as requested */
-  color: #0f172a !important; /* Elegant bold dark charcoal color */
-  padding: 0.42rem 0.95rem !important;
-  border-radius: 9999px !important; /* Outer circular area for each feature pill */
+  gap: 0.32rem !important;
+  font-size: 0.81rem !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  padding: 0.35rem 0.65rem !important; /* Compact padding so all buttons fit neatly */
+  border-radius: 9999px !important;
   cursor: pointer !important;
   transition: all 0.18s ease !important;
   white-space: nowrap !important;
@@ -2619,6 +2626,8 @@ input, select, textarea {
   box-shadow: none !important;
   position: relative !important;
   letter-spacing: -0.01em !important;
+  flex-shrink: 0 !important;
+  min-height: 34px !important;
 }
 
 [data-theme="dark"] .zenith-nav-dropdown {
@@ -9923,10 +9932,10 @@ body[data-theme="dark"],
   background: #ffffff !important;
   border: 1px solid rgba(203, 213, 225, 0.95) !important;
   border-radius: 9999px !important;
-  padding: 0 0.55rem 0 0.65rem !important;
+  padding: 0 0.5rem 0 0.55rem !important;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
-  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease !important;
-  width: 175px !important;
+  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease !important;
+  width: 135px !important;
   box-sizing: border-box !important;
   margin-left: 0.15rem !important;
 }
@@ -9936,7 +9945,7 @@ body[data-theme="dark"],
 }
 
 .zenith-nav-search-wrap:focus-within {
-  width: 220px !important;
+  width: 170px !important;
   border-color: #3b82f6 !important;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18), 0 1px 3px rgba(15, 23, 42, 0.08) !important;
   background: #ffffff !important;
@@ -10197,5 +10206,37 @@ body[data-theme="dark"],
     right: 0 !important;
     width: min(300px, 86vw) !important;
     max-height: 300px !important;
+  }
+}
+
+
+/* Responsive adjustments for mid-sized laptops & screens (901px - 1280px) */
+@media (min-width: 901px) and (max-width: 1280px) {
+  .app-header-inner {
+    gap: 0.45rem !important;
+  }
+  .zenith-header-nav {
+    margin-left: 0.35rem !important;
+    gap: 0.22rem !important;
+  }
+  .zenith-nav-dropdown {
+    padding: 0.32rem 0.52rem !important;
+    font-size: 0.77rem !important;
+    gap: 0.22rem !important;
+  }
+  .zenith-nav-search-wrap {
+    width: 120px !important;
+    height: 32px !important;
+    padding: 0 0.4rem 0 0.48rem !important;
+  }
+  .zenith-nav-search-wrap:focus-within {
+    width: 155px !important;
+  }
+  .header-actions {
+    gap: 0.4rem !important;
+  }
+  .icon-btn {
+    width: 35px !important;
+    height: 35px !important;
   }
 }
