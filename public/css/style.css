@@ -10240,3 +10240,12 @@ body[data-theme="dark"],
     height: 35px !important;
   }
 }
+
+
+/* ==========================================================================
+   REMOVE IN-SCREEN HERO SEARCH BAR (Top navigation search bar is preserved)
+   ========================================================================== */
+.zenith-hero-search-container,
+.suite-search-container {
+  display: none !important;
+}

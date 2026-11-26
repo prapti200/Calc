@@ -2086,6 +2086,9 @@
       window.clearNavSearch = function() {
         navInput.value = '';
         renderNavResults('');
+        if (window.SuiteSearchEngine) {
+          window.SuiteSearchEngine.search('hub', '');
+        }
         navInput.focus();
       };
 
