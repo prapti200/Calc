@@ -9935,7 +9935,7 @@ body[data-theme="dark"],
   padding: 0 0.5rem 0 0.55rem !important;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
   transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease !important;
-  width: 135px !important;
+  width: 195px !important;
   box-sizing: border-box !important;
   margin-left: 0.15rem !important;
 }
@@ -9945,7 +9945,7 @@ body[data-theme="dark"],
 }
 
 .zenith-nav-search-wrap:focus-within {
-  width: 170px !important;
+  width: 235px !important;
   border-color: #3b82f6 !important;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18), 0 1px 3px rgba(15, 23, 42, 0.08) !important;
   background: #ffffff !important;
@@ -10190,7 +10190,7 @@ body[data-theme="dark"],
 /* Mobile Responsive (< 900px) */
 @media (max-width: 900px) {
   .zenith-nav-search-wrap {
-    width: 155px !important;
+    width: 215px !important;
     height: 32px !important;
     padding: 0 0.45rem 0 0.55rem !important;
     margin-left: 0.1rem !important;
@@ -10225,12 +10225,12 @@ body[data-theme="dark"],
     gap: 0.22rem !important;
   }
   .zenith-nav-search-wrap {
-    width: 120px !important;
+    width: 165px !important;
     height: 32px !important;
     padding: 0 0.4rem 0 0.48rem !important;
   }
   .zenith-nav-search-wrap:focus-within {
-    width: 155px !important;
+    width: 205px !important;
   }
   .header-actions {
     gap: 0.4rem !important;
