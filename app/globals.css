@@ -24,7 +24,47 @@ aside.calc-detail-sidebar,
 .calc-detail-main-content {
   width: 100% !important;
   max-width: 100% !important;
+  display: block !important;
+  margin: 0 auto !important;
 }
+
+/* Calculator Container & Panel Centering across all pages */
+#fin-detail-view,
+#fit-detail-view,
+#math-detail-view,
+#other-detail-view,
+.calc-detail-view {
+  max-width: 1260px !important;
+  margin: 0 auto 2.5rem auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#fin-detail-view .calc-panel,
+#fit-detail-view .calc-panel,
+#math-detail-view .calc-panel,
+#other-detail-view .calc-panel,
+.calc-detail-main-content .calc-panel {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 auto 1.5rem auto !important;
+  box-sizing: border-box !important;
+}
+
+.calc-panel .calc-split-layout {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  width: 100% !important;
+}
+
+@media (max-width: 860px) {
+  .calc-panel .calc-split-layout {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+}
+
 
 /* Transparent top navigation bar containing calculator suites */
 .app-header,
