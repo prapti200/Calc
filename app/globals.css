@@ -4,3 +4,25 @@ html, body {
   padding: 0;
 }
 
+/* Remove left-hand directory and detail sidebars from all pages */
+.calc-directory-sidebar,
+aside.calc-detail-sidebar,
+.calc-detail-sidebar {
+  display: none !important;
+}
+
+.calc-page-layout {
+  display: block !important;
+  width: 100% !important;
+}
+
+.calc-detail-body-layout {
+  display: block !important;
+  width: 100% !important;
+}
+
+.calc-detail-main-content {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
