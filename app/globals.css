@@ -26,3 +26,19 @@ aside.calc-detail-sidebar,
   max-width: 100% !important;
 }
 
+/* Transparent top navigation bar containing calculator suites */
+.app-header,
+[data-theme="light"] .app-header,
+[data-theme="dark"] .app-header {
+  background: transparent !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5) !important;
+  box-shadow: none !important;
+}
+
+[data-theme="dark"] .app-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+
